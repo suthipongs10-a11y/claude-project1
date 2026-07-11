@@ -1,0 +1,39 @@
+{
+  "project": "2026-07-alaska-crab",
+  "title": "The Deadliest Job on Earth — Alaskan Crab Fishing",
+  "format": "vox-style paper collage, no external footage",
+  "capcut_draft": "0711(2)",
+  "canvas": { "width": 1080, "height": 1920, "fps": 30 },
+  "notes": "duration ของแต่ละ shot เป็นค่าจาก preview — ปรับตามความยาวเสียงพากย์จริงตอน build",
+  "shots": [
+    { "id": 1, "asset": "assets/scene01.png", "duration_s": 5.0,
+      "vo": "This is the deadliest job on Earth. And it's about catching... crab.",
+      "motion": "slow zoom-in 100->104%" },
+    { "id": 2, "asset": "assets/scene02.png", "duration_s": 5.5,
+      "vo": "Welcome to the Bering Sea — Dutch Harbor, Alaska. Winter water: two degrees.",
+      "motion": "slow zoom-in" },
+    { "id": 3, "asset": "assets/scene03.png", "duration_s": 6.0,
+      "vo": "The tool: a 750-pound steel cage. Bait it with cod, and crabs crawl in — but can't crawl out.",
+      "motion": "slow zoom-in" },
+    { "id": 4, "asset": "assets/scene04.png", "duration_s": 6.0,
+      "vo": "Drop it a hundred meters deep. Wait two days. Haul it up — full... or empty.",
+      "motion": "slow zoom-in" },
+    { "id": 5, "asset": "assets/scene05.png", "duration_s": 5.0,
+      "vo": "One good trip pays a deckhand over ten thousand dollars. In five days.",
+      "motion": "slow zoom-in" },
+    { "id": 6, "asset": "assets/scene06.png", "duration_s": 6.0,
+      "vo": "The catch? Minus twenty, forty-foot waves, and ice that builds up until boats flip. This job kills at eighty times the average rate.",
+      "motion": "slow zoom-in" },
+    { "id": 7, "asset": "assets/scene07.png", "duration_s": 6.0,
+      "vo": "Then, in 2022 — ten billion snow crabs just... vanished. The season was canceled for the first time ever.",
+      "motion": "slow zoom-in" },
+    { "id": 8, "asset": "assets/scene08.png", "duration_s": 6.5,
+      "vo": "A marine heat wave had spiked their metabolism. There wasn't enough food. They starved. Follow for part two: the two-hundred-million-dollar ghost fleet.",
+      "motion": "slow zoom-in" }
+  ],
+  "audio": {
+    "voiceover": "elevenlabs/ (ยังไม่ gen — ต้องทำบน PC ที่มี .env)",
+    "music": "ใช้ CapCut library บน PC — แทร็กใน preview เป็น placeholder",
+    "original_footage_volume": 0.0
+  }
+}
