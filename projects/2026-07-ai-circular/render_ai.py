@@ -1,6 +1,7 @@
 # render_ai.py — "The $1.4 Trillion Bet: AI's Circular Deal" (Vox-style, 1080x1920)
 #   python3 render_ai.py --stills   → PNG ท้ายฉากลง assets/
 #   python3 render_ai.py out.mp4    → วิดีโอเต็ม
+import json
 import math
 import random
 import subprocess
@@ -320,26 +321,92 @@ def render_frame(bg, scene, t, frame):
     return fr.convert("RGB")
 
 
+# ---------- VO timing: ยืดแต่ละฉากให้พอดีเสียงพากย์ ----------
+HEAD, TAIL = 0.45, 0.9   # เว้นก่อน/หลังเสียงพากย์ในแต่ละฉาก
+
+
+def apply_vo_timing(scenes):
+    """อ่าน elevenlabs/timing.json แล้วตั้ง dur ของแต่ละฉาก = max(dur เดิม, เสียง+หัว+ท้าย).
+    คืน list ของ (mp3_path, start_ในคลิปรวม) ไว้ mux; None ถ้าไม่มีไฟล์เสียง"""
+    tj = HERE / "elevenlabs" / "timing.json"
+    if not tj.exists():
+        return None
+    rows = {r["shot"]: r for r in json.loads(tj.read_text()) if not r.get("missing")}
+    vo = []
+    t0 = 0.0
+    for i, sc in enumerate(scenes):
+        r = rows.get(i + 1)
+        if r:
+            sc["dur"] = max(sc["dur"], r["duration"] + HEAD + TAIL)
+            mp3 = HERE / "elevenlabs" / "audio" / f"{r['id']}.mp3"
+            if mp3.exists():
+                vo.append((str(mp3), t0 + HEAD))
+        t0 += sc["dur"]
+    return vo
+
+
+def mux_final(video_only, out_path, total, vo):
+    """รวม: วิดีโอ + เพลงรองพื้น (เบา) + เสียงพากย์แต่ละท่อนวางตามตำแหน่งฉาก"""
+    pad = Path(out_path).with_suffix(".pad.wav")
+    make_pad(pad, total)
+    inputs = ["-i", str(video_only), "-i", str(pad)]
+    parts = ["[1:a]volume=0.13[m]"]      # เพลงเบาลงใต้เสียงพากย์
+    mixnames = ["[m]"]
+    for k, (mp3, start) in enumerate(vo):
+        inputs += ["-i", mp3]
+        idx = k + 2
+        ms = int(start * 1000)
+        parts.append(f"[{idx}:a]adelay={ms}|{ms},volume=1.35[v{k}]")
+        mixnames.append(f"[v{k}]")
+    parts.append("".join(mixnames) + f"amix=inputs={len(mixnames)}:normalize=0[pre]")
+    parts.append("[pre]alimiter=limit=0.97[mix]")
+    filt = ";".join(parts)
+    cmd = ["ffmpeg", "-y", *inputs, "-filter_complex", filt,
+           "-map", "0:v", "-map", "[mix]",
+           "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest", str(out_path)]
+    subprocess.run(cmd, check=True, stderr=subprocess.DEVNULL)
+    pad.unlink(missing_ok=True)
+
+
 def main():
     random.seed(7)
     scenes = build_scenes()
-    bgs = [paper_texture(W, H, seed=s["seed"]) for s in scenes]
 
     if "--stills" in sys.argv:
+        bgs = [paper_texture(W, H, seed=s["seed"]) for s in scenes]
         for i, (sc, bg) in enumerate(zip(scenes, bgs)):
             render_frame(bg, sc, sc["dur"] - .1, 9999).save(HERE / "assets" / f"scene{i+1:02d}.png")
             print("saved", f"scene{i+1:02d}.png")
         return
 
-    out_path = sys.argv[1] if len(sys.argv) > 1 else "preview.mp4"
+    final = "--final" in sys.argv
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    out_path = args[0] if args else ("final.mp4" if final else "preview.mp4")
+
+    vo = None
+    if final:
+        vo = apply_vo_timing(scenes)   # ยืด dur ให้พอดีเสียง
+        if not vo:
+            print("!! ไม่พบ elevenlabs/timing.json หรือไฟล์เสียง — รัน `node elevenlabs/pipeline.mjs gen` ก่อน")
+            return
+        print(f"โหมด --final: พบเสียงพากย์ {len(vo)} ท่อน, ยืดฉากให้พอดีเสียงแล้ว")
+
+    bgs = [paper_texture(W, H, seed=s["seed"]) for s in scenes]
     total = sum(s["dur"] for s in scenes)
-    pad = Path(out_path).with_suffix(".pad.wav")
-    make_pad(pad, total)
-    cmd = ["ffmpeg", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
-           "-r", str(FPS), "-i", "-", "-i", str(pad),
-           "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p",
-           "-c:a", "aac", "-b:a", "128k", "-shortest", out_path]
-    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=subprocess.DEVNULL)
+
+    # เรนเดอร์วิดีโอ (โหมด final เรนเดอร์เงียบก่อน แล้วค่อย mux เสียง)
+    video_target = (Path(out_path).with_suffix(".silent.mp4") if final else out_path)
+    head = ["ffmpeg", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
+            "-r", str(FPS), "-i", "-"]
+    vtail = ["-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p"]
+    pad = None
+    if not final:                       # preview: ใส่เพลงรองพื้นเลย
+        pad = Path(out_path).with_suffix(".pad.wav")
+        make_pad(pad, total)
+        head += ["-i", str(pad)]
+        vtail += ["-c:a", "aac", "-b:a", "128k", "-shortest"]
+    vcmd = head + vtail + [str(video_target)]
+    proc = subprocess.Popen(vcmd, stdin=subprocess.PIPE, stderr=subprocess.DEVNULL)
     fno = 0
     for si, (sc, bg) in enumerate(zip(scenes, bgs)):
         for f in range(int(sc["dur"] * FPS)):
@@ -347,8 +414,16 @@ def main():
             fno += 1
         print(f"scene {si+1}/{len(scenes)} done ({fno} frames)")
     proc.stdin.close(); proc.wait()
-    pad.unlink(missing_ok=True)
-    print("wrote", out_path, f"({total:.1f}s)")
+
+    if final:
+        print("รวมเสียงพากย์ + เพลง...")
+        mux_final(video_target, out_path, total, vo)
+        Path(video_target).unlink(missing_ok=True)
+        print("เสร็จ:", out_path, f"({total:.1f}s, มีเสียงพากย์)")
+    else:
+        if pad:
+            pad.unlink(missing_ok=True)
+        print("wrote", out_path, f"({total:.1f}s)")
 
 
 if __name__ == "__main__":

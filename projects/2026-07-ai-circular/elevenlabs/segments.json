@@ -1,0 +1,15 @@
+{
+  "comment": "เสียงบรรยาย 'The $1.4 Trillion Bet: AI's Circular Deal' — 9 ช็อตตรงกับ scene01-09 เป็น TTS ล้วน (ไม่มีเสียงจริง). แนะนำเสียงผู้ชายทุ้ม จริงจัง โทน documentary/explainer",
+  "defaults": { "speed": 1.0, "stability": 0.45, "similarity_boost": 0.8, "style": 0.3 },
+  "segments": [
+    { "id": "seg-01", "shot": 1, "text": "This is the biggest bet in history. One point four trillion dollars — from a single company.", "speed": 0.98 },
+    { "id": "seg-02", "shot": 2, "text": "Here's the problem. OpenAI has promised to spend one point four trillion dollars... on about thirteen billion a year in revenue.", "speed": 1.0 },
+    { "id": "seg-03", "shot": 3, "text": "And the deals are strange. Nvidia invests up to a hundred billion into OpenAI — which then spends it buying Nvidia's chips. The same money, going in a circle.", "speed": 1.0 },
+    { "id": "seg-04", "shot": 4, "text": "It's not just Nvidia. Broadcom, Oracle, Microsoft, AMD — over one point one trillion dollars in promises, all pointing back at one startup.", "speed": 1.02 },
+    { "id": "seg-05", "shot": 5, "text": "The strangest? AMD handed OpenAI the right to ten percent of its shares for a penny each — and OpenAI ordered ninety billion dollars of AMD chips. The customer now owns the supplier.", "speed": 1.0 },
+    { "id": "seg-06", "shot": 6, "text": "We've seen this before. In the dot-com bubble, chip makers funded their own buyers too. Then the Nasdaq fell seventy-eight percent.", "speed": 1.0 },
+    { "id": "seg-07", "shot": 7, "text": "One man is betting it all falls. Michael Burry — who called the two thousand eight crash — is shorting Nvidia with over a billion dollars.", "speed": 1.0 },
+    { "id": "seg-08", "shot": 8, "text": "But... Nvidia keeps beating every earnings call. The revenue is real, so far. Maybe it's not a bubble — maybe it's the biggest buildout ever.", "speed": 1.0 },
+    { "id": "seg-09", "shot": 9, "text": "Bubble? Or revolution? Nobody knows yet. Mr. WhyLab — we ask why.", "speed": 0.97 }
+  ]
+}
