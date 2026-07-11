@@ -15,14 +15,32 @@ MUSTARD = (217, 164, 65)
 RED     = (172, 58, 50)
 LABEL   = (246, 240, 226)
 
-SERIF_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf"
-SERIF      = "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf"
+# ฟอนต์ serif: ลองตามลำดับ (Linux → Windows) ใช้ตัวแรกที่เปิดได้
+_FONT_CANDIDATES = {
+    True: [  # bold
+        "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
+        r"C:\Windows\Fonts\georgiab.ttf",
+        r"C:\Windows\Fonts\timesbd.ttf",
+    ],
+    False: [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
+        r"C:\Windows\Fonts\georgia.ttf",
+        r"C:\Windows\Fonts\times.ttf",
+    ],
+}
 
 _font_cache = {}
 def font(size, bold=True):
     key = (size, bold)
     if key not in _font_cache:
-        _font_cache[key] = ImageFont.truetype(SERIF_BOLD if bold else SERIF, size)
+        for p in _FONT_CANDIDATES[bold]:
+            try:
+                _font_cache[key] = ImageFont.truetype(p, size)
+                break
+            except OSError:
+                continue
+        else:
+            _font_cache[key] = ImageFont.load_default()
     return _font_cache[key]
 
 
