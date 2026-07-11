@@ -1,0 +1,23 @@
+{
+  "comment": "เสียงบรรยาย 'Why Is Speed CRYING Over Ronaldo?' — ช็อต 10 และ 18 ไม่มีในนี้เพราะใช้เสียงจริงจากฟุตเทจ",
+  "defaults": { "speed": 1.1, "stability": 0.3, "similarity_boost": 0.75, "style": 0.8 },
+  "segments": [
+    { "id": "seg-01", "shot": 1,  "text": "Why is this grown man CRYING over Ronaldo?" },
+    { "id": "seg-02", "shot": 2,  "text": "To understand, go back to 2022." },
+    { "id": "seg-03", "shot": 3,  "text": "Speed sees Ronaldo — and falls in love instantly." },
+    { "id": "seg-04", "shot": 4,  "text": "He even makes a whole song about him." },
+    { "id": "seg-05", "shot": 5,  "text": "So he flies across the world to meet him." },
+    { "id": "seg-06", "shot": 6,  "text": "Old Trafford? Ronaldo doesn't play." },
+    { "id": "seg-07", "shot": 7,  "text": "Even Qatar? Benched." },
+    { "id": "seg-08", "shot": 8,  "text": "Then — June 2023. Lisbon." },
+    { "id": "seg-09", "shot": 9,  "text": "Rafael Leao spots him, and stops Ronaldo's car." },
+    { "id": "seg-11", "shot": 11, "text": "He even tattoos Ronaldo on his arm." },
+    { "id": "seg-12", "shot": 12, "text": "Now 2026 — Ronaldo's LAST World Cup ever." },
+    { "id": "seg-13", "shot": 13, "text": "Speed follows every single match." },
+    { "id": "seg-14", "shot": 14, "text": "Backflips when he scores. Tears of joy." },
+    { "id": "seg-15", "shot": 15, "text": "Then, July 6th. Spain wins, one nil.", "speed": 1.0 },
+    { "id": "seg-16", "shot": 16, "text": "Ronaldo's World Cup dream is over. Forever.", "speed": 0.95 },
+    { "id": "seg-17", "shot": 17, "text": "Speed looks up at the big screen, and says —", "speed": 1.0 },
+    { "id": "seg-19", "shot": 19, "text": "Greatest fan in football history — or just content? You decide.", "speed": 1.0 }
+  ]
+}

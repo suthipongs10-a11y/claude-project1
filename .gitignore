@@ -1,0 +1,16 @@
+# ห้าม commit เด็ดขาด — API keys
+**/.env
+
+# ฟุตเทจดาวน์โหลด: ใหญ่เกิน GitHub limit + ลิขสิทธิ์ของเจ้าของคลิป
+projects/*/footage/
+*.mp4
+
+# metadata ใหญ่จาก yt-dlp
+*.info.json
+
+# backup ของ CapCut (อยู่นอกโปรเจกต์อยู่แล้ว แต่กันไว้)
+_backups/
+
+# ไฟล์ชั่วคราว
+*.zip
+__pycache__/

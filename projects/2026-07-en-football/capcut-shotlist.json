@@ -1,0 +1,42 @@
+{
+  "audio": [
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-01.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-02.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-03.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-04.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-05.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-06.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-07.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-08.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-09.mp3", "gap": 2.62},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-11.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-12.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-13.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-14.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-15.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-16.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-17.mp3", "gap": 3.62},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/elevenlabs/audio/seg-19.mp3"}
+  ],
+  "shots": [
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/01-crying-hook.mp4", "duration": 2.65, "source_start": 0, "scale": 1.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/02-qatar-2022-cries.mp4", "duration": 2.76, "source_start": 0, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/02-qatar-2022-cries.mp4", "duration": 3.36, "source_start": 60, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/03-sewey-mv.mp4", "duration": 2.29, "source_start": 30, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/10-qatar-benched-tiktok1.mp4", "duration": 2.44, "source_start": 0, "scale": 1.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/02-qatar-2022-cries.mp4", "duration": 2.39, "source_start": 300, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/11-qatar-benched-tiktok2.mp4", "duration": 1.82, "source_start": 0, "scale": 1.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/04-meets-ronaldo-lisbon.mp4", "duration": 2.94, "source_start": 0, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/04-meets-ronaldo-lisbon.mp4", "duration": 3.31, "source_start": 420, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/04-meets-ronaldo-lisbon.mp4", "duration": 2.50, "source_start": 430, "scale": 2.0, "mute": false},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/05-tattoo.mp4", "duration": 2.16, "source_start": 5, "scale": 1.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/09-last-game-react.mp4", "duration": 3.65, "source_start": 60, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/07-croatia-goal-react.mp4", "duration": 2.24, "source_start": 0, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/06-backflip-croatia.mp4", "duration": 2.89, "source_start": 10, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/08-spain-cries-clip.mp4", "duration": 3.88, "source_start": 0, "scale": 1.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/09-last-game-react.mp4", "duration": 4.14, "source_start": 600, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/01-crying-hook.mp4", "duration": 2.44, "source_start": 5, "scale": 1.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/01-crying-hook.mp4", "duration": 3.50, "source_start": 10, "scale": 1.0, "mute": false},
+    {"file": "C:/Work/VideoTest/projects/2026-07-en-football/footage/01-crying-hook.mp4", "duration": 5.28, "source_start": 20, "scale": 1.0}
+  ]
+}

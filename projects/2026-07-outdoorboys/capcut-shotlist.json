@@ -1,0 +1,42 @@
+{
+  "audio": [
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-01.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-02.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-03.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-04.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-05.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-06.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-07.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-08.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-09.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-10.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-11.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-12.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-13.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-14.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-15.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-16.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-17.mp3"},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/elevenlabs/audio/seg-18.mp3"}
+  ],
+  "shots": [
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/footage/01-goodbye-video.mp4", "duration": 2.99, "source_start": 5, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g01-lawyer.png", "duration": 1.82},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/footage/02-comeback-twinlakes.mp4", "duration": 3.36, "source_start": 300, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/footage/02-comeback-twinlakes.mp4", "duration": 2.76, "source_start": 600, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g02-subs-chart.png", "duration": 2.65},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g03-100hours.png", "duration": 2.71},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g04-4billion.png", "duration": 3.41},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g05-kids.png", "duration": 2.39},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/footage/01-goodbye-video.mp4", "duration": 4.06, "source_start": 0, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g07-onpurpose.png", "duration": 3.12},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g06-headlines.png", "duration": 3.65},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/footage/02-comeback-twinlakes.mp4", "duration": 3.07, "source_start": 60, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/footage/02-comeback-twinlakes.mp4", "duration": 3.31, "source_start": 900, "scale": 2.0},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g08-isheback.png", "duration": 2.24},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g09-quote.png", "duration": 3.18},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g10-family.png", "duration": 2.99},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g11-20m.png", "duration": 5.14},
+    {"file": "C:/Work/VideoTest/projects/2026-07-outdoorboys/assets/g12-cta.png", "duration": 3.94}
+  ]
+}

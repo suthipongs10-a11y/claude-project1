@@ -1,0 +1,24 @@
+{
+  "comment": "เสียงบรรยาย 'The YouTuber Who Walked Away From 20 MILLION Subscribers' — ทั้ง 18 ช็อตเป็น TTS ล้วน (ไม่มีเสียงจริง)",
+  "defaults": { "speed": 1.1, "stability": 0.3, "similarity_boost": 0.75, "style": 0.8 },
+  "segments": [
+    { "id": "seg-01", "shot": 1,  "text": "This man walked away from 20 MILLION subscribers." },
+    { "id": "seg-02", "shot": 2,  "text": "By day? He's a lawyer." },
+    { "id": "seg-03", "shot": 3,  "text": "But weekends? Alaska — with his three sons." },
+    { "id": "seg-04", "shot": 4,  "text": "Camping. Fishing. Pure adventure." },
+    { "id": "seg-05", "shot": 5,  "text": "12 million new fans — in 18 months." },
+    { "id": "seg-06", "shot": 6,  "text": "But behind the views? 100-hour weeks.", "speed": 1.05 },
+    { "id": "seg-07", "shot": 7,  "text": "Thieves re-uploaded his videos — 4 BILLION views.", "speed": 1.05 },
+    { "id": "seg-08", "shot": 8,  "text": "And fame was closing in on his kids.", "speed": 1.0 },
+    { "id": "seg-09", "shot": 9,  "text": "So in May 2025, he posted one video. \"Goodbye.\"", "speed": 1.0 },
+    { "id": "seg-10", "shot": 10, "text": "At his absolute peak. On purpose.", "speed": 0.95 },
+    { "id": "seg-11", "shot": 11, "text": "Fans were heartbroken. Millions begged him to stay.", "speed": 1.05 },
+    { "id": "seg-12", "shot": 12, "text": "Then — November 2025. He came BACK." },
+    { "id": "seg-13", "shot": 13, "text": "Three final videos. 7.5 million views in days." },
+    { "id": "seg-14", "shot": 14, "text": "So… is he back for good?", "speed": 1.0 },
+    { "id": "seg-15", "shot": 15, "text": "His answer: just doing exactly what I told you.", "speed": 0.95 },
+    { "id": "seg-16", "shot": 16, "text": "No regrets. Family first. Always.", "speed": 0.95 },
+    { "id": "seg-17", "shot": 17, "text": "And his channel? Still growing. 20 million strong — without him.", "speed": 1.0 },
+    { "id": "seg-18", "shot": 18, "text": "Hero… or crazy? Could YOU walk away? Comment below.", "speed": 1.0 }
+  ]
+}
