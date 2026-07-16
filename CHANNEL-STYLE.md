@@ -13,8 +13,11 @@
 - **มาสคอท = สติ๊กแมนดำ** (ดูข้อ 2) โผล่ประจำเกือบทุกฉากในฐานะ "ผู้ถอดรหัส"
 - **ภาพ = PROMPT-ONLY** gen ฟรีใน Google Flow แล้วส่งกลับ (แนบ mascot + style-anchor
   เป็น ingredient ทุกครั้ง) — ไม่ gen ภาพเองแม้มีเครื่องมือจ่ายเงิน
-- **เสียง = ElevenLabs** เสียงไทย (โมเดล `eleven_multilingual_v2`, endpoint
-  `/with-timestamps`) — VO มาก่อนภาพเสมอ, timing มาจาก timestamp จริง
+- **เสียง = Gemini TTS (Google AI Studio)** โมเดล `gemini-2.5-flash-preview-tts`
+  (หรือ `-pro-` ถ้าอยากคุณภาพสูงสุด) เสียงไทย คุมโทนด้วย prompt ได้
+  - ⚠️ Gemini TTS **ไม่คืน timestamp** → มีขั้น **forced alignment** ต่อท้าย:
+    เอาบทที่รู้อยู่แล้ว + เสียง → align → `word-timings.json` (ดู `tts/`)
+  - **VO มาก่อนภาพเสมอ, timing มาจาก timestamp จาก alignment (ไม่ใช่เดาจากจำนวนคำ)**
 - **ประกอบ = HyperFrames**, duration จริงจาก `ffprobe`
 
 ## 1. Palette
