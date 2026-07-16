@@ -14,7 +14,9 @@
 - **ภาพ = PROMPT-ONLY** gen ฟรีใน Google Flow แล้วส่งกลับ (แนบ mascot + style-anchor
   เป็น ingredient ทุกครั้ง) — ไม่ gen ภาพเองแม้มีเครื่องมือจ่ายเงิน
 - **เสียง = Gemini TTS (Google AI Studio)** โมเดล `gemini-2.5-flash-preview-tts`
-  (หรือ `-pro-` ถ้าอยากคุณภาพสูงสุด) เสียงไทย คุมโทนด้วย prompt ได้
+  (หรือรุ่นใหม่กว่า เช่น `gemini-3.1-flash-tts-preview`) — **เสียงประจำช่อง = `Iapetus`**
+  (ชาย ทางการ น่าเชื่อถือ) คุมโทนด้วย prompt ได้ / คีย์เก็บใน env `GEMINI_API_KEY`
+  เท่านั้น ห้ามฝังในไฟล์/commit
   - ⚠️ Gemini TTS **ไม่คืน timestamp** → มีขั้น **forced alignment** ต่อท้าย:
     เอาบทที่รู้อยู่แล้ว + เสียง → align → `word-timings.json` (ดู `tts/`)
   - **VO มาก่อนภาพเสมอ, timing มาจาก timestamp จาก alignment (ไม่ใช่เดาจากจำนวนคำ)**

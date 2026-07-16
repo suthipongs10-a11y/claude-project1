@@ -65,7 +65,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--text", required=True, help="ไฟล์ .txt บทพากย์ (UTF-8)")
     ap.add_argument("--out", default="tts/samples", help="โฟลเดอร์เอาต์พุต")
-    ap.add_argument("--voice", default="Charon", help="ชื่อเสียง (โหมดเสียงเดียว)")
+    ap.add_argument("--voice", default="Iapetus", help="ชื่อเสียง (โหมดเสียงเดียว) — ช่องใช้ Iapetus")
     ap.add_argument("--name", default="voiceover", help="ชื่อไฟล์ (โหมดเสียงเดียว)")
     ap.add_argument("--model", default="gemini-2.5-flash-preview-tts")
     ap.add_argument("--ab", action="store_true",
