@@ -13,7 +13,48 @@ align เสียงทีละท่อนสั้น (~25s ซึ่งแ�
 import argparse, json, os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from align_th import tokenize_th, merge_to_words  # noqa: E402
+from align_th import tokenize_th, merge_to_words, _norm  # noqa: E402
+
+
+def merge_with_tail_fill(tokens: list, words: list, chunk_dur: float) -> list:
+    """กู้กรณี aligner พลาดเฉพาะคำท้ายท่อน (พบบ่อย: 'Failed to align the last N words')
+
+    เงื่อนไข: สตรีมอักษรของโทเคนต้องเป็น prefix ของสตรีมคำ และครอบคลุม >=90%
+    คำที่เหลือท้ายท่อนจะถูกเกลี่ยเวลาเท่าๆ กันจากจุดจบล่าสุดถึงจบท่อน
+    """
+    char_tok, stream = [], []
+    for i, t in enumerate(tokens):
+        for c in _norm(t["w"]):
+            stream.append(c)
+            char_tok.append(i)
+    stream = "".join(stream)
+    target = "".join(_norm(w) for w in words)
+
+    if not target.startswith(stream) or len(stream) < 0.9 * len(target):
+        return None
+
+    merged, pos = [], 0
+    covered = len(stream)
+    for wi, word in enumerate(words):
+        n = len(_norm(word))
+        if n == 0:
+            continue
+        if pos + n > covered:          # คำแรกที่หลุดจากช่วงที่ align ได้
+            tail_words = [w for w in words[wi:] if _norm(w)]
+            t0 = merged[-1]["end"] if merged else 0.0
+            step = max(chunk_dur - t0, 0.1) / len(tail_words)
+            for k, tw in enumerate(tail_words):
+                merged.append({
+                    "w": tw,
+                    "start": round(t0 + k * step, 3),
+                    "end": round(t0 + (k + 1) * step, 3),
+                })
+            return merged
+        first_tok = tokens[char_tok[pos]]
+        last_tok = tokens[char_tok[pos + n - 1]]
+        merged.append({"w": word, "start": first_tok["start"], "end": last_tok["end"]})
+        pos += n
+    return merged
 
 
 def main():
@@ -50,6 +91,10 @@ def main():
                     toks.append({"w": t, "start": round(w.start, 3), "end": round(w.end, 3)})
 
         merged = merge_to_words(toks, word_list)
+        if not merged:
+            merged = merge_with_tail_fill(toks, word_list, chunk["duration"])
+            if merged:
+                print(f"  ⚠️ ท่อน {n}: aligner พลาดคำท้ายท่อน — เกลี่ยเวลาคำท้ายให้แล้ว")
         if not merged:
             failed.append(n)
             print(f"  ❌ ท่อน {n}: merge ไม่สำเร็จ")
