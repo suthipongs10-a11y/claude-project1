@@ -38,11 +38,34 @@ def audio_duration(path: str) -> float:
             return 0.0
 
 
-def tokenize_th(text: str) -> str:
-    """ตัดคำไทยด้วย pythainlp แล้วคั่นด้วยช่องว่างให้ aligner เห็นขอบเขตคำ"""
+def tokenize_th(text: str) -> list:
+    """ตัดคำไทยด้วย pythainlp — คืน list คำ (ใช้ทั้งป้อน aligner และ merge ผลกลับ)"""
     from pythainlp.tokenize import word_tokenize
     words = word_tokenize(text.replace("\n", " "), engine="newmm", keep_whitespace=False)
-    return " ".join(w for w in words if w.strip())
+    return [w for w in words if w.strip()]
+
+
+def merge_to_words(tokens: list, words: list) -> list:
+    """stable-ts มักคืนผลไทยเป็นรายตัวอักษร — merge กลับเป็นคำตาม pythainlp
+
+    เดินไล่โทเคนสะสมตัวอักษรจนครบคำเป้าหมาย: start = โทเคนแรก, end = โทเคนสุดท้าย
+    ถ้าสตรีมไม่ตรงกัน (ไม่ควรเกิด) คืน None ให้ผู้เรียก fallback เป็นโทเคนดิบ
+    """
+    merged, ti = [], 0
+    for word in words:
+        target = word.replace(" ", "")
+        acc, start, end = "", None, None
+        while ti < len(tokens) and len(acc) < len(target):
+            t = tokens[ti]
+            if start is None:
+                start = t["start"]
+            acc += t["w"].replace(" ", "")
+            end = t["end"]
+            ti += 1
+        if acc != target:
+            return None
+        merged.append({"w": word, "start": start, "end": end})
+    return merged if ti == len(tokens) else None
 
 
 def main():
@@ -58,8 +81,9 @@ def main():
             sys.exit(f"ERROR: ไม่พบไฟล์ {p}")
 
     raw = open(args.text, encoding="utf-8").read().strip()
-    tokenized = tokenize_th(raw)
-    print(f"[tokenize] {len(tokenized.split())} คำ")
+    word_list = tokenize_th(raw)
+    tokenized = " ".join(word_list)
+    print(f"[tokenize] {len(word_list)} คำ")
 
     try:
         import stable_whisper
@@ -83,6 +107,14 @@ def main():
 
     if not words:
         sys.exit("ERROR: align ไม่ได้คำเลย — ลองโมเดลใหญ่ขึ้น หรือเช็คว่าบทตรงกับเสียง")
+
+    # stable-ts คืนไทยเป็นรายตัวอักษร -> รวมกลับเป็นคำตาม pythainlp
+    merged = merge_to_words(words, word_list)
+    if merged:
+        print(f"[merge] {len(words)} โทเคน -> {len(merged)} คำ")
+        words = merged
+    else:
+        print("⚠️ merge โทเคน->คำ ไม่สำเร็จ — บันทึกผลดิบแทน (เช็คว่าบทตรงกับเสียง)")
 
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:
