@@ -45,27 +45,61 @@ def tokenize_th(text: str) -> list:
     return [w for w in words if w.strip()]
 
 
+def _norm(s: str) -> str:
+    """เก็บเฉพาะอักษร/ตัวเลขไว้เทียบ — ตัดช่องว่างและเครื่องหมายวรรคตอน ("...", ! ฯลฯ)"""
+    return "".join(c for c in s if c.isalnum())
+
+
 def merge_to_words(tokens: list, words: list) -> list:
     """stable-ts มักคืนผลไทยเป็นรายตัวอักษร — merge กลับเป็นคำตาม pythainlp
 
-    เดินไล่โทเคนสะสมตัวอักษรจนครบคำเป้าหมาย: start = โทเคนแรก, end = โทเคนสุดท้าย
-    ถ้าสตรีมไม่ตรงกัน (ไม่ควรเกิด) คืน None ให้ผู้เรียก fallback เป็นโทเคนดิบ
+    เทียบแบบ character-stream (หลัง normalize ตัดวรรคตอน): สตรีมอักษรของโทเคน
+    ต้องตรงกับสตรีมอักษรของคำ แล้วแมปช่วงอักษรของแต่ละคำกลับเป็นช่วงเวลา
+    — ทนกรณีโทเคนคร่อมรอยต่อคำ และโทเคนที่เป็นวรรคตอนล้วน ("\" ส)
+    คืน None ถ้าสตรีมไม่ตรงกัน ให้ผู้เรียก fallback เป็นโทเคนดิบ
     """
-    merged, ti = [], 0
+    # สตรีมอักษรจากโทเคน: จำว่าอักษรตัวไหนมาจากโทเคนไหน
+    char_tok = []          # index ของโทเคนต่ออักษร
+    stream = []
+    for i, t in enumerate(tokens):
+        for c in _norm(t["w"]):
+            stream.append(c)
+            char_tok.append(i)
+    stream = "".join(stream)
+
+    target = "".join(_norm(w) for w in words)
+    if stream != target:
+        return None
+
+    merged, pos = [], 0
     for word in words:
-        target = word.replace(" ", "")
-        acc, start, end = "", None, None
-        while ti < len(tokens) and len(acc) < len(target):
-            t = tokens[ti]
-            if start is None:
-                start = t["start"]
-            acc += t["w"].replace(" ", "")
-            end = t["end"]
-            ti += 1
-        if acc != target:
-            return None
-        merged.append({"w": word, "start": start, "end": end})
-    return merged if ti == len(tokens) else None
+        n = len(_norm(word))
+        if n == 0:          # คำที่เป็นวรรคตอนล้วน — ข้าม ไม่มีประโยชน์เชิงเวลา
+            continue
+        first_tok = tokens[char_tok[pos]]
+        last_tok = tokens[char_tok[pos + n - 1]]
+        merged.append({"w": word, "start": first_tok["start"], "end": last_tok["end"]})
+        pos += n
+    return merged
+
+
+def quality_report(words: list, dur: float) -> bool:
+    """ตรวจสุขภาพ alignment — คืน True ถ้าน่าเชื่อถือ"""
+    zero = sum(1 for w in words if w["end"] - w["start"] <= 0)
+    jumps = [
+        (words[i - 1]["end"], words[i]["start"])
+        for i in range(1, len(words))
+        if words[i]["start"] - words[i - 1]["end"] > 3.0
+    ]
+    zero_pct = zero / len(words) * 100
+    print(f"[quality] zero-duration {zero}/{len(words)} ({zero_pct:.0f}%) | ช่วงกระโดด>3s: {len(jumps)}")
+    ok = zero_pct < 25 and len(jumps) <= 1
+    if not ok:
+        print("       ❌ alignment ไม่น่าเชื่อถือ (aligner หลุดราง — พบบ่อยกับเสียงยาว+โมเดลเล็ก)")
+        print("       ทางแก้: รันใหม่ด้วย --model large-v3 (แม่นขึ้นมาก ช้าลงหน่อย)")
+        if jumps:
+            print(f"       จุดกระโดดแรกๆ: {jumps[:5]}")
+    return ok
 
 
 def main():
@@ -125,6 +159,8 @@ def main():
     print(f"       คำแรก={words[0]['start']}s  คำสุดท้ายจบ={words[-1]['end']}s  เสียงยาว={dur:.2f}s")
     if dur and words[-1]["end"] > dur + 0.5:
         print("       ⚠️ เวลาคำสุดท้ายเกินความยาวเสียง — alignment อาจเพี้ยน ตรวจดู")
+    if not quality_report(words, dur):
+        sys.exit(2)
 
 
 if __name__ == "__main__":
