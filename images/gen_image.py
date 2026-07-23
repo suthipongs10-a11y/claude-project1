@@ -160,9 +160,11 @@ def main():
     ap.add_argument("--base-url", default=os.environ.get("DASHSCOPE_BASE"),
                     help="base URL (ดีฟอลต์ env DASHSCOPE_BASE / host ของ Token Plan)")
     ap.add_argument("--negative",
-                    default=("photorealistic, 3d render, realistic texture, gradient mesh, "
-                             "photograph, embedded text, letters, words, thai text, caption, "
-                             "watermark, signature, colored mascot, mascot with colored body, "
+                    default=("text, letters, words, numbers, captions, labels, title, "
+                             "character name, watermark, signature, handwriting, gibberish text, "
+                             "writing, typography, subtitles, "
+                             "photorealistic, 3d render, realistic texture, gradient mesh, "
+                             "photograph, colored mascot, mascot with colored body, "
                              "extra mascot faces, deformed face, blurry, cluttered"),
                     help="negative prompt ร่วมทุกช็อต (มีค่าเริ่มต้นกันตัวหนังสือ/ภาพจริง/มาสคอตเพี้ยน)")
     ap.add_argument("--style-file", default="CHANNEL-STYLE.md",

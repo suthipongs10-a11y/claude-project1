@@ -46,7 +46,7 @@
 
 ## 2. MASCOT — CHARLOCK (ล็อกตัวละคร — ใส่ verbatim ทุกช็อตที่มีมาสคอท)
 
-> CHARLOCK: a solid black stick-figure mascot — round white face with a bold black
+> The mascot is a solid black stick-figure — round white face with a bold black
 > outline, messy tall spiky black anime hair with a few thin white highlight
 > streaks, two angular determined eyes, a tiny short-line mouth, a small black "x"
 > stitch mark on the LEFT cheek, thin single-line black stick arms and legs, small
@@ -65,7 +65,9 @@
 > mascot stays pure solid black, slight sketchy hand-drawn wobble, clean warm
 > off-white paper background (#F6F1E7), generous negative space, fun energetic
 > science-explainer vibe, NOT photorealistic, no heavy gradients, no realistic
-> texture. 16:9.
+> texture. ABSOLUTELY NO text, no letters, no words, no numbers, no labels, no
+> captions, no signatures, no writing of ANY kind anywhere in the image — keep all
+> signs, screens, boards and menus completely blank. 16:9.
 
 ## 4. Captions (ใส่คำบ่อยขึ้น — จุดขายของช่อง)
 
