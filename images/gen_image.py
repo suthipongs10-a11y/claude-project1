@@ -61,14 +61,15 @@ def submit(host: str, key: str, model: str, prompt: str,
            negative: str, size: str, use_async: bool):
     """POST สร้างงาน — คืน (url, task_id): sync ได้ url เลย, async ได้ task_id"""
     import requests
+    # wan2.7 image-generation/generation รับ prompt แบบ messages (มัลติโมดัล)
     body = {
         "model": model,
-        "input": {"prompt": prompt},
+        "input": {"messages": [{"role": "user", "content": [{"text": prompt}]}]},
         "parameters": {"size": size, "n": 1,
                        "prompt_extend": False, "watermark": False},
     }
     if negative:
-        body["input"]["negative_prompt"] = negative
+        body["parameters"]["negative_prompt"] = negative
     headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
     if use_async:
         headers["X-DashScope-Async"] = "enable"
@@ -168,8 +169,9 @@ def main():
                     help="ดึง STYLE+CHARLOCK มาต่อท้าย prompt (ตั้ง '' เพื่อปิด)")
     ap.add_argument("--region", default=None, choices=["intl", "cn"],
                     help="ใช้ host DashScope ทั่วไป (ไม่ใช่ Token Plan)")
-    ap.add_argument("--async", dest="use_async", action="store_true",
-                    help="ยิงแบบ async+poll (ดีฟอลต์ sync; Token Plan รองรับเฉพาะ sync)")
+    ap.add_argument("--sync", dest="use_async", action="store_false",
+                    help="ยิงแบบ sync (ดีฟอลต์ async+poll ตามที่ wan2.7 Token Plan ต้องการ)")
+    ap.set_defaults(use_async=True)
     args = ap.parse_args()
 
     key = os.environ.get("DASHSCOPE_API_KEY")
