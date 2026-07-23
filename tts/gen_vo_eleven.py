@@ -61,10 +61,12 @@ def tts_with_timestamps(key: str, voice_id: str, text: str,
         "voice_settings": {"stability": 0.5},
     }
     # ส่งบริบทท่อนข้างเคียงให้โทนเสียงต่อเนื่อง ไม่สะดุดตรงรอยต่อ
-    if prev_text:
-        body["previous_text"] = prev_text
-    if next_text:
-        body["next_text"] = next_text
+    # (eleven_v3 ยังไม่รองรับ previous_text/next_text — ข้ามไปสำหรับรุ่นนี้)
+    if not model.startswith("eleven_v3"):
+        if prev_text:
+            body["previous_text"] = prev_text
+        if next_text:
+            body["next_text"] = next_text
     r = requests.post(
         f"{API}/text-to-speech/{voice_id}/with-timestamps",
         params={"output_format": "mp3_44100_128"},
