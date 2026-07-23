@@ -126,7 +126,12 @@ def main():
     ap.add_argument("--outdir", help="โฟลเดอร์ผลลัพธ์ (โหมด --pack), ตั้งชื่อไฟล์จาก id")
     ap.add_argument("--model", default="qwen-image", help="qwen-image / qwen-image-plus")
     ap.add_argument("--size", default="1664*928", help="16:9=1664*928, 1:1=1328*1328")
-    ap.add_argument("--negative", default="", help="negative prompt ร่วมทุกช็อต")
+    ap.add_argument("--negative",
+                    default=("photorealistic, 3d render, realistic texture, gradient mesh, "
+                             "photograph, embedded text, letters, words, thai text, caption, "
+                             "watermark, signature, colored mascot, mascot with colored body, "
+                             "extra mascot faces, deformed face, blurry, cluttered"),
+                    help="negative prompt ร่วมทุกช็อต (มีค่าเริ่มต้นกันตัวหนังสือ/ภาพจริง/มาสคอตเพี้ยน)")
     ap.add_argument("--style-file", default="CHANNEL-STYLE.md",
                     help="ดึง STYLE+CHARLOCK มาต่อท้าย prompt (ตั้ง '' เพื่อปิด)")
     ap.add_argument("--region", default="intl", choices=["intl", "cn"])
