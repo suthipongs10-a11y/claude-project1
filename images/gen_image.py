@@ -40,8 +40,25 @@ CREATE_PATH = "/api/v1/services/aigc/text2image/image-synthesis"
 TASK_PATH = "/api/v1/tasks/{task_id}"
 
 
-def create_task(host: str, key: str, model: str, prompt: str,
-                negative: str, size: str) -> str:
+def _first_url(out: dict):
+    """ดึง url รูปจาก output หลายทรง (sync/async ตอบต่างกัน) — ไม่เจอคืน None"""
+    for item in (out.get("results") or []):
+        if isinstance(item, dict) and item.get("url"):
+            return item["url"]
+    if out.get("url"):
+        return out["url"]
+    # เผื่อทรง choices/message.content
+    for ch in (out.get("choices") or []):
+        content = (ch.get("message") or {}).get("content") or []
+        for c in content if isinstance(content, list) else []:
+            if isinstance(c, dict) and c.get("image"):
+                return c["image"]
+    return None
+
+
+def submit(host: str, key: str, model: str, prompt: str,
+           negative: str, size: str, use_async: bool):
+    """POST สร้างงาน — คืน (url, task_id): sync ได้ url เลย, async ได้ task_id"""
     import requests
     body = {
         "model": model,
@@ -51,20 +68,22 @@ def create_task(host: str, key: str, model: str, prompt: str,
     }
     if negative:
         body["input"]["negative_prompt"] = negative
-    r = requests.post(
-        host + CREATE_PATH,
-        headers={"Authorization": f"Bearer {key}",
-                 "X-DashScope-Async": "enable",
-                 "Content-Type": "application/json"},
-        json=body, timeout=60,
-    )
+    headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+    if use_async:
+        headers["X-DashScope-Async"] = "enable"
+    # sync ต้องรอโมเดล gen จริง -> timeout ยาว
+    r = requests.post(host + CREATE_PATH, headers=headers, json=body,
+                      timeout=(60 if use_async else 240))
     if r.status_code != 200:
         raise RuntimeError(f"create HTTP {r.status_code}: {r.text[:400]}")
     out = r.json().get("output", {})
+    url = _first_url(out)
+    if url:
+        return url, None
     tid = out.get("task_id")
-    if not tid:
-        raise RuntimeError(f"ไม่มี task_id ในผลลัพธ์: {r.text[:400]}")
-    return tid
+    if tid:
+        return None, tid
+    raise RuntimeError(f"ไม่มีทั้ง url และ task_id: {r.text[:500]}")
 
 
 def poll_task(host: str, key: str, task_id: str, timeout_s: int = 300) -> str:
@@ -80,10 +99,9 @@ def poll_task(host: str, key: str, task_id: str, timeout_s: int = 300) -> str:
         out = r.json().get("output", {})
         status = out.get("task_status")
         if status == "SUCCEEDED":
-            results = out.get("results", [])
-            for item in results:
-                if item.get("url"):
-                    return item["url"]
+            url = _first_url(out)
+            if url:
+                return url
             raise RuntimeError(f"SUCCEEDED แต่ไม่มี url: {r.text[:400]}")
         if status in ("FAILED", "CANCELED", "UNKNOWN"):
             raise RuntimeError(f"task {status}: {out.get('message') or r.text[:400]}")
@@ -120,10 +138,11 @@ def load_style_suffix(style_file: str) -> str:
     return " ".join(b for b in blocks if b)
 
 
-def gen_one(host, key, model, prompt, negative, size, out_path):
-    tid = create_task(host, key, model, prompt, negative, size)
-    print(f"    task={tid} รอ...", flush=True)
-    url = poll_task(host, key, tid)
+def gen_one(host, key, model, prompt, negative, size, out_path, use_async):
+    url, tid = submit(host, key, model, prompt, negative, size, use_async)
+    if tid:  # async -> ต้อง poll
+        print(f"    task={tid} รอ...", flush=True)
+        url = poll_task(host, key, tid)
     download(url, out_path)
     print(f"    ✅ {out_path}")
 
@@ -148,6 +167,8 @@ def main():
                     help="ดึง STYLE+CHARLOCK มาต่อท้าย prompt (ตั้ง '' เพื่อปิด)")
     ap.add_argument("--region", default=None, choices=["intl", "cn"],
                     help="ใช้ host DashScope ทั่วไป (ไม่ใช่ Token Plan)")
+    ap.add_argument("--async", dest="use_async", action="store_true",
+                    help="ยิงแบบ async+poll (ดีฟอลต์ sync; Token Plan รองรับเฉพาะ sync)")
     args = ap.parse_args()
 
     key = os.environ.get("DASHSCOPE_API_KEY")
@@ -161,7 +182,7 @@ def main():
     # host: --base-url/env > --region (dashscope ทั่วไป) > DEFAULT_BASE (Token Plan)
     host = args.base_url or (REGION_HOST[args.region] if args.region else DEFAULT_BASE)
     host = host.rstrip("/")
-    print(f"[host] {host} | model {args.model}")
+    print(f"[host] {host} | model {args.model} | {'async' if args.use_async else 'sync'}")
     suffix = load_style_suffix(args.style_file)
     if suffix:
         print(f"[style] ต่อท้าย prompt ทุกช็อต ({len(suffix)} ตัวอักษร)")
@@ -184,7 +205,8 @@ def main():
             print(f"[{i}/{len(pack)}] {sid}")
             try:
                 gen_one(host, key, args.model, full(shot["prompt"]),
-                        shot.get("negative", args.negative), args.size, out_path)
+                        shot.get("negative", args.negative), args.size, out_path,
+                        args.use_async)
             except Exception as e:
                 print(f"    ❌ {sid}: {e}")
                 failed.append(sid)
@@ -196,7 +218,7 @@ def main():
     if not (args.prompt and args.out):
         sys.exit("ERROR: ใช้ --prompt+--out (เดี่ยว) หรือ --pack+--outdir (แพ็ก)")
     gen_one(host, key, args.model, full(args.prompt), args.negative,
-            args.size, args.out)
+            args.size, args.out, args.use_async)
 
 
 if __name__ == "__main__":
