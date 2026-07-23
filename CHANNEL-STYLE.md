@@ -16,8 +16,10 @@
 - **เสียง = ElevenLabs `eleven_v3`** (รองรับภาษาไทย) ผ่าน endpoint
   `/with-timestamps` — คืน **เสียง + timestamp รายตัวอักษร** ในคำสั่งเดียว
   → `tts/gen_vo_eleven.py` แปลงเป็น `word-timings.json` โดยตรง
-  **ไม่ต้องใช้ whisper/forced alignment อีก** / เสียงประจำช่อง = *(รอล็อก voice_id)*
-  / คีย์เก็บใน env `ELEVENLABS_API_KEY` เท่านั้น ห้ามฝังในไฟล์/commit
+  **ไม่ต้องใช้ whisper/forced alignment อีก**
+  - **เสียงประจำช่อง = `Brian` (voice_id `nPczCjzI2devNBz1zQrb`)** — ชายทุ้ม
+    น่าเชื่อถือ อบอุ่น (Deep, Resonant and Comforting) ผ่านการฟังจริงแล้ว
+  - คีย์เก็บใน env `ELEVENLABS_API_KEY` เท่านั้น ห้ามฝังในไฟล์/commit
   - **VO มาก่อนภาพเสมอ, timing มาจาก timestamp ของ API (ไม่ใช่เดาจากจำนวนคำ)**
   - *(สาย Gemini TTS + forced alignment เดิมยังอยู่ใน `tts/` เป็น fallback)*
 - **ประกอบ = HyperFrames**, duration จริงจาก `ffprobe`
