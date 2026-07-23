@@ -1,23 +1,31 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-gen_qwen.py — สร้างภาพช็อตด้วย Qwen-Image (DashScope / Alibaba Model Studio)
+gen_image.py — สร้างภาพช็อตด้วย Wan (DashScope / Alibaba Model Studio)
 
 DashScope image API เป็นแบบ async: POST สร้าง task -> ได้ task_id -> poll จน
 SUCCEEDED -> โหลดรูปจาก url สคริปต์นี้ห่อครบทั้งวงจร + ใส่ STYLE/CHARLOCK ให้
 อัตโนมัติ (อ่านจาก CHANNEL-STYLE.md ผ่าน --style-file) เพื่อคุมสไตล์ทุกช็อต
 
-ใช้ (ทีละภาพ):
-  set DASHSCOPE_API_KEY=sk-...        (PowerShell: $env:DASHSCOPE_API_KEY="sk-...")
-  python images/gen_qwen.py --prompt "ข้อความ prompt" --out images/out/test.png
+โมเดลสร้างภาพ = Wan (`wan2.7-image` / `wan2.7-image-pro`) — Qwen-Image ไม่มีในแพลน
+NOTE: image gen ใช้ได้เฉพาะ native async path นี้ ไม่ใช่ OpenAI-compatible (/compatible-mode)
 
-ใช้ (ยิงทั้งแพ็กจาก prompts.json = [{"id":"s01","prompt":"..."}, ...]):
-  python images/gen_qwen.py --pack projects/video-01-blackhole/PROMPTS.json \
+ตั้งค่าคีย์ + host (Token Plan ใช้ host ของแพลนเอง):
+  PowerShell:
+    $env:DASHSCOPE_API_KEY="sk-sp-..."
+    $env:DASHSCOPE_BASE="https://token-plan.ap-southeast-1.maas.aliyuncs.com"
+
+ใช้ (ทีละภาพ):
+  python images/gen_image.py --prompt "prompt" --out images/out/test.png
+
+ใช้ (ยิงทั้งแพ็ก prompts.json = [{"id":"img01","prompt":"..."}, ...]):
+  python images/gen_image.py --pack projects/video-01-blackhole/PROMPTS.json \
       --outdir projects/video-01-blackhole/frames
 
 หมายเหตุ:
   - ค่าเริ่มต้น 16:9 (1664*928) ตามสเปกช่อง
-  - endpoint intl (นอกจีนแผ่นดินใหญ่); ใช้ --region cn ถ้าคีย์อยู่แผ่นดินใหญ่
+  - host: --base-url หรือ env DASHSCOPE_BASE (ดีฟอลต์ host ของ Token Plan)
+    ถ้าเป็นคีย์ DashScope ทั่วไป ใช้ --region intl/cn ได้
   - watermark ปิด, prompt_extend ปิด (เราคุม prompt เอง ไม่ให้โมเดลแต่งเพิ่ม)
 """
 import argparse, json, os, sys, time, urllib.request
@@ -26,6 +34,8 @@ REGION_HOST = {
     "intl": "https://dashscope-intl.aliyuncs.com",
     "cn": "https://dashscope.aliyuncs.com",
 }
+# Token Plan (sk-sp-...) ยิง native path บน host ของแพลนเอง
+DEFAULT_BASE = "https://token-plan.ap-southeast-1.maas.aliyuncs.com"
 CREATE_PATH = "/api/v1/services/aigc/text2image/image-synthesis"
 TASK_PATH = "/api/v1/tasks/{task_id}"
 
@@ -124,8 +134,10 @@ def main():
     ap.add_argument("--out", help="path ไฟล์ภาพผลลัพธ์ (โหมด prompt เดี่ยว)")
     ap.add_argument("--pack", help="prompts.json = [{id, prompt, [negative]}]")
     ap.add_argument("--outdir", help="โฟลเดอร์ผลลัพธ์ (โหมด --pack), ตั้งชื่อไฟล์จาก id")
-    ap.add_argument("--model", default="qwen-image", help="qwen-image / qwen-image-plus")
+    ap.add_argument("--model", default="wan2.7-image", help="wan2.7-image / wan2.7-image-pro")
     ap.add_argument("--size", default="1664*928", help="16:9=1664*928, 1:1=1328*1328")
+    ap.add_argument("--base-url", default=os.environ.get("DASHSCOPE_BASE"),
+                    help="base URL (ดีฟอลต์ env DASHSCOPE_BASE / host ของ Token Plan)")
     ap.add_argument("--negative",
                     default=("photorealistic, 3d render, realistic texture, gradient mesh, "
                              "photograph, embedded text, letters, words, thai text, caption, "
@@ -134,7 +146,8 @@ def main():
                     help="negative prompt ร่วมทุกช็อต (มีค่าเริ่มต้นกันตัวหนังสือ/ภาพจริง/มาสคอตเพี้ยน)")
     ap.add_argument("--style-file", default="CHANNEL-STYLE.md",
                     help="ดึง STYLE+CHARLOCK มาต่อท้าย prompt (ตั้ง '' เพื่อปิด)")
-    ap.add_argument("--region", default="intl", choices=["intl", "cn"])
+    ap.add_argument("--region", default=None, choices=["intl", "cn"],
+                    help="ใช้ host DashScope ทั่วไป (ไม่ใช่ Token Plan)")
     args = ap.parse_args()
 
     key = os.environ.get("DASHSCOPE_API_KEY")
@@ -145,7 +158,10 @@ def main():
     except ImportError:
         sys.exit("ERROR: pip install requests")
 
-    host = REGION_HOST[args.region]
+    # host: --base-url/env > --region (dashscope ทั่วไป) > DEFAULT_BASE (Token Plan)
+    host = args.base_url or (REGION_HOST[args.region] if args.region else DEFAULT_BASE)
+    host = host.rstrip("/")
+    print(f"[host] {host} | model {args.model}")
     suffix = load_style_suffix(args.style_file)
     if suffix:
         print(f"[style] ต่อท้าย prompt ทุกช็อต ({len(suffix)} ตัวอักษร)")

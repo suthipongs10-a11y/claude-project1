@@ -11,8 +11,11 @@
 - **สไตล์ภาพ = "Sticky Line" (colored doodle explainer):** เส้นวาดมือ doodle
   เส้นดำหนาเท่ากัน ลงสีสดในเส้น (โทนมาร์กเกอร์/เครยอง) พื้นกระดาษออฟไวท์ สนุก
 - **มาสคอท = สติ๊กแมนดำ** (ดูข้อ 2) โผล่ประจำเกือบทุกฉากในฐานะ "ผู้ถอดรหัส"
-- **ภาพ = PROMPT-ONLY** gen ฟรีใน Google Flow แล้วส่งกลับ (แนบ mascot + style-anchor
-  เป็น ingredient ทุกครั้ง) — ไม่ gen ภาพเองแม้มีเครื่องมือจ่ายเงิน
+- **ภาพ = Wan (`wan2.7-image`) ผ่าน DashScope Token Plan** — gen ด้วย API
+  (`images/gen_image.py`) ฝังบล็อก CHARLOCK + STYLE ทุก prompt อัตโนมัติ
+  16:9 (1664×928) เว้นที่ caption / native async endpoint (ไม่ใช่ OpenAI-compat)
+  / คีย์ `DASHSCOPE_API_KEY` (`sk-sp-...`) + `DASHSCOPE_BASE` เก็บใน env เท่านั้น
+  - *(Qwen-Image ไม่มีในแพลน; สาย Google Flow prompt-only เดิมเป็น fallback ถ้าต้องการ)*
 - **เสียง = ElevenLabs `eleven_v3`** (รองรับภาษาไทย) ผ่าน endpoint
   `/with-timestamps` — คืน **เสียง + timestamp รายตัวอักษร** ในคำสั่งเดียว
   → `tts/gen_vo_eleven.py` แปลงเป็น `word-timings.json` โดยตรง
