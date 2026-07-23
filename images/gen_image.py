@@ -36,7 +36,8 @@ REGION_HOST = {
 }
 # Token Plan (sk-sp-...) ยิง native path บน host ของแพลนเอง
 DEFAULT_BASE = "https://token-plan.ap-southeast-1.maas.aliyuncs.com"
-CREATE_PATH = "/api/v1/services/aigc/text2image/image-synthesis"
+# wan2.7-image / qwen-image ใช้ path นี้ (text2image/image-synthesis = ของ wanx รุ่นเก่า)
+CREATE_PATH = "/api/v1/services/aigc/image-generation/generation"
 TASK_PATH = "/api/v1/tasks/{task_id}"
 
 
