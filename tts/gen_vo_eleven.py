@@ -51,13 +51,13 @@ def split_chunks(text: str) -> list:
 
 
 def tts_with_timestamps(key: str, voice_id: str, text: str,
-                        prev_text: str, next_text: str) -> dict:
+                        prev_text: str, next_text: str, model: str) -> dict:
     """เรียก /with-timestamps — คืน dict ที่มี audio_base64 + alignment รายตัวอักษร"""
     import requests
     body = {
         "text": text,
-        "model_id": "eleven_v3",
-        # stability ของ v3 รับเฉพาะ 0.0/0.5/1.0 — 0.5 = Natural เหมาะกับสารคดี
+        "model_id": model,
+        # stability 0.5 = Natural เหมาะกับสารคดี (v3 รับเฉพาะ 0.0/0.5/1.0)
         "voice_settings": {"stability": 0.5},
     }
     # ส่งบริบทท่อนข้างเคียงให้โทนเสียงต่อเนื่อง ไม่สะดุดตรงรอยต่อ
@@ -130,7 +130,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--text", help="ไฟล์บทพากย์ (UTF-8)")
     ap.add_argument("--outdir", help="โฟลเดอร์ clips ของคลิป")
-    ap.add_argument("--voice-id", help="voice_id จาก ElevenLabs (ดูด้วย --list-voices)")
+    ap.add_argument("--voice-id", default=os.environ.get("VOICE_ID"),
+                    help="voice_id (ดีฟอลต์อ่านจาก env VOICE_ID / ดูด้วย --list-voices)")
+    ap.add_argument("--model", default="eleven_v3",
+                    help="eleven_v3 (มีไทย) หรือ eleven_multilingual_v2 (ไทย+timestamps ชัวร์)")
     ap.add_argument("--only", type=int, default=0,
                     help="re-gen เฉพาะท่อนหมายเลขนี้ (ท่อนอื่นใช้ไฟล์เดิม)")
     ap.add_argument("--list-voices", action="store_true", help="แสดง voice ในบัญชีแล้วจบ")
@@ -149,7 +152,9 @@ def main():
         list_voices(key)
         return
     if not (args.text and args.outdir and args.voice_id):
-        sys.exit("ERROR: ต้องระบุ --text --outdir --voice-id (หรือใช้ --list-voices)")
+        sys.exit("ERROR: ต้องระบุ --text --outdir และ --voice-id "
+                 "(หรือตั้ง env VOICE_ID / ใช้ --list-voices)")
+    print(f"[cfg] voice={args.voice_id} model={args.model}")
 
     text = open(args.text, encoding="utf-8").read().strip()
     chunks = split_chunks(text)
@@ -171,7 +176,7 @@ def main():
         last_err = None
         for attempt in range(3):
             try:
-                res = tts_with_timestamps(key, args.voice_id, chunk, prev_text, next_text)
+                res = tts_with_timestamps(key, args.voice_id, chunk, prev_text, next_text, args.model)
                 words = chars_to_words(res["alignment"], chunk)
                 with open(mp3, "wb") as f:
                     f.write(base64.b64decode(res["audio_base64"]))
