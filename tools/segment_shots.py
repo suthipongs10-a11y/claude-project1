@@ -82,7 +82,12 @@ def split_long(start, end, words, wi):
 
 
 def main():
-    ap_dir = os.path.join(ROOT, "projects/video-01-blackhole")
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--project", default="projects/video-01-blackhole",
+                    help="โฟลเดอร์โปรเจกต์ (มี clips/narration.txt + word-timings.json)")
+    args = ap.parse_args()
+    ap_dir = os.path.join(ROOT, args.project) if not os.path.isabs(args.project) else args.project
     words = json.load(open(os.path.join(ap_dir, "clips/word-timings.json"), encoding="utf-8"))
     lines = load_lines_with_acts(os.path.join(ap_dir, "clips/narration.txt"))
     total = words[-1]["end"]
