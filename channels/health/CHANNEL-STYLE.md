@@ -40,13 +40,18 @@
 
 > STYLE: clean modern flat vector illustration, smooth rounded friendly shapes,
 > soft bold outlines, simple flat fills with gentle soft shading, calm health
-> palette (mint teal, soft sky blue, coral accents) on a very light mint-white
-> background (#F4FBF9), lots of clean whitespace, reassuring caring trustworthy
-> mood, NOT scary or clinical. NOT photorealistic, no gradient mesh, no realistic
-> texture. ABSOLUTELY NO text, letters, words, numbers, labels or writing of any
-> kind anywhere in the image — keep all charts, screens and bottles blank. 16:9.
+> palette (mint teal, soft sky blue, coral accents). ALWAYS give a simple soft
+> BACKGROUND setting (clinic room, kitchen, home, park, or a soft mint scene with
+> light context) — avoid a totally plain empty background, but keep it clean and
+> uncluttered with open low-detail areas. Reassuring caring trustworthy mood, NOT
+> scary or clinical. NOT photorealistic, no gradient mesh, no realistic texture.
+> Do NOT draw blank charts, empty signboards or reserved text boxes; a few short
+> real words on a bottle are fine, but avoid long text or garbled letters. 16:9.
 
 ## 4. Captions / Labels / Punch
-- **ฟอนต์ = Kanit** · caption ไฮไลต์มิ้นต์/คอรัล · ~35–45% ของช็อต
-- **LABELS:** ชื่ออวัยวะ/โรค/สารอาหาร/ค่าต่าง ๆ ใส่ป้ายชื่อไทยกำกับ (จุดขายความรู้)
+- **ฟอนต์ = Mali** (`assets/fonts/Mali-Bold.ttf`) — นุ่มมน อ่อนโยน น่าไว้ใจ เอกลักษณ์ช่อง
+  (ไม่ใช่ฟอนต์มาตรฐานแบบช่องอวกาศ)
+- caption ไฮไลต์มิ้นต์/คอรัล · ~35–45% ของช็อต
+- **LABELS:** ชื่ออวัยวะ/โรค/สารอาหาร/ค่าต่าง ๆ ใส่ป้ายชื่อไทยกำกับ (คำ/ป้ายเติมทีหลังแบบเคลื่อนไหว
+  วางในที่ว่างจริงของภาพ — **ไม่ gen กรอบเปล่าไว้ในภาพ**)
 - punch word: คำเด็ดย้ำ (เช่น "อันตราย!", "ลด 30%", "ทำได้ทุกวัน")

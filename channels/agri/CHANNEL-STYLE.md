@@ -40,13 +40,19 @@
 
 > STYLE: clean modern flat vector illustration, bold uniform outlines, simple flat
 > color fills with minimal soft shading, rounded friendly shapes, warm earthy
-> farm palette (leaf green, soil brown, sky blue, sun yellow) on a warm cream
-> background (#FBF6EC), generous clean space, wholesome friendly Thai-countryside
-> vibe, clear and easy to read. NOT photorealistic, no gradients mesh, no realistic
-> texture. ABSOLUTELY NO text, letters, words, numbers, labels or writing of any
-> kind anywhere in the image — keep all signs, packets and screens blank. 16:9.
+> farm palette (leaf green, soil brown, sky blue, sun yellow). ALWAYS set a simple
+> relevant BACKGROUND SCENE (rice field, farm plot, vegetable garden, barn,
+> village kitchen) — never a plain empty background. Draw complete scenes with
+> some generous open sky/ground areas kept low-detail. Wholesome friendly
+> Thai-countryside vibe, clear and easy to read. NOT photorealistic, no gradient
+> mesh, no realistic texture. Do NOT draw blank signboards, empty labels or empty
+> reserved text boxes; a few short real words on a sack/crate are fine, but avoid
+> long text or garbled letters. 16:9.
 
 ## 4. Captions / Labels / Punch
-- **ฟอนต์ = Kanit** · caption ไฮไลต์เหลือง `#FFC93C` หรือเขียว · ~35–45% ของช็อต
-- **LABELS:** ชื่อพืช/โรคพืช/ปุ๋ย/แมลง/เครื่องมือ ที่สำคัญ ใส่ป้ายชื่อไทยกำกับ (จุดขายความรู้)
+- **ฟอนต์ = Itim** (`assets/fonts/Itim-Regular.ttf`) — ลายมืออบอุ่น เป็นกันเอง เอกลักษณ์ช่อง
+  (ไม่ใช่ฟอนต์มาตรฐานแบบช่องอวกาศ) · ทำหนา/เด้งด้วยขอบหนา
+- caption ไฮไลต์เหลือง `#FFC93C`/เขียว · ~35–45% ของช็อต
+- **LABELS:** ชื่อพืช/โรค/ปุ๋ย/แมลง/เครื่องมือ ใส่ป้ายชื่อไทยกำกับ (คำ/ป้ายเติมทีหลังแบบเคลื่อนไหว
+  วางในที่ว่างจริงของภาพ — **ไม่ gen กรอบเปล่าไว้ในภาพ** เพราะตำแหน่งมักไม่ตรง)
 - punch word: คำเด็ดเตือน/เน้น (เช่น "ห้ามใส่!", "เพิ่ม 2 เท่า", "ระวังโรค")
