@@ -179,6 +179,9 @@ def main():
     key = os.environ.get("DASHSCOPE_API_KEY")
     if not key:
         sys.exit("ERROR: ตั้ง env DASHSCOPE_API_KEY ก่อน (ห้ามฝังคีย์ในไฟล์)")
+    if not key.isascii():
+        sys.exit("ERROR: คีย์มีอักขระที่ไม่ใช่ ASCII (น่าจะเผลอใส่ข้อความไทย/placeholder) "
+                 "— ใส่คีย์จริง เช่น $env:DASHSCOPE_API_KEY=\"sk-sp-...\"")
     try:
         import requests  # noqa: F401
     except ImportError:
