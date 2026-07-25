@@ -22,11 +22,27 @@ yt_upload.py — อัปโหลดคลิปขึ้น YouTube (resumabl
 import argparse, json, mimetypes, os, re, sys, urllib.error, urllib.parse, urllib.request
 
 TOKEN_URL = "https://oauth2.googleapis.com/token"
-UPLOAD_URL = ("https://youtube.googleapis.com/upload/youtube/v3/videos"
+UPLOAD_URL = ("https://www.googleapis.com/upload/youtube/v3/videos"
               "?uploadType=resumable&part=snippet,status")
-THUMB_URL = ("https://youtube.googleapis.com/upload/youtube/v3/thumbnails/set"
+THUMB_URL = ("https://www.googleapis.com/upload/youtube/v3/thumbnails/set"
              "?uploadType=media&videoId={vid}")
-CHUNK = 8 * 1024 * 1024  # 8 MB ต่อรอบ
+CHUNK = 8 * 1024 * 1024  # 8 MB ต่อรอบ (ต้องเป็นจำนวนเท่าของ 256 KB)
+
+WARN_AUDIT = """
+╔══════════════════════════════════════════════════════════════════════╗
+║  ⚠️  อ่านก่อนใช้ครั้งแรก                                              ║
+║                                                                      ║
+║  โปรเจกต์ Google Cloud ที่ยังไม่ผ่าน "compliance audit" ของ YouTube    ║
+║  คลิปที่อัปผ่าน API จะถูก "ล็อกเป็น private ถาวร"                      ║
+║  → กดเปลี่ยนเป็นสาธารณะใน YouTube Studio ไม่ได้ และอุทธรณ์ไม่ได้        ║
+║  → ต้องอัปใหม่ด้วยมือเท่านั้น                                          ║
+║                                                                      ║
+║  ขอ audit ฟรีที่: https://support.google.com/youtube/contact/yt_api_form ║
+║  (ไม่มีกำหนดเวลาตอบแน่นอน ตั้งแต่ไม่กี่วันถึงหลายสัปดาห์)                ║
+║                                                                      ║
+║  ยังไม่ผ่าน audit → อัปมือใน Studio คุ้มกว่า อย่าใช้สคริปต์นี้           ║
+╚══════════════════════════════════════════════════════════════════════╝
+"""
 
 
 def load_env(path=".env"):
@@ -148,7 +164,13 @@ def main():
     ap.add_argument("--language", default="th")
     ap.add_argument("--env", default=".env")
     ap.add_argument("--dry-run", action="store_true", help="แสดงค่าที่จะส่ง แต่ไม่อัปโหลดจริง")
+    ap.add_argument("--audited", action="store_true",
+                    help="ยืนยันว่าโปรเจกต์ผ่าน YouTube compliance audit แล้ว (ไม่งั้นคลิปจะโดนล็อก private ถาวร)")
     args = ap.parse_args()
+
+    if not args.audited and not args.dry_run:
+        print(WARN_AUDIT)
+        sys.exit("หยุดไว้ก่อน — ถ้าผ่าน audit แล้วจริง ใส่ --audited ต่อท้ายคำสั่ง")
 
     load_env(args.env)
     title, desc, tags = parse_publish(args.publish, args.title_key)
