@@ -17,19 +17,23 @@ const isSpace = (s) => /^\s+$/u.test(s);
  * คืน [{ w, from, to }] — to เป็นแบบ exclusive
  */
 export function segmentThai(text) {
+  /** { w, from, to, sp } — sp = มีเว้นวรรคตามหลังคำนี้ */
   const toks = [];
   for (const s of seg.segment(text)) {
     const from = s.index;
     const to = s.index + s.segment.length;
     if (s.isWordLike) {
       toks.push({ w: s.segment, from, to });
-    } else if (!isSpace(s.segment) && toks.length) {
+    } else if (isSpace(s.segment)) {
+      // ช่องว่าง: ไม่เป็น token เอง แต่จำไว้ว่าคำก่อนหน้ามีวรรคตามหลัง
+      // (ภาษาไทยใช้เว้นวรรคคั่นวลี ถ้าทิ้งไปข้อความจะติดกันหมด)
+      if (toks.length) toks[toks.length - 1].sp = true;
+    } else if (toks.length) {
       // เครื่องหมายวรรคตอน — ยุบเข้าคำหน้า
       const prev = toks[toks.length - 1];
       prev.w += s.segment;
       prev.to = to;
     }
-    // ช่องว่าง: ข้าม แต่ index ยังเดินต่อเอง
   }
   return toks;
 }
@@ -60,7 +64,7 @@ export function mapCharsToWords(text, alignment) {
     const prev = words[words.length - 1];
     if (prev && s < prev.e) s = prev.e;   // กันทับคำก่อนหน้า
     if (!(e > s)) e = s + 0.05;           // กันคำที่เวลาชนกันเป๊ะ
-    words.push({ w: t.w, s: +s.toFixed(4), e: +e.toFixed(4), speak: true });
+    words.push({ w: t.w, s: +s.toFixed(4), e: +e.toFixed(4), speak: true, ...(t.sp ? { sp: true } : {}) });
   }
   return words;
 }

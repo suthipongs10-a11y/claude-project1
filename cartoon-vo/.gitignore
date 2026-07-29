@@ -9,3 +9,6 @@ node_modules/
 *.mp3
 *.mp4
 *.png
+
+# ฟอนต์ที่ฝังเป็น data URI (สร้างใหม่ได้จาก public/fonts/)
+# เก็บไว้เพื่อให้ build ซ้ำได้เหมือนเดิม

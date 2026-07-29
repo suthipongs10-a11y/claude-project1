@@ -2,44 +2,58 @@
 
 ## M ล่าสุดที่ผ่าน
 
-**M0 · โครงโปรเจกต์** — ผ่าน acceptance ครบ (tag `m0-scaffold`)
+**M5 · Verify harness** — ผ่าน · M6 เรนเดอร์ออกไฟล์ได้แล้วแต่ยัง**ตรวจรับไม่ครบ** (ไม่มีเสียง)
 
-| Acceptance | ผล |
-|---|---|
-| `git status` ไม่มี `.env` โผล่ | ✅ `.gitignore` ตั้งก่อน commit แรก · `git check-ignore .env` ยืนยันแล้ว |
-| `node -e "import('./src/timing.ts')"` ไม่พัง | ✅ `exit=0` (Node v22.22.2 strip types ให้เอง ไม่ต้องใส่ flag) |
-
-ตรวจเพิ่มเองนอกเหนือจาก acceptance: `lerp / prog / easeOut / easeIO / pop / mulberry32`
-มีครบ คืนค่าถูก · `prog` clamp ที่ขอบจริง · `mulberry32(42)` เรียกสองครั้งได้ลำดับเดิม (deterministic)
+| M | สถานะ | Acceptance |
+|---|---|---|
+| M0 โครงโปรเจกต์ | ✅ | `.env` ไม่ถูก track · `node -e "import('./src/timing.ts')"` exit 0 |
+| M1 TTS + cache | ⚠️ **ผ่านครึ่งเดียว** | รอบสอง cached ครบ 10 บรรทัด · network request = 0 **แต่รอบแรกยังไม่เคยยิงจริง** (ไม่มีคีย์) |
+| M2 Alignment → คำ | ✅ | ทุกคำ `s < e` · ไม่ทับกัน · เทสต์ `"ผึ้ง 3 ตัวบินมาที่นี่"` ตัดได้ `ผึ้ง|3|ตัว|บิน|มา|ที่|นี่` เวลาไม่กระโดด |
+| M3 cues.json | ✅ | `verify.mjs` exit 0 · *(ยังไม่ได้เทียบกับ `ffprobe` เพราะไม่มีไฟล์เสียง)* |
+| M4 Remotion components | ✅ | `grep -nE "[^a-zA-Z](8\.6\|12\.6\|17\.2)" src/` ไม่เจอ · `remotion still` ออกภาพได้ |
+| M5 Verify harness | ✅ | `verify.mjs` ผ่าน · `frames.mjs` เรนเดอร์ 9 เฟรม (กลางทุก beat) + สแกน NaN ไม่เจอ · **ดูด้วยตาแล้ว** |
+| M6 เรนเดอร์จริง | ⚠️ | ได้ `out/final.mp4` 31.7s 1920×1080 30fps ไฟล์สมบูรณ์ · **แต่ยังฟังไม่ได้ว่าปากตรงเสียง เพราะยังไม่มีเสียง** |
 
 ## ยอด API call สะสม
 
-**0** — ยังไม่ได้ยิง ElevenLabs แม้แต่ครั้งเดียว
+**0** — ยังไม่ได้ยิง ElevenLabs แม้แต่ครั้งเดียว (cache ทั้ง 10 บรรทัดเป็นโหมด estimate)
+
+## บั๊กที่เจอและแก้ระหว่างทาง
+
+1. **ข้อความตกจอทั้งหมด** — ใช้ `paddingTop: "70%"` แต่ CSS คิด % ของ padding จาก**ความกว้าง**
+   70% ของ 1920 = 1344px เกินความสูง 1080 → เปลี่ยนเป็น `position:absolute; top: height * 0.70`
+2. **ฟอนต์ไทยไม่ขึ้น** — ประกาศ `font-family` ไว้แต่ไม่ได้โหลดฟอนต์
+3. **เว้นวรรคระหว่างวลีหายหมด** — `segmentThai` ทิ้ง segment ที่เป็นช่องว่าง
+   ทำให้ `"ตีสองยังโดนกัด บ่ายสามก็โดนอีก"` กลายเป็น `ตีสองยังโดนกัดบ่ายสามก็โดนอีก`
+   → เพิ่มธง `sp` บอกว่าคำนี้มีวรรคตามหลัง แล้ว TextLayer เว้น `marginRight`
+4. **เรนเดอร์ยาวล้มที่เฟรม 689** — `delayRender("โหลดฟอนต์ไทย")` ค้างเกิน 28 วิ
+   Remotion เปิดแท็บใหม่ระหว่างเรนเดอร์ แล้วคำขอไฟล์ฟอนต์ค้างในแท็บนั้น
+   → ฝังฟอนต์เป็น data URI (`src/font-data.ts`) ตัด network ออกจากสมการ + ประกัน `continueRender` เสมอ
+5. **Chrome ตัวเต็มเปิดไม่ได้** — ถอด headless แบบเก่าออกแล้ว
+   → ใช้ `/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell`
+6. `--scale=0.6667` ทำให้เรนเดอร์ล้ม (ได้ขนาดเป็นเศษ) → เรนเดอร์ที่ความละเอียดเต็มแทน
 
 ## สิ่งที่ค้าง
 
-1. **ไม่มี `ELEVENLABS_API_KEY`** — ไม่มีทั้งใน env และ `.env` (ไฟล์ `.env` สร้างไว้แล้วแต่ค่าว่าง)
-2. **`api.elevenlabs.io` ถูก network policy ของ environment บล็อก** (`connect_rejected`)
-   → ต้องเพิ่มโดเมนใน Allowed domains ของ environment ก่อน ถึงจะยิงได้จาก sandbox
-3. **ไม่มี `ffmpeg` / `ffprobe` ใน PATH** — M3 ต้องใช้
-   มีไบนารีที่ใช้ได้อยู่ในเครื่องแล้วจาก `imageio-ffmpeg`:
-   `/tmp/.../venv/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2`
-   (ffprobe ยังต้องหาเพิ่ม — ffmpeg bundle ตัวนี้ไม่มี ffprobe มาด้วย)
-4. ยังไม่ได้ `npm init` / ลง Remotion — รอ M4
-
-## ไฟล์ที่แตะล่าสุด
-
-- `src/timing.ts` — เขียนจริง ใช้งานได้ (ตัวเดียวใน M0 ที่ไม่ใช่ stub)
-- `assets/script.json` — บทเรื่อง "ยุงนอนไหม? แล้วทำไมเจอยุงได้ทุกเวลา" 10 บรรทัด 9 beats
-  พร้อมข้อเท็จจริงและแหล่งอ้างอิงใน `_notes`
-- `pipeline/*.mjs`, `src/*.tsx`, `verify/frames.mjs` — stub ที่ throw บอกว่าอยู่ M ไหน
-  (ตามกฎ BUILD-PLAN: ห้ามเขียน M ถัดไปคร่อมมาก่อน)
-- `verify/verify.mjs` — ของที่แนบมา คัดลอกเข้ามาตรง ๆ ไม่แก้
+1. **ไม่มี `ELEVENLABS_API_KEY`** และ **`api.elevenlabs.io` ถูก network policy บล็อก**
+   → M1 ครึ่งหลัง, M3 ส่วน `ffprobe`, และ M6 ทั้งหมด ตรวจรับไม่ได้จนกว่าจะแก้
+   วิธีแก้: ใส่คีย์ในช่อง Environment variables + เพิ่มโดเมนใน Allowed domains ของ environment
+2. **ไม่มี `ffprobe`** — M3 เขียนโค้ดวัดไว้แล้วแต่ยังไม่เคยรันจริง
+3. งานภาพยังเรียบมาก — ยุงลอยอยู่จุดเดิมเกือบตลอด ข้อความชนเส้นขอบพื้นในบางเฟรม
+   ถ้าจะใช้จริงควรใส่การเคลื่อนที่ตาม beat มากกว่านี้
 
 ## ก้าวถัดไป
 
-**M1 · TTS + cache** — เขียน `cache.mjs` + `tts.mjs`
-Acceptance: รัน `node pipeline/tts.mjs` สองรอบ รอบสองต้องขึ้น `cached` ทุกบรรทัดและไม่มี network call
+พอมีคีย์แล้ว: `node pipeline/tts.mjs` → `node pipeline/cues.mjs` → `node verify/verify.mjs out/cues.json` → เรนเดอร์
+**ไม่ต้องแตะโค้ดภาพเลย** เพราะเวลาทั้งหมดมาจาก `cues.json` — พากย์ยาวขึ้น ฉากยืดตามเอง
 
-> ⚠️ M1 รันจริงไม่ได้จนกว่าจะแก้ข้อค้าง 1 กับ 2 ข้างบน
-> ระหว่างนี้เขียนโหมด estimate (`0.09 + len * 0.055` วิ) ไว้ก่อนได้ตาม CLAUDE.md ข้อ 3
+## คำสั่งที่ใช้บ่อย
+
+```bash
+node pipeline/tts.mjs                    # ยิง/estimate ทีละบรรทัด + cache
+node pipeline/cues.mjs                   # ประกอบ cues.json
+node verify/verify.mjs out/cues.json     # ตรวจสัญญา
+SH=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell
+node verify/frames.mjs --browser $SH     # เฟรมตัวแทนทุก beat + สแกน NaN
+npx remotion render Scene out/final.mp4 --concurrency=3 --crf=20 --browser-executable=$SH
+```
