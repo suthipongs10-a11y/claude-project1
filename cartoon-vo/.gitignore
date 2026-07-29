@@ -1,0 +1,11 @@
+# ห้าม commit เด็ดขาด — API key
+.env
+.env.*
+!.env.example
+
+# ผลลัพธ์ที่ generate ได้ใหม่
+out/
+node_modules/
+*.mp3
+*.mp4
+*.png

@@ -1,0 +1,101 @@
+{
+  "title": "ยุงนอนไหม? แล้วทำไมเจอยุงได้ทุกเวลา",
+  "voiceId": "nPczCjzI2devNBz1zQrb",
+  "modelId": "eleven_v3",
+  "tailOut": 0.5,
+  "lines": [
+    {
+      "id": "L1",
+      "text": "ตีสองยังโดนกัด บ่ายสามก็โดนอีก",
+      "style": "alarm",
+      "startAt": 0.6,
+      "gapAfter": 0.15
+    },
+    {
+      "id": "L2",
+      "text": "ยุงมันไม่นอนกันเลยหรือไง",
+      "style": "alarm",
+      "gapAfter": 0.45,
+      "hold": 0.6
+    },
+    {
+      "id": "L3",
+      "text": "ยุงนอนครับ นอนจริง ๆ",
+      "style": "calm",
+      "gapAfter": 0.35,
+      "hold": 0.8
+    },
+    {
+      "id": "L4",
+      "text": "นักวิทยาศาสตร์พบว่ายุงมีท่าพักเฉพาะตัว และมียีนควบคุมการนอนชุดเดียวกับแมลงวันผลไม้",
+      "style": "calm",
+      "gapAfter": 0.3
+    },
+    {
+      "id": "L5",
+      "text": "เวลาพัก มันจะไปเกาะนิ่ง ๆ ในที่มืด เย็น และลมสงบ เพื่อเก็บแรง",
+      "style": "calm",
+      "gapAfter": 0.45,
+      "hold": 0.5
+    },
+    {
+      "id": "L6",
+      "text": "แต่ความลับอยู่ตรงนี้ ยุงแต่ละชนิดนอนคนละเวลา",
+      "style": "caption",
+      "gapAfter": 0.35,
+      "hold": 0.7
+    },
+    {
+      "id": "L7",
+      "text": "ยุงลายเข้ากะกลางวัน ตื่นตั้งแต่เช้าตรู่ แล้วมาอีกรอบก่อนค่ำ",
+      "style": "run",
+      "gapAfter": 0.25
+    },
+    {
+      "id": "L8",
+      "text": "ยุงรำคาญรับช่วงต่อตอนหัวค่ำ ส่วนยุงก้นปล่องออกล่าดึกจัดไปจนใกล้รุ่ง",
+      "style": "run",
+      "gapAfter": 0.45,
+      "hold": 0.6
+    },
+    {
+      "id": "L9",
+      "text": "เราเลยเจอยุงได้ทุกเวลา ไม่ใช่เพราะตัวเดิมไม่ยอมนอน",
+      "style": "calm",
+      "gapAfter": 0.2
+    },
+    {
+      "id": "L10",
+      "text": "แต่เพราะมันผลัดกะกันครับ",
+      "style": "caption",
+      "hold": 1.4
+    }
+  ],
+  "beats": [
+    { "name": "bedroom_night", "start": 0.0 },
+    { "name": "swat_panic", "anchorLine": "L2", "offset": -0.1 },
+    { "name": "reveal_answer", "anchorLine": "L3", "offset": -0.05 },
+    { "name": "lab_zoom", "anchorLine": "L4", "offset": -0.05 },
+    { "name": "resting_spot", "anchorLine": "L5", "offset": -0.05 },
+    { "name": "shift_board", "anchorLine": "L6", "offset": -0.1 },
+    { "name": "day_shift", "anchorLine": "L7", "offset": -0.05 },
+    { "name": "night_shift", "anchorLine": "L8", "offset": -0.05 },
+    { "name": "wrap_up", "anchorLine": "L9", "offset": -0.05 }
+  ],
+  "_notes": {
+    "ข้อเท็จจริง": [
+      "ยุงมีสภาวะคล้ายการนอน — พบท่าพักเฉพาะใน Aedes aegypti, การจัดระเบียบ circadian ของช่วงพัก/ตื่นที่ต่างกันตามชนิด และยีน ortholog ของยีนการนอนใน Drosophila",
+      "ช่วงพักจะหาที่มืด เย็น มีที่กำบัง เพื่อเก็บพลังงาน",
+      "ยุงลาย (Aedes aegypti / albopictus) กัดกลางวัน พีคช่วงเช้าตรู่และก่อนค่ำ",
+      "ยุงรำคาญ (Culex pipiens) ออกหากินหลังพลบค่ำต่อเนื่องทั้งคืน พักกลางวัน",
+      "ยุงก้นปล่อง (Anopheles) พีคดึกจัดถึงช่วงใกล้รุ่ง",
+      "จังหวะพวกนี้ถูกคุมด้วยนาฬิกาชีวภาพภายใน ไม่ได้ตอบสนองแค่แสงภายนอก"
+    ],
+    "แหล่งอ้างอิง": [
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC8094063/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4931426/",
+      "https://link.springer.com/article/10.1186/s41936-026-00564-8"
+    ],
+    "voiceId": "nPczCjzI2devNBz1zQrb = Brian (เคยใช้กับช่องอวกาศ ยืนยันแล้วว่าใช้ได้) — เปลี่ยนได้ตามต้องการ"
+  }
+}
