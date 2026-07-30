@@ -15,6 +15,7 @@
  */
 import fs from "node:fs";
 import { keyOf, get, put } from "./cache.mjs";
+import * as google from "./tts-google.mjs";
 
 const API = "https://api.elevenlabs.io";
 const CHAR_BASE = 0.09;   // ค่าคงที่ต่อบรรทัด (CLAUDE.md)
@@ -82,20 +83,34 @@ async function forcedAlign(text, audioBuf, key) {
 
 export async function run(scriptFile = "assets/script.json") {
   loadEnv();
-  const key = process.env.ELEVENLABS_API_KEY || "";
   const script = JSON.parse(fs.readFileSync(scriptFile, "utf8"));
   const { voiceId, modelId } = script;
-  const mode = key ? "elevenlabs" : "estimate";
 
-  if (!key) {
-    console.log("⚠ ไม่มี ELEVENLABS_API_KEY — เข้าโหมด estimate (กะเวลาจากจำนวนตัวอักษร)");
+  // เลือกผู้ให้บริการ: ระบุใน script.json ได้ ไม่งั้นดูจากคีย์ที่มี
+  const elevenKey = process.env.ELEVENLABS_API_KEY || "";
+  const googleKey = process.env.GOOGLE_TTS_API_KEY || "";
+  const want = script.provider || (elevenKey ? "elevenlabs" : googleKey ? "google" : "estimate");
+  const mode =
+    want === "google" && googleKey ? "google" :
+    want === "elevenlabs" && elevenKey ? "elevenlabs" : "estimate";
+
+  if (mode === "estimate") {
+    const why = want === "google" ? "GOOGLE_TTS_API_KEY" : "ELEVENLABS_API_KEY";
+    console.log(`⚠ ไม่มี ${why} — เข้าโหมด estimate (กะเวลาจากจำนวนตัวอักษร)`);
     console.log("  จัด layout ให้จบก่อนได้ แล้วค่อยยิงเสียงจริงรอบเดียวตอนมีคีย์\n");
+  } else {
+    console.log(`ใช้เสียงจาก: ${mode}\n`);
   }
+  const key = mode === "elevenlabs" ? elevenKey : "";
+
+  // cache key ต้องผูกกับผู้ให้บริการ+เสียงด้วย ไม่งั้นสลับ provider แล้วหยิบของเก่าผิดตัว
+  const voiceTag = mode === "google" ? `google:${script.googleVoice || ""}` : voiceId;
+  const modelTag = mode === "google" ? "gcloud-tts" : modelId;
 
   let cached = 0, fresh = 0;
   const segs = [];
   for (const line of script.lines) {
-    const k = keyOf(line.text, voiceId, modelId);
+    const k = keyOf(line.text, voiceTag, modelTag);
     const hit = get(k);
     if (hit) {
       cached++;
@@ -104,16 +119,28 @@ export async function run(scriptFile = "assets/script.json") {
       continue;
     }
     let meta, audio = null;
-    if (key) {
+    if (mode === "google") {
+      requests++;
+      const r = await google.synth(line.text, {
+        apiKey: googleKey,
+        voiceName: script.googleVoice,
+        languageCode: script.languageCode || "th-TH",
+        speakingRate: script.speakingRate || 1.0,
+      });
+      audio = r.audio;
+      meta = { text: line.text, voiceId: voiceTag, modelId: modelTag,
+               source: `google:${script.googleVoice}`, alignment: r.alignment,
+               duration: +r.duration.toFixed(4), audioFormat: "wav" };
+    } else if (key) {
       const r = await callTTS(line.text, voiceId, modelId, key);
       audio = r.audio;
       meta = { text: line.text, voiceId, modelId, source: `elevenlabs:${modelId}`, alignment: r.alignment };
     } else {
-      meta = { text: line.text, voiceId, modelId, source: "estimated", alignment: estimateAlignment(line.text) };
+      meta = { text: line.text, voiceId: voiceTag, modelId: modelTag, source: "estimated", alignment: estimateAlignment(line.text) };
     }
     const saved = put(k, meta, audio);
     fresh++;
-    console.log(`  ${line.id}  ${key ? "fetched " : "estimate"} ${k.slice(0, 8)}  [${saved.source}]`);
+    console.log(`  ${line.id}  ${mode === "estimate" ? "estimate" : "fetched "} ${k.slice(0, 8)}  [${saved.source}]`);
     segs.push({ id: line.id, key: k, ...saved });
   }
 

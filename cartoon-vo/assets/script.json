@@ -1,5 +1,9 @@
 {
   "title": "ยุงนอนไหม? แล้วทำไมเจอยุงได้ทุกเวลา",
+  "provider": "google",
+  "googleVoice": "th-TH-Neural2-C",
+  "languageCode": "th-TH",
+  "speakingRate": 1.0,
   "voiceId": "nPczCjzI2devNBz1zQrb",
   "modelId": "eleven_v3",
   "tailOut": 0.5,
@@ -72,15 +76,50 @@
     }
   ],
   "beats": [
-    { "name": "bedroom_night", "start": 0.0 },
-    { "name": "swat_panic", "anchorLine": "L2", "offset": -0.1 },
-    { "name": "reveal_answer", "anchorLine": "L3", "offset": -0.05 },
-    { "name": "lab_zoom", "anchorLine": "L4", "offset": -0.05 },
-    { "name": "resting_spot", "anchorLine": "L5", "offset": -0.05 },
-    { "name": "shift_board", "anchorLine": "L6", "offset": -0.1 },
-    { "name": "day_shift", "anchorLine": "L7", "offset": -0.05 },
-    { "name": "night_shift", "anchorLine": "L8", "offset": -0.05 },
-    { "name": "wrap_up", "anchorLine": "L9", "offset": -0.05 }
+    {
+      "name": "bedroom_night",
+      "start": 0.0
+    },
+    {
+      "name": "swat_panic",
+      "anchorLine": "L2",
+      "offset": -0.1
+    },
+    {
+      "name": "reveal_answer",
+      "anchorLine": "L3",
+      "offset": -0.05
+    },
+    {
+      "name": "lab_zoom",
+      "anchorLine": "L4",
+      "offset": -0.05
+    },
+    {
+      "name": "resting_spot",
+      "anchorLine": "L5",
+      "offset": -0.05
+    },
+    {
+      "name": "shift_board",
+      "anchorLine": "L6",
+      "offset": -0.1
+    },
+    {
+      "name": "day_shift",
+      "anchorLine": "L7",
+      "offset": -0.05
+    },
+    {
+      "name": "night_shift",
+      "anchorLine": "L8",
+      "offset": -0.05
+    },
+    {
+      "name": "wrap_up",
+      "anchorLine": "L9",
+      "offset": -0.05
+    }
   ],
   "_notes": {
     "ข้อเท็จจริง": [
@@ -96,6 +135,12 @@
       "https://pmc.ncbi.nlm.nih.gov/articles/PMC4931426/",
       "https://link.springer.com/article/10.1186/s41936-026-00564-8"
     ],
-    "voiceId": "nPczCjzI2devNBz1zQrb = Brian (เคยใช้กับช่องอวกาศ ยืนยันแล้วว่าใช้ได้) — เปลี่ยนได้ตามต้องการ"
+    "voiceId": "nPczCjzI2devNBz1zQrb = Brian (เคยใช้กับช่องอวกาศ ยืนยันแล้วว่าใช้ได้) — เปลี่ยนได้ตามต้องการ",
+    "ผู้ให้บริการเสียง": [
+      "provider: google | elevenlabs | (ไม่ใส่ = ดูจากคีย์ที่มีใน env)",
+      "google ต้องใช้เสียงที่รองรับ SSML (Standard / WaveNet / Neural2) — ตระกูล Chirp/Chirp3 ไม่รองรับ <mark> จะไม่ได้ timestamp",
+      "ยืนยันรายชื่อเสียงไทยจริงด้วย: node pipeline/voices.mjs",
+      "voiceId/modelId ด้านล่างใช้เฉพาะตอน provider=elevenlabs"
+    ]
   }
 }

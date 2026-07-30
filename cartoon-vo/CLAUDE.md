@@ -140,3 +140,25 @@ script.json ──► tts.mjs ──► seg_NN.mp3 + alignment
 - `line-height` อย่าต่ำกว่า 1.5 — วรรณยุกต์ซ้อน (เช่น "น้ำ" "ที่") จะโดนตัดหัว
 - ขอบตัวอักษรใช้ `text-shadow` 8 ทิศ อย่าใช้ `-webkit-text-stroke` เพราะมันกินเข้าไปในตัวอักษรทำให้สระไทยบางเส้นหาย
 - ขึ้นบรรทัดใหม่ให้ตัดที่ขอบ token จาก `words[]` เท่านั้น ห้ามให้เบราว์เซอร์ตัดเอง — ไทยไม่มีเว้นวรรค มันจะตัดกลางคำ
+
+---
+
+## Google Cloud TTS (ผู้ให้บริการทางเลือก)
+
+ตั้ง `"provider": "google"` + `"googleVoice"` ใน `script.json` แล้วใส่ `GOOGLE_TTS_API_KEY` ใน `.env`
+
+**Google ไม่คืน character timestamps** แบบ ElevenLabs แต่คืน **timepoint ของแท็ก `<mark>` ใน SSML** ได้
+`POST /v1beta1/text:synthesize` พร้อม `enableTimePointing: ["SSML_MARK"]`
+
+วิธีที่ `tts-google.mjs` ทำ:
+1. ตัดคำด้วย `segmentThai` **ตัวเดียวกับ align.mjs** แล้วแทรก `<mark name="wN"/>` หน้าทุกคำ + `wEND` ปิดท้าย
+2. timepoint ที่ได้ = เวลาเริ่มของทุกคำ · เวลาจบ = เวลาเริ่มของคำถัดไป (คำต่อกันสนิท) ตัวสุดท้ายใช้ `wEND`
+3. แปลงกลับเป็น alignment แบบตัวอักษร (เกลี่ยเชิงเส้นในแต่ละคำ) → downstream ใช้โค้ดเส้นเดิมทั้งหมด
+
+**ข้อควรระวัง**
+- เสียงตระกูล **Chirp / Chirp3 ไม่รองรับ SSML** → ไม่มี timepoint ใช้กับ pipeline นี้ไม่ได้
+  ใช้ **Standard / WaveNet / Neural2** เท่านั้น · เช็ครายชื่อจริงด้วย `node pipeline/voices.mjs`
+- ขอเสียงเป็น **LINEAR16 (WAV)** เพราะคำนวณความยาวจากจำนวนไบต์ได้เป๊ะ ไม่ต้องพึ่ง `ffprobe`
+  (`duration = (bytes - 44) / (sampleRate * 2)`)
+- **อักขระ SSML รวมทั้งแท็กนับเป็นตัวอักษรที่คิดเงิน** — การแทรก `<mark>` ทุกคำเพิ่มตัวอักษรพอสมควร
+  แต่โควตาฟรีรายเดือนสูงมากเมื่อเทียบกับสคริปต์ระดับนี้
