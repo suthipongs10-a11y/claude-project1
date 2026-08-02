@@ -15,11 +15,18 @@ echo "== [1/3] ติดตั้งไลบรารี (~2 นาที) =="
 pip install -q omnivoice fastapi "uvicorn[standard]" soundfile pythainlp edge-tts
 command -v ffmpeg >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq ffmpeg)
 
-# transformers รุ่นใหม่ (ที่ omnivoice ต้องใช้) ต้องการ torch ที่มี DTensor —
-# template PyTorch ของ RunPod บางตัวมากับ torch เก่าเกินไป ต้องอัปเกรด
-python -c "from torch.distributed.tensor import DTensor" 2>/dev/null || {
-  echo "== [1.5/3] torch เก่าเกินไป -> อัปเกรด torch/torchaudio (~3 นาที) =="
-  pip install -q -U torch torchaudio
+# transformers รุ่นใหม่ (ที่ omnivoice ใช้) ต้องการ torch >= 2.5 (มี DTensor) และ
+# torch/torchvision/torchaudio ต้องเป็นชุดเดียวกัน + ตรงกับไดรเวอร์ CUDA ของโฮสต์ (cu124)
+# ห้ามใช้ torch รุ่นล่าสุดลอย ๆ — ไดรเวอร์บน RunPod มักรองรับถึง CUDA 12.4 เท่านั้น
+python -c "from torch.distributed.tensor import DTensor; import torchvision" 2>/dev/null || {
+  echo "== [1.5/3] ติดตั้งชุด torch 2.6.0 + torchvision 0.21.0 + torchaudio 2.6.0 (cu124) (~3-4 นาที) =="
+  pip install -q -U torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 \
+    --index-url https://download.pytorch.org/whl/cu124
+}
+
+echo "== [1.9/3] ตรวจ import omnivoice =="
+python -c "import omnivoice; print('omnivoice พร้อม')" || {
+  echo "❌ import omnivoice ไม่ผ่าน — ก๊อป log ทั้งหมดส่งให้ Claude"; exit 1;
 }
 
 echo "== [2/3] ตรวจ GPU =="
