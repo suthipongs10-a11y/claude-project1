@@ -32,6 +32,10 @@ tts-ai/
     f5_tts_thai_demo.py              # เดโมตัวหลัก: F5-TTS-THAI + โคลนเสียง
     omnivoice_demo.py                # เดโม OmniVoice: โคลนเสียง + ออกแบบเสียง
     requirements.txt
+  tests/                             # 🎧 ชุดทดสอบฟังเสียงไทยเทียบทุกเอนจิน (เริ่มที่ tests/README.md)
+    sentences_th.json                # ประโยคมาตรฐาน 6 แบบ (เลข/อังกฤษปน/อารมณ์ ฯลฯ)
+    run_thai_tts_test.py             # รันบน PC/VPS — เจนเสียงทุกเอนจิน + report
+    colab_thai_tts_test.ipynb        # รันบน Colab GPU ฟรี — มีปุ่มกดฟังในตัว ⭐
 ```
 
 ## สรุปตัวเลือกเด่น (ภาษาไทย)
