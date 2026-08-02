@@ -19,16 +19,17 @@
 6. กด **Deploy** รอสถานะ Running
 
 ### 2. ติดตั้ง + เปิดเซิร์ฟเวอร์
-เปิด **Connect → Start Web Terminal** แล้ววาง (แก้ `ตั้งรหัสลับเอง` เป็นรหัสของคุณ):
+เปิดสวิตช์ **Enable web terminal** → กด **Connect to web terminal** แล้ววาง (แก้ `ตั้งรหัสลับเอง` เป็นรหัสของคุณ):
 
 ```bash
 cd /workspace \
   && git clone -b claude/tts-ai-tools-resources-m5rku5 https://github.com/suthipongs10-a11y/claude-project1.git \
   && export TTS_API_KEY=ตั้งรหัสลับเอง \
-  && bash claude-project1/tts-ai/runpod/setup_runpod.sh
+  && nohup bash claude-project1/tts-ai/runpod/setup_runpod.sh > /workspace/tts.log 2>&1 & \
+  sleep 2 && tail -f /workspace/tts.log
 ```
 
-รอจนขึ้น **`✅ พร้อมรับงาน`** (ครั้งแรก ~5 นาที: ติดตั้ง + โหลดโมเดล)
+รอจนขึ้น **`✅ พร้อมรับงาน`** (ครั้งแรก ~5 นาที: ติดตั้ง + โหลดโมเดล) แล้วกด `Ctrl+C` ออกจาก tail ได้ — เซิร์ฟเวอร์รันต่อเบื้องหลัง ปิดแท็บได้ ไม่ดับ (ดู log ทีหลัง: `tail -f /workspace/tts.log`)
 
 ### 3. หา URL ของเซิร์ฟเวอร์
 ในหน้า pod ดู **Pod ID** (เช่น `abc123xyz`) → URL คือ:
