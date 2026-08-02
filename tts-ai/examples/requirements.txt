@@ -1,0 +1,18 @@
+# เลือกติดตั้งตามเดโมที่จะรัน — ไม่ต้องลงทั้งหมด
+# Python 3.10+ แนะนำ
+
+# เดโม 1: edge_tts_demo.py (ฟรี ไม่ใช้ GPU)
+edge-tts>=6.1
+
+# เดโม 2: mms_tts_demo.py (CPU ได้)
+transformers>=4.40
+torch>=2.1
+scipy
+# หมายเหตุ: ต้องมี sentencepiece ด้วยในบางเวอร์ชัน: pip install sentencepiece
+
+# เดโม 3: f5_tts_thai_demo.py (แนะนำ GPU CUDA)
+# f5-tts-th          # -> pip install f5-tts-th
+soundfile
+
+# เดโม 4: omnivoice_demo.py (แนะนำ GPU)
+# omnivoice          # -> pip install omnivoice

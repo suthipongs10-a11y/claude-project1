@@ -7,6 +7,7 @@
 ```
 viral-story-remix.skill      # skill หลัก: 7 Phases (niche → research → outline → script → shotlist → voice → edit)
 capcut-draft-editor.skill    # skill ตัดต่อ: แก้ draft_content.json ของ CapCut ตรงๆ
+tts-ai/                      # งานแยก: ทำ TTS AI ใช้เอง (ไทย+อังกฤษ) — รวมเครื่องมือ โมเดล dataset + ตัวอย่างโค้ด (อ่าน tts-ai/README.md)
 projects/
   2026-07-en-football/       # คลิป 1: "Why Is Speed CRYING Over Ronaldo?" (เสร็จ รอ export)
   2026-07-outdoorboys/       # คลิป 2: "The YouTuber Who Walked Away From 20M Subs" (เสร็จ รอ export)
