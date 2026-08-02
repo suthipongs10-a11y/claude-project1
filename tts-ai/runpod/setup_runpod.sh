@@ -11,8 +11,12 @@
 set -e
 cd "$(dirname "$0")"
 
+# เก็บโมเดล HF ไว้บน /workspace (volume ใหญ่) — container disk เล็ก เต็มง่าย
+export HF_HOME=/workspace/hf_cache
+mkdir -p "$HF_HOME"
+
 echo "== [1/3] ติดตั้งไลบรารี (~2 นาที) =="
-pip install -q omnivoice fastapi "uvicorn[standard]" soundfile pythainlp edge-tts
+pip install -q --no-cache-dir omnivoice fastapi "uvicorn[standard]" soundfile pythainlp edge-tts
 command -v ffmpeg >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq ffmpeg)
 
 # transformers รุ่นใหม่ (ที่ omnivoice ใช้) ต้องการ torch >= 2.5 (มี DTensor) และ
@@ -20,9 +24,10 @@ command -v ffmpeg >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -
 # ห้ามใช้ torch รุ่นล่าสุดลอย ๆ — ไดรเวอร์บน RunPod มักรองรับถึง CUDA 12.4 เท่านั้น
 python -c "from torch.distributed.tensor import DTensor; import torchvision" 2>/dev/null || {
   echo "== [1.5/3] ติดตั้งชุด torch 2.6.0 + torchvision 0.21.0 + torchaudio 2.6.0 (cu124) (~3-4 นาที) =="
-  pip install -q -U torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 \
+  pip install -q --no-cache-dir -U torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 \
     --index-url https://download.pytorch.org/whl/cu124
 }
+pip cache purge >/dev/null 2>&1 || true  # คืนพื้นที่ container disk
 
 echo "== [1.9/3] ตรวจ import omnivoice =="
 python -c "import omnivoice; print('omnivoice พร้อม')" || {

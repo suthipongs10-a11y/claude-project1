@@ -23,6 +23,8 @@ from pathlib import Path
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse, Response
 
+os.environ.setdefault("HF_HOME", "/workspace/hf_cache")  # เก็บโมเดลบน volume ใหญ่ กัน container disk เต็ม
+
 HERE = Path(__file__).parent          # tts-ai/runpod
 TTS_DIR = HERE.parent                 # tts-ai
 sys.path.insert(0, str(TTS_DIR))
