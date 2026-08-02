@@ -64,6 +64,10 @@ async def lifespan(app):
     import torch
     from omnivoice import OmniVoice
 
+    if os.environ.get("DISABLE_CUDNN") == "1":  # ทางหนีฉุกเฉินถ้า cuDNN มีปัญหา (ช้าลงเล็กน้อยแต่รันได้)
+        torch.backends.cudnn.enabled = False
+        print("คำเตือน: ปิด cuDNN ตามคำสั่ง DISABLE_CUDNN=1", flush=True)
+
     ref_audio, ref_text, ref_src = prepare_ref()
     dev = "cuda:0" if torch.cuda.is_available() else "cpu"
     dt = torch.float16 if torch.cuda.is_available() else torch.float32

@@ -29,6 +29,27 @@ python -c "from torch.distributed.tensor import DTensor; import torchvision" 2>/
 }
 pip cache purge >/dev/null 2>&1 || true  # คืนพื้นที่ container disk
 
+# ตรวจ cuDNN ด้วยการยิง conv บน GPU จริง — import ผ่านอย่างเดียวไม่พอ
+# (เคยเจอ: อัป/ดาวน์เกรด torch หลายรอบทำให้ nvidia-cudnn ค้างคนละเวอร์ชัน -> CUDNN_STATUS_NOT_INITIALIZED)
+if python -c "import torch; exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null; then
+  echo "== [1.7/3] ตรวจ cuDNN บน GPU =="
+  CUDNN_BROKEN=0
+  python - <<'PYEOF' || CUDNN_BROKEN=1
+import torch
+import torch.nn.functional as F
+x = torch.randn(1, 1, 8, 8, device="cuda")
+w = torch.randn(1, 1, 3, 3, device="cuda")
+F.conv2d(x, w)
+print("cuDNN OK")
+PYEOF
+  if [ "$CUDNN_BROKEN" = "1" ]; then
+    echo "cuDNN พัง (ไลบรารี NVIDIA ปนหลายเวอร์ชัน) -> force-reinstall ชุด torch (~4 นาที)"
+    pip install -q --no-cache-dir --force-reinstall torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 \
+      --index-url https://download.pytorch.org/whl/cu124
+    pip cache purge >/dev/null 2>&1 || true
+  fi
+fi
+
 echo "== [1.9/3] ตรวจ import omnivoice =="
 python -c "import omnivoice; print('omnivoice พร้อม')" || {
   echo "❌ import omnivoice ไม่ผ่าน — ก๊อป log ทั้งหมดส่งให้ Claude"; exit 1;
