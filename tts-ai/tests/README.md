@@ -14,10 +14,13 @@
 ## วิธีรัน — เลือก 1 จาก 3 ทาง
 
 ### ทาง 1: Google Colab (แนะนำ — ฟรี มี GPU ได้ฟังใน 10 นาที) ⭐
-1. อัปโหลด [`colab_thai_tts_test.ipynb`](colab_thai_tts_test.ipynb) ไปที่ [colab.research.google.com](https://colab.research.google.com/) (File → Upload notebook)
+1. เปิด notebook ใน Colab (repo เป็น public เปิดผ่านลิงก์ `colab.research.google.com/github/...` ได้ตรง ๆ):
+   - **รอบ 1:** [`colab_thai_tts_test.ipynb`](colab_thai_tts_test.ipynb) — edge-tts (เสียง Microsoft) + MMS (2 รุ่น) + F5-TTS-THAI V1
+   - **รอบ 2:** [`colab_thai_tts_round2.ipynb`](colab_thai_tts_round2.ipynb) — OmniVoice-Thai + voice design + F5-TTS-TH V2 (IPA) + ThonburianTTS
 2. Runtime → Change runtime type → **T4 GPU**
 3. Runtime → Run all → เลื่อนลงล่างสุด มีปุ่ม ▶ กดฟังทุกเสียงเทียบกันทีละประโยค
-- ได้ครบ 3 เอนจิน: edge-tts (3 เสียง) + MMS (2 รุ่น) + F5-TTS-THAI = **~30 ไฟล์เสียง**
+
+> **ผลรอบ 1 (2 ส.ค. 2026):** ผู้ฟังตัดสินว่า **edge-tts อ่านถูกต้องแม่นยำที่สุด** / เสียง Achara โดน Microsoft ถอดแล้ว (เหลือ Premwadee, Niwat) / F5 V1 เสียเปรียบเพราะโคลนจากเสียงอ้างอิงสังเคราะห์สั้น ๆ — รอบ 2 จึงเพิ่ม V2 และ OmniVoice เข้าเทียบ
 
 ### ทาง 2: PC ของเรา (เครื่องที่มี CapCut)
 ```bash
@@ -50,8 +53,11 @@ python run_thai_tts_test.py                # รันครบทุกตั�
 
 เกณฑ์ตัดสิน: ตัวไหนได้ "เหมาะกับคลิป" ≥ 4 → เอาไปลองเจนสคริปต์จริง 1 คลิปเต็มใน phase ถัดไป
 
-## ตัวที่ยังไม่อยู่ในชุดนี้ (คิวรอบสอง)
+## ตัวที่ยังไม่อยู่ในชุดทดสอบ (คิวถัดไป)
 
-- **OmniVoice / omnivoice-thai** — โมเดล ~4.4GB เดี๋ยวทำ notebook แยกหลังฟังรอบแรกแล้วอยากไปต่อ
-- **ThonburianTTS** — ต้องลงจาก GitHub repo (ไม่มี pip) + โมเดลห้ามใช้เชิงพาณิชย์ ไว้เทียบคุณภาพอย่างเดียว
-- **Botnoi / ElevenLabs v3 ไทย** — มีค่าใช้จ่าย ไว้เทียบท้ายสุดกับตัวเปิดที่ชนะ
+ทดสอบได้เองบนเว็บ ไม่ต้องเขียนโค้ด (เอาประโยคจาก `sentences_th.json` ไปวาง):
+- **OmniVoice บนเว็บ** — [HF Space ทางการของ k2-fsa](https://huggingface.co/spaces/k2-fsa/OmniVoice)
+- **Gemini TTS** — [Google AI Studio](https://aistudio.google.com/) (ฟรี, รองรับไทย)
+- **Botnoi Voice** — [voice.botnoi.ai](https://voice.botnoi.ai/) (เจ้าไทย มีเครดิตฟรี)
+- **ElevenLabs v3** — ในบัญชีที่ใช้กับ pipeline อยู่แล้ว เลือกโมเดล v3 + วางข้อความไทย
+- **Typhoon2-Audio** (SCB 10X) — ต้อง GPU ใหญ่กว่า T4 ฟรี ไว้ทดสอบเมื่อมีเครื่อง/เช่าคลาวด์
