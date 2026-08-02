@@ -31,7 +31,8 @@ projects/
 **วิธีสั่งเสียงจากโปรเจกต์ไหนก็ได้ (สำหรับ Claude ทุกเซสชัน):**
 1. เขียนสคริปต์คลิปเสร็จ → สร้างไฟล์งาน `tts-ai/voice-jobs/<ชื่อคลิป>.json` รูปแบบ: `{"job": "...", "segments": [{"id": "s01_hook", "text": "..."}]}` (ดูตัวอย่าง `example-job.json`) → commit + push
 2. เจ้าของช่องเปิด `tts-ai/colab_voice_worker.ipynb` บน Colab (T4 GPU) → Run all → ได้ zip เสียงทุก segment + `timing.json` (ความยาวต่อไฟล์ พร้อมใช้วางไทม์ไลน์ CapCut)
-3. ทางเลือกบนเครื่องที่มี GPU: `python tts-ai/generate_voice.py --segments <ไฟล์> --outdir <โฟลเดอร์>`
+3. **โหมด API (RunPod)** ⭐: เปิด pod ตาม `tts-ai/runpod/README.md` แล้วทุกแชท/ทุกเครื่องสั่งเสียงผ่าน URL เดียว — `python tts-ai/runpod/client.py --server <URL> --key <KEY> --job <ไฟล์งาน> --outdir <โฟลเดอร์>`
+4. ทางเลือกบนเครื่องที่มี GPU: `python tts-ai/generate_voice.py --segments <ไฟล์> --outdir <โฟลเดอร์>`
 
 กติกา: ข้อความต้องผ่าน `normalize_th.py` เสมอ (worker/generate_voice ทำให้อัตโนมัติ) และห้ามแก้ `voice_profile.json` โดยไม่อัป `voice_version`
 
