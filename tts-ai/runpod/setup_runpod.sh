@@ -15,6 +15,13 @@ echo "== [1/3] ติดตั้งไลบรารี (~2 นาที) =="
 pip install -q omnivoice fastapi "uvicorn[standard]" soundfile pythainlp edge-tts
 command -v ffmpeg >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq ffmpeg)
 
+# transformers รุ่นใหม่ (ที่ omnivoice ต้องใช้) ต้องการ torch ที่มี DTensor —
+# template PyTorch ของ RunPod บางตัวมากับ torch เก่าเกินไป ต้องอัปเกรด
+python -c "from torch.distributed.tensor import DTensor" 2>/dev/null || {
+  echo "== [1.5/3] torch เก่าเกินไป -> อัปเกรด torch/torchaudio (~3 นาที) =="
+  pip install -q -U torch torchaudio
+}
+
 echo "== [2/3] ตรวจ GPU =="
 python -c "import torch; print('GPU:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'ไม่พบ!!')"
 
@@ -25,4 +32,5 @@ fi
 
 echo "== [3/3] เปิดเซิร์ฟเวอร์ที่พอร์ต 8000 (ครั้งแรกโหลดโมเดล 2-5 นาที รอจนขึ้น '✅ พร้อมรับงาน') =="
 echo "URL ภายนอก: https://<POD_ID>-8000.proxy.runpod.net (ดู POD_ID ในหน้า pod)"
+pkill -f "uvicorn server:app" 2>/dev/null || true  # เคลียร์ตัวเก่าที่อาจค้างพอร์ตอยู่
 exec python -m uvicorn server:app --host 0.0.0.0 --port 8000
