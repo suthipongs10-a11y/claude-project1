@@ -1,5 +1,7 @@
 # 🚀 เซิร์ฟเวอร์เสียงประจำช่องบน RunPod — คู่มือทีละขั้น
 
+> **สถานะ: ✅ ติดตั้งจริงสำเร็จแล้ว** (pod `omni-thai-voice`, RTX 4090, 2 ส.ค. 2026) — สคริปต์นี้ผ่านการแก้ครบทุกด่านแล้ว (torch/ไดรเวอร์/cuDNN/ดิสก์) pod ใหม่รันผ่านในการแปะครั้งเดียว
+
 เปลี่ยนเครดิต RunPod ให้เป็น "เครื่องเสียง TTS ส่วนตัว" ที่**ทุกแชท Claude / ทุกเครื่อง**เรียกใช้ได้ผ่าน URL เดียว
 
 ## แนวคิด
@@ -60,11 +62,18 @@ curl -H "x-api-key: รหัสลับ" https://abc123xyz-8000.proxy.runpod.n
 
 ## เลิกใช้ = กด Stop
 
-- หน้า pod → **Stop** — หยุดคิดเงิน GPU ทันที (เหลือค่า volume จิ๊บ ๆ ถ้ามี)
-- เปิดใหม่ครั้งหน้า: Start pod → Web Terminal → 
-  `cd /workspace && export TTS_API_KEY=รหัสเดิม && bash claude-project1/tts-ai/runpod/setup_runpod.sh`
-  (มี volume = โมเดลอยู่ครบ ขึ้น ✅ ใน~1-2 นาที / **Pod ID เปลี่ยน = URL เปลี่ยน** — แจ้ง URL ใหม่ให้แชทที่ใช้งานด้วย)
-- อัปเดตเสียง/โค้ดเวอร์ชันใหม่: `cd /workspace/claude-project1 && git pull` แล้วรัน setup ใหม่
+- หน้า pod → **Stop** — หยุดคิดเงิน GPU ทันที (เหลือค่าเก็บดิสก์ระหว่างปิด — เล็กน้อยมาก)
+- **Stop → Start pod เดิม: Pod ID และ URL คงเดิม** ✅ (URL จะเปลี่ยนเฉพาะกรณี Terminate แล้วสร้าง pod ใหม่)
+- สิ่งที่หายตอน Stop: โปรแกรมที่ pip ติดตั้ง (container disk รีเซ็ต) / สิ่งที่อยู่ครบ: repo + โมเดลใน `/workspace`
+- เปิดใหม่ครั้งหน้า: Start pod → Web Terminal → วางก้อนเดิม:
+  ```bash
+  cd /workspace/claude-project1 && git pull && \
+    export TTS_API_KEY=รหัสเดิม && \
+    nohup bash tts-ai/runpod/setup_runpod.sh > /workspace/tts.log 2>&1 &
+  sleep 2 && tail -f /workspace/tts.log
+  ```
+  รอ `✅ พร้อมรับงาน` ~4-6 นาที (ติดตั้งไลบรารีใหม่ แต่โมเดล 4.4GB อยู่แล้วไม่ต้องโหลด)
+- ข้อควรรู้: pod ที่ Stop ไว้ อาจเจอ "GPU ไม่ว่าง" ตอน Start ถ้าเครื่องนั้นถูกคนอื่นเช่าไป — รอสักพักหรือเลือกย้าย GPU ตามที่หน้าจอเสนอ
 
 ## ความปลอดภัย
 
