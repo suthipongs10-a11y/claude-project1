@@ -32,11 +32,17 @@ tts-ai/
     f5_tts_thai_demo.py              # เดโมตัวหลัก: F5-TTS-THAI + โคลนเสียง
     omnivoice_demo.py                # เดโม OmniVoice: โคลนเสียง + ออกแบบเสียง
     requirements.txt
+  normalize_th.py                    # แปลงตัวเลข/เวลา/เงินเป็นคำอ่านไทยก่อนเข้า TTS (จุดอ่อนที่เจอจากการทดสอบจริง)
   tests/                             # 🎧 ชุดทดสอบฟังเสียงไทยเทียบทุกเอนจิน (เริ่มที่ tests/README.md)
     sentences_th.json                # ประโยคมาตรฐาน 6 แบบ (เลข/อังกฤษปน/อารมณ์ ฯลฯ)
     run_thai_tts_test.py             # รันบน PC/VPS — เจนเสียงทุกเอนจิน + report
-    colab_thai_tts_test.ipynb        # รันบน Colab GPU ฟรี — มีปุ่มกดฟังในตัว ⭐
+    colab_thai_tts_test.ipynb        # รอบ 1: edge-tts / MMS / F5-V1 บน Colab
+    colab_thai_tts_round2.ipynb      # รอบ 2: OmniVoice-Thai / F5-V2 / Thonburian
+    colab_omni_thai_only.ipynb       # เฉพาะ OmniVoice-Thai ตัวเดียว (~8 นาที)
+    colab_omni_thai_myvoice.ipynb    # 🏆 ตัวที่ใช้จริง: โคลนเสียงตัวเอง + normalize ตัวเลข ⭐
 ```
+
+> **สถานะล่าสุด (2 ส.ค. 2026):** ทดสอบฟังจริงแล้ว 2 รอบ — **เลือก OmniVoice-Thai เป็นตัวหลัก** (อ่านถูก เว้นวรรคดี, Apache-2.0 ใช้เชิงพาณิชย์ได้) จุดอ่อนอ่านตัวเลขแก้ด้วย `normalize_th.py` แล้ว ขั้นต่อไป: โคลนเสียงเจ้าของช่อง — ดูผลทดสอบ/วิธีส่งคลิปเสียงที่ [tests/README.md](tests/README.md)
 
 ## สรุปตัวเลือกเด่น (ภาษาไทย)
 

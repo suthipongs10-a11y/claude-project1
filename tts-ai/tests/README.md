@@ -17,10 +17,21 @@
 1. เปิด notebook ใน Colab (repo เป็น public เปิดผ่านลิงก์ `colab.research.google.com/github/...` ได้ตรง ๆ):
    - **รอบ 1:** [`colab_thai_tts_test.ipynb`](colab_thai_tts_test.ipynb) — edge-tts (เสียง Microsoft) + MMS (2 รุ่น) + F5-TTS-THAI V1
    - **รอบ 2:** [`colab_thai_tts_round2.ipynb`](colab_thai_tts_round2.ipynb) — OmniVoice-Thai + voice design + F5-TTS-TH V2 (IPA) + ThonburianTTS
+   - **เฉพาะ OmniVoice-Thai:** [`colab_omni_thai_only.ipynb`](colab_omni_thai_only.ipynb) — ตัวเดียวจบใน ~8 นาที
+   - **โคลนเสียงตัวเอง 🏆:** [`colab_omni_thai_myvoice.ipynb`](colab_omni_thai_myvoice.ipynb) — OmniVoice-Thai + เสียงจริงจาก `ref/` + แปลงตัวเลขอัตโนมัติ
 2. Runtime → Change runtime type → **T4 GPU**
 3. Runtime → Run all → เลื่อนลงล่างสุด มีปุ่ม ▶ กดฟังทุกเสียงเทียบกันทีละประโยค
 
 > **ผลรอบ 1 (2 ส.ค. 2026):** ผู้ฟังตัดสินว่า **edge-tts อ่านถูกต้องแม่นยำที่สุด** / เสียง Achara โดน Microsoft ถอดแล้ว (เหลือ Premwadee, Niwat) / F5 V1 เสียเปรียบเพราะโคลนจากเสียงอ้างอิงสังเคราะห์สั้น ๆ — รอบ 2 จึงเพิ่ม V2 และ OmniVoice เข้าเทียบ
+
+> **ผลทดสอบ OmniVoice-Thai (2 ส.ค. 2026): 🏆 ตัวที่เลือกใช้ต่อ** — อ่านถูกต้อง เว้นวรรคจังหวะดีมาก / จุดอ่อนเดียว: อ่านตัวเลข-เวลาแบบดิบไม่ได้ → **แก้แล้ว**ด้วย [`../normalize_th.py`](../normalize_th.py) (แปลงเลขเป็นคำอ่านก่อนส่งเข้าโมเดล) / ขั้นถัดไป: โคลนเสียงเจ้าของช่องด้วย notebook myvoice
+
+## ส่งคลิปเสียงเพื่อโคลนเสียงตัวเอง
+
+สเปคคลิปที่ดี: **ยาว 8–15 วินาที**, ห้องเงียบ (ไม่มีดนตรี/พัดลม/เสียงรถ), พูดโทน-จังหวะเดียวกับที่อยากให้ AI ใช้เล่าเรื่อง, จบประโยคพอดี — อัดจากมือถือเป็น .m4a ได้เลย
+
+- **ทาง 1 (แนะนำ):** ส่งไฟล์เสียงให้ Claude ในแชท **พร้อมพิมพ์ข้อความที่พูดแบบคำต่อคำ** → Claude commit เป็น `tests/ref/my_voice.<ext>` + `tests/ref/my_voice.txt` → notebook myvoice จะสลับไปใช้เสียงจริงเองอัตโนมัติ ไม่ต้องแก้อะไร
+- **ทาง 2:** อัปโหลดเองใน Colab — ลากไฟล์ชื่อ `my_voice.wav/mp3/m4a` เข้าแถบ Files 📁 แล้วกรอกตัวแปร `MY_VOICE_TEXT` ในเซลล์ 3
 
 ### ทาง 2: PC ของเรา (เครื่องที่มี CapCut)
 ```bash
