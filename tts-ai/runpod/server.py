@@ -42,12 +42,13 @@ def prepare_ref():
         raw, ref_text = str(ra), rt.read_text(encoding="utf-8").strip()
         src = f"เสียงจริง ({PROFILE['voice_version']})"
     else:
-        import asyncio
-
-        import edge_tts
-
+        # เรียกผ่าน CLI แทน python API — โค้ดนี้รันใน lifespan ที่มี event loop อยู่แล้ว ใช้ asyncio.run ไม่ได้
         ref_text = "สวัสดีครับ ยินดีต้อนรับเข้าสู่ช่องของเรา วันนี้มีเรื่องราวน่าสนใจมาเล่าให้ฟังกันครับ"
-        asyncio.run(edge_tts.Communicate(ref_text, "th-TH-PremwadeeNeural").save("/tmp/ref_tmp.mp3"))
+        subprocess.run(
+            ["edge-tts", "--voice", "th-TH-PremwadeeNeural", "--text", ref_text,
+             "--write-media", "/tmp/ref_tmp.mp3"],
+            check=True,
+        )
         raw, src = "/tmp/ref_tmp.mp3", "เปรมวดีชั่วคราว (ยังไม่มีเสียงจริงใน repo)"
     out = "/tmp/ref_24k.wav"
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", raw, "-ar", str(SR), "-ac", "1", out], check=True)
