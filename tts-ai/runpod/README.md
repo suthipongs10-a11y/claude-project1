@@ -54,6 +54,7 @@ curl -H "x-api-key: รหัสลับ" https://abc123xyz-8000.proxy.runpod.n
 |---|---|
 | **Claude แชทอื่น/โปรเจกต์อื่น** | บอกแชทนั้นว่า: *"อ่าน tts-ai/runpod/README.md ใน repo claude-project1 — เซิร์ฟเวอร์เสียงอยู่ที่ `https://...proxy.runpod.net` key คือ `...` ใช้ client.py หรือ curl สั่งเสียงได้เลย"* |
 | **PC (ทำ CapCut)** | `python tts-ai/runpod/client.py --server https://... --key ... --job tts-ai/voice-jobs/งาน.json --outdir projects/xxx/voice` → ได้ wav + timing.json |
+| **มือถือ/เบราว์เซอร์ (ง่ายสุด)** 🎧 | เปิด `https://<POD_ID>-8000.proxy.runpod.net/say?key=รหัสลับ&text=สวัสดีครับ ทดสอบเสียง` → เล่นเสียงทันทีในเบราว์เซอร์ (อย่าวางข้อความไทยใน web terminal — encoding เพี้ยน ใช้ /say หรือไฟล์งานแทน) |
 | **curl เร็ว ๆ** | `curl -X POST -H "x-api-key: KEY" -H "Content-Type: application/json" -d '{"text":"สวัสดีครับ"}' https://.../tts -o out.wav` |
 | **Claude Code cloud เรียกเองในแชท** | เพิ่ม `proxy.runpod.net` ใน network policy ของ environment (claude.ai → Code → environment settings) → จากนั้น Claude เจนเสียง+commit ได้เองจบในแชท |
 

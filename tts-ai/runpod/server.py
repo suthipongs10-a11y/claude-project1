@@ -5,8 +5,10 @@
 รันโดย setup_runpod.sh — หรือเอง:
     TTS_API_KEY=รหัสลับ python -m uvicorn server:app --host 0.0.0.0 --port 8000
 
-Endpoints (ทุกตัวต้องส่ง header  x-api-key: <TTS_API_KEY>  ถ้าตั้งไว้):
+Endpoints (POST ใช้ header  x-api-key: <TTS_API_KEY> / GET ใช้ ?key=<TTS_API_KEY>):
     GET  /health            สถานะ + โมเดล + เวอร์ชันเสียง
+    GET  /say?key=..&text=..  เจนเสียงแล้วเล่นในเบราว์เซอร์ได้เลย (สะดวกสุดบนมือถือ)
+    GET  /listen?key=..       ฟังเสียงล่าสุดที่เจนไปซ้ำ
     POST /tts   {"text": "..."}                     -> ไฟล์ wav (header x-seconds = ความยาว)
     POST /job   {"job": "ชื่อ", "segments": [...]}  -> ไฟล์ zip (wav ทุก segment + timing.json)
 """
@@ -87,13 +89,28 @@ def check_key(x_api_key: str):
 
 
 def synth(text: str):
+    import numpy as np
     import soundfile as sf
 
     gen = normalize_th(text) if PROFILE.get("normalize_numbers", True) else text
     audio = state["model"].generate(text=gen, ref_audio=state["ref_audio"], ref_text=state["ref_text"])
+    wav = audio[0]
+    if hasattr(wav, "detach"):  # เป็น torch tensor (อาจอยู่บน GPU) -> แปลงเป็น numpy ก่อนเขียนไฟล์
+        wav = wav.detach().float().cpu().numpy()
+    wav = np.asarray(wav).squeeze()
     buf = io.BytesIO()
-    sf.write(buf, audio[0], SR, format="WAV")
-    return buf.getvalue(), round(len(audio[0]) / SR, 3), gen
+    sf.write(buf, wav, SR, format="WAV")
+    data = buf.getvalue()
+    state["last_wav"] = data
+    return data, round(len(wav) / SR, 3), gen
+
+
+def try_synth(text: str):
+    """เรียก synth พร้อมแปลง error เป็นข้อความอ่านรู้เรื่อง (แทน Internal Server Error เปล่า ๆ)"""
+    try:
+        return synth(text)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"เจนเสียงล้มเหลว: {type(e).__name__}: {e}")
 
 
 @app.get("/health")
@@ -108,13 +125,31 @@ def health(x_api_key: str = Header(default="")):
     }
 
 
+@app.get("/say")
+def say(key: str = "", text: str = ""):
+    """เปิดจากเบราว์เซอร์ได้เลย: /say?key=รหัส&text=ข้อความไทย -> เล่นเสียงทันที"""
+    check_key(key)
+    if not text.strip():
+        raise HTTPException(status_code=400, detail="ใส่ ?text=ข้อความที่จะให้พูด")
+    wav, secs, gen = try_synth(text.strip())
+    return Response(content=wav, media_type="audio/wav", headers={"x-seconds": str(secs)})
+
+
+@app.get("/listen")
+def listen(key: str = ""):
+    check_key(key)
+    if not state.get("last_wav"):
+        raise HTTPException(status_code=404, detail="ยังไม่มีเสียงล่าสุด — เรียก /say หรือ /tts ก่อน")
+    return Response(content=state["last_wav"], media_type="audio/wav")
+
+
 @app.post("/tts")
 def tts(payload: dict, x_api_key: str = Header(default="")):
     check_key(x_api_key)
     text = (payload or {}).get("text", "").strip()
     if not text:
         raise HTTPException(status_code=400, detail='ต้องส่ง {"text": "..."}')
-    wav, secs, gen = synth(text)
+    wav, secs, gen = try_synth(text)
     return Response(content=wav, media_type="audio/wav",
                     headers={"x-seconds": str(secs), "x-gen-text": gen.encode().hex()})
 
@@ -131,7 +166,11 @@ def job(payload: dict, x_api_key: str = Header(default="")):
     with zipfile.ZipFile(zbuf, "w", zipfile.ZIP_DEFLATED) as zf:
         for seg in segments:
             sid, text = seg["id"], seg["text"]
-            wav, secs, gen = synth(text)
+            try:
+                wav, secs, gen = synth(text)
+            except Exception as e:  # segment ไหนพังให้จดไว้ใน timing แล้วทำตัวถัดไปต่อ
+                timing.append({"id": sid, "error": f"{type(e).__name__}: {e}", "text": text})
+                continue
             zf.writestr(f"{name}/{sid}.wav", wav)
             timing.append({"id": sid, "file": f"{sid}.wav", "seconds": secs,
                            "chars": len(text), "text": text, "gen_text": gen})
