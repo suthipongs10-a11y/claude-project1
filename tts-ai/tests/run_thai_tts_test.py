@@ -52,7 +52,11 @@ def run_edge(outdir: Path):
             for sid, text in SENTENCES.items():
                 p = outdir / f"edge_{short}_{sid}.mp3"
                 t0 = time.time()
-                await edge_tts.Communicate(text, v).save(str(p))
+                try:  # บางเสียงอาจโดน Microsoft ถอด (เคยเจอกับ Achara) — ข้ามรายประโยค
+                    await edge_tts.Communicate(text, v).save(str(p))
+                except Exception as e:
+                    log_fail(f"edge-tts/{short}/{sid}", e)
+                    continue
                 log_ok("edge-tts", short, sid, p, time.time() - t0)
 
     asyncio.run(gen())
