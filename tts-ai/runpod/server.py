@@ -65,7 +65,7 @@ async def lifespan(app):
     ref_audio, ref_text, ref_src = prepare_ref()
     dev = "cuda:0" if torch.cuda.is_available() else "cpu"
     dt = torch.float16 if torch.cuda.is_available() else torch.float32
-    print(f"โหลดโมเดล ({dev}) ... ครั้งแรกใช้เวลา 2-5 นาที")
+    print(f"โหลดโมเดล ({dev}) ... ครั้งแรกใช้เวลา 2-5 นาที", flush=True)
     try:
         mid = PROFILE["model_id"]
         model = OmniVoice.from_pretrained(mid, device_map=dev, dtype=dt)
@@ -74,7 +74,7 @@ async def lifespan(app):
         mid = PROFILE["fallback_model_id"]
         model = OmniVoice.from_pretrained(mid, device_map=dev, dtype=dt)
     state.update(model=model, model_id=mid, ref_audio=ref_audio, ref_text=ref_text, ref_src=ref_src)
-    print(f"✅ พร้อมรับงาน | โมเดล: {mid} | เสียงอ้างอิง: {ref_src}")
+    print(f"✅ พร้อมรับงาน | โมเดล: {mid} | เสียงอ้างอิง: {ref_src}", flush=True)
     yield
 
 
