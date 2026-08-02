@@ -1,0 +1,16 @@
+{
+  "_comment": "โปรไฟล์เสียงประจำช่อง — source of truth เดียว ทุกโปรเจกต์/ทุกเซสชันต้องอ่านจากไฟล์นี้ ห้าม hardcode ค่าเอง",
+  "voice_version": "v0-รอเสียงจริง",
+  "engine": "omnivoice",
+  "model_id": "hotdogs/omnivoice-thai",
+  "fallback_model_id": "k2-fsa/OmniVoice",
+  "ref_audio": "tests/ref/my_voice.wav",
+  "ref_text_file": "tests/ref/my_voice.txt",
+  "sample_rate": 24000,
+  "normalize_numbers": true,
+  "notes": [
+    "ref_audio/ref_text ยังไม่มี — รอเจ้าของช่องส่งคลิปเสียง 8-15 วิ แล้ว Claude จะ commit ให้",
+    "เมื่อเปลี่ยนเสียงอ้างอิง ให้อัป voice_version (v1, v2, ...) และเจนประโยคทดสอบ tests/sentences_th.json เก็บไว้เทียบทุกครั้ง",
+    "ข้อความต้องผ่าน normalize_th.normalize_th() ก่อนส่งเข้าโมเดลเสมอ (โมเดลอ่านเลขดิบไม่ได้)"
+  ]
+}

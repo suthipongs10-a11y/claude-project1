@@ -32,6 +32,10 @@ tts-ai/
     f5_tts_thai_demo.py              # เดโมตัวหลัก: F5-TTS-THAI + โคลนเสียง
     omnivoice_demo.py                # เดโม OmniVoice: โคลนเสียง + ออกแบบเสียง
     requirements.txt
+  voice_profile.json                 # 🎙️ โปรไฟล์เสียงประจำช่อง (โมเดล+เสียงอ้างอิง+ค่าตั้ง) — source of truth เดียว
+  generate_voice.py                  # CLI เจนเสียงพากย์บนเครื่องมี GPU: --text หรือ --segments -> wav + timing.json
+  colab_voice_worker.ipynb           # 🏭 โรงงานเสียงบน Colab: อ่านงานจาก voice-jobs/ เจนครบทุก segment
+  voice-jobs/                        # คิวงานเสียง — Claude โปรเจกต์ไหนก็ได้เขียนไฟล์ .json สั่งงานที่นี่
   normalize_th.py                    # แปลงตัวเลข/เวลา/เงินเป็นคำอ่านไทยก่อนเข้า TTS (จุดอ่อนที่เจอจากการทดสอบจริง)
   tests/                             # 🎧 ชุดทดสอบฟังเสียงไทยเทียบทุกเอนจิน (เริ่มที่ tests/README.md)
     sentences_th.json                # ประโยคมาตรฐาน 6 แบบ (เลข/อังกฤษปน/อารมณ์ ฯลฯ)
