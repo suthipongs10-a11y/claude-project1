@@ -1,6 +1,6 @@
 {
   "_comment": "โปรไฟล์เสียงประจำช่อง — source of truth เดียว ทุกโปรเจกต์/ทุกเซสชันต้องอ่านจากไฟล์นี้ ห้าม hardcode ค่าเอง",
-  "voice_version": "v1-เสียงจริง (รอไฟล์ข้อความ my_voice.txt จึงจะเปิดใช้)",
+  "voice_version": "v1-เสียงจริง",
   "engine": "omnivoice",
   "model_id": "hotdogs/omnivoice-thai",
   "fallback_model_id": "k2-fsa/OmniVoice",
