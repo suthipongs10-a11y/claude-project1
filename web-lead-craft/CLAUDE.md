@@ -78,7 +78,7 @@ Thai serif comes out thin and awkward while its Latin looks fine. Fetch the
 Latin families with subset `latin`, then `--append` the Thai families with
 subset `thai` into the same `fonts.css`; each face keeps its own
 `unicode-range`, so the browser picks per character from a stack that lists
-Latin first: `'Noto Serif', 'Bai Jamjuree', serif`.
+Latin first: `'Noto Serif', 'Kanit', serif`.
 
 Add `:lang(th)` adjustments where Latin defaults do not suit Thai — more
 line-height (vowels and tone marks stack above and below), much less
@@ -86,4 +86,4 @@ letter-spacing (wide tracking pulls marks away from their consonants), and
 watch any underline or bottom border for collisions with below-vowels (ุ ู).
 
 In use: demo-cleaning is Mitr + Anuphan; demo-cleaning-biz is Noto Serif +
-Bai Jamjuree (display) and IBM Plex Sans + Anuphan (body). All OFL.
+Kanit (display) and IBM Plex Sans + Anuphan (body). All OFL.

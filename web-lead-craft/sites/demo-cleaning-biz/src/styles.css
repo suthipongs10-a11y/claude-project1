@@ -27,7 +27,7 @@
      Latin from the serif, Thai from Bai Jamjuree. Thai has no serif
      tradition — forcing a serif onto it gives thin, awkward loops — while
      English is exactly where the serif earns the premium tone. */
-  --font-display: 'Noto Serif', 'Bai Jamjuree', Georgia, serif;
+  --font-display: 'Noto Serif', 'Kanit', Georgia, serif;
   --font-body: 'IBM Plex Sans', 'Anuphan', -apple-system, 'Segoe UI', 'Leelawadee UI', sans-serif;
   --gutter: clamp(20px, 4vw, 30px);
   --page: 1180px;

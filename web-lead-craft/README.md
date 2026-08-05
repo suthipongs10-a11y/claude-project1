@@ -81,11 +81,12 @@ node tools/fetch-fonts.mjs "<url-ฟอนต์ไทย>"  sites/<ชื่อ
 ```
 
 ```css
---font-display: 'Noto Serif', 'Bai Jamjuree', serif;   /* ละตินก่อน ไทยตาม */
+--font-display: 'Noto Serif', 'Kanit', serif;   /* ละตินก่อน ไทยตาม */
 ```
 
-ฟอนต์ไทยที่ใช้ได้ดีในงานนี้: **Bai Jamjuree** (เรียบหรู แคบนิด) · **Kanit** (หนักแน่น)
-· **Prompt** (เรขาคณิต อ่านง่าย) · **Anuphan** (เนื้อความ) · **Mitr** (เป็นมิตร)
+ฟอนต์ไทยที่ใช้ได้ดีในงานนี้: **Kanit** (หนักแน่น มั่นใจ — ใช้ใน ALTA) ·
+**Bai Jamjuree** (เรียบหรู แคบนิด) · **Prompt** (เรขาคณิต อ่านง่าย) ·
+**Anuphan** (เนื้อความ) · **Mitr** (เป็นมิตร — ใช้ใน CleanDay)
 
 ปรับเพิ่มสำหรับภาษาไทยด้วย `:lang(th)` — ไทยต้องการ line-height มากกว่าเพราะมี
 สระบนล่าง และ letter-spacing กว้าง ๆ จะดันวรรณยุกต์ห่างจากพยัญชนะ
