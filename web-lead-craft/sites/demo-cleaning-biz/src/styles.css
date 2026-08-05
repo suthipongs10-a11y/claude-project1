@@ -22,8 +22,13 @@
   --line-green: #06C755;
   --shadow-soft: 0 12px 32px rgba(16, 21, 43, 0.07);
   --shadow-lift: 0 22px 54px rgba(16, 21, 43, 0.13);
-  --font-display: 'Noto Serif Thai', Georgia, 'Times New Roman', serif;
-  --font-body: 'IBM Plex Sans Thai', -apple-system, 'Segoe UI', 'Leelawadee UI', sans-serif;
+  /* One face per script, not one family for both. Each embedded font is
+     subset to its own unicode-range, so the browser picks per character:
+     Latin from the serif, Thai from Bai Jamjuree. Thai has no serif
+     tradition — forcing a serif onto it gives thin, awkward loops — while
+     English is exactly where the serif earns the premium tone. */
+  --font-display: 'Noto Serif', 'Bai Jamjuree', Georgia, serif;
+  --font-body: 'IBM Plex Sans', 'Anuphan', -apple-system, 'Segoe UI', 'Leelawadee UI', sans-serif;
   --gutter: clamp(20px, 4vw, 30px);
   --page: 1180px;
 }
@@ -58,6 +63,20 @@ img, svg { display: block; max-width: 100%; height: auto; }
   outline-offset: 3px;
   border-radius: 4px;
 }
+
+/* Thai stacks vowels and tone marks above and below the baseline, so it wants
+   more leading than Latin — and wide tracking, which flatters uppercase Latin
+   labels, pushes its marks away from the consonants they belong to. Each page
+   carries its own lang, so these apply only where they should. */
+:lang(th) h1 { line-height: 1.44; }
+:lang(th) h2, :lang(th) h3 { line-height: 1.52; }
+:lang(th) .label,
+:lang(th) .logo-name small,
+:lang(th) .foot-col h4,
+:lang(th) .plan-flag { letter-spacing: 0.05em; }
+/* the brass rule sits just under the Latin baseline, which is exactly where
+   Thai puts its below-vowels (ุ ู) — drop it clear of them */
+:lang(th) .hero h1 em::after { bottom: -0.09em; }
 
 .wrap { max-width: var(--page); margin-inline: auto; padding-inline: var(--gutter); }
 

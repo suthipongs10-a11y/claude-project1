@@ -66,6 +66,30 @@ node tools/build-site.mjs sites/<ชื่องาน>
 node tools/qa-site.mjs   sites/<ชื่องาน>     # ต้องขึ้น PASS ก่อนส่งงาน
 ```
 
+## ฟอนต์: ใช้คนละตัวสำหรับไทยกับอังกฤษ
+
+**อย่าใช้ฟอนต์ครอบครัวเดียวคุมทั้งสองภาษา** ฟอนต์ที่รองรับทั้งไทยและละติน
+มักจะดีแค่ฝั่งเดียว โดยเฉพาะ serif — อักษรไทยไม่มีธรรมเนียม serif ห่วงเลยออกมา
+บางและเก้ ๆ (บทเรียนจาก ALTA: Noto Serif Thai สวยฝั่งอังกฤษ แต่ฝั่งไทยไม่ผ่าน)
+
+วิธีที่ใช้: โหลดฟอนต์ละตินด้วย subset `latin` แล้ว **append** ฟอนต์ไทยด้วย subset
+`thai` ลงไฟล์เดียวกัน เบราว์เซอร์จะเลือกให้เองรายตัวอักษรจาก `unicode-range`
+
+```bash
+node tools/fetch-fonts.mjs "<url-ฟอนต์ละติน>" sites/<ชื่องาน>/src/fonts.css latin
+node tools/fetch-fonts.mjs "<url-ฟอนต์ไทย>"  sites/<ชื่องาน>/src/fonts.css thai --append
+```
+
+```css
+--font-display: 'Noto Serif', 'Bai Jamjuree', serif;   /* ละตินก่อน ไทยตาม */
+```
+
+ฟอนต์ไทยที่ใช้ได้ดีในงานนี้: **Bai Jamjuree** (เรียบหรู แคบนิด) · **Kanit** (หนักแน่น)
+· **Prompt** (เรขาคณิต อ่านง่าย) · **Anuphan** (เนื้อความ) · **Mitr** (เป็นมิตร)
+
+ปรับเพิ่มสำหรับภาษาไทยด้วย `:lang(th)` — ไทยต้องการ line-height มากกว่าเพราะมี
+สระบนล่าง และ letter-spacing กว้าง ๆ จะดันวรรณยุกต์ห่างจากพยัญชนะ
+
 หลักการ: HTML เป็นไฟล์เดียวจบ — ฟอนต์ฝังใน, ไอคอนเป็น SVG sprite, ไม่ยิงออกไปหา CDN
 ภายนอกเลย → PageSpeed ดี และใช้เป็นพรีวิว artifact ได้ (CSP ของ artifact บล็อก CDN ทุกตัว)
 

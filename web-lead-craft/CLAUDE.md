@@ -72,5 +72,18 @@ free-tier limits.
 
 ## Fonts
 
-Default pairing: Mitr (display, 500/600) + Anuphan (body, 400–600), both OFL.
-Change per client via the css2 URL passed to `fetch-fonts.mjs`.
+**One face per script, never one family for both.** A family covering Thai and
+Latin is usually only good at one of them — Thai has no serif tradition, so a
+Thai serif comes out thin and awkward while its Latin looks fine. Fetch the
+Latin families with subset `latin`, then `--append` the Thai families with
+subset `thai` into the same `fonts.css`; each face keeps its own
+`unicode-range`, so the browser picks per character from a stack that lists
+Latin first: `'Noto Serif', 'Bai Jamjuree', serif`.
+
+Add `:lang(th)` adjustments where Latin defaults do not suit Thai — more
+line-height (vowels and tone marks stack above and below), much less
+letter-spacing (wide tracking pulls marks away from their consonants), and
+watch any underline or bottom border for collisions with below-vowels (ุ ู).
+
+In use: demo-cleaning is Mitr + Anuphan; demo-cleaning-biz is Noto Serif +
+Bai Jamjuree (display) and IBM Plex Sans + Anuphan (body). All OFL.
