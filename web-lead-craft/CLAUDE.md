@@ -26,6 +26,13 @@ the day-to-day workflow and Cloudflare Pages limits.
    sprite, zero external requests. This is what makes the same page work both
    deployed and as a claude.ai artifact preview (artifact CSP blocks CDNs),
    and what makes PageSpeed trivially green.
+   **Photos are the exception** — a data URI cannot be lazy-loaded, cached
+   separately, or sized to the viewport. Masters live full-resolution in
+   `src/img/*.webp` (committed); `tools/images.mjs` derives 480/800/1200 into
+   `dist/img/` behind a `srcset`, and inlines them only for `preview.html`.
+   Reference them from `body.html` as `{{img:name:sizes}}`, never a raw `src`.
+   Every `<img>` needs Thai `alt` text plus `width`/`height` — and any CSS
+   sizing it must set `height: auto`, or the attribute beats `aspect-ratio`.
 5. Demo sites: fictional brand + fictional contact details, a footer
    disclaimer saying so, and the Web Lead Craft credit strip
    (LINE: kitty4uu · 099-151-4049). A demo doubles as an ad.

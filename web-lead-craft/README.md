@@ -21,6 +21,7 @@ sites/
     site.json       ← โดเมนลูกค้า + ชื่อแบรนด์ (ใช้สร้าง sitemap/canonical)
     src/            head.html · styles.css · body.html · favicon.svg
                     fonts.css (generated — อย่าแก้มือ)
+      img/          รูปต้นฉบับ .webp ความละเอียดเต็ม (commit ลง git)
     dist/           ← ของที่ deploy (gitignored, สั่ง build ใหม่ได้เสมอ)
     preview.html    ← พรีวิวเป็น artifact บน claude.ai (ห้าม deploy)
     .qa/            สกรีนช็อตจาก qa-site (gitignored)
@@ -40,9 +41,33 @@ node tools/build-site.mjs sites/<ชื่องาน>
 node tools/qa-site.mjs   sites/<ชื่องาน>     # ต้องขึ้น PASS ก่อนส่งงาน
 ```
 
-หลักการ: เว็บแพ็กเกจ 990 เป็น **static ไฟล์เดียว** — ฟอนต์ฝังใน, ไอคอนเป็น SVG sprite,
-ไม่มี external request เลย → PageSpeed ดี, ใช้ได้ทั้ง deploy จริงและพรีวิว artifact
-(CSP ของ artifact บล็อกทุก CDN ภายนอก)
+หลักการ: HTML เป็นไฟล์เดียวจบ — ฟอนต์ฝังใน, ไอคอนเป็น SVG sprite, ไม่ยิงออกไปหา CDN
+ภายนอกเลย → PageSpeed ดี และใช้เป็นพรีวิว artifact ได้ (CSP ของ artifact บล็อก CDN ทุกตัว)
+
+## รูปภาพ
+
+รูปเป็นข้อยกเว้นเดียวที่ไม่ฝังใน HTML — เพราะ data URI ทำ lazy-load ไม่ได้
+แคชแยกไม่ได้ และส่งขนาดตามจอไม่ได้ ระบบจึงเป็นแบบนี้:
+
+```bash
+# 1. แปลงรูปต้นฉบับ (PNG/JPG จากมือถือหรือ AI) เป็น master WebP
+node -e 'import("sharp").then(({default:s})=>s("ต้นฉบับ.png").webp({quality:88})
+  .toFile("sites/<ชื่องาน>/src/img/<ชื่อรูป>.webp"))'
+
+# 2. อ้างถึงใน body.html ด้วย placeholder — build จะสร้าง srcset ให้เอง
+#    <img {{img:<ชื่อรูป>:(max-width:600px) 88vw, 23vw}} width="1536" height="1024"
+#         loading="lazy" alt="คำอธิบายภาษาไทย">
+```
+
+`build-site.mjs` จะย่อเป็น 480 / 800 / 1200px ลง `dist/img/` พร้อม `srcset`
+(มือถือโหลด 480 จอคอมโหลด 1200) และตั้ง cache 1 ปีให้ใน `_headers`
+ส่วน `preview.html` จะฝังรูปเป็น data URI แทน เพราะ artifact เป็นหน้าเดียวโดด ๆ
+
+- **`alt` ต้องเขียนทุกรูป** เป็นภาษาไทยที่บอกว่าในรูปมีอะไร — qa-site จะ fail ถ้าขาด
+- **`width`/`height` ต้องใส่เสมอ** กันหน้าเว็บกระโดดตอนรูปโหลด และ CSS ต้องมี
+  `height: auto` คู่กันเสมอ ไม่งั้น attribute จะชนะ `aspect-ratio` (เคยพลาดมาแล้ว)
+- ต้นฉบับความละเอียดเต็มอยู่ใน `src/img/` และ commit ลง git — ขนาดที่ย่อแล้วเป็น
+  build output ไม่ต้อง commit
 
 ### qa-site ตรวจอะไรให้บ้าง
 

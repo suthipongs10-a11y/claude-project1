@@ -108,6 +108,26 @@ for (const [label, viewport] of VIEWPORTS) {
     // content still invisible after a full scroll means reveal animation stuck
     const stuck = [...document.querySelectorAll('.rv')].filter(el => Number(getComputedStyle(el).opacity) < 0.5).length;
 
+    // Two ways an <img> goes wrong that a screenshot review can miss.
+    const badImages = [];
+    for (const im of document.querySelectorAll('img')) {
+      if (!vis(im)) continue;
+      const r = im.getBoundingClientRect();
+      const name = (im.currentSrc || im.src).split('/').pop().split('?')[0].slice(0, 40);
+      // stretched: object-fit lets the box differ from the file, fill does not
+      if (getComputedStyle(im).objectFit === 'fill' && im.naturalWidth) {
+        const drawn = r.width / r.height;
+        const natural = im.naturalWidth / im.naturalHeight;
+        if (Math.abs(drawn - natural) / natural > 0.02) {
+          badImages.push(`${name} distorted (drawn ${drawn.toFixed(2)}:1 vs file ${natural.toFixed(2)}:1)`);
+        }
+      }
+      // runaway box: usually a height attribute beating a CSS aspect-ratio
+      if (r.height > r.width * 2.2) {
+        badImages.push(`${name} renders ${Math.round(r.width)}x${Math.round(r.height)} — far taller than wide, check height:auto`);
+      }
+    }
+
     // an in-page anchor with no matching target is a dead link
     const deadAnchors = [...document.querySelectorAll('a[href^="#"]')]
       .map(a => a.getAttribute('href'))
@@ -117,6 +137,7 @@ for (const [label, viewport] of VIEWPORTS) {
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       noAlt,
       small: [...new Set(small)],
+      badImages: [...new Set(badImages)],
       stuck,
       deadAnchors: [...new Set(deadAnchors)],
       tel: document.querySelectorAll('a[href^="tel:"]').length,
@@ -134,6 +155,7 @@ for (const [label, viewport] of VIEWPORTS) {
   if (found.overflow > 0) note(label, `page scrolls sideways by ${found.overflow}px`);
   if (found.stuck) note(label, `${found.stuck} section(s) still invisible after scrolling — reveal animation stuck`);
   if (found.noAlt.length) note(label, `${found.noAlt.length} image(s) without alt text → ${found.noAlt.slice(0, 3).join(', ')}`);
+  for (const b of found.badImages) note(label, b);
   if (found.deadAnchors.length) note(label, `anchor links point nowhere → ${found.deadAnchors.join(', ')}`);
   if (label === 'phone') {
     // list every one — a QA tool that truncates its findings hides work

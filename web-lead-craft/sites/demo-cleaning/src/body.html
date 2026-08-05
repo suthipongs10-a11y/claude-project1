@@ -93,6 +93,7 @@
       <a href="#services">บริการ</a>
       <a href="#pricing">ราคา</a>
       <a href="#how">ขั้นตอน</a>
+      <a href="#work">ผลงาน</a>
       <a href="#reviews">รีวิว</a>
     </nav>
     <a class="nav-tel" href="tel:0812345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>081-234-5678</a>
@@ -129,21 +130,22 @@
           </div>
         </div>
         <div class="hero-visual">
+          <figure class="hero-photo">
+            <img {{img:sofa-vacuum:(max-width:920px) 88vw, 44vw}} width="1536" height="1024" fetchpriority="high" decoding="async"
+                 alt="แม่บ้าน CleanDay สวมผ้ากันเปื้อนและถุงมือ กำลังดูดฝุ่นโซฟาในห้องนั่งเล่น">
+          </figure>
           <div class="chat-card">
             <div class="chat-head">
               <span class="chat-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
-              <div class="chat-who"><b>CleanDay</b><span><i class="chat-dot"></i>ออนไลน์ · ตอบภายใน 5 นาที</span></div>
+              <div class="chat-who"><b>CleanDay</b><span><i class="chat-dot"></i>ตอบภายใน 5 นาที</span></div>
               <span class="chat-line-badge">LINE</span>
             </div>
             <div class="chat-body">
-              <div class="msg msg-me"><p>สนใจทำความสะอาดคอนโด 1 ห้องนอน พรุ่งนี้ช่วงเช้าว่างไหมคะ?</p><time>20:41</time></div>
-              <div class="msg msg-them"><p>ว่างค่ะ 🙌 พรุ่งนี้ 9:00 น. ทีมงาน 2 คน ใช้เวลาประมาณ 3 ชม. ราคา 1,190 บาท รวมอุปกรณ์และน้ำยาแล้วค่ะ</p><time>20:42</time></div>
-              <div class="msg msg-me"><p>โอเค จองเลยค่ะ</p><time>20:43</time></div>
+              <div class="msg msg-me"><p>คอนโด 1 ห้องนอน พรุ่งนี้เช้าว่างไหมคะ?</p><time>20:41</time></div>
               <div class="msg msg-them" id="chatLast"><p><span class="typing"><i></i><i></i><i></i></span></p></div>
             </div>
           </div>
           <div class="float-badge fb-rate"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg><span>4.9/5<small>จาก 320+ รีวิวจริง</small></span></div>
-          <div class="float-badge fb-shield"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span>มีประกันความเสียหาย<small>เคลมได้ตามจริง</small></span></div>
         </div>
       </div>
     </div>
@@ -158,28 +160,52 @@
       </div>
       <div class="svc-grid">
         <article class="svc rv">
-          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-condo"/></svg></span>
-          <h3>คอนโด / ห้องชุด</h3>
-          <p>สตูดิโอถึง 2 ห้องนอน เช็ดฝุ่น ดูดฝุ่น ถูพื้น ขัดห้องน้ำ เก็บระเบียง</p>
-          <div class="svc-price"><b>เริ่ม 899.-</b><span>/ครั้ง</span></div>
+          <div class="svc-media">
+            <img {{img:sofa-wipe:(max-width:600px) 88vw, (max-width:1020px) 44vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+                 alt="เช็ดทำความสะอาดเบาะโซฟาในคอนโด">
+            <span class="svc-ic"><svg aria-hidden="true"><use href="#i-condo"/></svg></span>
+          </div>
+          <div class="svc-body">
+            <h3>คอนโด / ห้องชุด</h3>
+            <p>สตูดิโอถึง 2 ห้องนอน เช็ดฝุ่น ดูดฝุ่น ถูพื้น ขัดห้องน้ำ เก็บระเบียง</p>
+            <div class="svc-price"><b>เริ่ม 899.-</b><span>/ครั้ง</span></div>
+          </div>
         </article>
         <article class="svc rv" style="--d:0.08s">
-          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-home"/></svg></span>
-          <h3>บ้านเดี่ยว / ทาวน์โฮม</h3>
-          <p>ทำทั้งหลังทุกชั้น ห้องนั่งเล่น ครัว ห้องน้ำ บันได โถงทางเดิน</p>
-          <div class="svc-price"><b>เริ่ม 2,290.-</b><span>/ครั้ง</span></div>
+          <div class="svc-media">
+            <img {{img:living-mop:(max-width:600px) 88vw, (max-width:1020px) 44vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+                 alt="ถูพื้นห้องนั่งเล่นบ้านเดี่ยวจนพื้นเงา">
+            <span class="svc-ic"><svg aria-hidden="true"><use href="#i-home"/></svg></span>
+          </div>
+          <div class="svc-body">
+            <h3>บ้านเดี่ยว / ทาวน์โฮม</h3>
+            <p>ทำทั้งหลังทุกชั้น ห้องนั่งเล่น ครัว ห้องน้ำ บันได โถงทางเดิน</p>
+            <div class="svc-price"><b>เริ่ม 2,290.-</b><span>/ครั้ง</span></div>
+          </div>
         </article>
         <article class="svc rv" style="--d:0.16s">
-          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-sparkles"/></svg></span>
-          <h3>Big Cleaning</h3>
-          <p>ขัดคราบฝังลึก เช็ดกระจก ซอกมุมที่ถูกมองข้าม เหมาะทำทุก 3–6 เดือน</p>
-          <div class="svc-price"><b>เริ่ม 2,990.-</b><span>/ครั้ง</span></div>
+          <div class="svc-media">
+            <img {{img:floor-polish:(max-width:600px) 88vw, (max-width:1020px) 44vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+                 alt="ใช้เครื่องขัดพื้นขัดคราบฝังลึกในงาน Big Cleaning">
+            <span class="svc-ic"><svg aria-hidden="true"><use href="#i-sparkles"/></svg></span>
+          </div>
+          <div class="svc-body">
+            <h3>Big Cleaning</h3>
+            <p>ขัดคราบฝังลึก เช็ดกระจก ซอกมุมที่ถูกมองข้าม เหมาะทำทุก 3–6 เดือน</p>
+            <div class="svc-price"><b>เริ่ม 2,990.-</b><span>/ครั้ง</span></div>
+          </div>
         </article>
         <article class="svc rv" style="--d:0.24s">
-          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-hat"/></svg></span>
-          <h3>ก่อนเข้าอยู่ / หลังงานช่าง</h3>
-          <p>เก็บฝุ่นปูน เศษสี คราบกาว พร้อมส่งมอบให้เข้าอยู่ได้จริง</p>
-          <div class="svc-price"><b>เริ่ม 3,490.-</b><span>/ครั้ง</span></div>
+          <div class="svc-media">
+            <img {{img:window-wipe:(max-width:600px) 88vw, (max-width:1020px) 44vw, 23vw}} width="1024" height="1536" loading="lazy" decoding="async"
+                 alt="เช็ดกระจกบานใหญ่หลังงานช่างจนใสไม่เหลือคราบ">
+            <span class="svc-ic"><svg aria-hidden="true"><use href="#i-hat"/></svg></span>
+          </div>
+          <div class="svc-body">
+            <h3>ก่อนเข้าอยู่ / หลังงานช่าง</h3>
+            <p>เก็บฝุ่นปูน เศษสี คราบกาว พร้อมส่งมอบให้เข้าอยู่ได้จริง</p>
+            <div class="svc-price"><b>เริ่ม 3,490.-</b><span>/ครั้ง</span></div>
+          </div>
         </article>
       </div>
     </div>
@@ -191,31 +217,41 @@
         <span class="eyebrow">ทำไมต้อง CleanDay</span>
         <h2>มาตรฐานเดียวกัน ทุกครั้งที่จอง</h2>
       </div>
-      <div class="why-grid">
-        <article class="why rv">
-          <span class="why-ic"><svg aria-hidden="true"><use href="#i-badge"/></svg></span>
-          <div><h3>ทีมงานผ่านการอบรม</h3><p>ฝึกตามมาตรฐานงานสะอาดของเรา และตรวจประวัติทุกคนก่อนรับงาน</p></div>
-        </article>
-        <article class="why rv" style="--d:0.06s">
-          <span class="why-ic"><svg aria-hidden="true"><use href="#i-kit"/></svg></span>
-          <div><h3>อุปกรณ์–น้ำยาครบชุด</h3><p>ทีมงานขนไปเองทั้งหมด บ้านคุณไม่ต้องเตรียมแม้แต่ไม้กวาด</p></div>
-        </article>
-        <article class="why rv" style="--d:0.12s">
-          <span class="why-ic"><svg aria-hidden="true"><use href="#i-clock"/></svg></span>
-          <div><h3>ตรงต่อเวลา</h3><p>คิวที่ยืนยันแล้วคือเวลาจริง ถ้าถึงช้าเกิน 15 นาที ลดทันที 10%</p></div>
-        </article>
-        <article class="why rv" style="--d:0.06s">
-          <span class="why-ic"><svg aria-hidden="true"><use href="#i-check-circle"/></svg></span>
-          <div><h3>รับประกันความพอใจ</h3><p>จุดไหนไม่ผ่าน แจ้งภายใน 24 ชม. กลับไปทำซ้ำให้ฟรี</p></div>
-        </article>
-        <article class="why rv" style="--d:0.12s">
-          <span class="why-ic"><svg aria-hidden="true"><use href="#i-wallet"/></svg></span>
-          <div><h3>จ่ายเมื่องานเสร็จ</h3><p>เดินตรวจงานพร้อมกันก่อน แล้วค่อยจ่าย เงินสด โอน หรือพร้อมเพย์</p></div>
-        </article>
-        <article class="why rv" style="--d:0.18s">
-          <span class="why-ic"><svg aria-hidden="true"><use href="#i-shield"/></svg></span>
-          <div><h3>มีประกันความเสียหาย</h3><p>ของเสียหายจากการทำงาน เคลมได้ตามจริงตามเงื่อนไข</p></div>
-        </article>
+      <div class="why-split">
+        <figure class="why-photo rv">
+          <img {{img:team:(max-width:920px) 88vw, 40vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="ทีมงาน CleanDay สี่คนในชุดยูนิฟอร์ม พร้อมอุปกรณ์ทำความสะอาดครบชุด">
+          <figcaption class="why-cap">
+            <svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg>
+            <span>ตรวจประวัติทุกคน<small>ก่อนรับงานแรก</small></span>
+          </figcaption>
+        </figure>
+        <div class="why-list">
+          <article class="why rv">
+            <span class="why-ic"><svg aria-hidden="true"><use href="#i-badge"/></svg></span>
+            <div><h3>ทีมงานผ่านการอบรม</h3><p>ฝึกตามมาตรฐานงานสะอาดของเรา และตรวจประวัติทุกคนก่อนรับงาน</p></div>
+          </article>
+          <article class="why rv" style="--d:0.06s">
+            <span class="why-ic"><svg aria-hidden="true"><use href="#i-kit"/></svg></span>
+            <div><h3>อุปกรณ์–น้ำยาครบชุด</h3><p>ทีมงานขนไปเองทั้งหมด บ้านคุณไม่ต้องเตรียมแม้แต่ไม้กวาด</p></div>
+          </article>
+          <article class="why rv" style="--d:0.12s">
+            <span class="why-ic"><svg aria-hidden="true"><use href="#i-clock"/></svg></span>
+            <div><h3>ตรงต่อเวลา</h3><p>คิวที่ยืนยันแล้วคือเวลาจริง ถ้าถึงช้าเกิน 15 นาที ลดทันที 10%</p></div>
+          </article>
+          <article class="why rv" style="--d:0.06s">
+            <span class="why-ic"><svg aria-hidden="true"><use href="#i-check-circle"/></svg></span>
+            <div><h3>รับประกันความพอใจ</h3><p>จุดไหนไม่ผ่าน แจ้งภายใน 24 ชม. กลับไปทำซ้ำให้ฟรี</p></div>
+          </article>
+          <article class="why rv" style="--d:0.12s">
+            <span class="why-ic"><svg aria-hidden="true"><use href="#i-wallet"/></svg></span>
+            <div><h3>จ่ายเมื่องานเสร็จ</h3><p>เดินตรวจงานพร้อมกันก่อน แล้วค่อยจ่าย เงินสด โอน หรือพร้อมเพย์</p></div>
+          </article>
+          <article class="why rv" style="--d:0.18s">
+            <span class="why-ic"><svg aria-hidden="true"><use href="#i-shield"/></svg></span>
+            <div><h3>มีประกันความเสียหาย</h3><p>ของเสียหายจากการทำงาน เคลมได้ตามจริงตามเงื่อนไข</p></div>
+          </article>
+        </div>
       </div>
     </div>
   </section>
@@ -308,7 +344,44 @@
     </div>
   </section>
 
-  <section class="sec" id="reviews">
+  <section class="sec" id="work">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">ผลงานของเรา</span>
+        <h2>งานจริง ไม่ใช่ภาพโฆษณา</h2>
+        <p>ทุกงานถ่ายรูปก่อน–หลังส่งให้ลูกค้าเก็บไว้ นี่คือส่วนหนึ่งที่ลูกค้าอนุญาตให้เผยแพร่</p>
+      </div>
+      <div class="gal rv">
+        <figure class="gal-item gal-lead">
+          <img {{img:sofa-deep:(max-width:700px) 88vw, 46vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="ซักโซฟาด้วยเครื่องอัดฉีดและดูดกลับ ดึงคราบฝังลึกออกจากเนื้อผ้า">
+          <figcaption>ซักโซฟาด้วยเครื่องอัดฉีด–ดูดกลับ</figcaption>
+        </figure>
+        <figure class="gal-item">
+          <img {{img:bathroom-mirror:(max-width:700px) 88vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="ขัดกระจกและอ่างล้างหน้าในห้องน้ำจนไม่เหลือคราบน้ำ">
+          <figcaption>ห้องน้ำ ไร้คราบน้ำ</figcaption>
+        </figure>
+        <figure class="gal-item">
+          <img {{img:kitchen-counter:(max-width:700px) 88vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="เช็ดเคาน์เตอร์ครัวหินอ่อนและเตาจนสะอาด">
+          <figcaption>ครัว เคาน์เตอร์และเตา</figcaption>
+        </figure>
+        <figure class="gal-item">
+          <img {{img:aircon-filter:(max-width:700px) 88vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="ถอดแผ่นกรองแอร์ออกมาล้างฝุ่น">
+          <figcaption>ล้างแผ่นกรองแอร์</figcaption>
+        </figure>
+        <figure class="gal-item">
+          <img {{img:cleaning-kit:(max-width:700px) 88vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="ชุดอุปกรณ์และน้ำยาทำความสะอาดที่ทีมงานขนมาเองทุกครั้ง">
+          <figcaption>อุปกรณ์ที่เราขนมาเอง</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--mist" id="reviews">
     <div class="wrap">
       <div class="sec-head rv">
         <span class="eyebrow">รีวิวจากลูกค้า</span>
@@ -474,6 +547,7 @@
           <li><a href="#services">บริการของเรา</a></li>
           <li><a href="#pricing">ราคาแพ็กเกจ</a></li>
           <li><a href="#how">ขั้นตอนการจอง</a></li>
+          <li><a href="#work">ผลงานของเรา</a></li>
           <li><a href="#reviews">รีวิวลูกค้า</a></li>
           <li><a href="#booking">จองคิว</a></li>
         </ul>
@@ -517,7 +591,7 @@
   // the typing indicator in the hero chat resolves into the booking confirmation
   var last = document.getElementById('chatLast');
   var finalize = function () {
-    last.innerHTML = '<p>รับจองเรียบร้อยค่ะ ✅ เจอกันพรุ่งนี้ 9:00 น. นะคะ</p><time>20:43</time>';
+    last.innerHTML = '<p>ว่างค่ะ 9:00 น. ทีม 2 คน ราว 3 ชม. 1,190 บาท รวมอุปกรณ์แล้วค่ะ ✅</p><time>20:42</time>';
   };
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finalize(); }
   else { window.setTimeout(finalize, 3600); }

@@ -20,6 +20,9 @@
 // Usage: node tools/build-site.mjs <site-dir>
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
+import { buildDerivatives, inlineMap, applyImages, listImages, WIDTHS } from './images.mjs';
+
+const WIDTH_LABEL = WIDTHS.join('/');
 
 const dir = process.argv[2];
 if (!dir) {
@@ -52,8 +55,14 @@ const css = `${src('fonts.css').trim()}\n${src('styles.css').trim()}`;
 const body = src('body.html').trim();
 
 const dist = join(dir, 'dist');
-rmSync(dist, { recursive: true, force: true });
+// dist/img is expensive to regenerate, so it survives the wipe and the
+// pipeline decides per-file what is stale
+for (const entry of existsSync(dist) ? ['index.html', '404.html', 'favicon.svg', 'robots.txt', 'sitemap.xml', '_headers'] : []) {
+  rmSync(join(dist, entry), { force: true });
+}
 mkdirSync(dist, { recursive: true });
+
+const photos = await buildDerivatives(dir, dist);
 
 writeFileSync(
   join(dist, 'index.html'),
@@ -66,7 +75,7 @@ ${css}
 </style>
 </head>
 <body>
-${body}
+${applyImages(body)}
 </body>
 </html>
 `
@@ -127,6 +136,9 @@ if (isReal) {
   );
 }
 
+// Image filenames carry their width, and a changed photo gets a new master,
+// so a long immutable cache on /img is safe. The HTML itself must not be
+// cached hard — it is what points at everything else.
 writeFileSync(
   join(dist, '_headers'),
   `/*
@@ -135,17 +147,24 @@ writeFileSync(
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
 
+/img/*
+  Cache-Control: public, max-age=31536000, immutable
+
 /favicon.svg
   Cache-Control: public, max-age=604800
 `
 );
 
 const title = head.match(/<title>([^<]*)<\/title>/)?.[1] ?? 'Preview';
-writeFileSync(join(dir, 'preview.html'), `<title>${title}</title>\n<style>\n${css}\n</style>\n${body}\n`);
+const previewBody = applyImages(body, { inline: await inlineMap(dir) });
+writeFileSync(join(dir, 'preview.html'), `<title>${title}</title>\n<style>\n${css}\n</style>\n${previewBody}\n`);
 
 const kb = n => `${(n / 1024).toFixed(0)} KB`;
+const htmlBytes = readFileSync(join(dist, 'index.html')).length;
 console.log(`built ${dist}/`);
-console.log(`  index.html   ${kb(readFileSync(join(dist, 'index.html')).length)}`);
+console.log(`  index.html   ${kb(htmlBytes)}`);
+console.log(`  img/         ${photos.count} photo(s) x ${WIDTH_LABEL} = ${kb(photos.bytes)}`);
 console.log(`  + 404.html, favicon.svg, robots.txt, _headers${isReal ? ', sitemap.xml' : ''}`);
 if (!isReal) console.log(`  note: site.json has no real domain yet — sitemap skipped, canonical/og:url left empty`);
-console.log(`preview.html written to site root (do not deploy)`);
+console.log(`preview.html ${kb(readFileSync(join(dir, 'preview.html')).length)} (site root, do not deploy)`);
+if (listImages(dir).length === 0) console.log(`  note: no masters in src/img/ — {{img:...}} placeholders would fail`);
