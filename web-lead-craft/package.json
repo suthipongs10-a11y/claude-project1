@@ -1,0 +1,13 @@
+{
+  "name": "web-lead-craft",
+  "private": true,
+  "type": "module",
+  "description": "Static client-website production line",
+  "scripts": {
+    "build": "node tools/build-site.mjs",
+    "qa": "node tools/qa-site.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}

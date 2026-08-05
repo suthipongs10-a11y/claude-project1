@@ -1,0 +1,7 @@
+# build output — regenerate with: node tools/build-site.mjs sites/<name>
+sites/*/dist/
+
+# QA screenshots
+sites/*/.qa/
+
+node_modules/

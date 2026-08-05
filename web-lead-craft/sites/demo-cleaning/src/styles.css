@@ -708,6 +708,16 @@ img, svg { display: block; max-width: 100%; }
   .mcta { display: grid; }
   .site { padding-bottom: 76px; }
   .bubble { display: none; }
+
+  /* every tappable thing gets a 44px-tall hit area (iOS HIG minimum) —
+     text links in lists are the ones that fail this by default */
+  .logo, .nav .btn { min-height: 44px; }
+  .soc { width: 44px; height: 44px; }
+  .book-row a,
+  .foot-col a,
+  .map-meta a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .foot-col li { align-items: center; }
+  .foot-col li .ic { margin-top: 0; }
 }
 
 /* ---------- reduced motion ---------- */

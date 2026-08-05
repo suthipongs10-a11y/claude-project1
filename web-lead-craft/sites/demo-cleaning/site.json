@@ -1,0 +1,6 @@
+{
+  "name": "CleanDay คลีนเดย์",
+  "domain": "example.pages.dev",
+  "lang": "th",
+  "note": "เดโม่ — เปลี่ยน domain เป็นโดเมนจริงของลูกค้าก่อน build แล้ว sitemap/canonical จะถูกสร้างให้อัตโนมัติ"
+}
