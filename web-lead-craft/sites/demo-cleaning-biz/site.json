@@ -3,8 +3,8 @@
   "domain": "example.pages.dev",
   "lang": "th",
   "languages": [
-    { "code": "th", "path": "", "label": "ไทย" },
-    { "code": "en", "path": "en", "label": "EN" }
+    { "code": "th", "label": "ไทย" },
+    { "code": "en", "label": "EN" }
   ],
   "notFound": {
     "title": "ไม่พบหน้าที่คุณกำลังมองหา / Page not found",

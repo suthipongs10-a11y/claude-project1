@@ -23,13 +23,13 @@ if (!existsSync(join(dist, 'index.html'))) {
   process.exit(1);
 }
 
-// Every language page gets checked, not just the root: English runs longer
-// than Thai in the same boxes, so overflow and clipping show up there first.
+// Every language gets checked, not just the default: English runs longer than
+// Thai in the same boxes, so overflow and clipping show up there first. One
+// page now carries all of them, so the extra languages are reached by working
+// the switch exactly as a visitor would.
 const cfg = JSON.parse(readFileSync(join(dir, 'site.json'), 'utf8'));
-const PAGES = (cfg.languages ?? [{ code: cfg.lang ?? 'th', path: '' }]).map(l => ({
-  code: l.code,
-  url: `/${l.path ? l.path + '/' : ''}`,
-}));
+const DEFAULT_LANG = cfg.lang ?? 'th';
+const PAGES = (cfg.languages ?? [{ code: DEFAULT_LANG }]).map(l => ({ code: l.code, url: '/' }));
 
 // Serve over HTTP rather than file://, so root-absolute paths like
 // /favicon.svg and /en/ resolve the way they will once deployed.
@@ -93,6 +93,16 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
   page.on('requestfailed', r => errors.push(`request failed: ${r.url().slice(0, 90)}`));
 
   await page.goto(origin + pg.url, { waitUntil: 'load' });
+  if (pg.code !== DEFAULT_LANG) {
+    const btn = await page.$(`[data-set-lang="${pg.code}"]`);
+    if (!btn) {
+      note(label, `no switch button for "${pg.code}" — that language is unreachable`);
+      await page.close();
+      continue;
+    }
+    await btn.click();
+    await page.waitForTimeout(250);
+  }
   await page.waitForTimeout(4200); // hero animations settle
 
   // walk the page so IntersectionObserver reveals every section
@@ -155,11 +165,41 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       .map(a => a.getAttribute('href'))
       .filter(h => h.length > 1 && !document.querySelector(h));
 
+    // Content escaping its container sideways. The page-level overflow check
+    // misses this whenever something else clips the page, and translated copy
+    // is the usual cause: a phrase that fits in one language does not in the
+    // next, and lands on top of whatever sits beside it.
+    const spills = [];
+    for (const el of document.querySelectorAll('main *, header *, footer *')) {
+      if (!vis(el)) continue;
+      const cs = getComputedStyle(el);
+      if (cs.position === 'absolute' || cs.position === 'fixed') continue;
+      const parent = el.parentElement;
+      if (!parent) continue;
+      const pcs = getComputedStyle(parent);
+      if (pcs.overflow !== 'visible' || pcs.overflowX !== 'visible') continue;
+      const pr = parent.getBoundingClientRect();
+      const inner = {
+        left: pr.left + parseFloat(pcs.paddingLeft) + parseFloat(pcs.borderLeftWidth),
+        right: pr.right - parseFloat(pcs.paddingRight) - parseFloat(pcs.borderRightWidth),
+      };
+      if (inner.right - inner.left <= 0) continue;
+      const r = el.getBoundingClientRect();
+      const over = Math.round(Math.max(r.right - inner.right, inner.left - r.left));
+      if (over > 4) {
+        const what = el.className && typeof el.className === 'string'
+          ? '.' + el.className.trim().split(/\s+/)[0]
+          : el.tagName.toLowerCase();
+        spills.push(`${what} spills ${over}px out of ${parent.className ? '.' + String(parent.className).trim().split(/\s+/)[0] : parent.tagName.toLowerCase()}`);
+      }
+    }
+
     return {
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       noAlt,
       small: [...new Set(small)],
       badImages: [...new Set(badImages)],
+      spills: [...new Set(spills)],
       stuck,
       deadAnchors: [...new Set(deadAnchors)],
       tel: document.querySelectorAll('a[href^="tel:"]').length,
@@ -168,8 +208,32 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       h1: document.querySelectorAll('h1').length,
       favicon: !!document.querySelector('link[rel~=icon]'),
       lang: document.documentElement.lang || '(none)',
-      // a language link that 404s strands half the audience
-      langLinks: [...document.querySelectorAll('a[hreflang]')].map(a => a.getAttribute('href')),
+      switchTo: [...document.querySelectorAll('[data-set-lang]')].map(b => b.dataset.setLang),
+      // the whole single-page mechanism in one number: with a language
+      // active, nothing belonging to another one may still be on screen
+      wrongLang: [...document.querySelectorAll('[data-t]')]
+        .filter(el => el.getAttribute('lang') !== document.documentElement.lang && vis(el))
+        .map(el => (el.textContent || '').trim().slice(0, 30)),
+      // an attribute the switch failed to update stays in the old language
+      staleAttrs: (() => {
+        const d = document.getElementById('i18n-data');
+        if (!d) return [];
+        const D = JSON.parse(d.textContent);
+        const code = document.documentElement.lang;
+        const bad = [];
+        for (const key of Object.keys(D.nodes)) {
+          const el = document.querySelector(`[data-ti="${key}"]`);
+          if (!el) { bad.push(`node ${key} missing`); continue; }
+          const entry = D.nodes[key];
+          if (entry.text && el.textContent.trim() !== String(entry.text[code]).trim()) {
+            bad.push(`option text still "${el.textContent.trim().slice(0, 24)}"`);
+          }
+          for (const name of Object.keys(entry.attr || {})) {
+            if (el.getAttribute(name) !== entry.attr[name][code]) bad.push(`${name} on <${el.tagName.toLowerCase()}>`);
+          }
+        }
+        return bad;
+      })(),
       // Widths of containers that are *supposed* to fill their track, keyed by
       // a stable path and compared across languages afterwards. Such a width
       // is decided by layout, never by the copy — so when it moves because the
@@ -209,6 +273,7 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
   if (found.stuck) note(label, `${found.stuck} section(s) still invisible after scrolling — reveal animation stuck`);
   if (found.noAlt.length) note(label, `${found.noAlt.length} image(s) without alt text → ${found.noAlt.slice(0, 3).join(', ')}`);
   for (const b of found.badImages) note(label, b);
+  for (const s of (found.spills ?? []).slice(0, 6)) note(label, s);
   if (found.deadAnchors.length) note(label, `anchor links point nowhere → ${found.deadAnchors.join(', ')}`);
   if (size === 'phone') {
     // list every one — a QA tool that truncates its findings hides work
@@ -222,14 +287,17 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
     if (found.desc < 70 || found.desc > 165) note(seo, `meta description is ${found.desc} chars, aim for 70–165`);
     if (!found.favicon) note(seo, 'no favicon link in <head>');
     if (found.lang === '(none)') note(seo, '<html> has no lang attribute');
-    else if (found.lang !== pg.code) note(seo, `<html lang="${found.lang}"> but this is the ${pg.code} page`);
-    for (const href of new Set(found.langLinks)) {
-      if (!PAGES.some(p => p.url === href)) note(seo, `language link "${href}" matches no built page`);
-    }
-    if (PAGES.length > 1 && new Set(found.langLinks).size < PAGES.length) {
-      note(seo, `only ${new Set(found.langLinks).size} of ${PAGES.length} languages are linked from this page`);
+    else if (found.lang !== pg.code) note(seo, `switched to ${pg.code} but <html lang="${found.lang}">`);
+    if (PAGES.length > 1) {
+      for (const code of PAGES.map(p => p.code)) {
+        if (!found.switchTo.includes(code)) note(seo, `no way to switch to "${code}" from the page`);
+      }
     }
   }
+  if (found.wrongLang?.length) {
+    note(label, `${found.wrongLang.length} phrase(s) from another language still visible → "${found.wrongLang[0]}"`);
+  }
+  for (const s of (found.staleAttrs ?? []).slice(0, 5)) note(label, `switch did not update: ${s}`);
   layouts.push({ code: pg.code, size, boxes: found.boxes });
   await page.close();
 }

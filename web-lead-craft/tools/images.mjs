@@ -78,8 +78,10 @@ export function applyImages(html, { inline = null, sizesDefault = '100vw' } = {}
       if (!uri) throw new Error(`no image master named "${name}" — check src/img/`);
       return `src="${uri}"`;
     }
-    const set = WIDTHS.map(w => `/img/${name}-${w}.webp ${w}w`).join(', ');
-    return `src="/img/${name}-1200.webp" srcset="${set}" sizes="${sizes || sizesDefault}"`;
+    // Relative, not root-absolute: the built page must also work when opened
+    // straight off disk, where "/img/…" would resolve to the drive root.
+    const set = WIDTHS.map(w => `img/${name}-${w}.webp ${w}w`).join(', ');
+    return `src="img/${name}-1200.webp" srcset="${set}" sizes="${sizes || sizesDefault}"`;
   });
 }
 

@@ -74,9 +74,9 @@ img, svg { display: block; max-width: 100%; height: auto; }
 :lang(th) .logo-name small,
 :lang(th) .foot-col h4,
 :lang(th) .plan-flag { letter-spacing: 0.05em; }
-/* the brass rule sits just under the Latin baseline, which is exactly where
-   Thai puts its below-vowels (ุ ู) — drop it clear of them */
-:lang(th) .hero h1 em::after { bottom: -0.09em; }
+/* Thai puts its below-vowels (ุ ู) where Latin has only the odd descender,
+   so the rule needs more room beneath the text to clear them */
+:lang(th) .hero h1 em { padding-bottom: 0.28em; }
 
 .wrap { max-width: var(--page); margin-inline: auto; padding-inline: var(--gutter); }
 
@@ -186,7 +186,7 @@ img, svg { display: block; max-width: 100%; height: auto; }
 .nav-links a { color: var(--body); transition: color 0.15s ease; }
 .nav-links a:hover { color: var(--ink); }
 
-/* language switcher — two real pages, not a client-side toggle */
+/* language switcher — swaps the copy in place, no navigation */
 .lang {
   display: inline-flex;
   align-items: stretch;
@@ -196,18 +196,42 @@ img, svg { display: block; max-width: 100%; height: auto; }
   font-size: 0.82rem;
   font-weight: 600;
 }
-.lang a {
+.lang button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 46px;
+  min-height: 34px;
   padding: 0 11px;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: inherit;
+  font-weight: inherit;
   color: var(--faint);
+  cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
-.lang a:hover { background: var(--stone); color: var(--ink); }
-.lang a[aria-current='true'] { background: var(--indigo); color: #fff; }
-.lang a[aria-current='true']:hover { background: var(--indigo); color: #fff; }
+.lang button:hover { background: var(--stone); color: var(--ink); }
+.lang button[aria-current='true'] { background: var(--indigo); color: #fff; }
+
+/* a button that has to read as a link (footer language list) */
+.linklike {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: inherit;
+  color: var(--body);
+  cursor: pointer;
+  text-align: left;
+}
+.linklike:hover { color: var(--ink); }
+
+/* Only the active language is shown. display:none also removes the other from
+   the accessibility tree, so a screen reader never reads the page twice. */
+html[data-lang='th'] [data-t]:not([lang='th']),
+html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
 .nav-tel { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); font-size: 0.9575rem; }
 .nav-tel .ic { color: var(--brass); }
@@ -230,16 +254,19 @@ img, svg { display: block; max-width: 100%; height: auto; }
   justify-items: start;
 }
 .hero h1 { font-size: clamp(2rem, 4.3vw, 3.05rem); line-height: 1.34; }
-.hero h1 em { font-style: normal; color: var(--indigo); position: relative; white-space: nowrap; }
-.hero h1 em::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0.03em;
-  height: 0.09em;
-  background: var(--brass-light);
-  opacity: 0.85;
+/* The rule is painted as a background, not an absolutely-positioned ::after,
+   so the phrase is free to wrap — box-decoration-break underlines each line
+   fragment. An ::after would need white-space:nowrap to look right, and that
+   is what made the longer English phrase overflow into the photo. */
+.hero h1 em {
+  font-style: normal;
+  color: var(--indigo);
+  padding-bottom: 0.2em;
+  background: linear-gradient(var(--brass-light), var(--brass-light)) no-repeat;
+  background-size: 100% 0.085em;
+  background-position: 0 100%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 .hero-lede { font-size: 1.1rem; max-width: 32em; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -546,7 +573,9 @@ img, svg { display: block; max-width: 100%; height: auto; }
 .map-pin { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -74%); color: var(--brass-light); filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45)); }
 .map-pin svg { width: 32px; height: 32px; }
 .map-meta { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 16px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.72); background: rgba(255, 255, 255, 0.04); }
-.map-meta a { color: var(--brass-light); font-weight: 600; white-space: nowrap; }
+/* flex:none — the address beside it will happily squeeze this to nothing,
+   and its label is nowrap, so the icon ends up outside the link */
+.map-meta a { color: var(--brass-light); font-weight: 600; white-space: nowrap; flex: none; }
 
 .book-form { background: #fff; border-radius: 14px; padding: clamp(26px, 3.2vw, 38px); box-shadow: var(--shadow-lift); }
 .book-form h3 { font-size: 1.3rem; }
@@ -672,8 +701,11 @@ img, svg { display: block; max-width: 100%; height: auto; }
   /* 44px minimum hit area on anything tappable (iOS HIG) */
   .logo, .nav .btn { min-height: 44px; }
   .soc { width: 44px; height: 44px; }
-  .lang a { min-height: 44px; }
-  .book-row a, .foot-col a, .map-meta a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .lang button { min-height: 44px; }
+  .book-row a,
+  .foot-col a,
+  .foot-col .linklike,
+  .map-meta a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
   .foot-col li { align-items: center; }
   .foot-col li .ic { margin-top: 0; }
 }

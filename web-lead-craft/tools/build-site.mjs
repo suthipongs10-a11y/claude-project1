@@ -1,32 +1,34 @@
 #!/usr/bin/env node
 // Assemble a site folder into a deploy-ready dist/ plus a review preview.
 //
-//   dist/index.html    the default language
-//   dist/<path>/       one folder per extra language (e.g. dist/en/)
+//   dist/index.html    the page — every language in one file
 //   dist/404.html      Cloudflare Pages serves this for unknown paths
 //   dist/img/          responsive photo derivatives
 //   dist/favicon.svg   copied from src/
 //   dist/robots.txt    generated from site.json
-//   dist/sitemap.xml   every language URL, when a real domain is set
+//   dist/sitemap.xml   generated when site.json carries a real domain
 //   dist/_headers      Cloudflare Pages security + cache headers
-//   preview.html       (site root, NOT shipped) artifact-ready fragment for
-//                      client review — the artifact runtime supplies its own
+//   preview.html       (site root, NOT shipped, gitignored) artifact-ready
+//                      fragment — the artifact runtime supplies its own
 //                      doctype/head/body wrapper
 //
 // Deploy dist/ and nothing else: src/ and preview.html must never be public.
 //
-// src/ contract: head.html (meta only, no <style>; may use {{SITE_URL}} and
-//                {{HREFLANG}}), fonts.css (generated), styles.css, body.html,
-//                favicon.svg, img/*.webp masters
+// Everything inside dist/index.html links to its assets with relative paths,
+// so the built page opens correctly by double-click as well as over HTTP.
+//
+// src/ contract: head.html (meta only, no <style>; may use {{SITE_URL}}),
+//                fonts.css (generated), styles.css, body.html, favicon.svg,
+//                img/*.webp masters
 // site.json:     { "domain", "name", "lang", "languages"? }
-//                languages: [{ code, path, label }] — omit for a single-
-//                language site. The entry with path "" is the root page.
+//                languages: [{ code, label }] — omit for a single-language
+//                site. `lang` names the one shown before the visitor chooses.
 //
 // Usage: node tools/build-site.mjs <site-dir>
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { buildDerivatives, inlineMap, applyImages, listImages, WIDTHS } from './images.mjs';
-import { localize, checkTokens, hreflangTags, applyLangLinks } from './i18n.mjs';
+import { localize, checkTokens, expandAll, switcherFor } from './i18n.mjs';
 
 const WIDTH_LABEL = WIDTHS.join('/');
 
@@ -49,9 +51,9 @@ if (!existsSync(cfgPath)) {
 }
 const cfg = JSON.parse(readFileSync(cfgPath, 'utf8'));
 const defaultLang = cfg.lang ?? 'th';
-const langs = cfg.languages ?? [{ code: defaultLang, path: '', label: defaultLang.toUpperCase() }];
-if (!langs.some(l => l.path === '')) {
-  console.error('site.json: exactly one language must have "path": "" — it is the root page');
+const langs = cfg.languages ?? [{ code: defaultLang, label: defaultLang.toUpperCase() }];
+if (!langs.some(l => l.code === defaultLang)) {
+  console.error(`site.json: "lang": "${defaultLang}" is not in the languages list`);
   process.exit(1);
 }
 
@@ -74,19 +76,27 @@ if (tokenProblems.length) {
   process.exit(1);
 }
 
-// Without a real domain, drop the lines that need one outright — an empty
-// canonical or og:url is worse than none.
-const headFor = lang => {
-  const prefix = lang.path ? `/${lang.path}/` : '/';
-  return localize(rawHead, lang.code, langs)
-    .split('\n')
-    .filter(line => siteUrl || !line.includes('{{SITE_URL}}'))
-    .join('\n')
-    .replaceAll('{{SITE_URL}}', `${siteUrl}${prefix === '/' ? '' : prefix.slice(0, -1)}`)
-    .replace('{{HREFLANG}}', hreflangTags(langs, siteUrl, defaultLang))
-    .trim();
-};
+// The head ships in the default language; the switch updates <title> and the
+// description from the same JSON block the body uses.
+const head = localize(rawHead, defaultLang, langs)
+  .split('\n')
+  .filter(line => siteUrl || !line.includes('{{SITE_URL}}'))
+  .join('\n')
+  .replaceAll('{{SITE_URL}}', siteUrl)
+  .trim();
 
+const meta = Object.fromEntries(
+  langs.map(l => {
+    const h = localize(rawHead, l.code, langs);
+    return [l.code, {
+      title: h.match(/<title>([^<]*)<\/title>/)?.[1] ?? '',
+      desc: h.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? '',
+    }];
+  })
+);
+
+const withSwitcher = rawBody.replaceAll('{{SWITCHER}}', switcherFor(langs, defaultLang));
+const { html: expandedBody, data: i18nNodes } = expandAll(withSwitcher, langs, defaultLang);
 const css = `${src('fonts.css').trim()}\n${src('styles.css').trim()}`;
 
 const dist = join(dir, 'dist');
@@ -95,40 +105,78 @@ const dist = join(dir, 'dist');
 for (const entry of ['index.html', '404.html', 'favicon.svg', 'robots.txt', 'sitemap.xml', '_headers']) {
   rmSync(join(dist, entry), { force: true });
 }
-for (const l of langs) if (l.path) rmSync(join(dist, l.path), { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
 
 const photos = await buildDerivatives(dir, dist);
 
-const pages = [];
-for (const lang of langs) {
-  const outDir = lang.path ? join(dist, lang.path) : dist;
-  mkdirSync(outDir, { recursive: true });
-  const bodyHtml = applyImages(applyLangLinks(localize(rawBody, lang.code, langs), langs));
-  const file = join(outDir, 'index.html');
-  writeFileSync(
-    file,
-    `<!doctype html>
-<html lang="${lang.code}">
+// The switch itself. It runs from a JSON island rather than inline strings so
+// nothing here needs escaping, and it is small enough to inline everywhere.
+const i18nPayload = JSON.stringify({ default: defaultLang, meta, nodes: i18nNodes })
+  .replaceAll('</', '<\\/');
+const langScript = langs.length < 2 ? '' : `
+<script type="application/json" id="i18n-data">${i18nPayload}</script>
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById('i18n-data').textContent);
+  var root = document.documentElement;
+  function apply(code) {
+    if (!D.meta[code]) return;
+    root.setAttribute('data-lang', code);
+    root.lang = code;
+    document.title = D.meta[code].title;
+    var desc = document.querySelector('meta[name=description]');
+    if (desc) desc.setAttribute('content', D.meta[code].desc);
+    for (var key in D.nodes) {
+      var el = document.querySelector('[data-ti="' + key + '"]');
+      if (!el) continue;
+      var entry = D.nodes[key];
+      if (entry.text) el.textContent = entry.text[code];
+      for (var name in entry.attr || {}) el.setAttribute(name, entry.attr[name][code]);
+    }
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      if (b.dataset.setLang === code) b.setAttribute('aria-current', 'true');
+      else b.removeAttribute('aria-current');
+    });
+    try { localStorage.setItem('lang', code); } catch (e) {}
+  }
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-set-lang]');
+    if (!b) return;
+    ev.preventDefault();
+    apply(b.dataset.setLang);
+  });
+  // Only an explicit choice is restored. Guessing from navigator.language
+  // would put plenty of Thai visitors on the English copy, since English-locale
+  // phones are common here — and the business's own language is the safer
+  // thing to open with.
+  var saved;
+  try { saved = localStorage.getItem('lang'); } catch (e) {}
+  if (saved && saved !== D.default) apply(saved);
+})();
+</script>`;
+
+writeFileSync(
+  join(dist, 'index.html'),
+  `<!doctype html>
+<html lang="${defaultLang}" data-lang="${defaultLang}">
 <head>
-${headFor(lang)}
+${head}
 <style>
 ${css}
 </style>
 </head>
 <body>
-${bodyHtml}
+${applyImages(expandedBody)}${langScript}
 </body>
 </html>
 `
-  );
-  pages.push({ lang, file, url: `/${lang.path ? lang.path + '/' : ''}` });
-}
+);
 
 copyFileSync(join(dir, 'src', 'favicon.svg'), join(dist, 'favicon.svg'));
 
 // 404 deliberately skips the embedded font payload — it would double the
 // deploy size for a page almost nobody reaches. System faces are fine.
+// Its links stay root-absolute: it is served at URLs of any depth.
 const t404 = cfg.notFound ?? {};
 writeFileSync(
   join(dist, '404.html'),
@@ -171,14 +219,11 @@ writeFileSync(
 );
 
 if (isReal) {
-  const entries = pages
-    .map(p => `  <url><loc>${siteUrl}${p.url}</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>`)
-    .join('\n');
   writeFileSync(
     join(dist, 'sitemap.xml'),
     `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${entries}
+  <url><loc>${siteUrl}/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
 </urlset>
 `
   );
@@ -203,29 +248,17 @@ writeFileSync(
 `
 );
 
-// One preview per language: an artifact is a single page with no siblings, so
-// the switcher's href cannot resolve there. Publish each file as its own
-// artifact and send the client both links.
-const inline = await inlineMap(dir);
-const previews = [];
-for (const lang of langs) {
-  const name = lang.code === defaultLang ? 'preview.html' : `preview-${lang.code}.html`;
-  const pHead = headFor(lang);
-  const pTitle = pHead.match(/<title>([^<]*)<\/title>/)?.[1] ?? 'Preview';
-  const pBody = applyImages(applyLangLinks(localize(rawBody, lang.code, langs), langs), { inline });
-  writeFileSync(join(dir, name), `<title>${pTitle}</title>\n<style>\n${css}\n</style>\n${pBody}\n`);
-  previews.push(name);
-}
+const previewBody = applyImages(expandedBody, { inline: await inlineMap(dir) });
+writeFileSync(
+  join(dir, 'preview.html'),
+  `<title>${meta[defaultLang].title}</title>\n<style>\n${css}\n</style>\n${previewBody}${langScript}\n`
+);
 
 const kb = n => `${(n / 1024).toFixed(0)} KB`;
 console.log(`built ${dist}/`);
-for (const p of pages) {
-  console.log(`  ${p.url.padEnd(12)} ${p.lang.code}  ${kb(readFileSync(p.file).length)}`);
-}
+console.log(`  index.html   ${kb(readFileSync(join(dist, 'index.html')).length)}  (${langs.map(l => l.code).join(' + ')})`);
 console.log(`  img/         ${photos.count} photo(s) x ${WIDTH_LABEL} = ${kb(photos.bytes)}`);
 console.log(`  + 404.html, favicon.svg, robots.txt, _headers${isReal ? ', sitemap.xml' : ''}`);
-if (!isReal) console.log(`  note: site.json has no real domain yet — sitemap/hreflang/canonical skipped`);
-for (const name of previews) {
-  console.log(`${name.padEnd(16)} ${kb(readFileSync(join(dir, name)).length)} (site root, do not deploy)`);
-}
+if (!isReal) console.log(`  note: site.json has no real domain yet — sitemap/canonical skipped`);
+console.log(`preview.html   ${kb(readFileSync(join(dir, 'preview.html')).length)} (site root, do not deploy)`);
 if (listImages(dir).length === 0) console.log(`  note: no masters in src/img/ — {{img:...}} placeholders would fail`);

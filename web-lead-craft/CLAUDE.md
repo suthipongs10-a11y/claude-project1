@@ -49,19 +49,34 @@ the day-to-day workflow and Cloudflare Pages limits.
 
 ## Multi-language sites (Business package and up)
 
-`site.json` lists the languages; `{{t|ไทย|English}}` in `head.html`/`body.html`
-carries both phrases; `{{lang:en}}` resolves to that language's URL. The build
-emits **one real page per language** (`dist/index.html`, `dist/en/index.html`)
-with correct `lang`, `hreflang`, canonical and sitemap entries — not a
-hidden-DOM toggle, which would give Google one URL for two languages and leave
-`alt`/`placeholder` stuck in the wrong one. A token missing a phrase fails the
-build rather than shipping an empty heading.
+**One page, switched in place** — the operator's call, made after separate
+`/` and `/en/` pages meant the switch 404'd when the built file was opened off
+disk. `site.json` lists the languages, `{{t|ไทย|English}}` carries both
+phrases anywhere in `head.html`/`body.html`, and `{{SWITCHER}}` places the
+buttons. The build picks a mechanism per context: dual `<span data-t lang>` for
+text (CSS hides the inactive one, so it leaves the accessibility tree too), and
+a JSON island the switch reads for attributes and `<option>` text, which cannot
+hold markup. `<title>`, the meta description and `<html lang>` update with it;
+the choice persists in localStorage. A token missing a phrase fails the build.
 
-Sizing rule that this package makes load-bearing: **grid tracks holding
-translated copy must be `minmax(0, Nfr)`, never bare `Nfr`.** A bare `fr` will
-not shrink below its content's min-content width, so the longer language steals
-width from its neighbour. `qa-site.mjs` compares container widths across
-language pages and reports any that move with the copy.
+Do not restore language auto-detection from `navigator.language`: English-locale
+phones are common in Thailand, so it put Thai visitors on the English copy.
+
+The cost, and it should be quoted honestly: one URL means Google ranks one
+language. Separate `/` and `/en/` pages are a bigger job, not the default.
+
+Two sizing rules this package makes load-bearing:
+- **Grid tracks holding translated copy must be `minmax(0, Nfr)`, never bare
+  `Nfr`** — a bare `fr` will not shrink below its content's min-content width,
+  so the longer language steals width from its neighbour.
+- **No `white-space: nowrap` on a translated phrase.** It pins min-content to
+  the whole phrase; the English hero em overflowed its column into the photo
+  that way. Underline such a phrase with a background gradient plus
+  `box-decoration-break: clone` so it can wrap.
+
+`qa-site.mjs` drives the switch itself and, in every language, checks that
+nothing from another language is still visible, that every translated attribute
+actually changed, and that no element spills sideways out of its parent.
 
 ## Deployment
 

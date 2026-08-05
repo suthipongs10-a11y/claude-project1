@@ -647,7 +647,9 @@ img, svg { display: block; max-width: 100%; height: auto; }
 }
 .map-pin svg { width: 34px; height: 34px; }
 .map-meta { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 18px; font-size: 0.875rem; color: rgba(255, 255, 255, 0.75); }
-.map-meta a { color: #9FE2E9; font-weight: 600; white-space: nowrap; }
+/* flex:none — the address beside it will happily squeeze this to nothing,
+   and its label is nowrap, so the icon ends up outside the link */
+.map-meta a { color: #9FE2E9; font-weight: 600; white-space: nowrap; flex: none; }
 
 .book-form {
   background: #fff;

@@ -42,10 +42,7 @@
       <a href="#work">{{t|ผลงาน|Our work}}</a>
       <a href="#faq">{{t|คำถามที่พบบ่อย|FAQ}}</a>
     </nav>
-    <div class="lang" role="group" aria-label="{{t|เลือกภาษา|Choose language}}">
-      <a href="{{lang:th}}" hreflang="th" {{t|aria-current="true"|}}>ไทย</a>
-      <a href="{{lang:en}}" hreflang="en" {{t||aria-current="true"}}>EN</a>
-    </div>
+    {{SWITCHER}}
     <a class="nav-tel" href="tel:0822345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>082-234-5678</a>
     <a class="btn btn-ink" href="#booking">{{t|จองคิว|Book now}}</a>
   </div>
@@ -57,7 +54,7 @@
     <div class="hero-grid">
       <div class="hero-copy">
         <span class="label">{{t|ดูแลบ้านระดับพรีเมียม · กรุงเทพฯ|Premium home care · Bangkok}}</span>
-        <h1>{{t|บ้านที่ดูแลดี รู้สึกได้<br><em>ตั้งแต่เปิดประตู</em>|A well-kept home shows<br><em>the moment you walk in</em>}}</h1>
+        <h1>{{t|บ้านที่ดูแลดี รู้สึกได้<br><em>ตั้งแต่เปิดประตู</em>|Your home,<br><em>impeccably kept</em>}}</h1>
         <p class="hero-lede">{{t|บริการทำความสะอาดบ้านและคอนโดระดับพรีเมียมในกรุงเทพฯ ทีมงานผ่านการคัดเลือกและอบรม สื่อสารภาษาอังกฤษได้ มาพร้อมอุปกรณ์และน้ำยาครบชุด|Premium cleaning for Bangkok homes and condos. Vetted, trained, English-speaking teams who arrive with every tool and product the job needs.}}</p>
         <div class="hero-cta">
           <a class="btn btn-line btn-lg" href="#booking"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>{{t|จองผ่าน LINE|Book on LINE}}</a>
@@ -470,7 +467,9 @@
           <div class="form-ok" role="status">
             <span class="ok-ic"><svg aria-hidden="true"><use href="#i-check"/></svg></span>
             <h4>{{t|ได้รับคำขอแล้ว|Request received}}</h4>
-            <p id="okText"></p>
+            <p id="okText"
+               data-msg-th="ทีมงานจะโทรกลับภายใน 30 นาทีในเวลาทำการ (ทุกวัน 8:00–19:00) หรือทัก LINE: @altahome เพื่อคุยต่อได้เลยครับ"
+               data-msg-en="Our team will call you back within 30 minutes during business hours (daily 8am–7pm). You can also reach us on LINE: @altahome."></p>
           </div>
         </form>
       </div>
@@ -519,8 +518,8 @@
       <div class="foot-col">
         <h4>{{t|ภาษา|Language}}</h4>
         <ul>
-          <li><a href="{{lang:th}}" hreflang="th">ไทย</a></li>
-          <li><a href="{{lang:en}}" hreflang="en">English</a></li>
+          <li><button class="linklike" type="button" data-set-lang="th" lang="th">ไทย</button></li>
+          <li><button class="linklike" type="button" data-set-lang="en" lang="en">English</button></li>
         </ul>
       </div>
       <div class="foot-col">
@@ -562,9 +561,11 @@
   var form = document.getElementById('bookForm');
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
+    var ok = document.getElementById('okText');
+    var code = document.documentElement.getAttribute('data-lang') || 'th';
     var name = form.elements.name.value.trim();
-    document.getElementById('okText').textContent =
-      {{t|(name ? 'คุณ' + name + ' — ' : '') + 'ทีมงานจะโทรกลับภายใน 30 นาทีในเวลาทำการ (ทุกวัน 8:00–19:00) หรือทัก LINE: @altahome เพื่อคุยต่อได้เลยครับ'|(name ? name + ', ' : '') + 'our team will call you back within 30 minutes during business hours (daily 8am-7pm). You can also reach us on LINE: @altahome.'}};
+    var greeting = name ? (code === 'th' ? 'คุณ' + name + ' — ' : name + ', ') : '';
+    ok.textContent = greeting + (ok.getAttribute('data-msg-' + code) || ok.getAttribute('data-msg-th'));
     form.classList.add('sent');
   });
 })();
