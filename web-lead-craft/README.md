@@ -35,7 +35,8 @@ node tools/build-site.mjs sites/<ชื่องาน>
 Create → Pages → **Direct Upload** → ลากโฟลเดอร์ที่มี `index.html` ขึ้นไป
 แล้วผูก custom domain ของลูกค้าในแท็บ Custom domains
 
-ลิมิตของ free plan (เช็กล่าสุด ส.ค. 2026):
+ลิมิตของ free plan (ตามเอกสารทางการของ Cloudflare — ก่อนวางแผนเกิน ~50 เว็บ
+เปิดลิงก์ท้ายตารางเช็กตัวเลขล่าสุดอีกครั้ง):
 
 | เรื่อง | ลิมิตฟรี |
 |---|---|
