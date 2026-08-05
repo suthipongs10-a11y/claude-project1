@@ -59,9 +59,18 @@ const MIN_TAP = 44; // iOS Human Interface Guidelines minimum
 const problems = [];
 const note = (where, msg) => problems.push(`${where}: ${msg}`);
 
-const browser = await chromium.launch({
-  executablePath: process.env.PLAYWRIGHT_CHROMIUM ?? '/opt/pw-browsers/chromium',
-});
+// Use a pre-provisioned browser when one is present (some sandboxes ship
+// Chromium at a fixed path); otherwise let Playwright resolve its own, which
+// is what happens on an ordinary Windows or macOS install.
+const pinned = process.env.PLAYWRIGHT_CHROMIUM ?? '/opt/pw-browsers/chromium';
+let browser;
+try {
+  browser = await chromium.launch(existsSync(pinned) ? { executablePath: pinned } : {});
+} catch (err) {
+  console.error(`could not start Chromium: ${err.message.split('\n')[0]}`);
+  console.error('run: npx playwright install chromium');
+  process.exit(1);
+}
 
 for (const [label, viewport] of VIEWPORTS) {
   const page = await browser.newPage({ viewport });

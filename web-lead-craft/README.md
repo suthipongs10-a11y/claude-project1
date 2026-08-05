@@ -3,11 +3,35 @@
 โฟลเดอร์นี้คือธุรกิจรับทำเว็บไซต์ (แพ็กเกจ 990 / 1,990 / 4,990 บาท ตามใบปลิว)
 แยกขาดจากโปรเจกต์อื่นใน repo — เว็บลูกค้าทุกตัวสร้าง build และเก็บที่นี่
 
-## ติดตั้งครั้งเดียว
+## ดาวน์โหลดมาทำงานบนเครื่องตัวเอง (Windows)
 
-```bash
-cd web-lead-craft && npm install
+ต้องมี [Git](https://git-scm.com/download/win) และ [Node.js LTS](https://nodejs.org/)
+ก่อน จากนั้นเปิด PowerShell:
+
+```powershell
+git clone -b claude/website-price-estimate-rz07re `
+  https://github.com/suthipongs10-a11y/claude-project1.git C:\Work\WLC-FB
+
+cd C:\Work\WLC-FB\web-lead-craft
+npm install --omit=dev                        # ลง sharp อย่างเดียว (~30 MB)
+node tools/build-site.mjs sites/demo-cleaning
 ```
+
+ได้โฟลเดอร์พร้อม deploy ที่
+`C:\Work\WLC-FB\web-lead-craft\sites\demo-cleaning\dist`
+
+> `dist/` ไม่ได้อยู่ใน git (เป็นของที่ build ใหม่ได้เสมอ) เลยต้องสั่ง build
+> หลังโคลนทุกครั้ง — ใช้เวลาไม่กี่วินาที
+
+อยากรัน QA ด้วยต้องลง Playwright เพิ่ม (โหลดเบราว์เซอร์ ~150 MB):
+
+```powershell
+npm install
+npx playwright install chromium
+node tools/qa-site.mjs sites/demo-cleaning
+```
+
+ดึงงานอัปเดตรอบถัดไป: `git pull` แล้ว build ใหม่
 
 ## โครงสร้าง
 
