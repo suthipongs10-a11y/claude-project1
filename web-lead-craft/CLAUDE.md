@@ -127,5 +127,13 @@ line-height (vowels and tone marks stack above and below), much less
 letter-spacing (wide tracking pulls marks away from their consonants), and
 watch any underline or bottom border for collisions with below-vowels (ุ ู).
 
+Loopless geometric Thai faces (Prompt, Kanit, Bai Jamjuree) read as modern
+business; looped ones (Sarabun) read as government paperwork. Match the
+register the client is after — the operator has rejected a Thai serif and
+Sarabun on sight, and picked from a rendered comparison sheet both times.
+Build one before guessing again: it is faster than a second wrong answer.
+
 In use: demo-cleaning is Mitr + Anuphan; demo-cleaning-biz is Noto Serif +
-Kanit (display) and IBM Plex Sans + Anuphan (body). All OFL.
+Kanit (display) and IBM Plex Sans + Anuphan (body); demo-cleaning-pro is
+Archivo + Prompt (display) and Source Sans 3 + IBM Plex Sans Thai (body).
+All OFL.
