@@ -48,9 +48,13 @@ sites/
                       fonts.css (generated — อย่าแก้มือ)
       img/            รูปต้นฉบับ .webp ความละเอียดเต็ม (commit ลง git)
     dist/             ← ของที่ deploy (gitignored, สั่ง build ใหม่ได้เสมอ)
-    preview*.html     ← พรีวิวเป็น artifact ภาษาละไฟล์ (ห้าม deploy)
+    preview*.html     ← พรีวิวเป็น artifact ภาษาละไฟล์ (gitignored, ห้าม deploy)
     .qa/              สกรีนช็อตจาก qa-site (gitignored)
 ```
+
+> **ทุกอย่างที่ build สร้างขึ้น (`dist/`, `preview*.html`, `.qa/`) ถูก gitignore ไว้**
+> เพราะถ้าเก็บใน git ไฟล์พวกนี้จะกลายเป็น "local changes" ทุกครั้งที่คุณ build
+> บนเครื่องตัวเอง แล้วไปขวาง `git pull` ครั้งถัดไป (เคยพลาดมาแล้วครั้งหนึ่ง)
 
 `dist/` ที่ build ออกมาจะมี: `index.html` · `404.html` · `favicon.svg` ·
 `robots.txt` · `_headers` (security headers) · `sitemap.xml` (ถ้า site.json มีโดเมนจริง)

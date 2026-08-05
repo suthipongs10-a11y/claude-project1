@@ -37,6 +37,11 @@ if (!dir) {
 }
 
 const src = f => readFileSync(join(dir, 'src', f), 'utf8');
+if (!existsSync(dir)) {
+  console.error(`no site folder at ${dir}`);
+  console.error(`if you expected one, the last "git pull" may not have completed — check "git status"`);
+  process.exit(1);
+}
 const cfgPath = join(dir, 'site.json');
 if (!existsSync(cfgPath)) {
   console.error(`missing ${cfgPath} — see another site folder for the shape`);
