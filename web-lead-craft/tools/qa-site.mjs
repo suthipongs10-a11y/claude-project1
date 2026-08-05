@@ -8,7 +8,7 @@
 // every client handover.
 //
 // Usage: node tools/qa-site.mjs <site-dir>
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { join, resolve } from 'node:path';
 
@@ -23,12 +23,22 @@ if (!existsSync(join(dist, 'index.html'))) {
   process.exit(1);
 }
 
+// Every language page gets checked, not just the root: English runs longer
+// than Thai in the same boxes, so overflow and clipping show up there first.
+const cfg = JSON.parse(readFileSync(join(dir, 'site.json'), 'utf8'));
+const PAGES = (cfg.languages ?? [{ code: cfg.lang ?? 'th', path: '' }]).map(l => ({
+  code: l.code,
+  url: `/${l.path ? l.path + '/' : ''}`,
+}));
+
 // Serve over HTTP rather than file://, so root-absolute paths like
-// /favicon.svg resolve the way they will once deployed.
-const TYPES = { html: 'text/html', svg: 'image/svg+xml', txt: 'text/plain', xml: 'application/xml' };
+// /favicon.svg and /en/ resolve the way they will once deployed.
+const TYPES = { html: 'text/html', svg: 'image/svg+xml', txt: 'text/plain', xml: 'application/xml', webp: 'image/webp' };
 const server = createServer((req, res) => {
-  const rel = decodeURIComponent(req.url.split('?')[0]).replace(/^\/+/, '') || 'index.html';
-  const file = resolve(dist, rel);
+  let rel = decodeURIComponent(req.url.split('?')[0]).replace(/^\/+/, '') || 'index.html';
+  let file = resolve(dist, rel);
+  // a directory URL such as /en/ serves that folder's index.html
+  if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
   if (!file.startsWith(dist) || !existsSync(file)) {
     res.writeHead(404, { 'content-type': 'text/html' });
     res.end(existsSync(join(dist, '404.html')) ? readFileSync(join(dist, '404.html')) : 'not found');
@@ -57,6 +67,7 @@ const VIEWPORTS = [
 ];
 const MIN_TAP = 44; // iOS Human Interface Guidelines minimum
 const problems = [];
+const layouts = [];
 const note = (where, msg) => problems.push(`${where}: ${msg}`);
 
 // Use a pre-provisioned browser when one is present (some sandboxes ship
@@ -72,14 +83,16 @@ try {
   process.exit(1);
 }
 
-for (const [label, viewport] of VIEWPORTS) {
+for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
+  const label = PAGES.length > 1 ? `${pg.code} ${size}` : size;
+  const shot = PAGES.length > 1 ? `${pg.code}-${size}` : size;
   const page = await browser.newPage({ viewport });
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));
   page.on('console', m => m.type() === 'error' && errors.push(m.text()));
   page.on('requestfailed', r => errors.push(`request failed: ${r.url().slice(0, 90)}`));
 
-  await page.goto(origin + '/', { waitUntil: 'load' });
+  await page.goto(origin + pg.url, { waitUntil: 'load' });
   await page.waitForTimeout(4200); // hero animations settle
 
   // walk the page so IntersectionObserver reveals every section
@@ -155,10 +168,41 @@ for (const [label, viewport] of VIEWPORTS) {
       h1: document.querySelectorAll('h1').length,
       favicon: !!document.querySelector('link[rel~=icon]'),
       lang: document.documentElement.lang || '(none)',
+      // a language link that 404s strands half the audience
+      langLinks: [...document.querySelectorAll('a[hreflang]')].map(a => a.getAttribute('href')),
+      // Widths of containers that are *supposed* to fill their track, keyed by
+      // a stable path and compared across languages afterwards. Such a width
+      // is decided by layout, never by the copy — so when it moves because the
+      // text got longer, a grid track is being sized by its content.
+      // Shrink-to-fit boxes are excluded: their width follows the text by
+      // design, and flagging them would bury the real finding.
+      boxes: (() => {
+        const out = {};
+        const seen = new Map();
+        const STRETCH = new Set(['normal', 'stretch', 'auto']);
+        for (const el of document.querySelectorAll('section [class], header [class], footer [class]')) {
+          const r = el.getBoundingClientRect();
+          if (r.width < 200) continue;
+          const cs = getComputedStyle(el);
+          if (cs.display === 'inline' || cs.position === 'absolute' || cs.position === 'fixed') continue;
+          const parent = el.parentElement;
+          if (!parent) continue;
+          const pcs = getComputedStyle(parent);
+          // a flex row sizes its items from their content on purpose
+          if (pcs.display === 'flex' || pcs.display === 'inline-flex') continue;
+          if (!STRETCH.has(pcs.justifyItems) || !STRETCH.has(cs.justifySelf)) continue;
+          if (cs.width === 'max-content' || cs.width === 'fit-content') continue;
+          const key = el.className.trim().split(/\s+/).filter(c => c !== 'in').join('.');
+          const n = (seen.get(key) ?? 0) + 1;
+          seen.set(key, n);
+          out[`${key}#${n}`] = Math.round(r.width);
+        }
+        return out;
+      })(),
     };
   }, MIN_TAP);
 
-  await page.screenshot({ path: join(shotDir, `${label}.png`), fullPage: true });
+  await page.screenshot({ path: join(shotDir, `${shot}.png`), fullPage: true });
 
   if (errors.length) note(label, `script/network errors → ${[...new Set(errors)].slice(0, 3).join(' | ')}`);
   if (found.overflow > 0) note(label, `page scrolls sideways by ${found.overflow}px`);
@@ -166,19 +210,49 @@ for (const [label, viewport] of VIEWPORTS) {
   if (found.noAlt.length) note(label, `${found.noAlt.length} image(s) without alt text → ${found.noAlt.slice(0, 3).join(', ')}`);
   for (const b of found.badImages) note(label, b);
   if (found.deadAnchors.length) note(label, `anchor links point nowhere → ${found.deadAnchors.join(', ')}`);
-  if (label === 'phone') {
+  if (size === 'phone') {
     // list every one — a QA tool that truncates its findings hides work
     for (const t of found.small) note(label, `tap target under ${MIN_TAP}px → ${t}`);
     if (!found.tel) note(label, 'no tel: link — a phone visitor cannot tap to call');
   }
-  if (label === 'desktop') {
-    if (found.h1 !== 1) note('seo', `page has ${found.h1} <h1> tags, want exactly 1`);
-    if (found.title < 15 || found.title > 65) note('seo', `<title> is ${found.title} chars, aim for 15–65`);
-    if (found.desc < 70 || found.desc > 165) note('seo', `meta description is ${found.desc} chars, aim for 70–165`);
-    if (!found.favicon) note('seo', 'no favicon link in <head>');
-    if (found.lang === '(none)') note('seo', '<html> has no lang attribute');
+  if (size === 'desktop') {
+    const seo = PAGES.length > 1 ? `seo ${pg.code}` : 'seo';
+    if (found.h1 !== 1) note(seo, `page has ${found.h1} <h1> tags, want exactly 1`);
+    if (found.title < 15 || found.title > 65) note(seo, `<title> is ${found.title} chars, aim for 15–65`);
+    if (found.desc < 70 || found.desc > 165) note(seo, `meta description is ${found.desc} chars, aim for 70–165`);
+    if (!found.favicon) note(seo, 'no favicon link in <head>');
+    if (found.lang === '(none)') note(seo, '<html> has no lang attribute');
+    else if (found.lang !== pg.code) note(seo, `<html lang="${found.lang}"> but this is the ${pg.code} page`);
+    for (const href of new Set(found.langLinks)) {
+      if (!PAGES.some(p => p.url === href)) note(seo, `language link "${href}" matches no built page`);
+    }
+    if (PAGES.length > 1 && new Set(found.langLinks).size < PAGES.length) {
+      note(seo, `only ${new Set(found.langLinks).size} of ${PAGES.length} languages are linked from this page`);
+    }
   }
+  layouts.push({ code: pg.code, size, boxes: found.boxes });
   await page.close();
+}
+
+// Same element, same viewport, different language: a layout container whose
+// width moves with the copy is a track being sized by its content.
+if (PAGES.length > 1) {
+  for (const [size] of VIEWPORTS) {
+    const [base, ...rest] = layouts.filter(l => l.size === size);
+    if (!base) continue;
+    for (const other of rest) {
+      const drifted = [];
+      for (const [key, w] of Object.entries(base.boxes)) {
+        const w2 = other.boxes[key];
+        if (w2 === undefined) continue;
+        if (Math.abs(w - w2) / Math.max(w, w2) > 0.12) {
+          drifted.push(`.${key.split('#')[0]} is ${w}px in ${base.code} but ${w2}px in ${other.code}`);
+        }
+      }
+      for (const d of drifted.slice(0, 6)) note(`layout ${size}`, `${d} — a grid/flex track is being sized by its text`);
+      if (drifted.length > 6) note(`layout ${size}`, `…and ${drifted.length - 6} more container(s) differing between languages`);
+    }
+  }
 }
 
 // the 404 page ships too, so it gets checked as well

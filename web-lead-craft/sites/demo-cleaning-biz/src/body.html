@@ -1,0 +1,573 @@
+<div class="site">
+
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5 0.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5-4.7-4.6 6.5-0.9z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l1.5 4.5-2.3 1.6a12 12 0 0 0 5.7 5.7l1.6-2.3L20 15v4a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 3 6.2 2 2 0 0 1 5 4Z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6A2.5 2.5 0 0 1 6.5 3.5h11A2.5 2.5 0 0 1 20 6v7.5a2.5 2.5 0 0 1-2.5 2.5H12l-4.5 4v-4h-1A2.5 2.5 0 0 1 4 13.5Z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.6 6.8 12 13l8.4-6.2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-4.4 6.5-7.8 6.5-11a6.5 6.5 0 1 0-13 0c0 3.2 2.5 6.6 6.5 11Z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+    <symbol id="i-pin-fill" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c4.4-4.8 7-8.4 7-11.8A7 7 0 1 0 5 10.2C5 13.6 7.6 17.2 12 22Z"/><circle cx="12" cy="10" r="2.6" fill="#1A2450"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 2.6v5.6c0 4.3-2.9 7.6-7 9.2-4.1-1.6-7-4.9-7-9.2V5.6Z"/><path d="M9 11.8l2.1 2.1 4-4.4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.2 9.5h17.6M3.2 14.5h17.6"/><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18Z"/></symbol>
+    <symbol id="i-kit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5h13l-1.4 10.7a2 2 0 0 1-2 1.8H8.9a2 2 0 0 1-2-1.8L5.5 8.5Z"/><path d="M8 8.5a4 4 0 0 1 8 0"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2-2h12.5v3.2H20A1.5 1.5 0 0 1 21.5 9.7v7.8A2.5 2.5 0 0 1 19 20H6.5A2.5 2.5 0 0 1 4 17.5Z"/><circle cx="16.8" cy="14" r="1.3" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M4.2 6.5h.01M4.2 12h.01M4.2 17.5h.01"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5A2 2 0 0 1 5 6.5h2.2l1.3-2h7l1.3 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.4"/></symbol>
+    <symbol id="i-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5.2"/><path d="M8.7 13.4 7.2 21l4.8-2.5L16.8 21l-1.5-7.6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9.5 7H17v7.5"/></symbol>
+    <symbol id="i-fb" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21.5v-7.2h2.4l0.4-2.8h-2.8V9.6c0-0.8 0.4-1.5 1.6-1.5h1.3V5.6c-0.7-0.1-1.5-0.2-2.3-0.2-2.3 0-3.9 1.4-3.9 4v2.1H7.8v2.8h2.4v7.2Z"/></symbol>
+    <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/></symbol>
+  </defs>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="ALTA Home Care">
+      <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="11" fill="#1A2450"/>
+        <path d="M20 49 L32 17 L44 49" fill="none" stroke="#D9A441" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M25.8 38.5 H38.2" fill="none" stroke="#D9A441" stroke-width="5.5" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-name">ALTA<small>{{t|โฮมแคร์|Home Care}}</small></span>
+    </a>
+    <nav class="nav-links" aria-label="{{t|เมนูหลัก|Main menu}}">
+      <a href="#services">{{t|บริการ|Services}}</a>
+      <a href="#pricing">{{t|ราคา|Pricing}}</a>
+      <a href="#process">{{t|ขั้นตอน|Process}}</a>
+      <a href="#work">{{t|ผลงาน|Our work}}</a>
+      <a href="#faq">{{t|คำถามที่พบบ่อย|FAQ}}</a>
+    </nav>
+    <div class="lang" role="group" aria-label="{{t|เลือกภาษา|Choose language}}">
+      <a href="{{lang:th}}" hreflang="th" {{t|aria-current="true"|}}>ไทย</a>
+      <a href="{{lang:en}}" hreflang="en" {{t||aria-current="true"}}>EN</a>
+    </div>
+    <a class="nav-tel" href="tel:0822345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>082-234-5678</a>
+    <a class="btn btn-ink" href="#booking">{{t|จองคิว|Book now}}</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="label">{{t|ดูแลบ้านระดับพรีเมียม · กรุงเทพฯ|Premium home care · Bangkok}}</span>
+        <h1>{{t|บ้านที่ดูแลดี รู้สึกได้<br><em>ตั้งแต่เปิดประตู</em>|A well-kept home shows<br><em>the moment you walk in</em>}}</h1>
+        <p class="hero-lede">{{t|บริการทำความสะอาดบ้านและคอนโดระดับพรีเมียมในกรุงเทพฯ ทีมงานผ่านการคัดเลือกและอบรม สื่อสารภาษาอังกฤษได้ มาพร้อมอุปกรณ์และน้ำยาครบชุด|Premium cleaning for Bangkok homes and condos. Vetted, trained, English-speaking teams who arrive with every tool and product the job needs.}}</p>
+        <div class="hero-cta">
+          <a class="btn btn-line btn-lg" href="#booking"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>{{t|จองผ่าน LINE|Book on LINE}}</a>
+          <a class="btn btn-out btn-lg" href="#pricing">{{t|ดูราคาแพ็กเกจ|See pricing}}</a>
+        </div>
+        <p class="hero-fine"><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>{{t|ยืนยันคิวภายใน 30 นาที · จ่ายหลังตรวจงาน|Slot confirmed within 30 minutes · Pay after the walkthrough}}</p>
+        <div class="stats">
+          <div class="stat"><b>4.9<svg class="ic" aria-hidden="true"><use href="#i-star"/></svg></b><span>{{t|จาก 480+ รีวิว|from 480+ reviews}}</span></div>
+          <div class="stat"><b>2,600+</b><span>{{t|บ้านที่เราดูแลแล้ว|homes cleaned}}</span></div>
+          <div class="stat"><b>100%</b><span>{{t|รับประกันความพอใจ|satisfaction guarantee}}</span></div>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img {{img:sofa-vacuum:(max-width:960px) 100vw, 48vw}} width="1536" height="1024" fetchpriority="high" decoding="async"
+             alt="{{t|แม่บ้าน ALTA สวมยูนิฟอร์มและถุงมือ กำลังดูดฝุ่นโซฟาในห้องนั่งเล่น|An ALTA housekeeper in uniform and gloves vacuuming a living-room sofa}}">
+        <figure class="hero-quote">
+          <div class="stars" aria-label="{{t|5 ดาว|5 stars}}">
+            <svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg>
+          </div>
+          <p>{{t|“จองง่ายมาก แอดมินตอบภาษาอังกฤษได้ สามีเลยคุยรายละเอียดเองได้เลย”|“Booking was effortless, and the team speaks English — my husband briefed them himself.”}}</p>
+          <cite>{{t|คุณมิ้นท์ · คอนโด ทองหล่อ|Mint · Thonglor condo}}</cite>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="assure">
+    <div class="wrap assure-in">
+      <div class="assure-item">
+        <svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg>
+        <div><b>{{t|ทีมงานสื่อสารอังกฤษได้|English-speaking teams}}</b><span>{{t|บรีฟงานเป็นภาษาอังกฤษได้ทุกคิว|Brief us in English on any booking}}</span></div>
+      </div>
+      <div class="assure-item">
+        <svg class="ic" aria-hidden="true"><use href="#i-kit"/></svg>
+        <div><b>{{t|อุปกรณ์และน้ำยาครบชุด|All equipment supplied}}</b><span>{{t|คุณไม่ต้องเตรียมอะไรเลย|You provide nothing at all}}</span></div>
+      </div>
+      <div class="assure-item">
+        <svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg>
+        <div><b>{{t|มีประกันความเสียหาย|Damage insured}}</b><span>{{t|เคลมได้ตามจริงตามเงื่อนไข|Claims honoured under our policy}}</span></div>
+      </div>
+      <div class="assure-item">
+        <svg class="ic" aria-hidden="true"><use href="#i-wallet"/></svg>
+        <div><b>{{t|จ่ายหลังตรวจงาน|Pay after inspection}}</b><span>{{t|เดินตรวจพร้อมกันก่อนชำระ|We walk through together first}}</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="services">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|บริการของเรา|What we do}}</span>
+        <h2>{{t|เลือกแบบที่ตรงกับบ้านคุณ|Choose what fits your home}}</h2>
+        <p>{{t|ทุกงานทำตามเช็กลิสต์มาตรฐาน 52 จุด และจบด้วยรายงานรูปก่อน–หลังส่งให้คุณเก็บไว้|Every visit follows our 52-point standard and ends with a before-and-after photo report.}}</p>
+      </div>
+      <div class="svc-grid">
+        <article class="svc rv">
+          <div class="svc-media">
+            <img {{img:sofa-wipe:(max-width:600px) 90vw, (max-width:1080px) 45vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+                 alt="{{t|เช็ดทำความสะอาดเบาะโซฟาในคอนโด|Wiping down sofa upholstery in a condo}}">
+          </div>
+          <div class="svc-body">
+            <h3>{{t|คอนโด / ห้องชุด|Condos & apartments}}</h3>
+            <p>{{t|สตูดิโอถึง 3 ห้องนอน ดูแลครบทุกห้อง รวมระเบียงและห้องน้ำ|Studios to three bedrooms, every room covered including balcony and bathrooms.}}</p>
+            <div class="svc-foot"><b>{{t|เริ่ม 1,290.-|From ฿1,290}}</b><span>{{t|/ครั้ง|/ visit}}</span></div>
+          </div>
+        </article>
+        <article class="svc rv" style="--d:0.07s">
+          <div class="svc-media">
+            <img {{img:living-mop:(max-width:600px) 90vw, (max-width:1080px) 45vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+                 alt="{{t|ถูพื้นห้องนั่งเล่นบ้านเดี่ยวจนพื้นเงา|Mopping a house living-room floor to a shine}}">
+          </div>
+          <div class="svc-body">
+            <h3>{{t|บ้านเดี่ยว & ทาวน์โฮม|Houses & townhomes}}</h3>
+            <p>{{t|ทำครบทุกชั้น ห้องนั่งเล่น ครัว ห้องน้ำ บันได และโถงทางเดิน|All floors: living areas, kitchen, bathrooms, stairs and hallways.}}</p>
+            <div class="svc-foot"><b>{{t|เริ่ม 2,690.-|From ฿2,690}}</b><span>{{t|/ครั้ง|/ visit}}</span></div>
+          </div>
+        </article>
+        <article class="svc rv" style="--d:0.14s">
+          <div class="svc-media">
+            <img {{img:floor-polish:(max-width:600px) 90vw, (max-width:1080px) 45vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+                 alt="{{t|ใช้เครื่องขัดพื้นขัดคราบฝังลึก|A floor polisher lifting deep-set grime}}">
+          </div>
+          <div class="svc-body">
+            <h3>{{t|Deep Clean|Deep clean}}</h3>
+            <p>{{t|ขัดคราบฝังลึก ซักโซฟา เช็ดกระจก เหมาะทำทุก 3–6 เดือน|Deep-set stains, upholstery extraction and glass. Ideal every 3–6 months.}}</p>
+            <div class="svc-foot"><b>{{t|เริ่ม 3,490.-|From ฿3,490}}</b><span>{{t|/ครั้ง|/ visit}}</span></div>
+          </div>
+        </article>
+        <article class="svc rv" style="--d:0.21s">
+          <div class="svc-media">
+            <img {{img:window-wipe:(max-width:600px) 90vw, (max-width:1080px) 45vw, 23vw}} width="1024" height="1536" loading="lazy" decoding="async"
+                 alt="{{t|เช็ดกระจกบานใหญ่หลังงานช่างจนใส|Cleaning full-height glass after renovation work}}">
+          </div>
+          <div class="svc-body">
+            <h3>{{t|ก่อนเข้าอยู่ / หลังรีโนเวท|Move-in & post-renovation}}</h3>
+            <p>{{t|เก็บฝุ่นปูน เศษสี คราบกาว พร้อมส่งมอบให้เข้าอยู่ได้ทันที|Construction dust, paint and adhesive removed — handed over ready to live in.}}</p>
+            <div class="svc-foot"><b>{{t|เริ่ม 4,900.-|From ฿4,900}}</b><span>{{t|/ครั้ง|/ visit}}</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--stone">
+    <div class="wrap std">
+      <figure class="std-media rv">
+        <img {{img:team:(max-width:960px) 92vw, 42vw}} width="1536" height="1024" loading="lazy" decoding="async"
+             alt="{{t|ทีมงาน ALTA สี่คนในชุดยูนิฟอร์ม พร้อมอุปกรณ์ทำความสะอาด|Four ALTA team members in uniform with their cleaning equipment}}">
+        <figcaption class="std-tag">
+          <svg class="ic" aria-hidden="true"><use href="#i-badge"/></svg>
+          <span><b>{{t|ตรวจประวัติและอบรมทุกคน|Vetted and trained}}</b><span>{{t|ก่อนออกงานแรก|before their first job}}</span></span>
+        </figcaption>
+      </figure>
+      <div class="std-copy rv" style="--d:0.08s">
+        <span class="label">{{t|มาตรฐานของเรา|Our standard}}</span>
+        <h2>{{t|มาตรฐานเดียวกัน ทุกครั้งที่คุณจอง|The same standard, every single booking}}</h2>
+        <p>{{t|เราไม่ใช้ฟรีแลนซ์หมุนเวียน ทีมงานทุกคนเป็นพนักงานที่ผ่านการคัดเลือก อบรม และทำงานตามเช็กลิสต์เดียวกันทุกงาน|We do not rotate freelancers. Every housekeeper is a vetted employee working from the same checklist on every job.}}</p>
+        <div class="std-list">
+          <div class="std-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-list"/></svg>
+            <div><b>{{t|เช็กลิสต์มาตรฐาน 52 จุด|A 52-point checklist}}</b><p>{{t|ทุกห้องมีรายการที่ต้องผ่าน ไม่ใช่ทำตามความรู้สึก|Each room has items that must pass — not a judgement call.}}</p></div>
+          </div>
+          <div class="std-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-camera"/></svg>
+            <div><b>{{t|รายงานรูปก่อน–หลัง|Before-and-after report}}</b><p>{{t|ส่งให้ทาง LINE ทุกครั้งหลังจบงาน เก็บไว้อ้างอิงได้|Sent to your LINE after every visit, yours to keep.}}</p></div>
+          </div>
+          <div class="std-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>
+            <div><b>{{t|ตรงเวลา หรือลดให้|On time, or we discount}}</b><p>{{t|ถ้าทีมงานถึงช้าเกิน 15 นาที ลดค่าบริการทันที 10%|More than 15 minutes late and 10% comes off the bill.}}</p></div>
+          </div>
+          <div class="std-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>
+            <div><b>{{t|ไม่พอใจ กลับไปทำซ้ำฟรี|Not happy? We come back free}}</b><p>{{t|แจ้งภายใน 24 ชั่วโมง เรากลับไปแก้ให้โดยไม่คิดเงิน|Tell us within 24 hours and we return at no charge.}}</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="pricing">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|ราคาแพ็กเกจ|Pricing}}</span>
+        <h2>{{t|ราคาชัดเจน ไม่มีบวกเพิ่มหน้างาน|Clear prices, nothing added on the day}}</h2>
+        <p>{{t|คิดตามขนาดพื้นที่จริง ถ้าไม่แน่ใจ ส่งรูปห้องมาทาง LINE ให้เราประเมินฟรี|Priced by actual floor area. Unsure? Send photos on LINE for a free estimate.}}</p>
+      </div>
+      <div class="plan-grid">
+        <article class="plan rv">
+          <h3>{{t|สตูดิโอ|Studio}}</h3>
+          <p class="plan-size">{{t|ไม่เกิน 35 ตร.ม.|Up to 35 sqm}}</p>
+          <div class="plan-price"><b>{{t|1,290.-|฿1,290}}</b><span>{{t|/ครั้ง|/ visit}}</span></div>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|ทีมงาน 1 คน · ราว 2.5 ชม.|1 housekeeper · about 2.5 hrs}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|รวมอุปกรณ์และน้ำยา|Equipment and products included}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|รายงานรูปก่อน–หลัง|Before-and-after report}}</li>
+          </ul>
+          <a class="btn btn-out" href="#booking">{{t|เลือกแพ็กเกจนี้|Choose this}}</a>
+        </article>
+        <article class="plan plan-pop rv" style="--d:0.07s">
+          <span class="plan-flag">{{t|ยอดนิยม|Most booked}}</span>
+          <h3>{{t|1 ห้องนอน|One bedroom}}</h3>
+          <p class="plan-size">{{t|35–55 ตร.ม.|35–55 sqm}}</p>
+          <div class="plan-price"><b>{{t|1,690.-|฿1,690}}</b><span>{{t|/ครั้ง|/ visit}}</span></div>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|ทีมงาน 2 คน · ราว 3 ชม.|2 housekeepers · about 3 hrs}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|รวมอุปกรณ์และน้ำยา|Equipment and products included}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|รวมระเบียงและเครื่องใช้ไฟฟ้าภายนอก|Balcony and appliance exteriors}}</li>
+          </ul>
+          <a class="btn btn-ink" href="#booking">{{t|เลือกแพ็กเกจนี้|Choose this}}</a>
+        </article>
+        <article class="plan rv" style="--d:0.14s">
+          <h3>{{t|2–3 ห้องนอน|Two to three bedrooms}}</h3>
+          <p class="plan-size">{{t|55–90 ตร.ม.|55–90 sqm}}</p>
+          <div class="plan-price"><b>{{t|2,290.-|฿2,290}}</b><span>{{t|/ครั้ง|/ visit}}</span></div>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|ทีมงาน 2 คน · ราว 4 ชม.|2 housekeepers · about 4 hrs}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|รวมอุปกรณ์และน้ำยา|Equipment and products included}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|ครอบคลุมทุกห้องน้ำและระเบียง|Every bathroom and balcony}}</li>
+          </ul>
+          <a class="btn btn-out" href="#booking">{{t|เลือกแพ็กเกจนี้|Choose this}}</a>
+        </article>
+        <article class="plan rv" style="--d:0.21s">
+          <h3>{{t|บ้าน / ทาวน์โฮม|House / townhome}}</h3>
+          <p class="plan-size">{{t|ไม่เกิน 180 ตร.ม.|Up to 180 sqm}}</p>
+          <div class="plan-price"><b>{{t|2,690.-|฿2,690}}</b><span>{{t|/ครั้ง|/ visit}}</span></div>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|ทีมงาน 3 คน · ราว 4–5 ชม.|3 housekeepers · about 4–5 hrs}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|รวมอุปกรณ์และน้ำยา|Equipment and products included}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|รวมบันไดและโถงทุกชั้น|Stairs and hallways on every floor}}</li>
+          </ul>
+          <a class="btn btn-out" href="#booking">{{t|เลือกแพ็กเกจนี้|Choose this}}</a>
+        </article>
+      </div>
+      <div class="plan-note rv">
+        <span><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>{{t|ทุกแพ็กเกจรวมทีมงาน อุปกรณ์ และน้ำยา|Team, equipment and products in every price}}</span>
+        <span><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>{{t|พื้นที่ใหญ่กว่านี้ ประเมินฟรีทาง LINE|Larger places quoted free on LINE}}</span>
+        <span><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>{{t|จองประจำรายเดือน ลด 12%|Save 12% on a monthly schedule}}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--stone" id="process">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|ขั้นตอน|How it works}}</span>
+        <h2>{{t|จากทักแชต ถึงบ้านสะอาด|From first message to a spotless home}}</h2>
+      </div>
+      <div class="steps">
+        <article class="step rv">
+          <span class="step-n">01</span>
+          <h3>{{t|บอกรายละเอียดบ้านคุณ|Tell us about your place}}</h3>
+          <p>{{t|ทัก LINE หรือกรอกฟอร์มด้านล่าง บอกขนาดห้องและวันที่สะดวก ภาษาไทยหรืออังกฤษก็ได้|Message us on LINE or use the form below — size, preferred date, in Thai or English.}}</p>
+        </article>
+        <article class="step rv" style="--d:0.1s">
+          <span class="step-n">02</span>
+          <h3>{{t|เราจัดทีมและยืนยันคิว|We assign a team and confirm}}</h3>
+          <p>{{t|ยืนยันภายใน 30 นาทีในเวลาทำการ พร้อมบอกชื่อทีมงานที่จะไป และเวลาที่แน่นอน|Confirmed within 30 minutes during business hours, with the names of who is coming and an exact time.}}</p>
+        </article>
+        <article class="step rv" style="--d:0.2s">
+          <span class="step-n">03</span>
+          <h3>{{t|ตรวจงานร่วมกัน แล้วค่อยจ่าย|Walk through, then pay}}</h3>
+          <p>{{t|พอใจทุกจุดแล้วค่อยชำระ พร้อมรับรายงานรูปก่อน–หลังทาง LINE|Pay once you are happy with every room, and your photo report arrives on LINE.}}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="work">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|ผลงานของเรา|Our work}}</span>
+        <h2>{{t|งานจริง ไม่ใช่ภาพโฆษณา|Real jobs, not stock photography}}</h2>
+        <p>{{t|ภาพส่วนหนึ่งจากงานที่ลูกค้าอนุญาตให้เผยแพร่|A selection of jobs our clients let us publish.}}</p>
+      </div>
+      <div class="gal rv">
+        <figure class="gal-item gal-lead">
+          <img {{img:sofa-deep:(max-width:700px) 90vw, 46vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="{{t|ซักโซฟาด้วยเครื่องอัดฉีดและดูดกลับ|Upholstery extraction on a fabric sofa}}">
+          <figcaption>{{t|ซักโซฟาด้วยเครื่องอัดฉีด–ดูดกลับ|Upholstery extraction}}</figcaption>
+        </figure>
+        <figure class="gal-item">
+          <img {{img:bathroom-mirror:(max-width:700px) 90vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="{{t|ขัดกระจกและอ่างล้างหน้าในห้องน้ำ|Polishing a bathroom mirror and basin}}">
+          <figcaption>{{t|ห้องน้ำ ไร้คราบน้ำ|Bathrooms, water marks gone}}</figcaption>
+        </figure>
+        <figure class="gal-item">
+          <img {{img:kitchen-counter:(max-width:700px) 90vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="{{t|เช็ดเคาน์เตอร์ครัวหินอ่อนและเตา|Wiping a stone kitchen counter and hob}}">
+          <figcaption>{{t|ครัว เคาน์เตอร์และเตา|Kitchen counters and hob}}</figcaption>
+        </figure>
+        <figure class="gal-item">
+          <img {{img:aircon-filter:(max-width:700px) 90vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="{{t|ถอดแผ่นกรองแอร์ออกมาล้างฝุ่น|Removing an air-conditioner filter for washing}}">
+          <figcaption>{{t|ล้างแผ่นกรองแอร์|Air-conditioner filters}}</figcaption>
+        </figure>
+        <figure class="gal-item">
+          <img {{img:cleaning-kit:(max-width:700px) 90vw, 23vw}} width="1536" height="1024" loading="lazy" decoding="async"
+               alt="{{t|ชุดอุปกรณ์และน้ำยาที่ทีมงานขนมาเอง|The kit and products our team brings to every job}}">
+          <figcaption>{{t|อุปกรณ์ที่เราขนมาเอง|The kit we bring}}</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--stone" id="reviews">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|รีวิวจากลูกค้า|Client reviews}}</span>
+        <h2>{{t|คะแนนเฉลี่ย 4.9 จาก 480+ รีวิว|4.9 average from 480+ reviews}}</h2>
+      </div>
+      <div class="rev-grid">
+        <article class="rev rv">
+          <div class="stars" aria-label="{{t|5 ดาว|5 stars}}"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></div>
+          <blockquote>{{t|“รายงานรูปก่อน–หลังนี่ชอบมาก เห็นเลยว่าทำอะไรไปบ้าง ตอนนี้จองรายเดือนยาวแล้วค่ะ”|“The before-and-after report won me over — I can see exactly what was done. We are on a monthly plan now.”}}</blockquote>
+          <div class="rev-who"><span class="rev-ava">{{t|ป|R}}</span><div><b>{{t|คุณปุ๊ก · คอนโด สาทร|Rungnapa · Sathorn condo}}</b><span>{{t|แพ็กเกจ 1 ห้องนอน|One-bedroom package}}</span></div></div>
+        </article>
+        <article class="rev rv" style="--d:0.07s">
+          <div class="stars" aria-label="{{t|5 ดาว|5 stars}}"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></div>
+          <blockquote>{{t|“ย้ายเข้าบ้านใหม่หลังช่างเพิ่งออก ฝุ่นปูนเต็มไปหมด ทีมมา 3 คน จบในวันเดียว คุ้มมากครับ”|“We moved in right after the builders left — dust everywhere. Three people, done in a day. Worth every baht.”}}</blockquote>
+          <div class="rev-who"><span class="rev-ava">{{t|จ|D}}</span><div><b>{{t|คุณเจมส์ · บ้านเดี่ยว บางนา|Daniel · Bang Na house}}</b><span>{{t|แพ็กเกจก่อนเข้าอยู่|Move-in package}}</span></div></div>
+        </article>
+        <article class="rev rv" style="--d:0.14s">
+          <div class="stars" aria-label="{{t|5 ดาว|5 stars}}"><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg></div>
+          <blockquote>{{t|“ฝากกุญแจไว้กับนิติฯ ได้ ไม่ต้องลางาน กลับมาบ้านสะอาดพร้อมรูปรายงานรออยู่แล้ว”|“I leave the key with the front desk instead of taking a day off. I come home clean, with the report waiting.”}}</blockquote>
+          <div class="rev-who"><span class="rev-ava">{{t|อ|A}}</span><div><b>{{t|คุณอร · คอนโด อโศก|Anna · Asok condo}}</b><span>{{t|Deep Clean|Deep clean}}</span></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="faq">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|คำถามที่พบบ่อย|Questions}}</span>
+        <h2>{{t|เรื่องที่ลูกค้าถามก่อนจองเสมอ|What clients ask before booking}}</h2>
+      </div>
+      <div class="faq rv">
+        <details>
+          <summary>{{t|ต้องอยู่บ้านตอนทีมงานมาไหม?|Do I need to be home?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|ไม่จำเป็นครับ ลูกค้าส่วนใหญ่ฝากกุญแจไว้กับนิติบุคคลหรือรปภ. เราจะส่งรูปรายงานให้ทาง LINE เมื่อจบงาน แต่ถ้าอยากอยู่ตรวจงานด้วยก็ยินดีมากครับ|Not at all. Most clients leave a key with building management. We send the photo report to your LINE when we finish — but you are very welcome to be there for the walkthrough.}}</p>
+        </details>
+        <details>
+          <summary>{{t|ต้องเตรียมอุปกรณ์หรือน้ำยาไหม?|Do I need to provide anything?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|ไม่ต้องเลยครับ ทีมงานขนอุปกรณ์และน้ำยาไปเองทั้งหมด ถ้าคุณมีน้ำยาที่ชอบใช้เป็นพิเศษ หรือแพ้กลิ่นบางอย่าง แจ้งไว้ตอนจองได้เลย|Nothing. Our team brings every tool and product. If you prefer a specific product, or are sensitive to certain scents, just tell us when you book.}}</p>
+        </details>
+        <details>
+          <summary>{{t|ทีมงานสื่อสารภาษาอังกฤษได้ไหม?|Does the team speak English?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|ได้ครับ ทุกคิวมีทีมงานที่สื่อสารภาษาอังกฤษได้อย่างน้อยหนึ่งคน และแอดมินที่ตอบ LINE ตอบได้ทั้งไทยและอังกฤษ|Yes. Every booking includes at least one English-speaking housekeeper, and our LINE admin replies in both Thai and English.}}</p>
+        </details>
+        <details>
+          <summary>{{t|จ่ายเงินยังไง จ่ายก่อนหรือหลัง?|How and when do I pay?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|จ่ายหลังงานเสร็จและตรวจงานเรียบร้อยแล้วเท่านั้น รับเงินสด โอนธนาคาร และพร้อมเพย์ ไม่มีมัดจำสำหรับงานทั่วไป|Only after the job is done and inspected. We accept cash, bank transfer and PromptPay. No deposit for standard bookings.}}</p>
+        </details>
+        <details>
+          <summary>{{t|ถ้าไม่พอใจงานที่ทำ ทำยังไง?|What if I am not satisfied?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|แจ้งเราภายใน 24 ชั่วโมงพร้อมรูปจุดที่ไม่ผ่าน เราจะจัดทีมกลับไปแก้ให้โดยไม่คิดค่าใช้จ่าย และถ้ายังไม่พอใจอีก เราคืนเงินส่วนนั้นให้|Tell us within 24 hours with a photo of what fell short. We return and redo it at no charge — and if it still is not right, we refund that portion.}}</p>
+        </details>
+        <details>
+          <summary>{{t|ให้บริการนอกกรุงเทพฯ ไหม?|Do you work outside Bangkok?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|ครอบคลุมกรุงเทพฯ นนทบุรี ปทุมธานี และสมุทรปราการ พื้นที่นอกเหนือจากนี้ทักมาถามได้ครับ บางกรณีจัดทีมไปได้โดยมีค่าเดินทางเพิ่ม|We cover Bangkok, Nonthaburi, Pathum Thani and Samut Prakan. Ask us about anywhere else — we can often arrange it with a travel supplement.}}</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="book" id="booking">
+    <div class="wrap">
+      <div class="book-grid">
+        <div class="book-copy rv">
+          <span class="label">{{t|จองคิว / ขอใบเสนอราคา|Book or request a quote}}</span>
+          <h2>{{t|บอกวันที่คุณสะดวก<br>ที่เหลือเราจัดการ|Tell us when suits you<br>we handle the rest}}</h2>
+          <p>{{t|อยากได้คำตอบเร็วที่สุด ทัก LINE ได้เลย หรือฝากรายละเอียดไว้ในฟอร์ม ทีมงานติดต่อกลับภายใน 30 นาทีในเวลาทำการ|For the fastest answer, message us on LINE. Or leave your details and we will call back within 30 minutes during business hours.}}</p>
+          <div class="book-list">
+            <div class="book-row">
+              <svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>
+              <div><a href="tel:0822345678">082-234-5678</a><small>{{t|ทุกวัน 8:00–19:00|Daily 8am–7pm}}</small></div>
+            </div>
+            <div class="book-row">
+              <svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>
+              <div><a href="#booking">LINE: @altahome</a><small>{{t|ตอบไทย–อังกฤษ แนบรูปห้องได้เลย|Thai and English, send photos of your rooms}}</small></div>
+            </div>
+            <div class="book-row">
+              <svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>
+              <div><a href="mailto:hello@altahome.example">hello@altahome.example</a><small>{{t|สำหรับใบเสนอราคาองค์กร|For corporate quotes}}</small></div>
+            </div>
+            <div class="book-row">
+              <svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>
+              <div><b>{{t|พื้นที่ให้บริการ|Service area}}</b><small>{{t|กรุงเทพฯ · นนทบุรี · ปทุมธานี · สมุทรปราการ|Bangkok · Nonthaburi · Pathum Thani · Samut Prakan}}</small></div>
+            </div>
+          </div>
+          <div class="map-card">
+            <div class="map-view" aria-hidden="true">
+              <span class="map-road" style="left:0;right:0;top:40%;height:9px"></span>
+              <span class="map-road" style="top:0;bottom:0;left:34%;width:7px"></span>
+              <span class="map-road" style="left:58%;right:0;top:74%;height:5px"></span>
+              <span class="map-pin"><svg aria-hidden="true"><use href="#i-pin-fill"/></svg></span>
+            </div>
+            <div class="map-meta">
+              <span>{{t|888 อาคารสาทรทาวเวอร์ ชั้น 12 ถนนสาทรใต้ กรุงเทพฯ|888 Sathorn Tower, 12th floor, South Sathorn Rd, Bangkok}}</span>
+              <a href="https://maps.google.com/?q=Sathorn+Tower+Bangkok" target="_blank" rel="noopener">{{t|เปิดแผนที่|Open map}}<svg class="ic" style="display:inline-block;vertical-align:-0.2em;width:1em;height:1em" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            </div>
+          </div>
+        </div>
+        <form class="book-form rv" id="bookForm" style="--d:0.08s">
+          <h3>{{t|ฝากรายละเอียดให้ติดต่อกลับ|Leave your details}}</h3>
+          <p class="form-sub">{{t|กรอกไม่ถึงนาที ทีมงานโทรกลับภายใน 30 นาที (เวลาทำการ)|Under a minute. We call back within 30 minutes during business hours.}}</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="f-name">{{t|ชื่อ|Name}}</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" placeholder="{{t|ชื่อที่ให้เรียก|What should we call you}}">
+            </div>
+            <div class="field">
+              <label for="f-tel">{{t|เบอร์โทร|Phone}} <em>*</em></label>
+              <input id="f-tel" name="tel" type="tel" inputmode="tel" required pattern="0[0-9]{8,9}" title="{{t|กรอกเบอร์มือถือ 10 หลัก เช่น 0812345678|Enter a 10-digit Thai mobile number, e.g. 0812345678}}" placeholder="0812345678" autocomplete="tel">
+            </div>
+            <div class="field">
+              <label for="f-type">{{t|ประเภทที่พัก|Property type}}</label>
+              <select id="f-type" name="type">
+                <option>{{t|คอนโด / ห้องชุด|Condo / apartment}}</option>
+                <option>{{t|บ้านเดี่ยว|House}}</option>
+                <option>{{t|ทาวน์โฮม|Townhome}}</option>
+                <option>{{t|ออฟฟิศ / ร้านค้า|Office / retail}}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-size">{{t|ขนาดพื้นที่ (ตร.ม.)|Floor area (sqm)}}</label>
+              <input id="f-size" name="size" type="number" min="10" max="1000" placeholder="{{t|เช่น 45|e.g. 45}}">
+            </div>
+            <div class="field">
+              <label for="f-date">{{t|วันที่สะดวก|Preferred date}}</label>
+              <input id="f-date" name="date" type="date">
+            </div>
+            <div class="field">
+              <label for="f-slot">{{t|ช่วงเวลา|Time slot}}</label>
+              <select id="f-slot" name="slot">
+                <option>{{t|ช่วงเช้า 8:00–12:00|Morning 8am–12pm}}</option>
+                <option>{{t|ช่วงบ่าย 12:00–17:00|Afternoon 12pm–5pm}}</option>
+              </select>
+            </div>
+            <div class="field field-full">
+              <label for="f-note">{{t|รายละเอียดเพิ่มเติม|Anything else}}</label>
+              <textarea id="f-note" name="note" placeholder="{{t|เช่น มีสัตว์เลี้ยง อยากให้เน้นห้องน้ำ หรือขอทีมที่พูดอังกฤษได้|e.g. we have a cat, please focus on the bathrooms, English-speaking team preferred}}"></textarea>
+            </div>
+            <button class="btn btn-ink btn-lg field-full" type="submit">{{t|ส่งคำขอจองคิว|Send booking request}}</button>
+            <p class="form-fine">
+              <svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>
+              {{t|คำขอจะเด้งเข้า LINE ของทีมงานทันทีที่กดส่ง จึงไม่มีคิวไหนตกหล่น · ข้อมูลของคุณใช้ติดต่อกลับเท่านั้น|Your request pings our team's LINE the second you send it, so nothing gets missed · Your details are used only to contact you.}}
+            </p>
+          </div>
+          <div class="form-ok" role="status">
+            <span class="ok-ic"><svg aria-hidden="true"><use href="#i-check"/></svg></span>
+            <h4>{{t|ได้รับคำขอแล้ว|Request received}}</h4>
+            <p id="okText"></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="wlc">
+  <div class="wrap wlc-in">
+    <svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg>
+    <span>{{t|ชอบเว็บสไตล์นี้ไหมครับ? <b>เว็บไซต์ 2 ภาษา พร้อมระบบแจ้งเตือน LINE เริ่มต้น 1,990.-</b>|Like this style? <b>Bilingual business site with LINE alerts, from ฿1,990.</b>}}</span>
+    <span>{{t|ผลงานโดย <b>Web Lead Craft</b> · LINE: <b>kitty4uu</b> · โทร 099-151-4049|Built by <b>Web Lead Craft</b> · LINE: <b>kitty4uu</b> · 099-151-4049}}</span>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="logo" href="#top" aria-label="ALTA Home Care">
+          <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+            <rect width="64" height="64" rx="11" fill="#1A2450"/>
+            <path d="M20 49 L32 17 L44 49" fill="none" stroke="#D9A441" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M25.8 38.5 H38.2" fill="none" stroke="#D9A441" stroke-width="5.5" stroke-linecap="round"/>
+          </svg>
+          <span class="logo-name">ALTA<small>{{t|โฮมแคร์|Home Care}}</small></span>
+        </a>
+        <p>{{t|บริการทำความสะอาดบ้านและคอนโดระดับพรีเมียมในกรุงเทพฯ ทีมงานประจำที่ผ่านการอบรม สื่อสารได้ทั้งไทยและอังกฤษ|Premium home and condo cleaning across Bangkok, delivered by trained in-house teams who work in Thai and English.}}</p>
+        <div class="socials">
+          <a class="soc" href="#" aria-label="Facebook"><svg aria-hidden="true"><use href="#i-fb"/></svg></a>
+          <a class="soc" href="#" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
+          <a class="soc" href="#booking" aria-label="{{t|ทัก LINE|Message us on LINE}}"><svg aria-hidden="true"><use href="#i-chat"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>{{t|เมนู|Menu}}</h4>
+        <ul>
+          <li><a href="#services">{{t|บริการของเรา|Services}}</a></li>
+          <li><a href="#pricing">{{t|ราคาแพ็กเกจ|Pricing}}</a></li>
+          <li><a href="#process">{{t|ขั้นตอนการจอง|Process}}</a></li>
+          <li><a href="#work">{{t|ผลงาน|Our work}}</a></li>
+          <li><a href="#faq">{{t|คำถามที่พบบ่อย|FAQ}}</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>{{t|ภาษา|Language}}</h4>
+        <ul>
+          <li><a href="{{lang:th}}" hreflang="th">ไทย</a></li>
+          <li><a href="{{lang:en}}" hreflang="en">English</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>{{t|ติดต่อ|Contact}}</h4>
+        <ul>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:0822345678">082-234-5678</a></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>LINE: @altahome</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>{{t|เปิดทุกวัน 8:00–19:00|Daily 8am–7pm}}</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>{{t|888 อาคารสาทรทาวเวอร์ ชั้น 12 ถนนสาทรใต้ กรุงเทพฯ 10120|888 Sathorn Tower, 12th floor, South Sathorn Rd, Bangkok 10120}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">{{t|© 2026 ALTA Home Care — หน้านี้เป็นเว็บไซต์ตัวอย่างผลงานของ Web Lead Craft ชื่อแบรนด์ เบอร์โทร ที่อยู่ และรีวิวทั้งหมดเป็นข้อมูลสมมติ|© 2026 ALTA Home Care — a demonstration site built by Web Lead Craft. The brand, phone number, address and reviews are fictional.}}</div>
+  </div>
+</footer>
+
+<div class="mcta">
+  <a class="btn btn-out" href="tel:0822345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>{{t|โทรเลย|Call}}</a>
+  <a class="btn btn-line" href="#booking"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>{{t|จองผ่าน LINE|Book on LINE}}</a>
+</div>
+
+<script>
+(function () {
+  var nav = document.getElementById('nav');
+  var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if ('IntersectionObserver' in window) {
+    document.querySelector('.site').classList.add('anim');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+  }
+
+  var form = document.getElementById('bookForm');
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var name = form.elements.name.value.trim();
+    document.getElementById('okText').textContent =
+      {{t|(name ? 'คุณ' + name + ' — ' : '') + 'ทีมงานจะโทรกลับภายใน 30 นาทีในเวลาทำการ (ทุกวัน 8:00–19:00) หรือทัก LINE: @altahome เพื่อคุยต่อได้เลยครับ'|(name ? name + ', ' : '') + 'our team will call you back within 30 minutes during business hours (daily 8am-7pm). You can also reach us on LINE: @altahome.'}};
+    form.classList.add('sent');
+  });
+})();
+</script>
+
+</div>

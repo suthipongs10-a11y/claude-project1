@@ -47,6 +47,22 @@ the day-to-day workflow and Cloudflare Pages limits.
    footer links, an over-long `<title>`. Do not hand over on a red run, and do
    not weaken a check to make it green — fix the site.
 
+## Multi-language sites (Business package and up)
+
+`site.json` lists the languages; `{{t|ไทย|English}}` in `head.html`/`body.html`
+carries both phrases; `{{lang:en}}` resolves to that language's URL. The build
+emits **one real page per language** (`dist/index.html`, `dist/en/index.html`)
+with correct `lang`, `hreflang`, canonical and sitemap entries — not a
+hidden-DOM toggle, which would give Google one URL for two languages and leave
+`alt`/`placeholder` stuck in the wrong one. A token missing a phrase fails the
+build rather than shipping an empty heading.
+
+Sizing rule that this package makes load-bearing: **grid tracks holding
+translated copy must be `minmax(0, Nfr)`, never bare `Nfr`.** A bare `fr` will
+not shrink below its content's min-content width, so the longer language steals
+width from its neighbour. `qa-site.mjs` compares container widths across
+language pages and reports any that move with the copy.
+
 ## Deployment
 
 Cloudflare Pages, framework preset **None** (no build step runs on their side).

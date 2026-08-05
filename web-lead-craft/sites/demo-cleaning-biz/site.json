@@ -1,0 +1,20 @@
+{
+  "name": "ALTA Home Care",
+  "domain": "example.pages.dev",
+  "lang": "th",
+  "languages": [
+    { "code": "th", "path": "", "label": "ไทย" },
+    { "code": "en", "path": "en", "label": "EN" }
+  ],
+  "notFound": {
+    "title": "ไม่พบหน้าที่คุณกำลังมองหา / Page not found",
+    "text": "หน้านี้อาจถูกย้ายหรือลบไปแล้ว — This page may have moved or been removed.",
+    "cta": "กลับหน้าแรก / Back to home",
+    "bg": "#F4F5FA",
+    "body": "#59617D",
+    "ink": "#10152B",
+    "accent": "#26326B",
+    "radius": "10px"
+  },
+  "note": "เดโม่แพ็กเกจ Business 1,990.- — เปลี่ยน domain เป็นของลูกค้าจริงก่อน build แล้ว sitemap/hreflang/canonical จะถูกสร้างให้อัตโนมัติ"
+}

@@ -41,14 +41,15 @@ tools/
   build-site.mjs    ประกอบ src/ → dist/ (ของที่ deploy) + preview.html
   qa-site.mjs       ตรวจงานด้วยเบราว์เซอร์จริงก่อนส่งลูกค้า
 sites/
-  demo-cleaning/    เว็บเดโม่แพ็กเกจ 990.- (ธุรกิจทำความสะอาดบ้าน/คอนโด)
-    site.json       ← โดเมนลูกค้า + ชื่อแบรนด์ (ใช้สร้าง sitemap/canonical)
-    src/            head.html · styles.css · body.html · favicon.svg
-                    fonts.css (generated — อย่าแก้มือ)
-      img/          รูปต้นฉบับ .webp ความละเอียดเต็ม (commit ลง git)
-    dist/           ← ของที่ deploy (gitignored, สั่ง build ใหม่ได้เสมอ)
-    preview.html    ← พรีวิวเป็น artifact บน claude.ai (ห้าม deploy)
-    .qa/            สกรีนช็อตจาก qa-site (gitignored)
+  demo-cleaning/      เว็บเดโม่แพ็กเกจ Starter 990.- (ภาษาเดียว)
+  demo-cleaning-biz/  เว็บเดโม่แพ็กเกจ Business 1,990.- (2 ภาษา + FAQ)
+    site.json         ← โดเมน ชื่อแบรนด์ และรายการภาษา
+    src/              head.html · styles.css · body.html · favicon.svg
+                      fonts.css (generated — อย่าแก้มือ)
+      img/            รูปต้นฉบับ .webp ความละเอียดเต็ม (commit ลง git)
+    dist/             ← ของที่ deploy (gitignored, สั่ง build ใหม่ได้เสมอ)
+    preview*.html     ← พรีวิวเป็น artifact ภาษาละไฟล์ (ห้าม deploy)
+    .qa/              สกรีนช็อตจาก qa-site (gitignored)
 ```
 
 `dist/` ที่ build ออกมาจะมี: `index.html` · `404.html` · `favicon.svg` ·
@@ -101,6 +102,35 @@ JS/network error · เว็บล้นขอบจอแนวนอน · se
 รูปที่ไม่มี alt · ลิงก์ `#` ที่ชี้ไปไม่มีอะไร · ปุ่มที่เล็กกว่า 44px (นิ้วกดพลาด) ·
 ลิงก์ `tel:` หาย · ความยาว title/description · จำนวน `<h1>` · favicon · `lang` ·
 หน้า 404 ใช้ได้จริงไหม — พร้อมเซฟสกรีนช็อตเต็มหน้าไว้ที่ `.qa/`
+
+## เว็บ 2 ภาษา (แพ็กเกจ Business)
+
+ใส่รายการภาษาใน `site.json` — ตัวที่ `"path": ""` คือหน้าแรก:
+
+```json
+"languages": [
+  { "code": "th", "path": "",   "label": "ไทย" },
+  { "code": "en", "path": "en", "label": "EN" }
+]
+```
+
+แล้วเขียนข้อความคู่กันในไฟล์ src ด้วย token เดียว:
+
+```html
+<h1>{{t|บ้านสะอาด|A spotless home}}</h1>
+<img alt="{{t|ทีมงานของเรา|Our team}}">
+<a href="{{lang:en}}">EN</a>          <!-- กลายเป็น /en/ -->
+```
+
+build จะได้ **สองหน้าจริง** คือ `dist/index.html` และ `dist/en/index.html`
+พร้อม `lang`, `hreflang`, canonical และ sitemap ที่ถูกต้องของแต่ละภาษา
+
+**ทำไมไม่ใช้ปุ่มสลับภาษาแบบซ่อน DOM:** วิธีนั้น Google เห็นเป็น URL เดียว
+จัดอันดับได้ภาษาเดียว และต้องส่งข้อความสองภาษาให้ทุกคนโหลด ส่วนวิธีสองหน้า
+ได้ URL ที่ Google จัดอันดับแยกกัน และ attribute อย่าง `alt`/`placeholder`
+ไม่มีทางค้างเป็นภาษาผิด แลกกับการโหลดหน้าใหม่ตอนกดสลับ (มี `prefetch` ให้แล้ว)
+
+> ถ้า token ไหนใส่ภาษาไม่ครบ build จะ **หยุดและฟ้อง** ไม่ปล่อยให้หัวข้อว่างหลุดขึ้นเว็บ
 
 ## Deploy: Cloudflare Pages (ฟรี)
 
