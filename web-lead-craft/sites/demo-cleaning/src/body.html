@@ -1,0 +1,537 @@
+<div class="site">
+
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="i-sparkle" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2 14.2 9.8 22 12 14.2 14.2 12 22 9.8 14.2 2 12 9.8 9.8Z"/>
+    </symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2.6l2.9 5.9 6.5 0.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5-4.7-4.6 6.5-0.9z"/>
+    </symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M13 2 4.5 13.5h5.5L10.5 22l8.5-11.5h-5.5L13 2Z"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 12.5l5 5 10-11"/>
+    </symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M8 12.5l2.8 2.8L16.5 9"/>
+    </symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 4h4l1.5 4.5-2.3 1.6a12 12 0 0 0 5.7 5.7l1.6-2.3L20 15v4a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 3 6.2 2 2 0 0 1 5 4Z"/>
+    </symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 6A2.5 2.5 0 0 1 6.5 3.5h11A2.5 2.5 0 0 1 20 6v7.5a2.5 2.5 0 0 1-2.5 2.5H12l-4.5 4v-4h-1A2.5 2.5 0 0 1 4 13.5Z"/>
+    </symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 21c4-4.4 6.5-7.8 6.5-11a6.5 6.5 0 1 0-13 0c0 3.2 2.5 6.6 6.5 11Z"/>
+      <circle cx="12" cy="10" r="2.4"/>
+    </symbol>
+    <symbol id="i-pin-fill" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 22c4.4-4.8 7-8.4 7-11.8A7 7 0 1 0 5 10.2C5 13.6 7.6 17.2 12 22Z"/>
+      <circle cx="12" cy="10" r="2.6" fill="#0F333B"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v5l3.2 2"/>
+    </symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l7 2.6v5.6c0 4.3-2.9 7.6-7 9.2-4.1-1.6-7-4.9-7-9.2V5.6Z"/>
+      <path d="M9 11.8l2.1 2.1 4-4.4"/>
+    </symbol>
+    <symbol id="i-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="9" r="5.2"/>
+      <path d="M8.7 13.4 7.2 21l4.8-2.5L16.8 21l-1.5-7.6"/>
+      <path d="M10 9.2l1.5 1.5 2.6-2.9"/>
+    </symbol>
+    <symbol id="i-kit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5.5 8.5h13l-1.4 10.7a2 2 0 0 1-2 1.8H8.9a2 2 0 0 1-2-1.8L5.5 8.5Z"/>
+      <path d="M8 8.5a4 4 0 0 1 8 0"/>
+      <path d="M9.5 12.5l0.5 4M14.5 12.5l-0.5 4"/>
+    </symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 7a2 2 0 0 1 2-2h12.5v3.2H20A1.5 1.5 0 0 1 21.5 9.7v7.8A2.5 2.5 0 0 1 19 20H6.5A2.5 2.5 0 0 1 4 17.5Z"/>
+      <circle cx="16.8" cy="14" r="1.3" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 11l8-7 8 7v8.5a1.5 1.5 0 0 1-1.5 1.5h-4v-6h-5v6h-4A1.5 1.5 0 0 1 4 19.5Z"/>
+    </symbol>
+    <symbol id="i-condo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="6" y="3.5" width="12" height="17" rx="1.5"/>
+      <path d="M9.5 7.5h2M13.5 7.5h2M9.5 11h2M13.5 11h2M9.5 14.5h2M13.5 14.5h2M11 20.5v-3h2v3"/>
+    </symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M9 3.5 10.6 8.4 15.5 10 10.6 11.6 9 16.5 7.4 11.6 2.5 10 7.4 8.4Z"/>
+      <path d="M17.5 12.5 18.6 15.4 21.5 16.5 18.6 17.6 17.5 20.5 16.4 17.6 13.5 16.5 16.4 15.4Z"/>
+    </symbol>
+    <symbol id="i-hat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 15.5v-1a7.5 7.5 0 0 1 15 0v1"/>
+      <path d="M3.5 15.5h17a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-17a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1Z"/>
+      <path d="M12 7V4.5"/>
+    </symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="5.5" width="16" height="15" rx="2"/>
+      <path d="M4 10.5h16M8.5 3.5v4M15.5 3.5v4"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 17 17 7M9.5 7H17v7.5"/>
+    </symbol>
+    <symbol id="i-fb" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M13.5 21.5v-7.2h2.4l0.4-2.8h-2.8V9.6c0-0.8 0.4-1.5 1.6-1.5h1.3V5.6c-0.7-0.1-1.5-0.2-2.3-0.2-2.3 0-3.9 1.4-3.9 4v2.1H7.8v2.8h2.4v7.2Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="CleanDay กลับขึ้นด้านบน">
+      <span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
+      <span class="logo-name">CleanDay<small>ทำความสะอาดถึงที่</small></span>
+    </a>
+    <nav class="nav-links" aria-label="เมนูหลัก">
+      <a href="#services">บริการ</a>
+      <a href="#pricing">ราคา</a>
+      <a href="#how">ขั้นตอน</a>
+      <a href="#reviews">รีวิว</a>
+    </nav>
+    <a class="nav-tel" href="tel:0812345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>081-234-5678</a>
+    <a class="btn btn-primary" href="#booking">จองคิว</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="bubbles" aria-hidden="true">
+      <span class="bubble" style="left:8%;width:26px;height:26px;animation-duration:15s;animation-delay:0s"></span>
+      <span class="bubble" style="left:24%;width:16px;height:16px;animation-duration:12s;animation-delay:4s"></span>
+      <span class="bubble" style="left:41%;width:34px;height:34px;animation-duration:18s;animation-delay:2s"></span>
+      <span class="bubble" style="left:58%;width:14px;height:14px;animation-duration:13s;animation-delay:6.5s"></span>
+      <span class="bubble" style="left:74%;width:22px;height:22px;animation-duration:16s;animation-delay:1s"></span>
+      <span class="bubble" style="left:90%;width:18px;height:18px;animation-duration:14s;animation-delay:5s"></span>
+    </div>
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow"><svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg>บริการทำความสะอาดถึงที่ · กรุงเทพฯ–ปริมณฑล</span>
+          <h1>บ้านสะอาด <span class="hl">สดชื่น<svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9 C 28 3, 72 3, 98 7" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg></span><br>เหมือนวันแรกที่ย้ายเข้า</h1>
+          <p class="hero-lede">ทีมแม่บ้านมืออาชีพพร้อมอุปกรณ์และน้ำยาครบชุด ถึงหน้าบ้านตรงเวลา ดูแลทุกซอกมุมตามลิสต์มาตรฐาน 40 จุด — คุณแค่เปิดประตูรับ</p>
+          <div class="hero-cta">
+            <a class="btn btn-line btn-lg" href="#booking"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>จองผ่าน LINE</a>
+            <a class="btn btn-ghost btn-lg" href="#pricing">ดูราคาแพ็กเกจ</a>
+          </div>
+          <p class="hero-note"><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>ยืนยันคิวภายใน 30 นาที · จ่ายเมื่องานเสร็จ</p>
+          <div class="stats">
+            <div class="stat"><b>4.9<svg class="ic" aria-hidden="true"><use href="#i-star"/></svg></b><span>คะแนนจาก 320+ รีวิว</span></div>
+            <div class="stat"><b>1,200+</b><span>งานที่ทำเสร็จแล้ว</span></div>
+            <div class="stat"><b>100%</b><span>รับประกันความพอใจ</span></div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="chat-card">
+            <div class="chat-head">
+              <span class="chat-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
+              <div class="chat-who"><b>CleanDay</b><span><i class="chat-dot"></i>ออนไลน์ · ตอบภายใน 5 นาที</span></div>
+              <span class="chat-line-badge">LINE</span>
+            </div>
+            <div class="chat-body">
+              <div class="msg msg-me"><p>สนใจทำความสะอาดคอนโด 1 ห้องนอน พรุ่งนี้ช่วงเช้าว่างไหมคะ?</p><time>20:41</time></div>
+              <div class="msg msg-them"><p>ว่างค่ะ 🙌 พรุ่งนี้ 9:00 น. ทีมงาน 2 คน ใช้เวลาประมาณ 3 ชม. ราคา 1,190 บาท รวมอุปกรณ์และน้ำยาแล้วค่ะ</p><time>20:42</time></div>
+              <div class="msg msg-me"><p>โอเค จองเลยค่ะ</p><time>20:43</time></div>
+              <div class="msg msg-them" id="chatLast"><p><span class="typing"><i></i><i></i><i></i></span></p></div>
+            </div>
+          </div>
+          <div class="float-badge fb-rate"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg><span>4.9/5<small>จาก 320+ รีวิวจริง</small></span></div>
+          <div class="float-badge fb-shield"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span>มีประกันความเสียหาย<small>เคลมได้ตามจริง</small></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="services">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">บริการของเรา</span>
+        <h2>เลือกแบบที่ตรงกับบ้านคุณ</h2>
+        <p>ทุกงานทำตามลิสต์มาตรฐาน 40 จุด พร้อมอุปกรณ์และน้ำยาของเราเองทั้งหมด — คุณไม่ต้องเตรียมอะไรเลย</p>
+      </div>
+      <div class="svc-grid">
+        <article class="svc rv">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-condo"/></svg></span>
+          <h3>คอนโด / ห้องชุด</h3>
+          <p>สตูดิโอถึง 2 ห้องนอน เช็ดฝุ่น ดูดฝุ่น ถูพื้น ขัดห้องน้ำ เก็บระเบียง</p>
+          <div class="svc-price"><b>เริ่ม 899.-</b><span>/ครั้ง</span></div>
+        </article>
+        <article class="svc rv" style="--d:0.08s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-home"/></svg></span>
+          <h3>บ้านเดี่ยว / ทาวน์โฮม</h3>
+          <p>ทำทั้งหลังทุกชั้น ห้องนั่งเล่น ครัว ห้องน้ำ บันได โถงทางเดิน</p>
+          <div class="svc-price"><b>เริ่ม 2,290.-</b><span>/ครั้ง</span></div>
+        </article>
+        <article class="svc rv" style="--d:0.16s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-sparkles"/></svg></span>
+          <h3>Big Cleaning</h3>
+          <p>ขัดคราบฝังลึก เช็ดกระจก ซอกมุมที่ถูกมองข้าม เหมาะทำทุก 3–6 เดือน</p>
+          <div class="svc-price"><b>เริ่ม 2,990.-</b><span>/ครั้ง</span></div>
+        </article>
+        <article class="svc rv" style="--d:0.24s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-hat"/></svg></span>
+          <h3>ก่อนเข้าอยู่ / หลังงานช่าง</h3>
+          <p>เก็บฝุ่นปูน เศษสี คราบกาว พร้อมส่งมอบให้เข้าอยู่ได้จริง</p>
+          <div class="svc-price"><b>เริ่ม 3,490.-</b><span>/ครั้ง</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--mist">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">ทำไมต้อง CleanDay</span>
+        <h2>มาตรฐานเดียวกัน ทุกครั้งที่จอง</h2>
+      </div>
+      <div class="why-grid">
+        <article class="why rv">
+          <span class="why-ic"><svg aria-hidden="true"><use href="#i-badge"/></svg></span>
+          <div><h3>ทีมงานผ่านการอบรม</h3><p>ฝึกตามมาตรฐานงานสะอาดของเรา และตรวจประวัติทุกคนก่อนรับงาน</p></div>
+        </article>
+        <article class="why rv" style="--d:0.06s">
+          <span class="why-ic"><svg aria-hidden="true"><use href="#i-kit"/></svg></span>
+          <div><h3>อุปกรณ์–น้ำยาครบชุด</h3><p>ทีมงานขนไปเองทั้งหมด บ้านคุณไม่ต้องเตรียมแม้แต่ไม้กวาด</p></div>
+        </article>
+        <article class="why rv" style="--d:0.12s">
+          <span class="why-ic"><svg aria-hidden="true"><use href="#i-clock"/></svg></span>
+          <div><h3>ตรงต่อเวลา</h3><p>คิวที่ยืนยันแล้วคือเวลาจริง ถ้าถึงช้าเกิน 15 นาที ลดทันที 10%</p></div>
+        </article>
+        <article class="why rv" style="--d:0.06s">
+          <span class="why-ic"><svg aria-hidden="true"><use href="#i-check-circle"/></svg></span>
+          <div><h3>รับประกันความพอใจ</h3><p>จุดไหนไม่ผ่าน แจ้งภายใน 24 ชม. กลับไปทำซ้ำให้ฟรี</p></div>
+        </article>
+        <article class="why rv" style="--d:0.12s">
+          <span class="why-ic"><svg aria-hidden="true"><use href="#i-wallet"/></svg></span>
+          <div><h3>จ่ายเมื่องานเสร็จ</h3><p>เดินตรวจงานพร้อมกันก่อน แล้วค่อยจ่าย เงินสด โอน หรือพร้อมเพย์</p></div>
+        </article>
+        <article class="why rv" style="--d:0.18s">
+          <span class="why-ic"><svg aria-hidden="true"><use href="#i-shield"/></svg></span>
+          <div><h3>มีประกันความเสียหาย</h3><p>ของเสียหายจากการทำงาน เคลมได้ตามจริงตามเงื่อนไข</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="pricing">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">ราคาแพ็กเกจ</span>
+        <h2>ราคาชัดเจน ไม่มีบวกเพิ่มหน้างาน</h2>
+        <p>ประเมินจากขนาดพื้นที่จริง ถ้าไม่แน่ใจ ส่งรูปห้องมาทาง LINE ให้เราประเมินฟรี</p>
+      </div>
+      <div class="plan-grid">
+        <article class="plan rv">
+          <h3>สตูดิโอ</h3>
+          <p class="plan-size">พื้นที่ไม่เกิน 30 ตร.ม.</p>
+          <div class="plan-price"><b>899.-</b><span>/ครั้ง</span></div>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>ทีมงาน 1 คน · ประมาณ 2 ชม.</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>รวมอุปกรณ์และน้ำยาแล้ว</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>เหมาะกับห้องพัก / ห้องปล่อยเช่า</li>
+          </ul>
+          <a class="btn btn-ghost" href="#booking">จองแพ็กเกจนี้</a>
+        </article>
+        <article class="plan plan-pop rv" style="--d:0.08s">
+          <span class="pop-badge">ยอดนิยม</span>
+          <h3>1 ห้องนอน</h3>
+          <p class="plan-size">พื้นที่ 30–45 ตร.ม.</p>
+          <div class="plan-price"><b>1,190.-</b><span>/ครั้ง</span></div>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>ทีมงาน 1–2 คน · ประมาณ 3 ชม.</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>รวมอุปกรณ์และน้ำยาแล้ว</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>แพ็กเกจที่ถูกจองมากที่สุด</li>
+          </ul>
+          <a class="btn btn-primary" href="#booking">จองแพ็กเกจนี้</a>
+        </article>
+        <article class="plan rv" style="--d:0.16s">
+          <h3>2 ห้องนอน</h3>
+          <p class="plan-size">พื้นที่ 45–70 ตร.ม.</p>
+          <div class="plan-price"><b>1,590.-</b><span>/ครั้ง</span></div>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>ทีมงาน 2 คน · ประมาณ 3 ชม.</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>รวมอุปกรณ์และน้ำยาแล้ว</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>ครอบคลุมระเบียง 2 จุด</li>
+          </ul>
+          <a class="btn btn-ghost" href="#booking">จองแพ็กเกจนี้</a>
+        </article>
+        <article class="plan rv" style="--d:0.24s">
+          <h3>ทาวน์โฮม 2 ชั้น</h3>
+          <p class="plan-size">พื้นที่ไม่เกิน 150 ตร.ม.</p>
+          <div class="plan-price"><b>2,290.-</b><span>/ครั้ง</span></div>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>ทีมงาน 2–3 คน · ประมาณ 4–5 ชม.</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>รวมอุปกรณ์และน้ำยาแล้ว</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>รวมบันไดและโถงทุกชั้น</li>
+          </ul>
+          <a class="btn btn-ghost" href="#booking">จองแพ็กเกจนี้</a>
+        </article>
+      </div>
+      <div class="plan-note rv">
+        <span><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>ทุกแพ็กเกจรวมทีมงาน อุปกรณ์ น้ำยา</span>
+        <span><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>พื้นที่ใหญ่กว่านี้ ประเมินฟรีทาง LINE</span>
+        <span><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg>จองประจำรายเดือน ลดเพิ่ม 10%</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--mist" id="how">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">ขั้นตอนง่าย ๆ</span>
+        <h2>จากทักแชต ถึงบ้านสะอาด ใน 3 ขั้น</h2>
+      </div>
+      <div class="steps">
+        <article class="step rv">
+          <span class="step-num">1</span>
+          <h3>เลือกวันและเวลา</h3>
+          <p>ทัก LINE หรือกรอกฟอร์มด้านล่าง บอกขนาดห้องกับวันที่สะดวก เรายืนยันคิวภายใน 30 นาที</p>
+        </article>
+        <article class="step rv" style="--d:0.1s">
+          <span class="step-num">2</span>
+          <h3>ทีมงานถึงหน้าบ้านตรงเวลา</h3>
+          <p>พร้อมอุปกรณ์ครบชุด เริ่มงานตามลิสต์มาตรฐาน 40 จุด ถ่ายรูปก่อนเริ่มงานให้ทุกครั้ง</p>
+        </article>
+        <article class="step rv" style="--d:0.2s">
+          <span class="step-num">3</span>
+          <h3>เดินตรวจงานพร้อมกัน</h3>
+          <p>พอใจทุกจุดแล้วค่อยชำระเงิน พร้อมรูปก่อน–หลังส่งให้เก็บไว้เป็นหลักฐาน</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="reviews">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">รีวิวจากลูกค้า</span>
+        <h2>คะแนนเฉลี่ย 4.9 จาก 320+ รีวิว</h2>
+      </div>
+      <div class="rev-grid">
+        <article class="rev rv">
+          <div class="stars" aria-label="5 ดาว">
+            <svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg>
+          </div>
+          <blockquote>“ห้องเงาจนตกใจ ขอบกระจกกับยาแนวห้องน้ำที่เคยขัดเองยังไงก็ไม่ออก หายเกลี้ยง สุดท้ายกดจองรายเดือนยาวเลยค่ะ”</blockquote>
+          <div class="rev-who">
+            <span class="rev-ava">พ</span>
+            <div><b>คุณพลอย · คอนโด พระราม 9</b><span>แพ็กเกจ 1 ห้องนอน</span></div>
+          </div>
+        </article>
+        <article class="rev rv" style="--d:0.08s">
+          <div class="stars" aria-label="5 ดาว">
+            <svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg>
+          </div>
+          <blockquote>“ทีมงานมา 3 คน ตรงเวลามาก ทำงานเป็นระบบ บ้าน 2 ชั้นเสร็จในสี่ชั่วโมงกว่า ๆ คุ้มกว่าเหนื่อยเองทั้งวันเยอะครับ”</blockquote>
+          <div class="rev-who">
+            <span class="rev-ava">ต</span>
+            <div><b>คุณต้น · ทาวน์โฮม ลาดพร้าว</b><span>แพ็กเกจทาวน์โฮม 2 ชั้น</span></div>
+          </div>
+        </article>
+        <article class="rev rv" style="--d:0.16s">
+          <div class="stars" aria-label="5 ดาว">
+            <svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg>
+          </div>
+          <blockquote>“จองผ่าน LINE ง่ายมาก แอดมินตอบไว มีรูปก่อน–หลังส่งให้ดูทุกจุด รอบหน้าฝากกุญแจไว้กับนิติฯ ก็ได้ สะดวกสุด ๆ ค่ะ”</blockquote>
+          <div class="rev-who">
+            <span class="rev-ava">น</span>
+            <div><b>คุณแนน · คอนโด อ่อนนุช</b><span>Big Cleaning</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="book" id="booking">
+    <svg class="spark" style="top:14%;left:5%;width:26px" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg>
+    <svg class="spark" style="top:68%;left:44%;width:16px" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg>
+    <svg class="spark" style="top:22%;right:8%;width:20px" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg>
+    <div class="wrap">
+      <div class="book-grid">
+        <div class="book-copy rv">
+          <span class="eyebrow">จองคิว / ขอใบเสนอราคา</span>
+          <h2>ว่างวันไหน บอกเรา<br>เดี๋ยวความสะอาดไปหาถึงที่</h2>
+          <p>อยากได้คำตอบไว ทัก LINE ได้เลย หรือฝากรายละเอียดไว้ในฟอร์ม ทีมงานติดต่อกลับภายใน 30 นาทีในเวลาทำการ</p>
+          <div class="book-list">
+            <div class="book-row">
+              <span class="book-ic"><svg aria-hidden="true"><use href="#i-phone"/></svg></span>
+              <div><a href="tel:0812345678">081-234-5678</a><small>ทุกวัน 8:00–18:00</small></div>
+            </div>
+            <div class="book-row">
+              <span class="book-ic"><svg aria-hidden="true"><use href="#i-chat"/></svg></span>
+              <div><a href="#booking">LINE: @cleanday</a><small>ตอบเร็วที่สุด แนบรูปห้องได้เลย</small></div>
+            </div>
+            <div class="book-row">
+              <span class="book-ic"><svg aria-hidden="true"><use href="#i-fb"/></svg></span>
+              <div><a href="#" aria-disabled="true">Facebook: CleanDay TH</a><small>ผลงานก่อน–หลัง อัปเดตทุกสัปดาห์</small></div>
+            </div>
+            <div class="book-row">
+              <span class="book-ic"><svg aria-hidden="true"><use href="#i-pin"/></svg></span>
+              <div>พื้นที่ให้บริการ<small>กรุงเทพฯ · นนทบุรี · ปทุมธานี · สมุทรปราการ</small></div>
+            </div>
+          </div>
+          <div class="map-card">
+            <div class="map-view" aria-hidden="true">
+              <span class="map-road" style="left:0;right:0;top:38%;height:10px"></span>
+              <span class="map-road" style="top:0;bottom:0;left:30%;width:8px"></span>
+              <span class="map-road" style="left:55%;right:0;top:72%;height:6px"></span>
+              <span class="map-pin"><svg aria-hidden="true"><use href="#i-pin-fill"/></svg></span>
+            </div>
+            <div class="map-meta">
+              <span>128/44 ซอยสุขุมวิท 64 แขวงบางจาก เขตพระโขนง กรุงเทพฯ</span>
+              <a href="https://maps.google.com/?q=%E0%B8%8B%E0%B8%AD%E0%B8%A2%E0%B8%AA%E0%B8%B8%E0%B8%82%E0%B8%B8%E0%B8%A1%E0%B8%A7%E0%B8%B4%E0%B8%97%2064%20%E0%B8%9A%E0%B8%B2%E0%B8%87%E0%B8%88%E0%B8%B2%E0%B8%81" target="_blank" rel="noopener">เปิดแผนที่<svg class="ic" style="display:inline-block;vertical-align:-0.2em;width:1em;height:1em" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            </div>
+          </div>
+        </div>
+        <form class="book-form rv" id="bookForm" style="--d:0.1s">
+          <h3>ฝากรายละเอียดให้ติดต่อกลับ</h3>
+          <p class="form-sub">กรอกไม่ถึงนาที ทีมงานโทรกลับภายใน 30 นาที (เวลาทำการ)</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="f-name">ชื่อ</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" placeholder="ชื่อที่ให้เรียก">
+            </div>
+            <div class="field">
+              <label for="f-tel">เบอร์โทร <em>*</em></label>
+              <input id="f-tel" name="tel" type="tel" inputmode="tel" required pattern="0[0-9]{8,9}" title="กรอกเบอร์มือถือ 10 หลัก เช่น 0812345678" placeholder="0812345678" autocomplete="tel">
+            </div>
+            <div class="field">
+              <label for="f-type">ประเภทที่พัก</label>
+              <select id="f-type" name="type">
+                <option>คอนโด / ห้องชุด</option>
+                <option>บ้านเดี่ยว</option>
+                <option>ทาวน์โฮม</option>
+                <option>ออฟฟิศ / ร้านค้า</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-size">ขนาดพื้นที่ (ตร.ม.)</label>
+              <input id="f-size" name="size" type="number" min="10" max="1000" placeholder="เช่น 35">
+            </div>
+            <div class="field">
+              <label for="f-date">วันที่สะดวก</label>
+              <input id="f-date" name="date" type="date">
+            </div>
+            <div class="field">
+              <label for="f-slot">ช่วงเวลา</label>
+              <select id="f-slot" name="slot">
+                <option>ช่วงเช้า 8:00–12:00</option>
+                <option>ช่วงบ่าย 12:00–17:00</option>
+              </select>
+            </div>
+            <div class="field field-full">
+              <label for="f-note">รายละเอียดเพิ่มเติม</label>
+              <textarea id="f-note" name="note" placeholder="เช่น มีสัตว์เลี้ยง อยากให้เน้นห้องน้ำเป็นพิเศษ"></textarea>
+            </div>
+            <button class="btn btn-primary btn-lg field-full" type="submit">ส่งคำขอจองคิว</button>
+            <p class="form-fine">ไม่มีค่าใช้จ่ายจนกว่าจะยืนยันคิว · ข้อมูลของคุณใช้ติดต่อกลับเท่านั้น</p>
+          </div>
+          <div class="form-ok" role="status">
+            <span class="ok-ic"><svg aria-hidden="true"><use href="#i-check"/></svg></span>
+            <h4>ได้รับคำขอแล้ว!</h4>
+            <p id="okText">ทีมงานจะโทรกลับภายใน 30 นาทีในเวลาทำการ</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="wlc-strip">
+  <div class="wrap wlc-in">
+    <svg class="ic" aria-hidden="true"><use href="#i-bolt"/></svg>
+    <span>ชอบเว็บสไตล์นี้ไหมครับ? <b>เว็บไซต์ธุรกิจหน้าเดียว เริ่มต้น 990.-</b> มีเว็บใน 24 ชม.</span>
+    <span>ผลงานโดย <b>Web Lead Craft</b> · LINE: <b>kitty4uu</b> · โทร 099-151-4049</span>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="logo" href="#top" aria-label="CleanDay กลับขึ้นด้านบน">
+          <span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
+          <span class="logo-name">CleanDay<small>ทำความสะอาดถึงที่</small></span>
+        </a>
+        <p>บริการทำความสะอาดบ้านและคอนโดถึงที่ ทีมงานผ่านการอบรม อุปกรณ์ครบชุด จองง่ายผ่าน LINE ทั่วกรุงเทพฯ–ปริมณฑล</p>
+        <div class="socials">
+          <a class="soc" href="#" aria-label="Facebook CleanDay TH"><svg aria-hidden="true"><use href="#i-fb"/></svg></a>
+          <a class="soc" href="#booking" aria-label="ทัก LINE จองคิว"><svg aria-hidden="true"><use href="#i-chat"/></svg></a>
+          <a class="soc" href="tel:0812345678" aria-label="โทรหา CleanDay"><svg aria-hidden="true"><use href="#i-phone"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>เมนูลัด</h4>
+        <ul>
+          <li><a href="#services">บริการของเรา</a></li>
+          <li><a href="#pricing">ราคาแพ็กเกจ</a></li>
+          <li><a href="#how">ขั้นตอนการจอง</a></li>
+          <li><a href="#reviews">รีวิวลูกค้า</a></li>
+          <li><a href="#booking">จองคิว</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>ติดต่อเรา</h4>
+        <ul>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:0812345678">081-234-5678</a></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>LINE: @cleanday</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>เปิดทุกวัน 8:00–18:00</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>128/44 ซอยสุขุมวิท 64 แขวงบางจาก เขตพระโขนง กรุงเทพฯ 10260</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">© 2026 CleanDay คลีนเดย์ — หน้านี้เป็นเว็บไซต์ตัวอย่างผลงานของ Web Lead Craft ชื่อแบรนด์ เบอร์โทร และข้อมูลติดต่อทั้งหมดเป็นข้อมูลสมมติ</div>
+  </div>
+</footer>
+
+<div class="mcta">
+  <a class="btn btn-ghost" href="tel:0812345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>โทรเลย</a>
+  <a class="btn btn-line" href="#booking"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>จองผ่าน LINE</a>
+</div>
+
+<script>
+(function () {
+  var nav = document.getElementById('nav');
+  var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if ('IntersectionObserver' in window) {
+    document.querySelector('.site').classList.add('anim');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+  }
+
+  // the typing indicator in the hero chat resolves into the booking confirmation
+  var last = document.getElementById('chatLast');
+  var finalize = function () {
+    last.innerHTML = '<p>รับจองเรียบร้อยค่ะ ✅ เจอกันพรุ่งนี้ 9:00 น. นะคะ</p><time>20:43</time>';
+  };
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finalize(); }
+  else { window.setTimeout(finalize, 3600); }
+
+  var form = document.getElementById('bookForm');
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var name = form.elements.name.value.trim();
+    document.getElementById('okText').textContent =
+      (name ? 'คุณ' + name + ' — ' : '') +
+      'ทีมงานจะโทรกลับภายใน 30 นาทีในเวลาทำการ (ทุกวัน 8:00–18:00) หรือทัก LINE: @cleanday เพื่อคุยต่อได้เลยค่ะ';
+    form.classList.add('sent');
+  });
+})();
+</script>
+
+</div>

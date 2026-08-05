@@ -1,4 +1,13 @@
-# claude-project1 — Viral Story Remix Pipeline
+# claude-project1
+
+repo รวมโปรเจกต์ย่อย — แต่ละโฟลเดอร์แยกขาดจากกัน:
+
+- **`web-lead-craft/`** — ธุรกิจรับทำเว็บไซต์ (แพ็กเกจ 990/1,990/4,990.-) — เว็บลูกค้า, เดโม่, เครื่องมือ build → อ่าน `web-lead-craft/README.md`
+- **Viral Story Remix Pipeline** (ด้านล่าง) — ทำคลิป YouTube Shorts
+
+---
+
+## Viral Story Remix Pipeline
 
 โปรเจกต์ทำคลิป YouTube Shorts แนว "Story Remix" (เล่าเรื่องใหม่จากเหตุการณ์ไวรัล) ด้วย pipeline อัตโนมัติ 7 Phases ทำงานร่วมกับ Claude Code
 
