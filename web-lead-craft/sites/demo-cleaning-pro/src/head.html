@@ -1,0 +1,54 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{PAGE_TITLE}}</title>
+<meta name="description" content="{{PAGE_DESC}}">
+<meta property="og:title" content="{{PAGE_TITLE}}">
+<meta property="og:description" content="{{PAGE_DESC}}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="{{t|th_TH|en_US}}">
+<meta property="og:site_name" content="HOMEKEEP">
+<meta property="og:url" content="{{SITE_URL}}">
+<link rel="canonical" href="{{SITE_URL}}">
+<meta name="theme-color" content="#0E3F35">
+<link rel="icon" href="{{BASE}}favicon.svg" type="image/svg+xml">
+
+<!-- Google Search Console: paste the verification tag the client is given.
+     <meta name="google-site-verification" content="..."> -->
+
+<!-- Google Analytics 4 — replace G-XXXXXXX with the client's ID and uncomment.
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXX');
+</script>
+-->
+
+<!-- Meta (Facebook) Pixel — replace PIXEL_ID with the client's and uncomment.
+     Left inert in the demo so it sends nothing anywhere.
+<script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', 'PIXEL_ID'); fbq('track', 'PageView');
+</script>
+-->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  "name": "HOMEKEEP",
+  "description": "{{t|บริษัทรับดูแลความสะอาดบ้าน คอนโด และสำนักงานครบวงจร กรุงเทพฯ|Full-service home, condo and office cleaning company in Bangkok}}",
+  "telephone": "+6620001234",
+  "email": "hello@homekeep.example",
+  "priceRange": "฿1,200–฿12,000",
+  "areaServed": "Bangkok",
+  "availableLanguage": ["th", "en"],
+  "openingHours": "Mo-Su 08:00-20:00",
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "1240" }
+}
+</script>

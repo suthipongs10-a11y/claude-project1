@@ -1,0 +1,38 @@
+<main class="sec">
+  <div class="wrap">
+    <div class="article">
+      <div class="article-head">
+        <p class="article-meta">
+          <span class="post-cat">{{ARTICLE_CAT}}</span>
+          <time datetime="{{ARTICLE_DATE_ISO}}">{{ARTICLE_DATE}}</time>
+          <span>· {{ARTICLE_READ}}</span>
+        </p>
+        <h1>{{ARTICLE_TITLE}}</h1>
+        <p>{{ARTICLE_DESC}}</p>
+      </div>
+      <figure class="article-hero">
+        <img {{img:{{ARTICLE_HERO}}:(max-width:820px) 92vw, 760px}} width="1536" height="1024" decoding="async" alt="{{ARTICLE_TITLE}}">
+      </figure>
+      <div class="prose">
+        {{ARTICLE_BODY}}
+      </div>
+      <div class="article-cta">
+        <h3>{{t|อยากให้เราดูแลให้แทน?|Would you rather we did it?}}</h3>
+        <p>{{t|ทีมงาน HOMEKEEP รับดูแลบ้านและคอนโดทั่วกรุงเทพฯ ประเมินราคาฟรี ตอบกลับใน 30 นาที|HOMEKEEP looks after homes and condos across Bangkok. Free quote, answered within 30 minutes.}}</p>
+        <a class="btn btn-green" href="{{BASE}}contact.html">{{t|ขอใบเสนอราคา|Get a quote}}</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<section class="sec sec--stone">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="label label-c">{{t|อ่านต่อ|Keep reading}}</span>
+      <h2>{{t|บทความอื่นที่น่าสนใจ|More from the blog}}</h2>
+    </div>
+    <div class="posts rv">
+        {{RELATED}}
+    </div>
+  </div>
+</section>

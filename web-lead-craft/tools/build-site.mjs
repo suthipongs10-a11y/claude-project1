@@ -1,44 +1,38 @@
 #!/usr/bin/env node
 // Assemble a site folder into a deploy-ready dist/ plus a review preview.
 //
-//   dist/index.html    the page — every language in one file
-//   dist/404.html      Cloudflare Pages serves this for unknown paths
-//   dist/img/          responsive photo derivatives
-//   dist/favicon.svg   copied from src/
-//   dist/robots.txt    generated from site.json
-//   dist/sitemap.xml   generated when site.json carries a real domain
-//   dist/_headers      Cloudflare Pages security + cache headers
-//   preview.html       (site root, NOT shipped, gitignored) artifact-ready
-//                      fragment — the artifact runtime supplies its own
-//                      doctype/head/body wrapper
+// Two shapes, chosen by whether src/pages/ exists:
+//
+//   single page   src/body.html is the whole site       → dist/index.html
+//   multi page    src/pages/*.html + src/partials/      → dist/<slug>.html
+//                 src/articles/*.html                   → dist/articles/<slug>.html
+//
+// Both emit every configured language into the same file and switch between
+// them in the page, so a built site works with no server at all — assets and
+// links are relative, resolved through {{BASE}} for the extra depth of an
+// article. Flat .html output rather than folder/index.html is what makes that
+// true: a directory URL has no index to serve off disk.
+//
+// Also written: 404.html, favicon.svg, robots.txt, _headers, and sitemap.xml
+// once site.json carries a real domain.
 //
 // Deploy dist/ and nothing else: src/ and preview.html must never be public.
 //
-// Everything inside dist/index.html links to its assets with relative paths,
-// so the built page opens correctly by double-click as well as over HTTP.
-//
-// src/ contract: head.html (meta only, no <style>; may use {{SITE_URL}}),
-//                fonts.css (generated), styles.css, body.html, favicon.svg,
-//                img/*.webp masters
-// site.json:     { "domain", "name", "lang", "languages"? }
-//                languages: [{ code, label }] — omit for a single-language
-//                site. `lang` names the one shown before the visitor chooses.
-//
 // Usage: node tools/build-site.mjs <site-dir>
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, rmSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
 import { buildDerivatives, inlineMap, applyImages, listImages, WIDTHS } from './images.mjs';
 import { localize, checkTokens, expandAll, switcherFor } from './i18n.mjs';
-
-const WIDTH_LABEL = WIDTHS.join('/');
+import {
+  hasPages, collectPages, collectArticles, baseFor,
+  renderNav, renderArticleCards, renderBreadcrumb, fmtDate,
+} from './pages.mjs';
 
 const dir = process.argv[2];
 if (!dir) {
   console.error('usage: build-site.mjs <site-dir>');
   process.exit(1);
 }
-
-const src = f => readFileSync(join(dir, 'src', f), 'utf8');
 if (!existsSync(dir)) {
   console.error(`no site folder at ${dir}`);
   console.error(`if you expected one, the last "git pull" may not have completed — check "git status"`);
@@ -49,6 +43,9 @@ if (!existsSync(cfgPath)) {
   console.error(`missing ${cfgPath} — see another site folder for the shape`);
   process.exit(1);
 }
+
+const src = f => readFileSync(join(dir, 'src', f), 'utf8');
+const srcIf = f => (existsSync(join(dir, 'src', f)) ? src(f) : '');
 const cfg = JSON.parse(readFileSync(cfgPath, 'utf8'));
 const defaultLang = cfg.lang ?? 'th';
 const langs = cfg.languages ?? [{ code: defaultLang, label: defaultLang.toUpperCase() }];
@@ -62,59 +59,70 @@ if (!langs.some(l => l.code === defaultLang)) {
 const isReal = typeof cfg.domain === 'string' && /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(cfg.domain) && !cfg.domain.startsWith('example.');
 const siteUrl = isReal ? `https://${cfg.domain}` : '';
 
+const multi = hasPages(dir);
+const pages = multi ? collectPages(dir) : [];
+const articles = multi ? collectArticles(dir) : [];
+const css = `${src('fonts.css').trim()}\n${src('styles.css').trim()}`;
 const rawHead = src('head.html');
-const rawBody = src('body.html');
 
-// A token missing a phrase would silently ship an empty heading, so refuse
-// to build rather than emit one.
-const tokenProblems = [
-  ...checkTokens(rawHead, langs, 'head.html'),
-  ...checkTokens(rawBody, langs, 'body.html'),
-];
+// A token missing a phrase would silently ship an empty heading, so refuse to
+// build rather than emit one.
+const sources = multi
+  ? [
+      ['head.html', rawHead],
+      ['partials/header.html', srcIf('partials/header.html')],
+      ['partials/footer.html', srcIf('partials/footer.html')],
+      ['partials/article.html', srcIf('partials/article.html')],
+      ...pages.map(p => [`pages/${p.file}`, `${p.title}${p.desc}${p.nav ?? ''}${p.body}`]),
+      ...articles.map(a => [`articles/${a.file}`, `${a.title}${a.desc}${a.cat}${a.body}`]),
+    ]
+  : [['head.html', rawHead], ['body.html', src('body.html')]];
+const tokenProblems = sources.flatMap(([where, text]) => checkTokens(text, langs, where));
 if (tokenProblems.length) {
   console.error(`translation tokens are malformed:\n  ${tokenProblems.join('\n  ')}`);
   process.exit(1);
 }
 
-// The head ships in the default language; the switch updates <title> and the
-// description from the same JSON block the body uses.
-const head = localize(rawHead, defaultLang, langs)
-  .split('\n')
-  .filter(line => siteUrl || !line.includes('{{SITE_URL}}'))
-  .join('\n')
-  .replaceAll('{{SITE_URL}}', siteUrl)
-  .trim();
-
-const meta = Object.fromEntries(
-  langs.map(l => {
-    const h = localize(rawHead, l.code, langs);
-    return [l.code, {
-      title: h.match(/<title>([^<]*)<\/title>/)?.[1] ?? '',
-      desc: h.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? '',
-    }];
-  })
-);
-
-const withSwitcher = rawBody.replaceAll('{{SWITCHER}}', switcherFor(langs, defaultLang));
-const { html: expandedBody, data: i18nNodes } = expandAll(withSwitcher, langs, defaultLang);
-const css = `${src('fonts.css').trim()}\n${src('styles.css').trim()}`;
-
 const dist = join(dir, 'dist');
 // dist/img is expensive to regenerate, so it survives the wipe and the
 // pipeline decides per-file what is stale
-for (const entry of ['index.html', '404.html', 'favicon.svg', 'robots.txt', 'sitemap.xml', '_headers']) {
-  rmSync(join(dist, entry), { force: true });
+for (const entry of ['404.html', 'favicon.svg', 'robots.txt', 'sitemap.xml', '_headers', 'articles']) {
+  rmSync(join(dist, entry), { recursive: true, force: true });
 }
+for (const f of existsSync(dist) ? [] : []) rmSync(f, { force: true });
 mkdirSync(dist, { recursive: true });
+for (const p of multi ? pages : [{ out: 'index.html' }]) rmSync(join(dist, p.out), { force: true });
 
 const photos = await buildDerivatives(dir, dist);
 
-// The switch itself. It runs from a JSON island rather than inline strings so
-// nothing here needs escaping, and it is small enough to inline everywhere.
-const i18nPayload = JSON.stringify({ default: defaultLang, meta, nodes: i18nNodes })
-  .replaceAll('</', '<\\/');
-const langScript = langs.length < 2 ? '' : `
-<script type="application/json" id="i18n-data">${i18nPayload}</script>
+/** Head for one page: shared meta plus this page's title, description, canonical. */
+function headFor(lang, page, base) {
+  const path = page.out === 'index.html' ? '' : `/${page.out}`;
+  return localize(rawHead, lang, langs)
+    .replaceAll('{{PAGE_TITLE}}', localize(page.title, lang, langs))
+    .replaceAll('{{PAGE_DESC}}', localize(page.desc, lang, langs))
+    .replaceAll('{{BASE}}', base)
+    .split('\n')
+    .filter(line => siteUrl || !line.includes('{{SITE_URL}}'))
+    .join('\n')
+    .replaceAll('{{SITE_URL}}', `${siteUrl}${path}`)
+    .trim();
+}
+
+/** The per-page dictionary the language switch reads. */
+const metaFor = page =>
+  Object.fromEntries(
+    langs.map(l => [l.code, {
+      title: localize(page.title, l.code, langs),
+      desc: localize(page.desc, l.code, langs),
+    }])
+  );
+
+function langScriptFor(meta, nodes) {
+  if (langs.length < 2) return '';
+  const payload = JSON.stringify({ default: defaultLang, meta, nodes }).replaceAll('</', '<\\/');
+  return `
+<script type="application/json" id="i18n-data">${payload}</script>
 <script>
 (function () {
   var D = JSON.parse(document.getElementById('i18n-data').textContent);
@@ -154,23 +162,90 @@ const langScript = langs.length < 2 ? '' : `
   if (saved && saved !== D.default) apply(saved);
 })();
 </script>`;
+}
 
-writeFileSync(
-  join(dist, 'index.html'),
-  `<!doctype html>
+/** Render one page to disk and hand back what the sitemap needs. */
+function emit(page, bodyHtml, base) {
+  const withSwitcher = bodyHtml.replaceAll('{{SWITCHER}}', switcherFor(langs, defaultLang));
+  const { html, data } = expandAll(withSwitcher, langs, defaultLang);
+  const out = join(dist, page.out);
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(
+    out,
+    `<!doctype html>
 <html lang="${defaultLang}" data-lang="${defaultLang}">
 <head>
-${head}
+${headFor(defaultLang, page, base)}
 <style>
 ${css}
 </style>
 </head>
 <body>
-${applyImages(expandedBody)}${langScript}
+${applyImages(html, { base })}${langScriptFor(metaFor(page), data)}
 </body>
 </html>
 `
-);
+  );
+  return { out: page.out, bytes: readFileSync(out).length, expanded: withSwitcher };
+}
+
+const written = [];
+let previewSource = null;
+
+if (multi) {
+  const header = srcIf('partials/header.html');
+  const footer = srcIf('partials/footer.html');
+  const articleTpl = srcIf('partials/article.html');
+
+  for (const page of pages) {
+    const base = baseFor(page.out);
+    const trail = page.slug === 'index' ? [] : [
+      { label: '{{t|หน้าแรก|Home}}', href: 'index.html' },
+      { label: page.nav ?? page.title },
+    ];
+    const body = `${header}\n${page.body}\n${footer}`
+      .replaceAll('{{NAV}}', renderNav(pages, page.slug, base))
+      .replaceAll('{{BREADCRUMB}}', renderBreadcrumb(trail, base))
+      .replace(/\{\{ARTICLES(?::(\d+))?\}\}/g, (_m, n) => renderArticleCards(articles, base, Number(n) || 0))
+      .replaceAll('{{BASE}}', base);
+    written.push(emit(page, body, base));
+    if (page.slug === 'index') previewSource = written[written.length - 1].expanded;
+  }
+
+  for (const a of articles) {
+    const base = baseFor(a.out);
+    const blog = pages.find(p => p.slug === 'blog');
+    const trail = [
+      { label: '{{t|หน้าแรก|Home}}', href: 'index.html' },
+      ...(blog ? [{ label: blog.nav, href: blog.href }] : []),
+      { label: a.title },
+    ];
+    const related = articles.filter(x => x.slug !== a.slug).slice(0, 3);
+    const body = `${header}\n${articleTpl}\n${footer}`
+      .replaceAll('{{NAV}}', renderNav(pages, 'blog', base))
+      .replaceAll('{{BREADCRUMB}}', renderBreadcrumb(trail, base))
+      .replaceAll('{{ARTICLE_TITLE}}', a.title)
+      .replaceAll('{{ARTICLE_DESC}}', a.desc)
+      .replaceAll('{{ARTICLE_CAT}}', a.cat)
+      .replaceAll('{{ARTICLE_DATE_ISO}}', a.date)
+      .replaceAll('{{ARTICLE_DATE}}', fmtDate(a.date))
+      .replaceAll('{{ARTICLE_READ}}', a.read)
+      .replaceAll('{{ARTICLE_HERO}}', a.img)
+      .replaceAll('{{ARTICLE_BODY}}', a.body)
+      .replaceAll('{{RELATED}}', renderArticleCards(related, base, 3))
+      .replaceAll('{{BASE}}', base);
+    written.push(emit(a, body, base));
+  }
+} else {
+  const page = { out: 'index.html', slug: 'index', title: '', desc: '' };
+  // A single-page site keeps its title and description in head.html directly.
+  const h = rawHead;
+  page.title = h.match(/<title>([^<]*)<\/title>/)?.[1] ?? '';
+  page.desc = h.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? '';
+  const rec = emit(page, src('body.html').trim(), '');
+  written.push(rec);
+  previewSource = rec.expanded;
+}
 
 copyFileSync(join(dir, 'src', 'favicon.svg'), join(dist, 'favicon.svg'));
 
@@ -219,13 +294,12 @@ writeFileSync(
 );
 
 if (isReal) {
+  const urls = written
+    .map(w => `  <url><loc>${siteUrl}/${w.out === 'index.html' ? '' : w.out}</loc><changefreq>monthly</changefreq></url>`)
+    .join('\n');
   writeFileSync(
     join(dist, 'sitemap.xml'),
-    `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>${siteUrl}/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-</urlset>
-`
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`
   );
 }
 
@@ -248,17 +322,24 @@ writeFileSync(
 `
 );
 
-const previewBody = applyImages(expandedBody, { inline: await inlineMap(dir) });
+// The preview is the home page only — an artifact is one page, and links to
+// the site's other pages have nowhere to go there.
+const home = multi ? pages.find(p => p.slug === 'index') : { title: written[0] ? '' : '', desc: '' };
+const previewMeta = multi ? metaFor(home) : null;
+const { html: previewHtml, data: previewNodes } = expandAll(previewSource, langs, defaultLang);
+const previewTitle = multi ? previewMeta[defaultLang].title : (rawHead.match(/<title>([^<]*)<\/title>/)?.[1] ?? 'Preview');
 writeFileSync(
   join(dir, 'preview.html'),
-  `<title>${meta[defaultLang].title}</title>\n<style>\n${css}\n</style>\n${previewBody}${langScript}\n`
+  `<title>${localize(previewTitle, defaultLang, langs)}</title>\n<style>\n${css}\n</style>\n` +
+    `${applyImages(previewHtml, { inline: await inlineMap(dir) })}` +
+    `${langScriptFor(multi ? previewMeta : metaFor({ title: previewTitle, desc: '' }), previewNodes)}\n`
 );
 
 const kb = n => `${(n / 1024).toFixed(0)} KB`;
-console.log(`built ${dist}/`);
-console.log(`  index.html   ${kb(readFileSync(join(dist, 'index.html')).length)}  (${langs.map(l => l.code).join(' + ')})`);
-console.log(`  img/         ${photos.count} photo(s) x ${WIDTH_LABEL} = ${kb(photos.bytes)}`);
+console.log(`built ${dist}/  (${langs.map(l => l.code).join(' + ')})`);
+for (const w of written) console.log(`  ${w.out.padEnd(34)} ${kb(w.bytes)}`);
+console.log(`  img/${' '.repeat(30)} ${photos.count} photo(s) x ${WIDTHS.join('/')} = ${kb(photos.bytes)}`);
 console.log(`  + 404.html, favicon.svg, robots.txt, _headers${isReal ? ', sitemap.xml' : ''}`);
 if (!isReal) console.log(`  note: site.json has no real domain yet — sitemap/canonical skipped`);
-console.log(`preview.html   ${kb(readFileSync(join(dir, 'preview.html')).length)} (site root, do not deploy)`);
+console.log(`preview.html ${kb(readFileSync(join(dir, 'preview.html')).length)} (site root, do not deploy)`);
 if (listImages(dir).length === 0) console.log(`  note: no masters in src/img/ — {{img:...}} placeholders would fail`);

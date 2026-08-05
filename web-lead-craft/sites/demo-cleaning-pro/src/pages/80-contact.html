@@ -1,0 +1,98 @@
+<!-- slug: contact -->
+<!-- nav: {{t|ติดต่อเรา|Contact}} -->
+<!-- title: {{t|ติดต่อเรา — ขอใบเสนอราคาฟรี · HOMEKEEP|Contact — get a free quote · HOMEKEEP}} -->
+<!-- desc: {{t|ขอใบเสนอราคาฟรีทาง LINE โทรศัพท์ หรือกรอกฟอร์ม ทีมงานตอบกลับภายใน 30 นาทีในเวลาทำการ ทุกวัน 8:00–20:00|Ask for a free quote on LINE, by phone or through the form. We reply within 30 minutes during business hours, daily 8am–8pm.}} -->
+
+<main>
+  <section class="sec sec--tight">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|ติดต่อเรา|Contact}}</span>
+        <h1>{{t|ขอใบเสนอราคาฟรี ไม่มีข้อผูกมัด|A free quote, with no obligation}}</h1>
+        <p>{{t|อยากได้คำตอบเร็วที่สุด ทัก LINE ได้เลย หรือฝากรายละเอียดไว้ในฟอร์ม เราติดต่อกลับภายใน 30 นาทีในเวลาทำการ|For the fastest answer, message us on LINE. Or leave your details and we will get back within 30 minutes during business hours.}}</p>
+      </div>
+      <div class="contact-grid">
+        <div class="rv">
+          <div class="contact-list">
+            <div class="contact-row"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><div><a href="tel:022221234">02-222-1234</a><small>{{t|ทุกวัน 8:00–20:00|Daily 8am–8pm}}</small></div></div>
+            <div class="contact-row"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg><div><a href="#form">LINE: @homekeep</a><small>{{t|ตอบไทย–อังกฤษ แนบรูปห้องได้เลย|Thai and English, send photos of your rooms}}</small></div></div>
+            <div class="contact-row"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg><div><a href="mailto:hello@homekeep.example">hello@homekeep.example</a><small>{{t|สำหรับใบเสนอราคาองค์กรและนิติบุคคล|For corporate and building quotes}}</small></div></div>
+            <div class="contact-row"><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg><div><b>{{t|เวลาทำการ|Opening hours}}</b><small>{{t|ทุกวัน 8:00–20:00 · ทีมงานเข้างานได้ตั้งแต่ 8:00|Daily 8am–8pm · teams start jobs from 8am}}</small></div></div>
+            <div class="contact-row"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg><div><b>{{t|พื้นที่ให้บริการ|Service area}}</b><small>{{t|กรุงเทพฯ · นนทบุรี · ปทุมธานี · สมุทรปราการ|Bangkok · Nonthaburi · Pathum Thani · Samut Prakan}}</small></div></div>
+          </div>
+          <div class="map-card">
+            <div class="map-view" aria-hidden="true">
+              <span class="map-road" style="left:0;right:0;top:42%;height:9px"></span>
+              <span class="map-road" style="top:0;bottom:0;left:32%;width:7px"></span>
+              <span class="map-road" style="left:56%;right:0;top:74%;height:5px"></span>
+              <span class="map-pin"><svg aria-hidden="true"><use href="#i-pin-fill"/></svg></span>
+            </div>
+            <div class="map-meta">
+              <span>{{t|1919 อาคารเอ็มไพร์ ชั้น 24 ถนนสาทรใต้ กรุงเทพฯ|1919 Empire Tower, 24th floor, South Sathorn Rd, Bangkok}}</span>
+              <a href="https://maps.google.com/?q=Empire+Tower+Sathorn+Bangkok" target="_blank" rel="noopener">{{t|เปิดแผนที่|Open map}}</a>
+            </div>
+          </div>
+        </div>
+
+        <form class="form-card rv" id="quoteForm" style="--d:.08s">
+          <h3 id="form">{{t|ขอใบเสนอราคา|Request a quote}}</h3>
+          <p class="form-sub">{{t|กรอกไม่ถึงนาที ทีมงานติดต่อกลับภายใน 30 นาที (เวลาทำการ)|Under a minute. We call back within 30 minutes during business hours.}}</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="f-name">{{t|ชื่อ|Name}}</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" placeholder="{{t|ชื่อที่ให้เรียก|What should we call you}}">
+            </div>
+            <div class="field">
+              <label for="f-tel">{{t|เบอร์โทร|Phone}} <em>*</em></label>
+              <input id="f-tel" name="tel" type="tel" inputmode="tel" required pattern="0[0-9]{8,9}" title="{{t|กรอกเบอร์มือถือ 10 หลัก เช่น 0812345678|Enter a 10-digit Thai mobile number, e.g. 0812345678}}" placeholder="0812345678" autocomplete="tel">
+            </div>
+            <div class="field">
+              <label for="f-type">{{t|ประเภทสถานที่|Property type}}</label>
+              <select id="f-type" name="type">
+                <option>{{t|คอนโด / ห้องชุด|Condo / apartment}}</option>
+                <option>{{t|บ้านเดี่ยว|House}}</option>
+                <option>{{t|ทาวน์โฮม|Townhome}}</option>
+                <option>{{t|สำนักงาน|Office}}</option>
+                <option>{{t|นิติบุคคล / อาคาร|Building management}}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-service">{{t|บริการที่สนใจ|Service}}</label>
+              <select id="f-service" name="service">
+                <option>{{t|ทำความสะอาดรายครั้ง|One-off clean}}</option>
+                <option>{{t|แม่บ้านรายเดือน|Monthly housekeeping}}</option>
+                <option>{{t|Big Cleaning / Deep Clean|Deep clean}}</option>
+                <option>{{t|ก่อนเข้าอยู่ / หลังรีโนเวท|Move-in / post-renovation}}</option>
+                <option>{{t|ล้างแอร์ / ซักโซฟา|Air-con / upholstery}}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-size">{{t|ขนาดพื้นที่ (ตร.ม.)|Floor area (sqm)}}</label>
+              <input id="f-size" name="size" type="number" min="10" max="5000" placeholder="{{t|เช่น 60|e.g. 60}}">
+            </div>
+            <div class="field">
+              <label for="f-date">{{t|วันที่สะดวก|Preferred date}}</label>
+              <input id="f-date" name="date" type="date">
+            </div>
+            <div class="field field-full">
+              <label for="f-note">{{t|รายละเอียดเพิ่มเติม|Anything else}}</label>
+              <textarea id="f-note" name="note" placeholder="{{t|เช่น มีสัตว์เลี้ยง อยากให้เน้นห้องน้ำ ต้องการใบกำกับภาษี หรือขอทีมที่พูดอังกฤษได้|e.g. we have a cat, focus on the bathrooms, we need a tax invoice, English-speaking team preferred}}"></textarea>
+            </div>
+            <button class="btn btn-green btn-lg field-full" type="submit">{{t|ส่งคำขอใบเสนอราคา|Send my request}}</button>
+            <p class="form-fine">
+              <svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>
+              {{t|คำขอเด้งเข้า LINE ของทีมงานทันทีที่กดส่ง จึงไม่มีคิวไหนตกหล่น · ข้อมูลของคุณใช้ติดต่อกลับเท่านั้น ดูนโยบายความเป็นส่วนตัว|Your request pings our team's LINE the moment you send it, so nothing is missed · Your details are used only to contact you — see our privacy policy.}}
+            </p>
+          </div>
+          <div class="form-ok" role="status">
+            <span class="ok-ic"><svg aria-hidden="true"><use href="#i-check"/></svg></span>
+            <h4>{{t|ได้รับคำขอแล้ว|Request received}}</h4>
+            <p id="quoteMsg"
+               data-msg-th="ทีมงานจะติดต่อกลับภายใน 30 นาทีในเวลาทำการ (ทุกวัน 8:00–20:00) หรือทัก LINE: @homekeep เพื่อคุยต่อได้เลยครับ"
+               data-msg-en="We will get back to you within 30 minutes during business hours (daily 8am–8pm). You can also reach us on LINE: @homekeep."></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>

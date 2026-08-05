@@ -8,7 +8,7 @@
 // every client handover.
 //
 // Usage: node tools/qa-site.mjs <site-dir>
-import { existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { join, resolve } from 'node:path';
 
@@ -23,13 +23,19 @@ if (!existsSync(join(dist, 'index.html'))) {
   process.exit(1);
 }
 
-// Every language gets checked, not just the default: English runs longer than
-// Thai in the same boxes, so overflow and clipping show up there first. One
-// page now carries all of them, so the extra languages are reached by working
-// the switch exactly as a visitor would.
+// Every built page, in every language, at both widths. English runs longer
+// than Thai in the same boxes, so overflow and clipping show up there first,
+// and a multi-page site fails on the page nobody thought to open. Extra
+// languages are reached by working the switch exactly as a visitor would.
 const cfg = JSON.parse(readFileSync(join(dir, 'site.json'), 'utf8'));
 const DEFAULT_LANG = cfg.lang ?? 'th';
-const PAGES = (cfg.languages ?? [{ code: DEFAULT_LANG }]).map(l => ({ code: l.code, url: '/' }));
+const LANGS = (cfg.languages ?? [{ code: DEFAULT_LANG }]).map(l => l.code);
+const html = d => (existsSync(d) ? readdirSync(d).filter(f => f.endsWith('.html') && f !== '404.html') : []);
+const URLS = [
+  ...html(dist).map(f => `/${f}`),
+  ...html(join(dist, 'articles')).map(f => `/articles/${f}`),
+].sort((a, b) => (a === '/index.html' ? -1 : b === '/index.html' ? 1 : a.localeCompare(b)));
+const PAGES = LANGS.flatMap(code => URLS.map(url => ({ code, url })));
 
 // Serve over HTTP rather than file://, so root-absolute paths like
 // /favicon.svg and /en/ resolve the way they will once deployed.
@@ -68,6 +74,8 @@ const VIEWPORTS = [
 const MIN_TAP = 44; // iOS Human Interface Guidelines minimum
 const problems = [];
 const layouts = [];
+const linkTargets = new Map(); // href -> the page that links to it
+const titlesSeen = new Map(); // title text -> the page that used it first
 const note = (where, msg) => problems.push(`${where}: ${msg}`);
 
 // Use a pre-provisioned browser when one is present (some sandboxes ship
@@ -83,9 +91,11 @@ try {
   process.exit(1);
 }
 
+const slugOf = url => url.replace(/^\//, '').replace(/\.html$/, '').replace(/\//g, '-') || 'index';
 for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
-  const label = PAGES.length > 1 ? `${pg.code} ${size}` : size;
-  const shot = PAGES.length > 1 ? `${pg.code}-${size}` : size;
+  const many = URLS.length > 1;
+  const label = [many ? slugOf(pg.url) : null, LANGS.length > 1 ? pg.code : null, size].filter(Boolean).join(' ');
+  const shot = [many ? slugOf(pg.url) : null, LANGS.length > 1 ? pg.code : null, size].filter(Boolean).join('-');
   const page = await browser.newPage({ viewport });
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));
@@ -103,7 +113,8 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
     await btn.click();
     await page.waitForTimeout(250);
   }
-  await page.waitForTimeout(4200); // hero animations settle
+  // the staged chat/hero animation only exists on a home page
+  await page.waitForTimeout(pg.url === '/index.html' ? 4200 : 900);
 
   // walk the page so IntersectionObserver reveals every section
   await page.evaluate(async () => {
@@ -127,12 +138,26 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       .filter(i => i.alt === null || i.alt.trim() === '')
       .map(i => i.getAttribute('src')?.slice(0, 60) ?? '(inline)');
 
+    // A card carrying a .stretch-link is one hit area covering the whole card,
+    // so the small links inside it are not the tap target and measuring their
+    // own boxes says nothing useful.
+    const stretched = new Set();
+    for (const s of document.querySelectorAll('.stretch-link')) {
+      let p = s.parentElement;
+      while (p && p !== document.body) {
+        if (getComputedStyle(p).position === 'relative') { stretched.add(p); break; }
+        p = p.parentElement;
+      }
+    }
+    const inStretchedCard = el => [...stretched].some(c => c.contains(el));
+
     const small = [];
     for (const el of document.querySelectorAll('a, button, input[type=submit]')) {
-      if (!vis(el)) continue;
+      if (!vis(el) || inStretchedCard(el)) continue;
       const r = el.getBoundingClientRect();
       if (r.width < minTap || r.height < minTap) {
-        const name = (el.textContent || el.getAttribute('aria-label') || el.tagName).trim().slice(0, 34);
+        const name = (el.textContent || el.getAttribute('aria-label') || el.tagName).trim().slice(0, 34)
+          || `<${el.tagName.toLowerCase()} class="${el.className}">`;
         small.push(`${name} (${Math.round(r.width)}x${Math.round(r.height)})`);
       }
     }
@@ -164,6 +189,13 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
     const deadAnchors = [...document.querySelectorAll('a[href^="#"]')]
       .map(a => a.getAttribute('href'))
       .filter(h => h.length > 1 && !document.querySelector(h));
+
+    // every same-site link, resolved, so the runner can fetch each one
+    const localLinks = [...new Set([...document.querySelectorAll('a[href]')]
+      .map(a => a.href)
+      .filter(h => h.startsWith(location.origin))
+      .map(h => h.slice(location.origin.length).split('#')[0])
+      .filter(Boolean))];
 
     // Content escaping its container sideways. The page-level overflow check
     // misses this whenever something else clips the page, and translated copy
@@ -202,8 +234,10 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       spills: [...new Set(spills)],
       stuck,
       deadAnchors: [...new Set(deadAnchors)],
+      localLinks,
       tel: document.querySelectorAll('a[href^="tel:"]').length,
       title: (document.title || '').length,
+      titleText: document.title || '',
       desc: (document.querySelector('meta[name=description]')?.content || '').length,
       h1: document.querySelectorAll('h1').length,
       favicon: !!document.querySelector('link[rel~=icon]'),
@@ -281,32 +315,38 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
     if (!found.tel) note(label, 'no tel: link — a phone visitor cannot tap to call');
   }
   if (size === 'desktop') {
-    const seo = PAGES.length > 1 ? `seo ${pg.code}` : 'seo';
+    const seo = `seo ${[URLS.length > 1 ? slugOf(pg.url) : null, LANGS.length > 1 ? pg.code : null].filter(Boolean).join(' ')}`.trim();
     if (found.h1 !== 1) note(seo, `page has ${found.h1} <h1> tags, want exactly 1`);
     if (found.title < 15 || found.title > 65) note(seo, `<title> is ${found.title} chars, aim for 15–65`);
     if (found.desc < 70 || found.desc > 165) note(seo, `meta description is ${found.desc} chars, aim for 70–165`);
     if (!found.favicon) note(seo, 'no favicon link in <head>');
     if (found.lang === '(none)') note(seo, '<html> has no lang attribute');
     else if (found.lang !== pg.code) note(seo, `switched to ${pg.code} but <html lang="${found.lang}">`);
-    if (PAGES.length > 1) {
-      for (const code of PAGES.map(p => p.code)) {
-        if (!found.switchTo.includes(code)) note(seo, `no way to switch to "${code}" from the page`);
-      }
+    for (const code of LANGS) {
+      if (LANGS.length > 1 && !found.switchTo.includes(code)) note(seo, `no way to switch to "${code}" from the page`);
     }
+    if (found.titleText && titlesSeen.has(found.titleText)) {
+      note(seo, `<title> is identical to ${titlesSeen.get(found.titleText)} — every page needs its own`);
+    } else if (found.titleText) titlesSeen.set(found.titleText, slugOf(pg.url));
   }
   if (found.wrongLang?.length) {
     note(label, `${found.wrongLang.length} phrase(s) from another language still visible → "${found.wrongLang[0]}"`);
   }
   for (const s of (found.staleAttrs ?? []).slice(0, 5)) note(label, `switch did not update: ${s}`);
-  layouts.push({ code: pg.code, size, boxes: found.boxes });
+  layouts.push({ url: pg.url, code: pg.code, size, boxes: found.boxes });
+  // links between pages are what a multi-page site breaks on, and a 404 here
+  // is silent to anyone not clicking every one of them
+  for (const href of found.localLinks) {
+    if (!linkTargets.has(href)) linkTargets.set(href, `${slugOf(pg.url)} (${pg.code})`);
+  }
   await page.close();
 }
 
-// Same element, same viewport, different language: a layout container whose
-// width moves with the copy is a track being sized by its content.
-if (PAGES.length > 1) {
-  for (const [size] of VIEWPORTS) {
-    const [base, ...rest] = layouts.filter(l => l.size === size);
+// Same element, same page, same viewport, different language: a layout
+// container whose width moves with the copy is a track being sized by content.
+if (LANGS.length > 1) {
+  for (const url of URLS) for (const [size] of VIEWPORTS) {
+    const [base, ...rest] = layouts.filter(l => l.size === size && l.url === url);
     if (!base) continue;
     for (const other of rest) {
       const drifted = [];
@@ -317,10 +357,18 @@ if (PAGES.length > 1) {
           drifted.push(`.${key.split('#')[0]} is ${w}px in ${base.code} but ${w2}px in ${other.code}`);
         }
       }
-      for (const d of drifted.slice(0, 6)) note(`layout ${size}`, `${d} — a grid/flex track is being sized by its text`);
-      if (drifted.length > 6) note(`layout ${size}`, `…and ${drifted.length - 6} more container(s) differing between languages`);
+      const where = `layout ${URLS.length > 1 ? slugOf(url) + ' ' : ''}${size}`;
+      for (const d of drifted.slice(0, 4)) note(where, `${d} — a grid/flex track is being sized by its text`);
+      if (drifted.length > 4) note(where, `…and ${drifted.length - 4} more container(s) differing between languages`);
     }
   }
+}
+
+// Follow every internal link once. A broken one between pages is invisible
+// until a visitor clicks it, and nobody clicks all of them by hand.
+for (const [href, from] of linkTargets) {
+  const res = await fetch(origin + href).catch(() => null);
+  if (!res || !res.ok) note('links', `${href} is broken (linked from ${from})`);
 }
 
 // the 404 page ships too, so it gets checked as well

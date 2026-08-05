@@ -78,6 +78,33 @@ Two sizing rules this package makes load-bearing:
 nothing from another language is still visible, that every translated attribute
 actually changed, and that no element spills sideways out of its parent.
 
+## Multi-page sites (Premium package)
+
+A site opts in by having `src/pages/`; `tools/pages.mjs` then drives pages,
+articles, nav, breadcrumbs and article listings. Metadata rides in comment
+front matter so source files stay valid HTML. Output is **flat `.html`**, not
+`folder/index.html` — the only layout where one set of links works both on a
+server and from a double-clicked file, since a directory URL has no index off
+disk. Everything an article links to or loads goes through `{{BASE}}`, which
+resolves to `../` one level down; forgetting it is how article images 404'd.
+
+Every page needs exactly one `<h1>` and its own `<title>`. Both are checked.
+
+## Where the Premium tier's cost actually sits
+
+The demo's back-office panel is illustrative and labelled as such — the
+operator chose that over wiring a real CMS. When a paying client wants the
+real thing, it is Sveltia CMS (git-based, free, one Cloudflare Worker serves
+every client site via ALLOWED_DOMAINS) and it brings two consequences worth
+quoting for: the client needs a GitHub account to log in, and the site must
+use Cloudflare's Git integration rather than Direct Upload, so every content
+save spends one of the account's 500 monthly builds — shared across all sites.
+
+Three line items on that tier are services, not site features, and need
+written scope or they eat the margin: the 30-day support window, the
+statistics reporting, and Google Business Profile (whose verification is
+Google's timeline and needs the client, not us).
+
 ## Deployment
 
 Cloudflare Pages, framework preset **None** (no build step runs on their side).

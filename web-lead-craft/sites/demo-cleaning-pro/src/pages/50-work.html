@@ -1,0 +1,87 @@
+<!-- slug: work -->
+<!-- nav: {{t|ผลงาน|Our work}} -->
+<!-- title: {{t|ผลงานของเรา — ภาพก่อนและหลังทำความสะอาด · HOMEKEEP|Our work — before and after · HOMEKEEP}} -->
+<!-- desc: {{t|ภาพก่อน–หลังจากงานจริงที่ลูกค้าอนุญาตให้เผยแพร่ กรองดูตามประเภทบ้าน คอนโด สำนักงาน และงานทำความสะอาดใหญ่ได้|Before-and-after photos from real jobs our clients let us publish. Filter by houses, condos, offices or deep cleans.}} -->
+
+<main>
+  <section class="sec sec--tight">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|ผลงานของเรา|Our work}}</span>
+        <h1>{{t|เลื่อนแถบกลางภาพเพื่อดูก่อน–หลัง|Drag the handle to compare}}</h1>
+        <p>{{t|ทุกงานถ่ายรูปก่อนและหลังส่งให้ลูกค้าเก็บไว้ นี่คือส่วนหนึ่งที่ได้รับอนุญาตให้เผยแพร่|We photograph every job before and after and send it to the client. These are the ones we may publish.}}</p>
+      </div>
+
+      <div class="filters rv" role="group" aria-label="{{t|กรองผลงาน|Filter our work}}">
+        <button type="button" data-filter="all" aria-pressed="true">{{t|ทั้งหมด|All}}</button>
+        <button type="button" data-filter="house" aria-pressed="false">{{t|บ้าน|Houses}}</button>
+        <button type="button" data-filter="condo" aria-pressed="false">{{t|คอนโด|Condos}}</button>
+        <button type="button" data-filter="office" aria-pressed="false">{{t|สำนักงาน|Offices}}</button>
+        <button type="button" data-filter="deep" aria-pressed="false">{{t|ทำความสะอาดใหญ่|Deep cleans}}</button>
+      </div>
+
+      <div class="works rv">
+        <figure class="work" data-cat="condo">
+          <div class="ba">
+            <img {{img:sofa-deep:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|โซฟาก่อนซัก|Sofa before extraction}}">
+            <img class="after" {{img:sofa-wipe:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|โซฟาหลังซัก|Sofa after extraction}}">
+            <span class="ba-tag is-before">{{t|ก่อน|Before}}</span><span class="ba-tag is-after">{{t|หลัง|After}}</span>
+            <span class="ba-handle" aria-hidden="true"></span>
+            <input type="range" min="0" max="100" value="50" aria-label="{{t|เลื่อนเปรียบเทียบก่อน–หลัง|Drag to compare before and after}}">
+          </div>
+          <figcaption class="work-cap"><b>{{t|ซักโซฟาผ้า|Fabric sofa}}</b><span>{{t|คอนโด สาทร|Sathorn condo}}</span></figcaption>
+        </figure>
+        <figure class="work" data-cat="house">
+          <div class="ba">
+            <img {{img:bathroom-mirror:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|ห้องน้ำก่อนทำความสะอาด|Bathroom before cleaning}}">
+            <img class="after" {{img:kitchen-counter:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|ห้องน้ำหลังทำความสะอาด|Bathroom after cleaning}}">
+            <span class="ba-tag is-before">{{t|ก่อน|Before}}</span><span class="ba-tag is-after">{{t|หลัง|After}}</span>
+            <span class="ba-handle" aria-hidden="true"></span>
+            <input type="range" min="0" max="100" value="50" aria-label="{{t|เลื่อนเปรียบเทียบก่อน–หลัง|Drag to compare before and after}}">
+          </div>
+          <figcaption class="work-cap"><b>{{t|ห้องน้ำและครัว|Bathroom & kitchen}}</b><span>{{t|บ้านเดี่ยว บางนา|Bang Na house}}</span></figcaption>
+        </figure>
+        <figure class="work" data-cat="office">
+          <div class="ba">
+            <img {{img:aircon-filter:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|แผ่นกรองแอร์ก่อนล้าง|Air-con filter before washing}}">
+            <img class="after" {{img:living-mop:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|พื้นสำนักงานหลังขัด|Office floor after polishing}}">
+            <span class="ba-tag is-before">{{t|ก่อน|Before}}</span><span class="ba-tag is-after">{{t|หลัง|After}}</span>
+            <span class="ba-handle" aria-hidden="true"></span>
+            <input type="range" min="0" max="100" value="50" aria-label="{{t|เลื่อนเปรียบเทียบก่อน–หลัง|Drag to compare before and after}}">
+          </div>
+          <figcaption class="work-cap"><b>{{t|ล้างแอร์และขัดพื้น|Air-con & floors}}</b><span>{{t|สำนักงาน พระราม 9|Rama IX office}}</span></figcaption>
+        </figure>
+        <figure class="work" data-cat="deep">
+          <div class="ba">
+            <img {{img:window-wipe:(max-width:700px) 90vw, 30vw}} width="1024" height="1536" loading="lazy" decoding="async" alt="{{t|กระจกก่อนเช็ด|Glass before cleaning}}">
+            <img class="after" {{img:sofa-vacuum:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|ห้องนั่งเล่นหลังทำความสะอาดใหญ่|Living room after a deep clean}}">
+            <span class="ba-tag is-before">{{t|ก่อน|Before}}</span><span class="ba-tag is-after">{{t|หลัง|After}}</span>
+            <span class="ba-handle" aria-hidden="true"></span>
+            <input type="range" min="0" max="100" value="50" aria-label="{{t|เลื่อนเปรียบเทียบก่อน–หลัง|Drag to compare before and after}}">
+          </div>
+          <figcaption class="work-cap"><b>{{t|หลังรีโนเวท|Post-renovation}}</b><span>{{t|ทาวน์โฮม ลาดพร้าว|Lat Phrao townhome}}</span></figcaption>
+        </figure>
+        <figure class="work" data-cat="condo">
+          <div class="ba">
+            <img {{img:cleaning-kit:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|ครัวก่อนทำความสะอาด|Kitchen before cleaning}}">
+            <img class="after" {{img:kitchen-counter:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|ครัวหลังทำความสะอาด|Kitchen after cleaning}}">
+            <span class="ba-tag is-before">{{t|ก่อน|Before}}</span><span class="ba-tag is-after">{{t|หลัง|After}}</span>
+            <span class="ba-handle" aria-hidden="true"></span>
+            <input type="range" min="0" max="100" value="50" aria-label="{{t|เลื่อนเปรียบเทียบก่อน–หลัง|Drag to compare before and after}}">
+          </div>
+          <figcaption class="work-cap"><b>{{t|ครัวและเคาน์เตอร์|Kitchen & counters}}</b><span>{{t|คอนโด อโศก|Asok condo}}</span></figcaption>
+        </figure>
+        <figure class="work" data-cat="deep">
+          <div class="ba">
+            <img {{img:floor-polish:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|พื้นก่อนขัดด้วยเครื่อง|Floor before machine polishing}}">
+            <img class="after" {{img:team:(max-width:700px) 90vw, 30vw}} width="1536" height="1024" loading="lazy" decoding="async" alt="{{t|ทีมงานหลังจบงานทำความสะอาดใหญ่|The team after a completed deep clean}}">
+            <span class="ba-tag is-before">{{t|ก่อน|Before}}</span><span class="ba-tag is-after">{{t|หลัง|After}}</span>
+            <span class="ba-handle" aria-hidden="true"></span>
+            <input type="range" min="0" max="100" value="50" aria-label="{{t|เลื่อนเปรียบเทียบก่อน–หลัง|Drag to compare before and after}}">
+          </div>
+          <figcaption class="work-cap"><b>{{t|ขัดพื้นทั้งชั้น|Whole-floor polish}}</b><span>{{t|บ้านเดี่ยว รามอินทรา|Ram Inthra house}}</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+</main>

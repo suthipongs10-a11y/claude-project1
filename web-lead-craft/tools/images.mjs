@@ -71,7 +71,7 @@ export async function inlineMap(dir) {
  * For preview: a single inlined data URI, and srcset/sizes are dropped
  * because there is nothing else to choose between.
  */
-export function applyImages(html, { inline = null, sizesDefault = '100vw' } = {}) {
+export function applyImages(html, { inline = null, sizesDefault = '100vw', base = '' } = {}) {
   return html.replace(/\{\{img:([a-z0-9-]+)(?::([^}]+))?\}\}/g, (_m, name, sizes) => {
     if (inline) {
       const uri = inline.get(name);
@@ -79,9 +79,11 @@ export function applyImages(html, { inline = null, sizesDefault = '100vw' } = {}
       return `src="${uri}"`;
     }
     // Relative, not root-absolute: the built page must also work when opened
-    // straight off disk, where "/img/…" would resolve to the drive root.
-    const set = WIDTHS.map(w => `img/${name}-${w}.webp ${w}w`).join(', ');
-    return `src="img/${name}-1200.webp" srcset="${set}" sizes="${sizes || sizesDefault}"`;
+    // straight off disk, where "/img/…" would resolve to the drive root. `base`
+    // carries the extra depth of a page in a subfolder — without it an article
+    // asks for /articles/img/… and gets a 404.
+    const set = WIDTHS.map(w => `${base}img/${name}-${w}.webp ${w}w`).join(', ');
+    return `src="${base}img/${name}-1200.webp" srcset="${set}" sizes="${sizes || sizesDefault}"`;
   });
 }
 
