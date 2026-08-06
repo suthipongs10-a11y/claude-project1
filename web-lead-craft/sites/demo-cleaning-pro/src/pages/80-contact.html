@@ -78,7 +78,12 @@
               <label for="f-note">{{t|รายละเอียดเพิ่มเติม|Anything else}}</label>
               <textarea id="f-note" name="note" placeholder="{{t|เช่น มีสัตว์เลี้ยง อยากให้เน้นห้องน้ำ ต้องการใบกำกับภาษี หรือขอทีมที่พูดอังกฤษได้|e.g. we have a cat, focus on the bathrooms, we need a tax invoice, English-speaking team preferred}}"></textarea>
             </div>
+            <div class="hp" aria-hidden="true">
+              <label for="f-hp">{{t|อย่ากรอกช่องนี้|Leave this empty}}</label>
+              <input id="f-hp" name="wlc_hp" type="text" tabindex="-1" autocomplete="off">
+            </div>
             <button class="btn btn-green btn-lg field-full" type="submit">{{t|ส่งคำขอใบเสนอราคา|Send my request}}</button>
+            <p class="form-err" id="formErr" role="alert">{{t|ส่งไม่สำเร็จ ขออภัยครับ — รบกวนโทร <a href="tel:022221234">02-222-1234</a> หรือทัก LINE: @homekeep แทน|Sorry, that did not send. Please call <a href="tel:022221234">02-222-1234</a> or message LINE: @homekeep instead.}}</p>
             <p class="form-fine">
               <svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>
               {{t|คำขอเด้งเข้า LINE ของทีมงานทันทีที่กดส่ง จึงไม่มีคิวไหนตกหล่น · ข้อมูลของคุณใช้ติดต่อกลับเท่านั้น|Your request pings our team's LINE the moment you send it, so nothing is missed · Your details are used only to contact you.}}

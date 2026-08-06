@@ -458,7 +458,12 @@
               <label for="f-note">{{t|รายละเอียดเพิ่มเติม|Anything else}}</label>
               <textarea id="f-note" name="note" placeholder="{{t|เช่น มีสัตว์เลี้ยง อยากให้เน้นห้องน้ำ หรือขอทีมที่พูดอังกฤษได้|e.g. we have a cat, please focus on the bathrooms, English-speaking team preferred}}"></textarea>
             </div>
+            <div class="hp" aria-hidden="true">
+              <label for="f-hp">{{t|อย่ากรอกช่องนี้|Leave this empty}}</label>
+              <input id="f-hp" name="wlc_hp" type="text" tabindex="-1" autocomplete="off">
+            </div>
             <button class="btn btn-ink btn-lg field-full" type="submit">{{t|ส่งคำขอจองคิว|Send booking request}}</button>
+            <p class="form-err" id="formErr" role="alert">{{t|ส่งไม่สำเร็จ ขออภัยครับ — รบกวนโทร <a href="tel:0822345678">082-234-5678</a> หรือทัก LINE: @altahome แทน|Sorry, that did not send. Please call <a href="tel:0822345678">082-234-5678</a> or message LINE: @altahome instead.}}</p>
             <p class="form-fine">
               <svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>
               {{t|คำขอจะเด้งเข้า LINE ของทีมงานทันทีที่กดส่ง จึงไม่มีคิวไหนตกหล่น · ข้อมูลของคุณใช้ติดต่อกลับเท่านั้น|Your request pings our team's LINE the second you send it, so nothing gets missed · Your details are used only to contact you.}}
@@ -579,14 +584,24 @@
   }
 
   var form = document.getElementById('bookForm');
+  var err = document.getElementById('formErr');
+  var submit = form.querySelector('[type=submit]');
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    var ok = document.getElementById('okText');
-    var code = document.documentElement.getAttribute('data-lang') || 'th';
-    var name = form.elements.name.value.trim();
-    var greeting = name ? (code === 'th' ? 'คุณ' + name + ' — ' : name + ', ') : '';
-    ok.textContent = greeting + (ok.getAttribute('data-msg-' + code) || ok.getAttribute('data-msg-th'));
-    form.classList.add('sent');
+    err.classList.remove('show');
+    var label = submit.innerHTML;
+    submit.disabled = true;
+    window.wlcSend(form).then(function (sent) {
+      submit.disabled = false;
+      submit.innerHTML = label;
+      if (!sent) { err.classList.add('show'); return; }
+      var ok = document.getElementById('okText');
+      var code = document.documentElement.getAttribute('data-lang') || 'th';
+      var name = form.elements.name.value.trim();
+      var greeting = name ? (code === 'th' ? 'คุณ' + name + ' — ' : name + ', ') : '';
+      ok.textContent = greeting + (ok.getAttribute('data-msg-' + code) || ok.getAttribute('data-msg-th'));
+      form.classList.add('sent');
+    });
   });
 })();
 </script>

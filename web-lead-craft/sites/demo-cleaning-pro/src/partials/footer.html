@@ -152,12 +152,22 @@
   var quote = document.getElementById('quoteForm');
   if (quote) quote.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    var ok = document.getElementById('quoteMsg');
-    var name = (quote.elements.name && quote.elements.name.value.trim()) || '';
-    var code = lang();
-    ok.textContent = (name ? (code === 'th' ? 'คุณ' + name + ' — ' : name + ', ') : '') +
-      (ok.getAttribute('data-msg-' + code) || ok.getAttribute('data-msg-th'));
-    quote.classList.add('sent');
+    var err = document.getElementById('formErr');
+    var submit = quote.querySelector('[type=submit]');
+    var label = submit.innerHTML;
+    if (err) err.classList.remove('show');
+    submit.disabled = true;
+    window.wlcSend(quote).then(function (sent) {
+      submit.disabled = false;
+      submit.innerHTML = label;
+      if (!sent) { if (err) err.classList.add('show'); return; }
+      var ok = document.getElementById('quoteMsg');
+      var name = (quote.elements.name && quote.elements.name.value.trim()) || '';
+      var code = lang();
+      ok.textContent = (name ? (code === 'th' ? 'คุณ' + name + ' — ' : name + ', ') : '') +
+        (ok.getAttribute('data-msg-' + code) || ok.getAttribute('data-msg-th'));
+      quote.classList.add('sent');
+    });
   });
   var news = document.getElementById('newsForm');
   if (news) news.addEventListener('submit', function (ev) {

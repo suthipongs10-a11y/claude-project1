@@ -46,6 +46,31 @@
 })(window);
 </script>
 
+<!-- Contact form delivery. A static site has nowhere to POST to, so the form
+     goes to our Cloudflare Worker (form-worker/ in the repo), which pushes the
+     enquiry into the client's LINE Official Account. Put that Worker's URL in
+     FORM_ENDPOINT; leave it empty and the form only pretends to send, which is
+     how a demo must behave. -->
+<script>
+(function (w) {
+  w.FORM_ENDPOINT = '';
+  var opened = Date.now();
+  // A promise for "did it get through" — never rejects, so the page always
+  // has something to say. A form that hangs on a network error is worse than
+  // one that says "call us instead".
+  w.wlcSend = function (form) {
+    var data = { page: location.pathname, elapsed: Date.now() - opened };
+    new FormData(form).forEach(function (v, k) { data[k] = v; });
+    if (!w.FORM_ENDPOINT) return Promise.resolve(true);
+    return fetch(w.FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  };
+})(window);
+</script>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

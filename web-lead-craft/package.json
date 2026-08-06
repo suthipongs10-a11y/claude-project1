@@ -8,7 +8,8 @@
     "qa": "node tools/qa-site.mjs"
   },
   "devDependencies": {
-    "playwright": "^1.49.0"
+    "playwright": "^1.49.0",
+    "wrangler": "^4.119.0"
   },
   "dependencies": {
     "sharp": "^0.35.3"

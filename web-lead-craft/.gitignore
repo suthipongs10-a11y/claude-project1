@@ -10,3 +10,5 @@ sites/*/preview-*.html
 sites/*/.qa/
 
 node_modules/
+form-worker/sites.json
+form-worker/.wrangler/

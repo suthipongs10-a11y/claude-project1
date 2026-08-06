@@ -503,7 +503,12 @@
               <label for="f-note">รายละเอียดเพิ่มเติม</label>
               <textarea id="f-note" name="note" placeholder="เช่น มีสัตว์เลี้ยง อยากให้เน้นห้องน้ำเป็นพิเศษ"></textarea>
             </div>
+            <div class="hp" aria-hidden="true">
+              <label for="f-hp">อย่ากรอกช่องนี้</label>
+              <input id="f-hp" name="wlc_hp" type="text" tabindex="-1" autocomplete="off">
+            </div>
             <button class="btn btn-primary btn-lg field-full" type="submit">ส่งคำขอจองคิว</button>
+            <p class="form-err" id="formErr" role="alert">ส่งไม่สำเร็จ ขออภัยครับ — รบกวนโทร <a href="tel:0812345678">081-234-5678</a> หรือทัก LINE: @cleanday แทน เราจะดูแลให้ทันที</p>
             <p class="form-fine">ไม่มีค่าใช้จ่ายจนกว่าจะยืนยันคิว · ข้อมูลของคุณใช้ติดต่อกลับเท่านั้น ดู<a href="privacy.html">นโยบายความเป็นส่วนตัว</a></p>
           </div>
           <div class="form-ok" role="status">
@@ -598,13 +603,23 @@
   else { window.setTimeout(finalize, 3600); }
 
   var form = document.getElementById('bookForm');
+  var err = document.getElementById('formErr');
+  var submit = form.querySelector('[type=submit]');
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    var name = form.elements.name.value.trim();
-    document.getElementById('okText').textContent =
-      (name ? 'คุณ' + name + ' — ' : '') +
-      'ทีมงานจะโทรกลับภายใน 30 นาทีในเวลาทำการ (ทุกวัน 8:00–18:00) หรือทัก LINE: @cleanday เพื่อคุยต่อได้เลยค่ะ';
-    form.classList.add('sent');
+    err.classList.remove('show');
+    submit.disabled = true;
+    submit.textContent = 'กำลังส่ง...';
+    window.wlcSend(form).then(function (ok) {
+      submit.disabled = false;
+      submit.textContent = 'ส่งคำขอจองคิว';
+      if (!ok) { err.classList.add('show'); return; }
+      var name = form.elements.name.value.trim();
+      document.getElementById('okText').textContent =
+        (name ? 'คุณ' + name + ' — ' : '') +
+        'ทีมงานจะโทรกลับภายใน 30 นาทีในเวลาทำการ (ทุกวัน 8:00–18:00) หรือทัก LINE: @cleanday เพื่อคุยต่อได้เลยค่ะ';
+      form.classList.add('sent');
+    });
   });
 })();
 </script>

@@ -38,6 +38,17 @@ the day-to-day workflow and Cloudflare Pages limits.
    (LINE: kitty4uu · 099-151-4049). A demo doubles as an ad.
 6. "LINE แจ้งเตือน" features must use the LINE Messaging API with a LINE
    Official Account. LINE Notify was discontinued March 2025 — never quote it.
+   **A static site has nowhere to POST to, so every contact form goes through
+   `form-worker/`** — one Cloudflare Worker for all clients, keyed on the
+   site's Origin, pushing into that client's LINE OA. A client is added by
+   editing the SITES secret, never by deploying. Point a site at it with
+   `FORM_ENDPOINT` in `head.html`; empty means demo mode, where the form only
+   pretends to send. Two rules that are not negotiable: **the success panel
+   may only appear after delivery is confirmed** — a lost enquiry the shop
+   never learns about is the worst thing this business can ship — and **a
+   honeypot field must never be named `website`, `url` or `email2`**, because
+   browser autofill would fill it for a real customer and drop every genuine
+   lead in silence.
    **Never add a Meta/Facebook Pixel to a client site** — dropped 2026-08-06.
    The snippet is trivial; the support is not. Selling it invites Business
    Suite questions the operator cannot answer, and a feature we cannot support

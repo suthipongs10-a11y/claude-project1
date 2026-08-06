@@ -866,3 +866,14 @@ img, svg { display: block; max-width: 100%; height: auto; }
   .legal-crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; margin-bottom: 6px; }
   .legal-crumb a { display: inline-flex; align-items: center; min-height: 44px; }
 }
+
+/* Honeypot: off-screen rather than display:none, because some bots skip a
+   field they can see is hidden. People never reach it — it is out of the tab
+   order and out of the accessibility tree. */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Delivery failed. The form has to say so and offer the phone number, or the
+   enquiry is silently lost and the shop never knows it had one. */
+.form-err { grid-column: 1 / -1; display: none; border-radius: 10px; padding: 12px 15px; font-size: 0.9rem; line-height: 1.6; background: #FDECEC; border: 1px solid #F3C2C2; color: #8E2626; }
+.form-err.show { display: block; }
+.form-err a { color: inherit; font-weight: 700; }

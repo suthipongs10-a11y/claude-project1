@@ -1,0 +1,22 @@
+{
+  "_comment": "Shape of the SITES secret. Copy to sites.json (gitignored), fill in real values, then: wrangler secret put SITES < sites.json. The key is the site's origin exactly as the browser sends it — scheme, host, no trailing slash, and one entry per domain the site answers on (with and without www if both are live).",
+
+  "https://cleanday.co.th": {
+    "name": "CleanDay คลีนเดย์",
+    "lineToken": "PUT-THE-CHANNEL-ACCESS-TOKEN-HERE",
+    "lineTo": "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+
+  "https://www.cleanday.co.th": {
+    "name": "CleanDay คลีนเดย์",
+    "lineToken": "PUT-THE-CHANNEL-ACCESS-TOKEN-HERE",
+    "lineTo": "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+
+  "https://altahome.example.com": {
+    "name": "ALTA Home Care",
+    "lineToken": "PUT-THE-CHANNEL-ACCESS-TOKEN-HERE",
+    "lineTo": "Cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "webhook": "https://optional-mirror.example.com/hook"
+  }
+}
