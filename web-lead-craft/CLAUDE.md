@@ -38,6 +38,11 @@ the day-to-day workflow and Cloudflare Pages limits.
    (LINE: kitty4uu · 099-151-4049). A demo doubles as an ad.
 6. "LINE แจ้งเตือน" features must use the LINE Messaging API with a LINE
    Official Account. LINE Notify was discontinued March 2025 — never quote it.
+   **Never add a Meta/Facebook Pixel to a client site** — dropped 2026-08-06.
+   The snippet is trivial; the support is not. Selling it invites Business
+   Suite questions the operator cannot answer, and a feature we cannot support
+   costs more than one we do not offer. Analytics stays on Google, which we
+   can support. A link to the client's own Facebook page is unrelated and fine.
 7. Reveal-on-scroll must be gated behind a JS-added `.anim` class so content
    is never hidden when scripts don't run (this bug was already made and
    fixed once — see demo-cleaning).
