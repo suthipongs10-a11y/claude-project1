@@ -811,6 +811,7 @@ img, svg { display: block; max-width: 100%; height: auto; }
   .soc { width: 44px; height: 44px; }
   .book-row a,
   .foot-col a,
+  .form-fine a,
   .map-meta a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
   .foot-col li { align-items: center; }
   .foot-col li .ic { margin-top: 0; }
@@ -822,4 +823,46 @@ img, svg { display: block; max-width: 100%; height: auto; }
   html { scroll-behavior: auto; }
   .site *, .site *::before, .site *::after { animation: none !important; transition: none !important; }
   .rv, .msg { opacity: 1 !important; transform: none !important; }
+}
+
+/* ---------- privacy page (dist/privacy.html) ----------
+   A legal page carries none of the home page's JS, so it must not depend on
+   the sprite, the reveal observer or the mobile bar — it is written to stand
+   on its own with the same palette and type. */
+
+.legal-top { border-bottom: 1px solid var(--line-soft); background: #fff; }
+.legal-top-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.legal-home { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; color: var(--ink); text-decoration: none; }
+.legal-home svg { width: 26px; height: 26px; color: var(--aqua); }
+.legal-tel { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 4px; font-weight: 600; color: var(--aqua-deep); text-decoration: none; }
+.legal-tel:hover { color: var(--aqua-ink); }
+
+.legal { padding-block: clamp(36px, 6vw, 64px) clamp(48px, 8vw, 80px); }
+.legal-in { max-width: 760px; }
+.legal-crumb { font-size: 0.86rem; color: var(--faint); margin-bottom: 14px; }
+.legal-crumb a { color: var(--aqua-deep); }
+.legal h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.7rem, 4.4vw, 2.3rem); line-height: 1.35; color: var(--ink); }
+.legal-date { margin-top: 10px; font-size: 0.92rem; color: var(--faint); }
+
+.legal-note { margin-top: 26px; border-left: 4px solid var(--zest); background: var(--zest-tint); border-radius: 0 10px 10px 0; padding: 16px 20px; font-size: 0.96rem; color: var(--ink); }
+
+.prose { margin-top: 30px; }
+.prose h2 { margin-top: 34px; font-family: var(--font-display); font-weight: 500; font-size: 1.25rem; line-height: 1.5; color: var(--ink); }
+.prose p { margin-top: 12px; }
+.prose b { color: var(--ink); font-weight: 600; }
+.prose ul { margin-top: 12px; padding-left: 0; list-style: none; display: grid; gap: 8px; }
+.prose li { position: relative; padding-left: 26px; }
+.prose li::before { content: ""; position: absolute; left: 6px; top: 0.72em; width: 7px; height: 7px; border-radius: 50%; background: var(--aqua); }
+
+.legal-back { margin-top: 40px; }
+
+.legal-foot { background: var(--mist); border-top: 1px solid var(--line-soft); padding-block: 26px; }
+.legal-foot p { font-size: 0.84rem; line-height: 1.75; color: var(--faint); text-align: center; }
+.legal-foot p + p { margin-top: 8px; }
+.legal-foot b { color: var(--ink); }
+
+@media (max-width: 620px) {
+  .legal-back .btn { width: 100%; }
+  .legal-crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; margin-bottom: 6px; }
+  .legal-crumb a { display: inline-flex; align-items: center; min-height: 44px; }
 }

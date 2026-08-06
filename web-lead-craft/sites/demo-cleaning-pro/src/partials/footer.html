@@ -85,15 +85,17 @@
   </div>
 </footer>
 
+<div class="mcta">
+  <a class="btn btn-out" href="tel:022221234"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>{{t|โทรเลย|Call}}</a>
+  <a class="btn btn-line" href="{{BASE}}contact.html"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>{{t|ทัก LINE|LINE}}</a>
+</div>
+
+<!-- after .mcta on purpose: the phone rule lifts the bar clear of the mobile
+     CTA with a sibling selector, and that needs this order -->
 <div class="cookie" id="cookie" role="region" aria-label="{{t|การใช้คุกกี้|Cookie notice}}">
   <p>{{t|เว็บไซต์นี้ใช้คุกกี้เพื่อวัดผลการเข้าชม ช่วยให้เราปรับปรุงบริการได้ตรงจุด|This site uses cookies to measure visits so we can improve the service.}} <a href="{{BASE}}privacy.html">{{t|อ่านนโยบาย|Read the policy}}</a></p>
   <button class="btn btn-green" type="button" id="cookieOk">{{t|ยอมรับ|Accept}}</button>
   <button class="btn btn-out" type="button" id="cookieNo">{{t|เฉพาะที่จำเป็น|Essential only}}</button>
-</div>
-
-<div class="mcta">
-  <a class="btn btn-out" href="tel:022221234"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>{{t|โทรเลย|Call}}</a>
-  <a class="btn btn-line" href="{{BASE}}contact.html"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>{{t|ทัก LINE|LINE}}</a>
 </div>
 
 <script>
@@ -135,16 +137,14 @@
     });
   });
 
-  // cookie notice — remembered, so it is asked once
+  // cookie notice — asked once, and the answer is what decides whether the
+  // analytics in <head> ever loads. setConsent() lives there.
   var bar = document.getElementById('cookie');
-  var store = function (v) { try { localStorage.setItem('cookie', v); } catch (e) {} };
-  var seen;
-  try { seen = localStorage.getItem('cookie'); } catch (e) {}
-  if (bar && !seen) window.setTimeout(function () { bar.classList.add('show'); }, 900);
-  var close = function (v) { return function () { store(v); bar.classList.remove('show'); }; };
+  if (bar && !window.cookieChoice) window.setTimeout(function () { bar.classList.add('show'); }, 900);
+  var answer = function (v) { return function () { window.setConsent(v); bar.classList.remove('show'); }; };
   if (bar) {
-    document.getElementById('cookieOk').addEventListener('click', close('yes'));
-    document.getElementById('cookieNo').addEventListener('click', close('no'));
+    document.getElementById('cookieOk').addEventListener('click', answer('yes'));
+    document.getElementById('cookieNo').addEventListener('click', answer('no'));
   }
 
   // forms — nothing is sent from a demo, so say so rather than pretend

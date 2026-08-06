@@ -462,6 +462,7 @@
             <p class="form-fine">
               <svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>
               {{t|คำขอจะเด้งเข้า LINE ของทีมงานทันทีที่กดส่ง จึงไม่มีคิวไหนตกหล่น · ข้อมูลของคุณใช้ติดต่อกลับเท่านั้น|Your request pings our team's LINE the second you send it, so nothing gets missed · Your details are used only to contact you.}}
+              <a href="privacy.html">{{t|นโยบายความเป็นส่วนตัว|Privacy policy}}</a>
             </p>
           </div>
           <div class="form-ok" role="status">
@@ -513,6 +514,7 @@
           <li><a href="#process">{{t|ขั้นตอนการจอง|Process}}</a></li>
           <li><a href="#work">{{t|ผลงาน|Our work}}</a></li>
           <li><a href="#faq">{{t|คำถามที่พบบ่อย|FAQ}}</a></li>
+          <li><a href="privacy.html">{{t|นโยบายความเป็นส่วนตัว|Privacy policy}}</a></li>
         </ul>
       </div>
       <div class="foot-col">
@@ -541,6 +543,14 @@
   <a class="btn btn-line" href="#booking"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>{{t|จองผ่าน LINE|Book on LINE}}</a>
 </div>
 
+<!-- after .mcta on purpose: the phone rule lifts the bar clear of the mobile
+     CTA with a sibling selector, and that needs this order -->
+<div class="cookie" id="cookie" role="region" aria-label="{{t|การใช้คุกกี้|Cookie notice}}">
+  <p>{{t|เว็บไซต์นี้ใช้คุกกี้เพื่อวัดผลการเข้าชม ช่วยให้เราปรับปรุงบริการได้ตรงจุด|This site uses cookies to measure visits so we can improve the service.}} <a href="privacy.html">{{t|อ่านนโยบาย|Read the policy}}</a></p>
+  <button class="btn btn-ink" type="button" id="cookieOk">{{t|ยอมรับ|Accept}}</button>
+  <button class="btn btn-out" type="button" id="cookieNo">{{t|เฉพาะที่จำเป็น|Essential only}}</button>
+</div>
+
 <script>
 (function () {
   var nav = document.getElementById('nav');
@@ -556,6 +566,16 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+  }
+
+  // cookie notice — asked once, and the answer is what decides whether the
+  // analytics in <head> ever loads. setConsent() lives there.
+  var bar = document.getElementById('cookie');
+  if (bar && !window.cookieChoice) window.setTimeout(function () { bar.classList.add('show'); }, 900);
+  var answer = function (v) { return function () { window.setConsent(v); bar.classList.remove('show'); }; };
+  if (bar) {
+    document.getElementById('cookieOk').addEventListener('click', answer('yes'));
+    document.getElementById('cookieNo').addEventListener('click', answer('no'));
   }
 
   var form = document.getElementById('bookForm');

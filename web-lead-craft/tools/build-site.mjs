@@ -4,8 +4,13 @@
 // Two shapes, chosen by whether src/pages/ exists:
 //
 //   single page   src/body.html is the whole site       → dist/index.html
+//                 src/privacy.html, if present          → dist/privacy.html
 //   multi page    src/pages/*.html + src/partials/      → dist/<slug>.html
 //                 src/articles/*.html                   → dist/articles/<slug>.html
+//
+// A one-page site still gets its privacy notice as a real page: PDPA wants one
+// wherever a form collects personal data, and a legal page is a utility, not a
+// second page of content — "เว็บไซต์ 1 หน้า" still holds.
 //
 // Both emit every configured language into the same file and switch between
 // them in the page, so a built site works with no server at all — assets and
@@ -24,7 +29,7 @@ import { join, dirname } from 'node:path';
 import { buildDerivatives, inlineMap, applyImages, listImages, WIDTHS } from './images.mjs';
 import { localize, checkTokens, expandAll, switcherFor } from './i18n.mjs';
 import {
-  hasPages, collectPages, collectArticles, baseFor,
+  hasPages, collectPages, collectArticles, baseFor, parseFront,
   renderNav, renderArticleCards, renderBreadcrumb, fmtDate,
 } from './pages.mjs';
 
@@ -62,6 +67,9 @@ const siteUrl = isReal ? `https://${cfg.domain}` : '';
 const multi = hasPages(dir);
 const pages = multi ? collectPages(dir) : [];
 const articles = multi ? collectArticles(dir) : [];
+// The one extra page a single-page site may carry, kept deliberately to one:
+// anything more is the multi-page shape and should say so with src/pages/.
+const legalFile = !multi && existsSync(join(dir, 'src', 'privacy.html')) ? 'privacy.html' : null;
 const css = `${src('fonts.css').trim()}\n${src('styles.css').trim()}`;
 const rawHead = src('head.html');
 
@@ -76,7 +84,11 @@ const sources = multi
       ...pages.map(p => [`pages/${p.file}`, `${p.title}${p.desc}${p.nav ?? ''}${p.body}`]),
       ...articles.map(a => [`articles/${a.file}`, `${a.title}${a.desc}${a.cat}${a.body}`]),
     ]
-  : [['head.html', rawHead], ['body.html', src('body.html')]];
+  : [
+      ['head.html', rawHead],
+      ['body.html', src('body.html')],
+      ...(legalFile ? [[legalFile, src(legalFile)]] : []),
+    ];
 const tokenProblems = sources.flatMap(([where, text]) => checkTokens(text, langs, where));
 if (tokenProblems.length) {
   console.error(`translation tokens are malformed:\n  ${tokenProblems.join('\n  ')}`);
@@ -86,7 +98,7 @@ if (tokenProblems.length) {
 const dist = join(dir, 'dist');
 // dist/img is expensive to regenerate, so it survives the wipe and the
 // pipeline decides per-file what is stale
-for (const entry of ['404.html', 'favicon.svg', 'robots.txt', 'sitemap.xml', '_headers', 'articles']) {
+for (const entry of ['404.html', 'favicon.svg', 'robots.txt', 'sitemap.xml', '_headers', 'articles', 'privacy.html']) {
   rmSync(join(dist, entry), { recursive: true, force: true });
 }
 for (const f of existsSync(dist) ? [] : []) rmSync(f, { force: true });
@@ -95,10 +107,21 @@ for (const p of multi ? pages : [{ out: 'index.html' }]) rmSync(join(dist, p.out
 
 const photos = await buildDerivatives(dir, dist);
 
+/** A single-page head serves a second page once its four title/description
+ *  tags are swapped. Function replacements keep `$` in Thai copy literal. */
+function headWith(head, title, desc) {
+  let out = head.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${title}</title>`);
+  const tags = [['name="description"', desc], ['property="og:title"', title], ['property="og:description"', desc]];
+  for (const [sel, value] of tags) {
+    out = out.replace(new RegExp(`(<meta ${sel} content=")[^"]*(")`), (_m, a, b) => a + value + b);
+  }
+  return out;
+}
+
 /** Head for one page: shared meta plus this page's title, description, canonical. */
 function headFor(lang, page, base) {
-  const path = page.out === 'index.html' ? '' : `/${page.out}`;
-  return localize(rawHead, lang, langs)
+  const path = page.out === 'index.html' ? '/' : `/${page.out}`;
+  return localize(page.head ?? rawHead, lang, langs)
     .replaceAll('{{PAGE_TITLE}}', localize(page.title, lang, langs))
     .replaceAll('{{PAGE_DESC}}', localize(page.desc, lang, langs))
     .replaceAll('{{BASE}}', base)
@@ -245,6 +268,18 @@ if (multi) {
   const rec = emit(page, src('body.html').trim(), '');
   written.push(rec);
   previewSource = rec.expanded;
+
+  if (legalFile) {
+    const { meta, body } = parseFront(src(legalFile));
+    const legal = {
+      out: legalFile,
+      slug: legalFile.replace(/\.html$/, ''),
+      title: meta.title ?? '',
+      desc: meta.desc ?? '',
+    };
+    legal.head = headWith(rawHead, legal.title, legal.desc);
+    written.push(emit(legal, body, ''));
+  }
 }
 
 copyFileSync(join(dir, 'src', 'favicon.svg'), join(dist, 'favicon.svg'));

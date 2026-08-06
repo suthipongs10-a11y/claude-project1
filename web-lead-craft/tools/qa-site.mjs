@@ -371,6 +371,62 @@ for (const [href, from] of linkTargets) {
   if (!res || !res.ok) note('links', `${href} is broken (linked from ${from})`);
 }
 
+// A cookie bar is a promise in writing: the privacy page says analytics does
+// not load until the visitor accepts. Nothing about the markup proves that, so
+// drive it — fresh visitor, both answers, and a reload after each. The gtag
+// request is intercepted, so this never actually reaches Google.
+const cookiePages = URLS.filter(u => readFileSync(join(dist, u.slice(1))).includes('id="cookie"'));
+if (cookiePages.length) {
+  const TRACKER = /googletagmanager\.com|google-analytics\.com/;
+  const visit = async (seed, act) => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    // The demo ships GA_ID empty, so there would be nothing for the gate to
+    // gate. Stand in for a client who filled it in: hold a test ID and ignore
+    // the page's own empty assignment, keeping any real one it sets.
+    await ctx.addInitScript(() => {
+      let id = 'G-QATEST01';
+      Object.defineProperty(window, 'GA_ID', {
+        get: () => id,
+        set: v => { if (v) id = v; },
+        configurable: true,
+      });
+    });
+    await ctx.route('**/*', r => (TRACKER.test(r.request().url()) ? r.fulfill({ body: '', contentType: 'text/javascript' }) : r.continue()));
+    const page = await ctx.newPage();
+    const hits = [];
+    page.on('request', r => TRACKER.test(r.url()) && hits.push(r.url()));
+    await page.goto(origin + cookiePages[0], { waitUntil: 'load' });
+    await page.waitForTimeout(1500);
+    const shown = await page.isVisible('#cookie.show');
+    if (seed) await page.click(seed === 'yes' ? '#cookieOk' : '#cookieNo');
+    await page.waitForTimeout(400);
+    const out = await act({ page, hits, shown });
+    await ctx.close();
+    return out;
+  };
+
+  const first = await visit(null, async ({ hits, shown }) => ({ shown, hits: hits.length }));
+  if (!first.shown) note('consent', 'the cookie bar never appears for a first-time visitor');
+  if (first.hits) note('consent', `analytics loaded before any answer was given (${first.hits} request(s))`);
+
+  for (const answer of ['no', 'yes']) {
+    const r = await visit(answer, async ({ page, hits }) => {
+      const dismissed = !(await page.isVisible('#cookie.show'));
+      const stored = await page.evaluate(() => { try { return localStorage.getItem('cookie'); } catch { return null; } });
+      const loadedOnAnswer = hits.length;
+      await page.reload({ waitUntil: 'load' });
+      await page.waitForTimeout(1500);
+      return { dismissed, stored, loadedOnAnswer, again: await page.isVisible('#cookie.show'), loaded: hits.length };
+    });
+    if (!r.dismissed) note('consent', `"${answer}" does not dismiss the bar`);
+    if (r.stored !== answer) note('consent', `"${answer}" stored as "${r.stored}" — the choice will not survive a reload`);
+    if (r.again) note('consent', `the bar comes back after answering "${answer}" — a visitor is asked on every page view`);
+    if (answer === 'no' && r.loaded) note('consent', `"essential only" was chosen and analytics loaded anyway (${r.loaded} request(s))`);
+    if (answer === 'yes' && !r.loadedOnAnswer) note('consent', 'accepting does not load analytics — the consent gate never opens');
+    if (answer === 'yes' && !r.loaded) note('consent', 'analytics does not load on a return visit that already accepted');
+  }
+}
+
 // the 404 page ships too, so it gets checked as well
 if (existsSync(join(dist, '404.html'))) {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });

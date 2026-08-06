@@ -46,7 +46,19 @@ the day-to-day workflow and Cloudflare Pages limits.
 7. Reveal-on-scroll must be gated behind a JS-added `.anim` class so content
    is never hidden when scripts don't run (this bug was already made and
    fixed once — see demo-cleaning).
-8. **`node tools/qa-site.mjs sites/<name>` must print PASS before any site is
+8. **Every package ships a privacy page.** A form taking a name and a phone
+   number collects personal data, so PDPA applies at 990 THB as much as at
+   5,990 — decided 2026-08-06, and it is quoted as included, not as an extra.
+   A one-page site emits it from `src/privacy.html`; a multi-page site makes it
+   a `src/pages/` file with no `nav:` entry. Link it from the footer and from
+   under the form's submit button, which is where the data is actually taken.
+   **A cookie bar belongs only on a site that installs a tracker** — CleanDay
+   sets no cookies at all, and a consent bar there would be theatre. Where one
+   does exist, the analytics must genuinely be gated on the answer: the policy
+   page promises that in writing, and HOMEKEEP shipped the promise before the
+   code kept it. `qa-site.mjs` drives the bar and intercepts the tracker
+   request to prove it, so do not hand-verify this.
+9. **`node tools/qa-site.mjs sites/<name>` must print PASS before any site is
    shown to a client.** Every check in it corresponds to something that has
    already shipped broken here: invisible sections, sideways scroll, 20px-tall
    footer links, an over-long `<title>`. Do not hand over on a red run, and do
