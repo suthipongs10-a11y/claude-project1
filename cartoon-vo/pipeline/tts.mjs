@@ -16,6 +16,8 @@
 import fs from "node:fs";
 import { keyOf, get, put } from "./cache.mjs";
 import * as google from "./tts-google.mjs";
+import * as gemini from "./tts-gemini.mjs";
+import { readKeys, mask, withKeyRotation } from "./keys.mjs";
 
 const API = "https://api.elevenlabs.io";
 const CHAR_BASE = 0.09;   // ค่าคงที่ต่อบรรทัด (CLAUDE.md)
@@ -87,25 +89,34 @@ export async function run(scriptFile = "assets/script.json") {
   const { voiceId, modelId } = script;
 
   // เลือกผู้ให้บริการ: ระบุใน script.json ได้ ไม่งั้นดูจากคีย์ที่มี
-  const elevenKey = process.env.ELEVENLABS_API_KEY || "";
-  const googleKey = process.env.GOOGLE_TTS_API_KEY || "";
-  const want = script.provider || (elevenKey ? "elevenlabs" : googleKey ? "google" : "estimate");
+  // คีย์ Google/Gemini รองรับหลายตัวคั่นด้วย , — สลับอัตโนมัติเมื่อโควตาหมด
+  const elevenKeys = readKeys("ELEVENLABS_API_KEY");
+  const googleKeys = readKeys("GOOGLE_TTS_API_KEY", "GEMINI_API_KEY");
+  const want = script.provider || (elevenKeys.length ? "elevenlabs" : googleKeys.length ? "google" : "estimate");
   const mode =
-    want === "google" && googleKey ? "google" :
-    want === "elevenlabs" && elevenKey ? "elevenlabs" : "estimate";
+    want === "gemini" && googleKeys.length ? "gemini" :
+    want === "google" && googleKeys.length ? "google" :
+    want === "elevenlabs" && elevenKeys.length ? "elevenlabs" : "estimate";
 
   if (mode === "estimate") {
-    const why = want === "google" ? "GOOGLE_TTS_API_KEY" : "ELEVENLABS_API_KEY";
+    const why = want === "elevenlabs" ? "ELEVENLABS_API_KEY" : "GOOGLE_TTS_API_KEY / GEMINI_API_KEY";
     console.log(`⚠ ไม่มี ${why} — เข้าโหมด estimate (กะเวลาจากจำนวนตัวอักษร)`);
     console.log("  จัด layout ให้จบก่อนได้ แล้วค่อยยิงเสียงจริงรอบเดียวตอนมีคีย์\n");
   } else {
-    console.log(`ใช้เสียงจาก: ${mode}\n`);
+    const n = mode === "elevenlabs" ? elevenKeys.length : googleKeys.length;
+    console.log(`ใช้เสียงจาก: ${mode} · คีย์ ${n} ตัว (${mask((mode === "elevenlabs" ? elevenKeys : googleKeys)[0])})\n`);
   }
-  const key = mode === "elevenlabs" ? elevenKey : "";
+  const key = mode === "elevenlabs" ? elevenKeys[0] : "";
 
   // cache key ต้องผูกกับผู้ให้บริการ+เสียงด้วย ไม่งั้นสลับ provider แล้วหยิบของเก่าผิดตัว
-  const voiceTag = mode === "google" ? `google:${script.googleVoice || ""}` : voiceId;
-  const modelTag = mode === "google" ? "gcloud-tts" : modelId;
+  const geminiVoice = script.geminiVoice || "Charon";
+  const geminiModel = script.geminiModel || gemini.DEFAULT_MODEL;
+  const voiceTag =
+    mode === "gemini" ? `gemini:${geminiVoice}` :
+    mode === "google" ? `google:${script.googleVoice || ""}` : voiceId;
+  const modelTag =
+    mode === "gemini" ? geminiModel :
+    mode === "google" ? "gcloud-tts" : modelId;
 
   let cached = 0, fresh = 0;
   const segs = [];
@@ -119,18 +130,34 @@ export async function run(scriptFile = "assets/script.json") {
       continue;
     }
     let meta, audio = null;
-    if (mode === "google") {
-      requests++;
-      const r = await google.synth(line.text, {
-        apiKey: googleKey,
-        voiceName: script.googleVoice,
-        languageCode: script.languageCode || "th-TH",
-        speakingRate: script.speakingRate || 1.0,
-      });
+    if (mode === "gemini") {
+      const r = await withKeyRotation(googleKeys, (apiKey) => {
+        requests++;
+        return gemini.synth(line.text, {
+          apiKey, voiceName: geminiVoice, model: geminiModel,
+          styleHint: script.geminiStyle || "",
+        });
+      }, console.log);
+      audio = r.audio;
+      meta = { text: line.text, voiceId: voiceTag, modelId: modelTag,
+               source: `gemini:${geminiVoice}`, alignment: r.alignment,
+               duration: +r.duration.toFixed(4), audioFormat: "wav",
+               sampleRate: r.sampleRate, wordTiming: "spread" };
+    } else if (mode === "google") {
+      const r = await withKeyRotation(googleKeys, (apiKey) => {
+        requests++;
+        return google.synth(line.text, {
+          apiKey,
+          voiceName: script.googleVoice,
+          languageCode: script.languageCode || "th-TH",
+          speakingRate: script.speakingRate || 1.0,
+        });
+      }, console.log);
       audio = r.audio;
       meta = { text: line.text, voiceId: voiceTag, modelId: modelTag,
                source: `google:${script.googleVoice}`, alignment: r.alignment,
-               duration: +r.duration.toFixed(4), audioFormat: "wav" };
+               duration: +r.duration.toFixed(4), audioFormat: "wav",
+               sampleRate: 24000, wordTiming: "ssml-mark" };
     } else if (key) {
       const r = await callTTS(line.text, voiceId, modelId, key);
       audio = r.audio;

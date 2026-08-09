@@ -12,3 +12,8 @@ node_modules/
 
 # ฟอนต์ที่ฝังเป็น data URI (สร้างใหม่ได้จาก public/fonts/)
 # เก็บไว้เพื่อให้ build ซ้ำได้เหมือนเดิม
+
+# เสียงที่ต่อแล้ว (สร้างใหม่ได้จาก pipeline/cues.mjs)
+public/vo.wav
+public/vo.mp3
+*.wav

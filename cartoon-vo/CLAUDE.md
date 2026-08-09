@@ -143,6 +143,42 @@ script.json ──► tts.mjs ──► seg_NN.mp3 + alignment
 
 ---
 
+## เลือกผู้ให้บริการเสียง
+
+ตั้ง `"provider"` ใน `script.json` — `gemini` | `google` | `elevenlabs` | ไม่ใส่ (ดูจากคีย์ที่มี)
+
+| provider | คีย์ที่ใช้ | timestamp รายคำ | หมายเหตุ |
+|---|---|---|---|
+| `elevenlabs` | `ELEVENLABS_API_KEY` | ✅ จริง (รายตัวอักษร) | เสียงดีสุด แต่มีค่าใช้จ่าย |
+| `google` | คีย์ Google Cloud ที่เปิด `texttospeech.googleapis.com` | ✅ จริง (SSML `<mark>`) | **คีย์ AI Studio ใช้ไม่ได้** — ได้ 403 |
+| `gemini` | คีย์ AI Studio / Gemini ตัวไหนก็ได้ | ⚠️ ประมาณ | ไม่ต้องตั้งโปรเจกต์ GCP เลย |
+
+เช็คว่าคีย์ที่มีใช้กับอะไรได้: `node pipeline/keycheck.mjs`
+
+ใส่หลายคีย์คั่นด้วย `,` ใน env ตัวเดียวได้ — `keys.mjs` สลับให้เองเมื่อเจอ 429/RESOURCE_EXHAUSTED
+
+---
+
+## Gemini TTS (`provider: "gemini"`)
+
+`POST /v1beta/models/{model}:generateContent` พร้อม `responseModalities: ["AUDIO"]`
+คืน PCM ดิบ `audio/L16;rate=24000` เป็น base64 — `tts-gemini.mjs` ห่อ header WAV เองแล้วเก็บเป็น `.wav`
+
+**ไม่มี timestamp** ทั้งรายตัวอักษรและรายคำ ระบบเลยชดเชยแบบนี้:
+- ความยาวบรรทัด **วัดจากจำนวนไบต์ PCM จริง** → ขอบบรรทัดเป๊ะ 100%
+- เวลาแต่ละคำ **กระจายตามน้ำหนักพยางค์** (นับเฉพาะอักขระที่กินที่ — สระบน/ล่างและวรรณยุกต์ไม่นับ)
+  บวกเวลาหยุดตรงเว้นวรรค → `spreadAlignment()` แล้วส่งเข้า `toCharAlignment()` ตัวเดียวกับ provider google
+  ⇒ downstream (align/cues/TextLayer/MouthRig) ใช้โค้ดเส้นเดิมทั้งหมด ไม่รู้เลยว่าเสียงมาจากไหน
+
+**ข้อควรระวัง**
+- โมเดล `gemini-2.5-flash-preview-tts` คืน `finishReason=OTHER` ซ้ำ ๆ กับข้อความไทยบางประโยค
+  ใช้ **`gemini-3.1-flash-tts-preview`** เป็นค่าตั้งต้น มี fallback ไล่ไปโมเดลอื่นให้อัตโนมัติ
+- ตัดความเงียบหัว-ท้ายออกก่อนเสมอ (`trimSilence`) โมเดลใส่ความเงียบนำมาไม่เท่ากันทุกบรรทัด
+  ถ้าไม่ตัด ปากจะขยับก่อนได้ยินเสียง
+- lip-sync ตรงระดับ**วลี** ไม่ตรงระดับ**คำ** — ถ้าจะเอาเป๊ะต้องย้ายไป `google` หรือ `elevenlabs`
+
+---
+
 ## Google Cloud TTS (ผู้ให้บริการทางเลือก)
 
 ตั้ง `"provider": "google"` + `"googleVoice"` ใน `script.json` แล้วใส่ `GOOGLE_TTS_API_KEY` ใน `.env`

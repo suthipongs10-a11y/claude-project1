@@ -21,10 +21,19 @@ function which(bin) {
   catch { return null; }
 }
 
-/** วัดความยาวไฟล์เสียงจริง — คืน null ถ้าไม่มี ffprobe */
+/**
+ * วัดความยาวไฟล์เสียงจริง
+ * WAV อ่าน header เองได้ (เป๊ะกว่าและไม่ต้องมีเครื่องมือนอก)
+ * ฟอร์แมตอื่นค่อยพึ่ง ffprobe — ไม่มีก็คืน null
+ */
 export function probeDuration(file) {
+  if (!fs.existsSync(file)) return null;
+  if (file.endsWith(".wav")) {
+    const d = wavInfo(fs.readFileSync(file));
+    if (d) return d.dataBytes / (d.sampleRate * d.channels * (d.bits / 8));
+  }
   const ffprobe = which("ffprobe");
-  if (!ffprobe || !fs.existsSync(file)) return null;
+  if (!ffprobe) return null;
   const out = execFileSync(ffprobe, [
     "-v", "error", "-show_entries", "format=duration",
     "-of", "default=nw=1:nk=1", file,
@@ -66,7 +75,7 @@ export function build(scriptFile = "assets/script.json", segFile = "out/segments
   if (haveAudio) {
     const built = concatAudio(lines, segs, duration);
     if (built) {
-      audio = built.file;
+      audio = built.file.replace(/^public\//, "");   // staticFile() อ้างจากราก public/
       const real = probeDuration(built.file);
       if (real != null) duration = +Math.max(duration, real).toFixed(4);
       else console.log("⚠ ไม่มี ffprobe — ใช้ความยาวจากไทม์ไลน์แทน (ควรวัดจริงก่อนเรนเดอร์)");
@@ -98,7 +107,7 @@ export function build(scriptFile = "assets/script.json", segFile = "out/segments
     fps,
     duration,
     frames: Math.round(duration * fps),
-    source: mode === "estimate" ? "estimated" : `elevenlabs:${script.modelId}`,
+    source: segs[0]?.source || (mode === "estimate" ? "estimated" : mode),
     ...(audio ? { audio } : {}),
     beats,
     mouth,
@@ -113,14 +122,77 @@ export function build(scriptFile = "assets/script.json", segFile = "out/segments
   return cues;
 }
 
-/** ต่อ mp3 ทีละบรรทัดพร้อม silence padding ให้ตรง startAt */
+/**
+ * อ่าน header WAV → { sampleRate, channels, bits, dataOffset, dataBytes }
+ * เดินทีละ chunk เพราะบางไฟล์มี LIST/fact คั่นก่อน data
+ */
+export function wavInfo(buf) {
+  if (buf.length < 12 || buf.toString("ascii", 0, 4) !== "RIFF") return null;
+  let pos = 12, fmt = null;
+  while (pos + 8 <= buf.length) {
+    const id = buf.toString("ascii", pos, pos + 4);
+    const size = buf.readUInt32LE(pos + 4);
+    const body = pos + 8;
+    if (id === "fmt ") {
+      fmt = { channels: buf.readUInt16LE(body + 2), sampleRate: buf.readUInt32LE(body + 4), bits: buf.readUInt16LE(body + 14) };
+    } else if (id === "data" && fmt) {
+      return { ...fmt, dataOffset: body, dataBytes: Math.min(size, buf.length - body) };
+    }
+    pos = body + size + (size % 2);
+  }
+  return null;
+}
+
+/**
+ * ต่อเสียงเป็นไฟล์เดียวโดยไม่ง้อ ffmpeg — ใช้ได้เมื่อทุกท่อนเป็น WAV PCM 16-bit
+ * เขียนตัวอย่างลงบัฟเฟอร์เงียบตรงตำแหน่งวินาทีของแต่ละบรรทัดเป๊ะ ๆ
+ * (แม่นกว่า adelay ของ ffmpeg เพราะปัดที่ระดับ sample ไม่ใช่ระดับ ms)
+ */
+function mixWav(lines, byId, duration) {
+  const parts = [];
+  for (const L of lines) {
+    const buf = fs.readFileSync(byId[L.id].audioFile);
+    const info = wavInfo(buf);
+    if (!info || info.bits !== 16 || info.channels !== 1) return null;
+    parts.push({ L, buf, info });
+  }
+  const rate = parts[0].info.sampleRate;
+  if (parts.some((p) => p.info.sampleRate !== rate)) return null;
+
+  const total = Math.ceil(duration * rate);
+  const out = Buffer.alloc(total * 2);                 // ศูนย์ = เงียบ
+  for (const { L, buf, info } of parts) {
+    const at = Math.round(L.s * rate) * 2;
+    const n = Math.min(info.dataBytes, out.length - at);
+    if (n > 0) buf.copy(out, at, info.dataOffset, info.dataOffset + n);
+  }
+  const head = Buffer.alloc(44);
+  head.write("RIFF", 0); head.writeUInt32LE(36 + out.length, 4); head.write("WAVE", 8);
+  head.write("fmt ", 12); head.writeUInt32LE(16, 16); head.writeUInt16LE(1, 20);
+  head.writeUInt16LE(1, 22); head.writeUInt32LE(rate, 24); head.writeUInt32LE(rate * 2, 28);
+  head.writeUInt16LE(2, 32); head.writeUInt16LE(16, 34);
+  head.write("data", 36); head.writeUInt32LE(out.length, 40);
+
+  const file = "public/vo.wav";        // ต้องอยู่ใน public/ เพราะ Scene.tsx ใช้ staticFile()
+  fs.mkdirSync("public", { recursive: true });
+  fs.writeFileSync(file, Buffer.concat([head, out]));
+  console.log(`ต่อเสียงเป็น ${file} (ผสมเองใน Node ไม่ใช้ ffmpeg · ${rate}Hz)`);
+  return { file };
+}
+
+/** ต่อเสียงทีละบรรทัดพร้อม silence padding ให้ตรง startAt */
 function concatAudio(lines, segs, duration) {
+  const byId = Object.fromEntries(segs.map((s) => [s.id, s]));
+  if (lines.every((L) => byId[L.id].audioFile.endsWith(".wav"))) {
+    const mixed = mixWav(lines, byId, duration);
+    if (mixed) return mixed;
+    console.log("⚠ WAV ไม่เข้าเงื่อนไขผสมเอง (ต้อง PCM 16-bit mono อัตราเดียวกัน) — ลอง ffmpeg แทน");
+  }
   const ffmpeg = which("ffmpeg") || process.env.FFMPEG_BIN;
   if (!ffmpeg || !fs.existsSync(ffmpeg)) {
     console.log("⚠ ไม่พบ ffmpeg — ข้ามการต่อ vo.mp3 (ตั้ง FFMPEG_BIN ชี้ไบนารีได้)");
     return null;
   }
-  const byId = Object.fromEntries(segs.map((s) => [s.id, s]));
   const inputs = [], filters = [];
   lines.forEach((L, i) => {
     inputs.push("-i", byId[L.id].audioFile);
@@ -128,7 +200,7 @@ function concatAudio(lines, segs, duration) {
   });
   const mix = lines.map((_, i) => `[a${i}]`).join("");
   const graph = `${filters.join(";")};${mix}amix=inputs=${lines.length}:normalize=0[out]`;
-  const file = "out/vo.mp3";
+  const file = "public/vo.mp3";
   execFileSync(ffmpeg, ["-y", ...inputs, "-filter_complex", graph, "-map", "[out]",
     "-t", String(duration), "-c:a", "libmp3lame", "-b:a", "128k", file], { stdio: "pipe" });
   console.log(`ต่อเสียงเป็น ${file}`);

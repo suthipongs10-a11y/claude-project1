@@ -1,6 +1,8 @@
 {
   "title": "ยุงนอนไหม? แล้วทำไมเจอยุงได้ทุกเวลา",
-  "provider": "google",
+  "provider": "gemini",
+  "geminiVoice": "Charon",
+  "geminiModel": "gemini-3.1-flash-tts-preview",
   "googleVoice": "th-TH-Neural2-C",
   "languageCode": "th-TH",
   "speakingRate": 1.0,
@@ -137,10 +139,12 @@
     ],
     "voiceId": "nPczCjzI2devNBz1zQrb = Brian (เคยใช้กับช่องอวกาศ ยืนยันแล้วว่าใช้ได้) — เปลี่ยนได้ตามต้องการ",
     "ผู้ให้บริการเสียง": [
-      "provider: google | elevenlabs | (ไม่ใส่ = ดูจากคีย์ที่มีใน env)",
-      "google ต้องใช้เสียงที่รองรับ SSML (Standard / WaveNet / Neural2) — ตระกูล Chirp/Chirp3 ไม่รองรับ <mark> จะไม่ได้ timestamp",
-      "ยืนยันรายชื่อเสียงไทยจริงด้วย: node pipeline/voices.mjs",
-      "voiceId/modelId ด้านล่างใช้เฉพาะตอน provider=elevenlabs"
+      "provider: gemini | google | elevenlabs | (ไม่ใส่ = ดูจากคีย์ที่มีใน env)",
+      "gemini = โมเดล TTS ของ Gemini API ใช้คีย์ AI Studio ได้เลย (GOOGLE_TTS_API_KEY / GEMINI_API_KEY) แต่ไม่มี timestamp รายคำ — เวลาคำมาจากการกระจายตามน้ำหนักพยางค์ ขอบบรรทัดยังเป๊ะเพราะวัดจากไบต์จริง",
+      "google = Cloud Text-to-Speech ได้ timestamp รายคำจริงผ่าน <mark> ต้องเป็นคีย์ที่เปิด texttospeech.googleapis.com (คีย์ AI Studio ใช้ไม่ได้ ได้ 403)",
+      "google ต้องใช้เสียงที่รองรับ SSML (Standard / WaveNet / Neural2) — ตระกูล Chirp/Chirp3 ไม่รองรับ <mark>",
+      "ใส่คีย์หลายตัวคั่นด้วย , ได้ — สลับอัตโนมัติเมื่อคีย์แรกโควตาหมด",
+      "voiceId/modelId ใช้เฉพาะตอน provider=elevenlabs"
     ]
   }
 }

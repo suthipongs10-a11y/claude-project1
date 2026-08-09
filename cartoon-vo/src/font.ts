@@ -5,28 +5,31 @@
  * ถ้าคำขอไฟล์ค้างแม้แท็บเดียว delayRender จะ timeout แล้วล้มทั้งงาน (เจอจริงที่เฟรม 689)
  * data URI ตัดปัญหานี้ทิ้ง เพราะไม่มี network เข้ามาเกี่ยว
  *
- * ยังใช้ delayRender อยู่ เพื่อกันเฟรมแรก ๆ ได้ฟอนต์ fallback ที่ไม่มีสระไทย
- * แต่ประกันไว้ว่า continueRender ถูกเรียกเสมอ ไม่ว่าจะสำเร็จหรือพัง
+ * ทำไมเลิกใช้ delayRender ด้วย: แท็บที่ Remotion เปิดใหม่อยู่เบื้องหลัง
+ * Chrome หน่วง `setTimeout` ในแท็บพื้นหลังได้ถึงระดับนาที ตัวกันเหนียวเลยไม่ทันงาน
+ * แล้ว delayRender ก็ค้างจนล้มอีกรอบ (เจอจริงที่เฟรม 1306)
+ *
+ * ทางที่นิ่งกว่า: ฉีด @font-face เป็น CSS ตรง ๆ ตอนโหลดโมดูล — เป็นงาน DOM ล้วน
+ * ไม่มี timer ไม่มี promise ให้ค้าง · `font-display: block` สั่งให้ Chrome
+ * ซ่อนตัวอักษรไว้จนกว่าฟอนต์จะพร้อม จึงไม่มีเฟรมไหนได้ฟอนต์ fallback ที่สระไทยหาย
  */
-import { continueRender, delayRender } from "remotion";
 import { KANIT_BOLD_B64 } from "./font-data";
 
 export const THAI_FONT = "KanitCartoon";
 
-const handle = delayRender("โหลดฟอนต์ไทย", { timeoutInMilliseconds: 60000 });
+const CSS = `@font-face{
+  font-family:"${THAI_FONT}";
+  font-style:normal;
+  font-weight:700;
+  font-display:block;
+  src:url(data:font/ttf;base64,${KANIT_BOLD_B64}) format("truetype");
+}`;
 
-let settled = false;
-const finish = () => {
-  if (settled) return;
-  settled = true;
-  continueRender(handle);
-};
-
-try {
-  const face = new FontFace(THAI_FONT, `url(data:font/ttf;base64,${KANIT_BOLD_B64}) format("truetype")`);
-  face.load().then((f) => { document.fonts.add(f); finish(); }).catch(finish);
-  // กันเหนียว: ถึงยังไงก็ต้องปล่อยให้เรนเดอร์เดินต่อ
-  setTimeout(finish, 15000);
-} catch {
-  finish();
+if (typeof document !== "undefined" && !document.getElementById("thai-font-face")) {
+  const el = document.createElement("style");
+  el.id = "thai-font-face";
+  el.textContent = CSS;
+  document.head.appendChild(el);
+  // สั่งให้เริ่มโหลดทันที ไม่ต้องรอให้มีข้อความมาใช้ก่อน — ไม่ gate อะไรทั้งสิ้น
+  document.fonts?.load(`700 100px "${THAI_FONT}"`).catch(() => {});
 }
