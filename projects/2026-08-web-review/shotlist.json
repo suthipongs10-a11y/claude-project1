@@ -15,7 +15,8 @@
       ],
       "source_label": "nimbus-desk.example",
       "caption": "closes its own tickets",
-      "fade_in": 0.4
+      "fade_in": 0.4,
+      "width_zoom": 1.45
     },
     {
       "id": "s02",
@@ -45,7 +46,8 @@
         0.5
       ],
       "source_label": "nimbus-desk.example",
-      "caption": "71% auto-resolved"
+      "caption": "71% auto-resolved",
+      "width_zoom": 1.45
     },
     {
       "id": "s05",
@@ -58,7 +60,8 @@
         0.55
       ],
       "source_label": "pricing page",
-      "caption": "$0.39 per resolution"
+      "caption": "$0.39 per resolution",
+      "width_zoom": 1.45
     },
     {
       "id": "s06",
@@ -78,7 +81,8 @@
         0.5
       ],
       "source_label": "vendor comparison",
-      "caption": "writes to your billing system"
+      "caption": "writes to your billing system",
+      "width_zoom": 1.45
     },
     {
       "id": "s08",

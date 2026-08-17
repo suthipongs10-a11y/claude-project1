@@ -87,21 +87,26 @@ class Builder:
         parts.append("format=yuv420p")
         return parts
 
-    def _run(self, in_args, geom: list[str], shot, idx, dur, out: Path):
-        geom = [*geom, f"fps={self.fps}", "setsar=1"]
+    def _run(self, in_args, geom, shot, idx, dur, out: Path):
+        """geom = list ของ filter ต่อกันตรง ๆ หรือ graph string ที่จบด้วย [vpre]"""
+        if isinstance(geom, str):
+            pre = geom
+        else:
+            pre = f"[0:v]{','.join(geom)}[vpre]"
+        chain = [pre, f"[vpre]fps={self.fps},setsar=1[vb]"]
+
         post = self._post(shot, dur)
         ov = self._overlay(shot, idx)
-
         args = [self.ff, "-y", "-hide_banner", "-loglevel", "error", *in_args]
         if ov:
-            args += ["-i", str(ov), "-filter_complex",
-                     f"[0:v]{','.join(geom)}[base];"
-                     f"[base][1:v]overlay=0:0:shortest=0[ov];"
-                     f"[ov]{','.join(post)}[out]",
-                     "-map", "[out]"]
+            args += ["-i", str(ov)]
+            chain.append("[vb][1:v]overlay=0:0:shortest=0[vov]")
+            chain.append(f"[vov]{','.join(post)}[out]")
         else:
-            args += ["-vf", ",".join(geom + post)]
-        args += ["-t", f"{dur}", "-c:v", "libx264", "-preset", "veryfast",
+            chain.append(f"[vb]{','.join(post)}[out]")
+
+        args += ["-filter_complex", ";".join(chain), "-map", "[out]",
+                 "-t", f"{dur}", "-c:v", "libx264", "-preset", "veryfast",
                  "-crf", "20", "-pix_fmt", "yuv420p", "-r", str(self.fps),
                  "-an", str(out)]
 
@@ -155,21 +160,31 @@ class Builder:
         # ทำ base ที่ 2x ก่อนเข้า zoompan เพื่อไม่ให้ภาพแตกตอนซูม
         bw, bh = self.w * 2, self.h * 2
         fit = shot.get("fit") or ("width" if self.h > self.w else "cover")
-        pad = shot.get("pad_color", "0x0B0E13")
+
+        zp = (f"zoompan=z='1+{zmax - 1:.4f}*on/{frames}':"
+              f"x='iw*{fx}-(iw/zoom/2)':y='ih*{fy}-(ih/zoom/2)':"
+              f"d=1:s={self.w}x{self.h}:fps={self.fps}")
 
         if fit == "width":
-            base = [f"scale={bw}:-2:flags=lanczos",
-                    f"pad={bw}:'max({bh}\\,ih)':(ow-iw)/2:(oh-ih)/2:color={pad}",
-                    f"crop={bw}:{bh}"]
+            # ภาพหน้าเว็บกว้างกว่าเฟรมแนวตั้งมาก วางกลางจอแล้วเอาภาพเดียวกันเบลอ
+            # เป็นพื้นหลัง ดูตั้งใจกว่าปล่อยพื้นสีทึบโล่ง ๆ
+            zw = float(shot.get("width_zoom", 1.0))
+            fw = even(int(bw * zw))
+            geom = (
+                f"[0:v]split=2[bgsrc][fgsrc];"
+                f"[bgsrc]scale={bw}:{bh}:force_original_aspect_ratio=increase:"
+                f"flags=lanczos,crop={bw}:{bh},gblur=sigma=42,"
+                f"eq=brightness=-0.16:saturation=0.85[bgo];"
+                f"[fgsrc]scale={fw}:-2:flags=lanczos[fgo];"
+                f"[bgo][fgo]overlay=(W-w)/2:(H-h)/2:shortest=1[merged];"
+                f"[merged]{zp}[vpre]"
+            )
         else:
-            base = [f"scale={bw}:{bh}:force_original_aspect_ratio=increase:flags=lanczos",
-                    f"crop={bw}:{bh}"]
-
-        geom = base + [
-            f"zoompan=z='1+{zmax - 1:.4f}*on/{frames}':"
-            f"x='iw*{fx}-(iw/zoom/2)':y='ih*{fy}-(ih/zoom/2)':"
-            f"d=1:s={self.w}x{self.h}:fps={self.fps}",
-        ]
+            geom = [
+                f"scale={bw}:{bh}:force_original_aspect_ratio=increase:flags=lanczos",
+                f"crop={bw}:{bh}",
+                zp,
+            ]
         self._run(["-loop", "1", "-framerate", str(self.fps), "-i", str(src)],
                   geom, shot, idx, dur, out)
 

@@ -23,8 +23,10 @@ UI_FONTS = [
     "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
 ]
-# ฟอนต์ไทย (ถ้าจะทำคลิปภาษาไทย ต้องมีอันใดอันหนึ่ง)
+# ฟอนต์ไทย — ตัวแรกคือไฟล์ที่ fetch_font.py โหลดมาไว้ในโปรเจกต์
+_PROJ = Path(__file__).resolve().parent.parent
 THAI_FONTS = [
+    str(_PROJ / "fonts" / "NotoSansThai-Bold.ttf"),
     "/usr/share/fonts/truetype/noto/NotoSansThai-Bold.ttf",
     "/usr/share/fonts/truetype/thai/Loma-Bold.ttf",
     os.path.expanduser("~/.fonts/NotoSansThai-Bold.ttf"),
@@ -52,8 +54,9 @@ def pick_font(text: str, ui: bool = False) -> str:
         if thai:
             return thai
         raise SystemExit(
-            "caption เป็นภาษาไทยแต่ไม่พบฟอนต์ไทยในเครื่อง — ติดตั้ง Noto Sans Thai "
-            "แล้วชี้ด้วย env CAPTION_FONT=/path/NotoSansThai-Bold.ttf"
+            "caption เป็นภาษาไทยแต่ไม่พบฟอนต์ไทย — โหลดด้วย:\n"
+            "  python3 pipeline/fetch_font.py --family 'Noto Sans Thai' "
+            "--weight 700 -o fonts/NotoSansThai-Bold.ttf"
         )
     found = _first_existing(UI_FONTS if ui else DISPLAY_FONTS) or _first_existing(UI_FONTS)
     if not found:
@@ -61,22 +64,71 @@ def pick_font(text: str, ui: bool = False) -> str:
     return found
 
 
+# สระ/วรรณยุกต์ที่เกาะตัวพยัญชนะ — ห้ามขึ้นบรรทัดใหม่นำหน้าตัวพวกนี้
+THAI_COMBINING = set("ัิีึืฺุู"
+                     "็่้๊๋์ํ๎")
+# สระหน้า — ต้องอยู่ติดกับพยัญชนะที่ตามมา
+THAI_LEADING_VOWEL = set("เแโใไ")
+
+
+def _can_break_before(word: str, i: int) -> bool:
+    if i <= 0 or i >= len(word):
+        return False
+    if word[i] in THAI_COMBINING:
+        return False
+    if word[i - 1] in THAI_LEADING_VOWEL:
+        return False
+    return True
+
+
+def _break_long(draw, word: str, font, max_w: int) -> list[str]:
+    """ตัดคำที่ยาวเกินบรรทัด — ภาษาไทยไม่เว้นวรรคระหว่างคำ ทั้งประโยคจึงนับเป็น
+    คำเดียว ถ้าไม่ตัดตรงนี้ caption จะล้นจอ
+
+    ไม่มี dictionary ตัดคำ (จะต้องลง pythainlp) แต่กันเคสที่อ่านไม่ออกจริง ๆ ไว้:
+    ไม่ตัดหน้าสระ/วรรณยุกต์ที่เกาะพยัญชนะ และไม่ตัดหลังสระหน้า
+    """
+    out, start = [], 0
+    for i in range(1, len(word) + 1):
+        if draw.textlength(word[start:i], font=font) <= max_w:
+            continue
+        # ถอยหาจุดตัดที่ยอมรับได้
+        cut = i - 1
+        while cut > start + 1 and not _can_break_before(word, cut):
+            cut -= 1
+        if cut <= start:
+            cut = i - 1
+        out.append(word[start:cut])
+        start = cut
+    if start < len(word):
+        out.append(word[start:])
+    return out or [word]
+
+
 def _wrap(draw, text: str, font, max_w: int) -> list[str]:
     """ตัดบรรทัดตามความกว้างจริง เคารพ \\n ที่ผู้เขียนใส่มา"""
     lines: list[str] = []
     for para in text.split("\n"):
-        words, cur = para.split(), ""
+        words = para.split()
         if not words:
             lines.append("")
             continue
+        cur = ""
         for w in words:
             trial = f"{cur} {w}".strip()
-            if draw.textlength(trial, font=font) <= max_w or not cur:
+            if draw.textlength(trial, font=font) <= max_w:
                 cur = trial
-            else:
+                continue
+            if cur:
                 lines.append(cur)
+            if draw.textlength(w, font=font) > max_w:
+                chunks = _break_long(draw, w, font, max_w)
+                lines.extend(chunks[:-1])
+                cur = chunks[-1]
+            else:
                 cur = w
-        lines.append(cur)
+        if cur:
+            lines.append(cur)
     return lines
 
 
