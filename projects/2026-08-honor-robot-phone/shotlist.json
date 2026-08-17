@@ -1,0 +1,120 @@
+{
+  "project": "honor-robot-phone-th",
+  "note": "คลิปรีวิวไทย — ยังไม่มีช็อตหน้าเว็บ honor.com เพราะ network policy บล็อกอยู่ ใช้การ์ดสเปก + ฟุตเทจจริงจาก Pexels แทน",
+  "fps": 30,
+  "shots": [
+    {
+      "id": "s01",
+      "type": "title",
+      "dur": 4.9,
+      "headline": "กล้องขยับได้เอง",
+      "headline_scale": 0.11,
+      "caption": "ไม่ใช่ภาพขยับ ตัวกล้องขยับจริง",
+      "caption_scale": 0.048,
+      "fade_in": 0.5
+    },
+    {
+      "id": "s02",
+      "type": "broll",
+      "src": "broll/gimbal-phone.mp4",
+      "dur": 7.83,
+      "caption": "Honor Robot Phone ขายจริงในจีน 18 ส.ค.",
+      "caption_scale": 0.046
+    },
+    {
+      "id": "s03",
+      "type": "title",
+      "dur": 6.85,
+      "headline": "กิมบอล 3 แกน",
+      "headline_scale": 0.115,
+      "caption": "ของจริง ฝังอยู่ในตัวเครื่อง",
+      "caption_scale": 0.048,
+      "source_label": "ตัวเลขจาก Honor"
+    },
+    {
+      "id": "s04",
+      "type": "broll",
+      "src": "broll/phone-lens.mp4",
+      "dur": 7.83,
+      "caption": "กันสั่นทุกวันนี้คือซอฟต์แวร์ครอปภาพ",
+      "caption_scale": 0.046
+    },
+    {
+      "id": "s05",
+      "type": "title",
+      "dur": 8.32,
+      "headline": "2.6 กรัม · บาง 6 มม.",
+      "headline_scale": 0.095,
+      "caption": "Honor เคลมว่าเล็กที่สุดในโลก",
+      "caption_scale": 0.048,
+      "source_label": "ตัวเลขจาก Honor"
+    },
+    {
+      "id": "s06",
+      "type": "broll",
+      "src": "broll/camera-lens.mp4",
+      "dur": 8.81,
+      "caption": "กล้องหลัก 200MP · เทเล 200MP ซูม 2.7x",
+      "caption_scale": 0.044
+    },
+    {
+      "id": "s07",
+      "type": "title",
+      "dur": 7.34,
+      "headline": "ARRI",
+      "headline_scale": 0.2,
+      "caption": "จับมือกับเจ้าของกล้องที่ใช้ถ่ายหนังโรง",
+      "caption_scale": 0.046
+    },
+    {
+      "id": "s08",
+      "type": "broll",
+      "src": "broll/filming-camera.mp4",
+      "dur": 6.85,
+      "caption": "จุดที่ Honor เอามาสู้ iPhone ตรงๆ",
+      "caption_scale": 0.046
+    },
+    {
+      "id": "s09",
+      "type": "title",
+      "dur": 10.8,
+      "bg": "0x101726",
+      "headline": "9,999 หยวน",
+      "headline_scale": 0.13,
+      "caption": "ราวๆ 50,000 บาท\nรุ่นท็อป 12,999 หยวน ราวๆ 65,000",
+      "caption_scale": 0.044,
+      "source_label": "ราคาเปิดตัวในจีน"
+    },
+    {
+      "id": "s10",
+      "type": "broll",
+      "src": "broll/phone-in-hand.mp4",
+      "dur": 7.83,
+      "caption": "2 เรื่องที่ต้องคิดก่อน",
+      "caption_scale": 0.05
+    },
+    {
+      "id": "s11",
+      "type": "title",
+      "dur": 8.81,
+      "headline": "ยังไม่มีรีวิวจริง",
+      "headline_scale": 0.105,
+      "caption": "ตัวเลขทั้งหมดคือที่ Honor บอกเอง\nและกิมบอลคือชิ้นส่วนที่ขยับ = พังได้",
+      "caption_scale": 0.042
+    },
+    {
+      "id": "s12",
+      "type": "title",
+      "dur": 5.0,
+      "lock": true,
+      "caption": "ถ่ายวิดีโอเป็นงาน = น่าตามข่าว\nใช้ทั่วไป = รอรีวิวจริงก่อน",
+      "caption_scale": 0.05,
+      "caption_y": 0.5,
+      "fade_out": 0.8
+    }
+  ],
+  "audio": {
+    "vo": "vo/full-th.mp3",
+    "bgm_db": -26
+  }
+}

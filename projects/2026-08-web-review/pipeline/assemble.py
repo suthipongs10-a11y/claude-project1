@@ -73,6 +73,9 @@ class Builder:
             source_label=shot.get("source_label"),
             caption_scale=float(shot.get("caption_scale", 0.062)),
             caption_y=shot.get("caption_y"),
+            headline=shot.get("headline"),
+            headline_scale=float(shot.get("headline_scale", 0.15)),
+            headline_y=float(shot.get("headline_y", 0.42)),
         )
 
     def _post(self, shot, dur) -> list[str]:

@@ -132,6 +132,19 @@ def _wrap(draw, text: str, font, max_w: int) -> list[str]:
     return lines
 
 
+def _draw_centered(d, text, font, w, y, fill, stroke_w, stroke_fill, max_w):
+    """วาดข้อความกลางจอ ตัดบรรทัดให้ คืนความสูงที่ใช้ไป"""
+    lines = _wrap(d, text, font, max_w)
+    asc, desc = font.getmetrics()
+    lh = int((asc + desc) * 1.12)
+    for line in lines:
+        tw = d.textlength(line, font=font)
+        d.text(((w - tw) / 2, y), line, font=font, fill=fill,
+               stroke_width=stroke_w, stroke_fill=stroke_fill)
+        y += lh
+    return lh * len(lines)
+
+
 def render_overlay(
     w: int,
     h: int,
@@ -140,15 +153,34 @@ def render_overlay(
     source_label: str | None = None,
     caption_scale: float = 0.062,
     caption_y: float | None = None,
+    headline: str | None = None,
+    headline_scale: float = 0.15,
+    headline_color: tuple = (108, 158, 255, 255),
+    headline_y: float = 0.42,
 ) -> Path | None:
-    """สร้าง PNG โปร่งใส WxH ที่มี caption + ป้ายแหล่งที่มา; คืน None ถ้าไม่มีอะไรวาด"""
-    if not caption and not source_label:
+    """สร้าง PNG โปร่งใส WxH; คืน None ถ้าไม่มีอะไรวาด
+
+    headline = ตัวเลขใหญ่สำหรับการ์ดสเปก/ราคา (เช่น "9,999 หยวน") วาดเหนือ caption
+    """
+    if not caption and not source_label and not headline:
         return None
 
     img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     base = min(w, h)
     vertical = h > w
+
+    if headline:
+        size = max(20, int(base * headline_scale))
+        font = ImageFont.truetype(pick_font(headline), size)
+        used = _draw_centered(d, headline, font, w, int(h * headline_y),
+                              headline_color, max(2, size // 16),
+                              (0, 0, 0, 200), int(w * 0.88))
+        if caption_y is None:
+            # caption_y เป็นจุดกลางของบล็อก caption จึงต้องบวกครึ่งความสูงบรรทัดเข้าไป
+            gap = base * 0.045
+            half_line = base * caption_scale * 1.16 / 2
+            caption_y = headline_y + (used + gap + half_line) / h
 
     if caption:
         size = max(14, int(base * caption_scale))
