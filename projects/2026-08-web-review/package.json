@@ -1,0 +1,11 @@
+{
+  "name": "web-review-clip",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "capture": "node pipeline/capture_web.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.56.1"
+  }
+}

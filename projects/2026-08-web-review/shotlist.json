@@ -1,0 +1,109 @@
+{
+  "project": "nimbus-desk-pipeline-demo",
+  "note": "เดโมพิสูจน์ pipeline — สินค้าในคลิปเป็นของสมมติ (demo/nimbus-desk.html) ไม่ใช่บริษัทจริง",
+  "fps": 30,
+  "shots": [
+    {
+      "id": "s01",
+      "type": "web_hold",
+      "src": "capture/nimbus/view-01.png",
+      "dur": 9.03,
+      "zoom_to": 1.1,
+      "focus": [
+        0.5,
+        0.42
+      ],
+      "source_label": "nimbus-desk.example",
+      "caption": "closes its own tickets",
+      "fade_in": 0.4
+    },
+    {
+      "id": "s02",
+      "type": "web_pan",
+      "src": "capture/nimbus/full.png",
+      "dur": 12.65,
+      "pan": "down",
+      "travel": 0.35,
+      "source_label": "nimbus-desk.example",
+      "caption": "reads it, then acts on it"
+    },
+    {
+      "id": "s03",
+      "type": "broll",
+      "src": "broll/abstract-blue.mp4",
+      "dur": 5.42,
+      "caption": "no human in the loop"
+    },
+    {
+      "id": "s04",
+      "type": "web_hold",
+      "src": "capture/nimbus/view-03.png",
+      "dur": 9.93,
+      "zoom_to": 1.12,
+      "focus": [
+        0.5,
+        0.5
+      ],
+      "source_label": "nimbus-desk.example",
+      "caption": "71% auto-resolved"
+    },
+    {
+      "id": "s05",
+      "type": "web_hold",
+      "src": "capture/nimbus/sel-pricing.png",
+      "dur": 12.64,
+      "zoom_to": 1.16,
+      "focus": [
+        0.5,
+        0.55
+      ],
+      "source_label": "pricing page",
+      "caption": "$0.39 per resolution"
+    },
+    {
+      "id": "s06",
+      "type": "broll",
+      "src": "broll/abstract-teal.mp4",
+      "dur": 5.42,
+      "caption": "escalations are free"
+    },
+    {
+      "id": "s07",
+      "type": "web_hold",
+      "src": "capture/nimbus/sel-compare.png",
+      "dur": 10.84,
+      "zoom_to": 1.1,
+      "focus": [
+        0.5,
+        0.5
+      ],
+      "source_label": "vendor comparison",
+      "caption": "writes to your billing system"
+    },
+    {
+      "id": "s08",
+      "type": "web_pan",
+      "src": "capture/nimbus/full.png",
+      "dur": 9.03,
+      "pan": "down",
+      "start_at": 0.55,
+      "travel": 0.4,
+      "source_label": "nimbus-desk.example",
+      "caption": "two things to watch"
+    },
+    {
+      "id": "s09",
+      "type": "title",
+      "dur": 2.6,
+      "lock": true,
+      "bg": "0x0B0E13",
+      "caption": "pipeline demo\nfictional product",
+      "caption_scale": 0.05,
+      "fade_out": 0.6
+    }
+  ],
+  "audio": {
+    "vo": "vo/full.mp3",
+    "bgm_db": -26
+  }
+}

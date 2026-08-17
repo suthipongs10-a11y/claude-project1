@@ -7,6 +7,7 @@
 ```
 viral-story-remix.skill      # skill หลัก: 7 Phases (niche → research → outline → script → shotlist → voice → edit)
 capcut-draft-editor.skill    # skill ตัดต่อ: แก้ draft_content.json ของ CapCut ตรงๆ
+web-review-clip.skill        # skill สายที่ 2: คลิปรีวิวสินค้าเทค (แคปหน้าเว็บ + ฟุตเทจ + TTS) เรนเดอร์ด้วย ffmpeg
 projects/
   2026-07-en-football/       # คลิป 1: "Why Is Speed CRYING Over Ronaldo?" (เสร็จ รอ export)
   2026-07-outdoorboys/       # คลิป 2: "The YouTuber Who Walked Away From 20M Subs" (เสร็จ รอ export)
@@ -15,7 +16,19 @@ projects/
     assets/                  # กราฟิกการ์ด PNG + สคริปต์ gen
     capcut-shotlist.json     # ไฟล์ build timeline
     capcut-captions.json     # caption คำเด็ด
+  2026-08-web-review/        # pipeline คลิปรีวิวสินค้าเทค — เรนเดอร์ MP4 จบในเครื่อง ไม่ต้องพึ่ง CapCut
+    pipeline/                # capture_web.mjs, captions.py, fit_timing.py, assemble.py
+    demo/                    # หน้าเว็บสินค้าสมมติ ใช้เทสต์ pipeline
+    shotlist.json            # ไฟล์คุมทั้งคลิป
 ```
+
+## สองสายงานในรีโปนี้
+
+| | Story Remix (สายเดิม) | Web Review (สายใหม่) |
+|---|---|---|
+| ภาพหลัก | ฟุตเทจไวรัลของคนดัง | หน้าเว็บของสินค้า + ฟุตเทจสตอก |
+| ตัดต่อ | CapCut บน PC | ffmpeg เรนเดอร์เองจนได้ MP4 |
+| ทำบนมือถือ | Phase 1–4 | ทุก Phase ยกเว้นแคปเว็บจริง + โหลดฟุตเทจ (ดู README ของโปรเจกต์) |
 
 ## แบ่งงาน: มือถือ (Claude Code cloud) vs PC
 

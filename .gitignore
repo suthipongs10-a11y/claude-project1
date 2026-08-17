@@ -14,3 +14,11 @@ _backups/
 # ไฟล์ชั่วคราว
 *.zip
 __pycache__/
+
+# web-review pipeline: ของหนัก/ของที่ gen ใหม่ได้
+node_modules/
+projects/*/capture/
+projects/*/broll/
+projects/*/vo/
+projects/*/out/
+*.webm
