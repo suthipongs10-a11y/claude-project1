@@ -280,6 +280,17 @@ Cloudflare Dashboard → Workers & Pages → Create → Pages → **Upload asset
 npx wrangler pages deploy sites/<ชื่องาน>/dist --project-name=<ชื่อโปรเจกต์>
 ```
 
+**ถ้าโดเมนจริงไม่ตรงกับที่เขียนไว้ใน `site.json`** (เช่น deploy ขึ้นชื่อโปรเจกต์อื่น
+หรือย้ายไปโดเมนลูกค้าแล้ว) ให้ override ตอน build แทนการแก้ไฟล์:
+
+```bash
+node tools/build-site.mjs sites/<ชื่องาน> --domain=spmthailand.pages.dev
+```
+
+ค่านี้ไปโผล่ที่ canonical, og:url และ sitemap — ถ้าปล่อยให้ชี้ผิดที่ Google จะ
+ถูกบอกว่า "หน้าจริงอยู่ที่อีก URL หนึ่ง" ซึ่ง URL นั้นไม่มีอยู่ และตอนแชร์ลิงก์
+ทาง LINE หรือ Facebook รูปพรีวิวก็จะดึงจาก URL ที่ตายแล้วเหมือนกัน
+
 ### ถ้าจะต่อ Git ให้ deploy อัตโนมัติ
 
 | ช่อง | ใส่ |

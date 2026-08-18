@@ -33,9 +33,15 @@ import {
   renderNav, renderArticleCards, renderBreadcrumb, fmtDate,
 } from './pages.mjs';
 
-const dir = process.argv[2];
+const argv = process.argv.slice(2);
+// The same site is built for a demo URL first and the client's own domain
+// later, and site.json is the wrong place to keep flipping: a canonical left
+// pointing at the previous address tells Google, LINE and Facebook that the
+// real page lives somewhere that does not exist.
+const domainArg = argv.find(a => a.startsWith('--domain='))?.slice('--domain='.length);
+const dir = argv.find(a => !a.startsWith('--'));
 if (!dir) {
-  console.error('usage: build-site.mjs <site-dir>');
+  console.error('usage: build-site.mjs <site-dir> [--domain=example.com]');
   process.exit(1);
 }
 if (!existsSync(dir)) {
@@ -61,8 +67,10 @@ if (!langs.some(l => l.code === defaultLang)) {
 
 // Placeholder domains stay out of robots/sitemap: pointing crawlers at a
 // domain we do not own is worse than shipping no sitemap at all.
-const isReal = typeof cfg.domain === 'string' && /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(cfg.domain) && !cfg.domain.startsWith('example.');
-const siteUrl = isReal ? `https://${cfg.domain}` : '';
+const domain = domainArg ?? cfg.domain;
+const isReal = typeof domain === 'string' && /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(domain) && !domain.startsWith('example.');
+const siteUrl = isReal ? `https://${domain}` : '';
+if (domainArg) console.log(`domain overridden for this build: ${domainArg}`);
 
 const multi = hasPages(dir);
 const pages = multi ? collectPages(dir) : [];
