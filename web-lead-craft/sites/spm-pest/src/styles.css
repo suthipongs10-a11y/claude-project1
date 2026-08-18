@@ -244,9 +244,75 @@ img, svg { display: block; max-width: 100%; height: auto; }
 html[data-lang='th'] [data-t]:not([lang='th']),
 html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
+/* ---------- mobile menu ----------
+   A <details> rather than a scripted drawer: it opens, closes and takes
+   keyboard focus with no JavaScript, so the only way to reach the sections on
+   a phone does not depend on a script having loaded. Hidden above 960px,
+   which is exactly where .nav-links comes back. */
+
+.mnav { display: none; position: relative; flex: none; }
+.mnav-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.mnav-btn::-webkit-details-marker { display: none; }
+.mnav-btn::marker { content: ''; }
+.mnav-i { width: 22px; height: 22px; }
+.mnav-i-close { display: none; }
+.mnav[open] .mnav-btn { background: var(--forest); border-color: var(--forest); color: var(--cream); }
+.mnav[open] .mnav-i-open { display: none; }
+.mnav[open] .mnav-i-close { display: block; }
+
+.mnav-panel {
+  position: absolute;
+  top: calc(100% + 13px);
+  right: 0;
+  z-index: 1;
+  width: min(290px, calc(100vw - 2 * var(--gutter)));
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lift);
+}
+.mnav-panel a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding-inline: 14px;
+  border-radius: 9px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.mnav-panel a:hover { background: var(--stone); }
+.mnav-sep { height: 1px; background: var(--line); margin: 6px 10px; }
+.mnav-tel { font-weight: 600 !important; color: var(--forest) !important; }
+.mnav-tel .ic { width: 1.15em; height: 1.15em; color: var(--accent); }
+.mnav-panel .btn {
+  margin-top: 6px;
+  min-height: 48px;
+  justify-content: center;
+  font-weight: 600;
+  color: #fff;
+  background: var(--forest);
+}
+.mnav-panel .btn:hover { background: var(--forest-deep); color: #fff; transform: none; }
+
 .nav-tel { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); font-size: 0.9375rem; }
 .nav-tel .ic { color: var(--accent); }
-.nav .btn { padding: 0.66em 1.35em; font-size: 0.9375rem; }
+.nav-in > .btn { padding: 0.66em 1.35em; font-size: 0.9375rem; }
 
 /* ---------- hero ---------- */
 
@@ -757,6 +823,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   .book-grid { grid-template-columns: 1fr; }
   .assure-in { grid-template-columns: repeat(2, 1fr); gap: 24px; }
   .nav-links, .nav-tel { display: none; }
+  .mnav { display: block; }
   .steps { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -787,7 +854,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
      do not fit in 390px, and .mcta already pins the same action to the bottom
      of every screen. Shrinking it instead just clipped the switcher. */
   .nav-in { gap: 12px; }
-  .nav .btn { display: none; }
+  .nav-in > .btn { display: none; }
   .logo-name { font-size: 1.04rem; }
   .logo-name small { font-size: 0.6rem; letter-spacing: 0.1em; }
 
