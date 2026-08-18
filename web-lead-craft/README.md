@@ -45,6 +45,8 @@ sites/
   demo-cleaning/      เดโม่ Starter 990.- (หน้าเดียว ภาษาเดียว)
   demo-cleaning-biz/  เดโม่ Business 1,990.- (หน้าเดียว 2 ภาษา + FAQ)
   demo-cleaning-pro/  เดโม่ Premium 5,990.- (8 หน้า + บทความ 6 บท 2 ภาษา)
+  spm-pest/           งานลูกค้าจริง — SPM Thailand กำจัดแมลง (Business 1,990.-)
+                      ดู docs/handover-spm-pest.md ก่อนแก้ ยังมีค่าตัวอย่างค้างอยู่
     src/pages/        หน้าเว็บ ไฟล์ละหน้า (เลขนำหน้าคือลำดับในเมนู)
     src/articles/     บทความ ไฟล์ละบท
     src/partials/     header · footer · article (ใช้ร่วมทุกหน้า)

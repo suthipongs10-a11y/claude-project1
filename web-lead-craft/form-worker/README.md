@@ -75,6 +75,11 @@ w.FORM_ENDPOINT = 'https://wlc-form.<subdomain>.workers.dev/';
 | timing | กรอกเสร็จเร็วกว่า 2.5 วินาที = ไม่ใช่คน ทิ้งเหมือนกัน |
 | field allowlist | รับเฉพาะช่องที่เรารู้จัก ที่เหลือทิ้ง — ฟอร์มนี้ส่งต่ออะไรก็ได้ไม่ได้ |
 
+ช่องที่ Worker รับ (นอกจากนี้ทิ้งทั้งหมด):
+`name` `company` `tel` `email` `type` `pest` `size` `date` `slot` `note`
+— ถ้าฟอร์มของเว็บใหม่ต้องใช้ชื่อช่องที่ไม่มีในลิสต์นี้ ต้องเพิ่มใน `LIMITS`
+และ `LABELS` ใน `src/worker.mjs` ก่อน ไม่งั้นข้อมูลจะหายเงียบ ๆ
+
 **ชื่อช่อง honeypot ห้ามเป็น `website` / `url` / `email2`** เพราะ autofill ของเบราว์เซอร์
 อาจกรอกให้ลูกค้าจริงโดยที่เขาไม่รู้ตัว แล้วใบสั่งงานจริงจะหายเงียบทุกใบ
 
@@ -84,7 +89,7 @@ w.FORM_ENDPOINT = 'https://wlc-form.<subdomain>.workers.dev/';
 ## เทสต์
 
 ```bash
-node --test form-worker/test/worker.test.mjs      # กฎทั้งหมดของ Worker (19 เคส)
+node --test form-worker/test/worker.test.mjs      # กฎทั้งหมดของ Worker (20 เคส)
 ```
 
 เทสต์ยิงเข้า handler ตัวจริงที่ deploy ไม่ใช่โค้ดจำลอง มีแต่ `api.line.me` ที่ถูกสตับ

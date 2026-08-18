@@ -141,6 +141,18 @@ test('an email alone is enough — not everyone leaves a phone number', async ()
   } finally { line.restore(); }
 });
 
+test('the B2B fields reach the shop, each on its own labelled line', async () => {
+  // A commercial enquiry is worthless without the business name and what they
+  // are actually seeing — "somebody called about pests" is not a callback.
+  const line = stubLine();
+  try {
+    await call(post({ ...valid, company: 'โรงแรมสมมติ สุขุมวิท', pest: 'หนู' }));
+    const text = line.calls[0].body.messages[0].text;
+    assert.match(text, /^สถานประกอบการ: โรงแรมสมมติ สุขุมวิท$/m);
+    assert.match(text, /^ปัญหาที่พบ: หนู$/m);
+  } finally { line.restore(); }
+});
+
 test('fields we do not know about are dropped, not relayed', async () => {
   const line = stubLine();
   try {

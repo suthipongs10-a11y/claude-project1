@@ -20,7 +20,7 @@ const MAX_BODY = 8 * 1024;
 
 /** Per-field caps. Thai runs longer than the Latin equivalent, so these are
  *  generous — the point is to stop a novel, not to police a message. */
-const LIMITS = { name: 120, tel: 40, email: 160, type: 80, size: 40, date: 40, slot: 80, note: 2000 };
+const LIMITS = { name: 120, company: 160, tel: 40, email: 160, type: 80, pest: 80, size: 40, date: 40, slot: 80, note: 2000 };
 
 /** Fields we accept at all. Anything else in the body is dropped rather than
  *  forwarded: a form that relays arbitrary keys is a relay for whatever an
@@ -29,8 +29,9 @@ const FIELDS = Object.keys(LIMITS);
 
 /** Labels for the LINE message, so the shop owner reads Thai and not JSON. */
 const LABELS = {
-  name: 'ชื่อ', tel: 'เบอร์โทร', email: 'อีเมล', type: 'ประเภท',
-  size: 'ขนาดพื้นที่', date: 'วันที่สะดวก', slot: 'ช่วงเวลา', note: 'รายละเอียด',
+  name: 'ชื่อ', company: 'สถานประกอบการ', tel: 'เบอร์โทร', email: 'อีเมล',
+  type: 'ประเภท', pest: 'ปัญหาที่พบ', size: 'ขนาดพื้นที่', date: 'วันที่สะดวก',
+  slot: 'ช่วงเวลา', note: 'รายละเอียด',
 };
 
 /** Field names that no person should ever fill in. See the check below for

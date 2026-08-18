@@ -163,5 +163,5 @@ Build one before guessing again: it is faster than a second wrong answer.
 
 In use: demo-cleaning is Mitr + Anuphan; demo-cleaning-biz is Noto Serif +
 Kanit (display) and IBM Plex Sans + Anuphan (body); demo-cleaning-pro is
-Archivo + Prompt (display) and Source Sans 3 + IBM Plex Sans Thai (body).
-All OFL.
+Archivo + Prompt (display) and Source Sans 3 + IBM Plex Sans Thai (body);
+spm-pest reuses demo-cleaning-biz's `fonts.css` unchanged. All OFL.

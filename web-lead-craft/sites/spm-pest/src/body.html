@@ -1,0 +1,653 @@
+<div class="site">
+
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <!-- interface -->
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9.5 7H17v7.5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l1.5 4.5-2.3 1.6a12 12 0 0 0 5.7 5.7l1.6-2.3L20 15v4a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 3 6.2 2 2 0 0 1 5 4Z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6A2.5 2.5 0 0 1 6.5 3.5h11A2.5 2.5 0 0 1 20 6v7.5a2.5 2.5 0 0 1-2.5 2.5H12l-4.5 4v-4h-1A2.5 2.5 0 0 1 4 13.5Z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.6 6.8 12 13l8.4-6.2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-4.4 6.5-7.8 6.5-11a6.5 6.5 0 1 0-13 0c0 3.2 2.5 6.6 6.5 11Z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+    <symbol id="i-pin-fill" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c4.4-4.8 7-8.4 7-11.8A7 7 0 1 0 5 10.2C5 13.6 7.6 17.2 12 22Z"/><circle cx="12" cy="10" r="2.6" fill="#14331D"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 2.6v5.6c0 4.3-2.9 7.6-7 9.2-4.1-1.6-7-4.9-7-9.2V5.6Z"/><path d="M9 11.8l2.1 2.1 4-4.4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.2 9.5h17.6M3.2 14.5h17.6"/><path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18Z"/></symbol>
+    <symbol id="i-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5.2"/><path d="M8.7 13.4 7.2 21l4.8-2.5L16.8 21l-1.5-7.6"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.4 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.6Z"/><path d="M13.2 3v5.4H19"/><path d="M8.6 13h6.8M8.6 16.6h4.6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m15.6 15.6 4.4 4.4"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5A5 5 0 0 1 9 5h11"/><path d="m17 2 3.4 3-3.4 3"/><path d="M20 14.5A5 5 0 0 1 15 19H4"/><path d="m7 22-3.4-3L7 16"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.4" cy="8.2" r="3.6"/><path d="M2.8 20c0-3.6 3-6 6.6-6s6.6 2.4 6.6 6"/><path d="M16.4 5.2a3.4 3.4 0 0 1 0 6.4M18.2 14.6c2 .9 3.2 2.7 3.2 5.4"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.6 16.6V7.4a1 1 0 0 1 1-1h9.6v10.2"/><path d="M13.2 9.6h3.6l3.6 3.6v3.4"/><circle cx="7.4" cy="17.6" r="1.9"/><circle cx="16.6" cy="17.6" r="1.9"/><path d="M9.4 17.6h5.2M2.6 17.6h2.8M18.6 17.6h2.2"/></symbol>
+    <symbol id="i-fb" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21.5v-7.2h2.4l0.4-2.8h-2.8V9.6c0-0.8 0.4-1.5 1.6-1.5h1.3V5.6c-0.7-0.1-1.5-0.2-2.3-0.2-2.3 0-3.9 1.4-3.9 4v2.1H7.8v2.8h2.4v7.2Z"/></symbol>
+    <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/></symbol>
+
+    <!-- sectors -->
+    <symbol id="i-hotel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5.6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1V21"/><path d="M2.6 21h18.8"/><path d="M8 8.4h2.4M13.6 8.4H16M8 12.2h2.4M13.6 12.2H16"/><path d="M10 21v-4.2h4V21"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.6V21h16V9.6"/><path d="M2.6 21h18.8"/><path d="M3.4 9.6 5 3.6h14l1.6 6a2.8 2.8 0 0 1-5.6.4 2.8 2.8 0 0 1-5.6 0 2.8 2.8 0 0 1-5.6-.4Z"/><path d="M9.6 21v-5.4h4.8V21"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V4.6a1 1 0 0 1 1-1h6.4a1 1 0 0 1 1 1V21"/><path d="M14.4 10.4H18a1 1 0 0 1 1 1V21"/><path d="M3.4 21h18"/><path d="M9 7.4h2.4M9 11.4h2.4M9 15.4h2.4M16.4 14.4h.8M16.4 17.6h.8"/></symbol>
+    <symbol id="i-factory" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V10.6l5.4 3.4V10.6l5.4 3.4V10.6L19.2 14V6.4h1.8V21"/><path d="M2 21h20"/><path d="M6.4 17.6h1.8M11 17.6h1.8M15.6 17.6h1.8"/></symbol>
+
+    <!-- the pests, as line marks. A photograph of any of these is the one
+         image guaranteed to make a hotel's engineering manager close the tab. -->
+    <symbol id="i-termite" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.4 3.2 10.8 5.6M14.6 3.2 13.2 5.6"/><rect x="9" y="5.4" width="6" height="4.4" rx="1.6"/><ellipse cx="12" cy="12.6" rx="2.4" ry="2.6"/><ellipse cx="12" cy="18" rx="3.2" ry="3.4"/><path d="M9.8 11.4 6.4 9.8M9.6 13.4 6 14.2M10 15.2 7 17.4"/><path d="M14.2 11.4 17.6 9.8M14.4 13.4 18 14.2M14 15.2 17 17.4"/></symbol>
+    <symbol id="i-rat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.8" cy="8.2" r="2.9"/><circle cx="15.6" cy="8.2" r="2.9"/><circle cx="11.2" cy="13.6" r="5.5"/><circle cx="11.2" cy="14.8" r="0.85" fill="currentColor" stroke="none"/><path d="M9.4 12.6h.01M13 12.6h.01"/><path d="M16.4 16.6c2.6.9 4.2 2.6 4.4 4.6"/></symbol>
+    <symbol id="i-roach" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="14" rx="4.4" ry="6"/><path d="M9.6 8.8a4.2 4.2 0 0 1 4.8 0"/><path d="M10.4 7.4 6.4 2.8M13.6 7.4 17.6 2.8"/><path d="M7.9 10.8 4.2 8.8M7.5 14 3.6 14.6M8.1 17.4 4.8 19.8"/><path d="M16.1 10.8 19.8 8.8M16.5 14 20.4 14.6M15.9 17.4 19.2 19.8"/><path d="M12 9.8v9.4"/></symbol>
+    <symbol id="i-ant" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5.6" r="2.1"/><ellipse cx="12" cy="11" rx="2.1" ry="2.6"/><ellipse cx="12" cy="18" rx="2.9" ry="3.4"/><path d="M10.4 4.2 8.4 2.2M13.6 4.2 15.6 2.2"/><path d="M9.9 9.4 6 7.4M9.9 11.4 5.6 12M10.3 13.4 6.6 15.8"/><path d="M14.1 9.4 18 7.4M14.1 11.4 18.4 12M13.7 13.4 17.4 15.8"/></symbol>
+    <symbol id="i-mosquito" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.8" cy="8.4" r="2"/><path d="M11.2 10.4c.9 2.5 1.7 5.2 2.1 8.8"/><path d="M9.9 6.9 6.2 3"/><path d="M12.6 8.2c2.6-1.7 5.5-1.9 7.5-.5-1.9 1.7-4.7 2.1-7.1 1.3"/><path d="M12.2 10.8c2.4-.6 5 .2 6.6 1.9-2.2.6-4.9 0-6.5-1.1"/><path d="M10.4 11.2 6.8 15.2M11.2 12.6 8.8 17.8M12 13.8 11.8 19.4"/></symbol>
+    <symbol id="i-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.4" r="2.4"/><ellipse cx="12" cy="14.6" rx="2.7" ry="4.6"/><path d="M9.5 11.4C6.6 8.9 3.3 8.5 2 10.4c1.1 2.5 4.4 3.9 7.2 3.2"/><path d="M14.5 11.4c2.9-2.5 6.2-2.9 7.5-1-1.1 2.5-4.4 3.9-7.2 3.2"/><path d="M10.6 6.7 9 4.6M13.4 6.7 15 4.6"/></symbol>
+
+    <!-- the mark, reused at every size -->
+    <symbol id="i-mark" viewBox="0 0 64 64"><g fill="currentColor"><path d="M32 31C33 21 40 13 48 12c8-1 11 7 6 14-4 5-13 7-22 5Z"/><path d="M32 33c9 0 17 3 19 9 2 6-3 11-8 9-6-2-10-10-11-18Z"/><path d="M32 31C31 21 24 13 16 12 8 11 5 19 10 26c4 5 13 7 22 5Z"/><path d="M32 33c-9 0-17 3-19 9-2 6 3 11 8 9 6-2 10-10 11-18Z"/><path d="M31 21.5c-2.6-4.3-5.4-6.3-8.2-7.2a1 1 0 0 1 .6-1.9c3.3 1 6.5 3.4 9.3 8.1Zm2 0 -1.7-1c2.8-4.7 6-7.1 9.3-8.1a1 1 0 0 1 .6 1.9c-2.8.9-5.6 2.9-8.2 7.2Z"/><ellipse cx="32" cy="33" rx="2.4" ry="12"/><circle cx="32" cy="20.5" r="2.8"/></g></symbol>
+  </defs>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="Scientific Pest Management (Thailand)">
+      <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="11" fill="#14331D"/>
+        <g transform="translate(6.4 6.4) scale(0.8)" color="#EFECA6"><use href="#i-mark"/></g>
+      </svg>
+      <span class="logo-name">SPM Thailand<small>{{t|ตั้งแต่ปี 2537|Since 1994}}</small></span>
+    </a>
+    <nav class="nav-links" aria-label="{{t|เมนูหลัก|Main menu}}">
+      <a href="#services">{{t|บริการ|Services}}</a>
+      <a href="#sectors">{{t|กลุ่มลูกค้า|Sectors}}</a>
+      <a href="#standard">{{t|มาตรฐาน|Standards}}</a>
+      <a href="#coverage">{{t|พื้นที่บริการ|Coverage}}</a>
+      <a href="#faq">{{t|คำถามที่พบบ่อย|FAQ}}</a>
+    </nav>
+    {{SWITCHER}}
+    <a class="nav-tel" href="tel:021234567"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>02-123-4567</a>
+    <a class="btn btn-ink" href="#contact">{{t|ขอสำรวจฟรี|Free survey}}</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <svg class="hero-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-mark"/></svg>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="label">{{t|กำจัดแมลงเชิงพาณิชย์ · ตั้งแต่ พ.ศ. 2537|Commercial pest management · since 1994}}</span>
+        <h1>{{t|ดูแลโรงแรม ร้านอาหาร<br>และอาคาร <em>มากว่า 30 ปี</em>|Protecting hotels,<br>kitchens and buildings<br><em>for 30 years</em>}}</h1>
+        <p class="hero-lede">{{t|Scientific Pest Management (Thailand) รับกำจัดปลวก หนู แมลงสาบ มด ยุง และแมลงบิน ด้วยทีมงานประจำ พร้อมเอกสารรายงานหลังบริการที่ใช้ยื่นตรวจประเมินได้ทุกครั้ง|Scientific Pest Management (Thailand) controls termites, rodents, cockroaches, ants, mosquitoes and flying insects with our own trained crews — and a written report after every visit that stands up in an audit file.}}</p>
+        <div class="hero-cta">
+          <a class="btn btn-cream btn-lg" href="#contact"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>{{t|ขอให้เข้าสำรวจหน้างาน|Request a site survey}}</a>
+          <a class="btn btn-light btn-lg" href="#services">{{t|ดูบริการทั้งหมด|See all services}}</a>
+        </div>
+        <p class="hero-fine"><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>{{t|สำรวจหน้างานและเสนอราคา ไม่มีค่าใช้จ่าย|Site survey and quotation at no charge}}</p>
+        <div class="stats">
+          <div class="stat"><b>2537</b><span>{{t|ปีที่ก่อตั้ง|year established}}</span></div>
+          <div class="stat"><b>5</b><span>{{t|พื้นที่ให้บริการ|service areas}}</span></div>
+          <div class="stat"><b>6</b><span>{{t|กลุ่มแมลงและสัตว์พาหะ|pest groups covered}}</span></div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h2>{{t|สิ่งที่ฝ่ายจัดซื้อมักถามก่อนเซ็นสัญญา|What purchasing asks before signing}}</h2>
+        <div class="hero-card-row">
+          <svg class="ic" aria-hidden="true"><use href="#i-badge"/></svg>
+          <div><b>{{t|ใบอนุญาตถูกต้องตามกฎหมาย|Licensed and registered}}</b><span>{{t|มีผู้ควบคุมการใช้วัตถุอันตรายประจำบริษัท|With a registered chemical supervisor on staff}}</span></div>
+        </div>
+        <div class="hero-card-row">
+          <svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg>
+          <div><b>{{t|รายงานหลังบริการทุกครั้ง|A report after every visit}}</b><span>{{t|เก็บเข้าแฟ้มตรวจประเมินได้ทันที|Ready to file for your next inspection}}</span></div>
+        </div>
+        <div class="hero-card-row">
+          <svg class="ic" aria-hidden="true"><use href="#i-users"/></svg>
+          <div><b>{{t|ทีมงานประจำ ไม่ใช่รับเหมาช่วง|Our own crews, never subcontracted}}</b><span>{{t|คนเดิมเข้าพื้นที่ จำผังหน้างานได้|The same people return, and they know your site}}</span></div>
+        </div>
+        <div class="hero-card-row">
+          <svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg>
+          <div><b>{{t|สัญญารายปี เรียกเสริมได้ไม่จำกัด|Annual contract, unlimited call-backs}}</b><span>{{t|เจอปัญหาระหว่างรอบ แจ้งแล้วเข้าเพิ่มให้|Something appears between visits — we come back}}</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="assure">
+    <div class="wrap assure-in">
+      <div class="assure-item">
+        <svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>
+        <div><b>{{t|สำรวจหน้างานฟรี|Free site survey}}</b><span>{{t|ประเมินและเสนอราคาก่อนตัดสินใจ|We assess and quote before you commit}}</span></div>
+      </div>
+      <div class="assure-item">
+        <svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg>
+        <div><b>{{t|เอกสารครบสำหรับการตรวจประเมิน|Audit-ready paperwork}}</b><span>{{t|รายงาน แผนผังจุด และเอกสารสารเคมี|Reports, station maps and chemical records}}</span></div>
+      </div>
+      <div class="assure-item">
+        <svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg>
+        <div><b>{{t|ปลอดภัยกับพื้นที่เตรียมอาหาร|Safe around food areas}}</b><span>{{t|เลือกวิธีและสารให้เหมาะกับแต่ละพื้นที่|Method and product matched to each zone}}</span></div>
+      </div>
+      <div class="assure-item">
+        <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>
+        <div><b>{{t|เข้าบริการนอกเวลาทำการได้|We work outside your hours}}</b><span>{{t|นัดกลางคืนหรือวันหยุดได้ ไม่กระทบลูกค้าคุณ|Nights and holidays, so your guests never see us}}</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="services">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|บริการของเรา|What we control}}</span>
+        <h2>{{t|ครบทุกชนิดที่สร้างปัญหากับสถานประกอบการ|Every pest that costs a business its licence}}</h2>
+        <p>{{t|แต่ละชนิดใช้วิธีคุมคนละแบบ เราวางแผนตามผังพื้นที่จริง ไม่ใช่ฉีดเหมือนกันทุกจุด|Each one needs a different method. We plan from your actual floor plan, not from a spray schedule.}}</p>
+      </div>
+      <div class="svc-grid">
+        <article class="svc rv">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-termite"/></svg></span>
+          <h3>{{t|ปลวก|Termites}}</h3>
+          <p>{{t|วางระบบท่อใต้พื้น อัดน้ำยาลงดิน และติดตั้งสถานีเหยื่อรอบอาคาร พร้อมตรวจตามรอบ|Under-slab piping, soil treatment and bait stations around the building, inspected on a fixed cycle.}}</p>
+          <div class="svc-tags"><span>{{t|ระบบท่อ|Piping}}</span><span>{{t|อัดน้ำยา|Soil treatment}}</span><span>{{t|สถานีเหยื่อ|Bait stations}}</span></div>
+        </article>
+        <article class="svc rv" style="--d:0.06s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-rat"/></svg></span>
+          <h3>{{t|หนู|Rodents}}</h3>
+          <p>{{t|ติดตั้งสถานีเหยื่อและกับดักตามผังจุด บันทึกทุกจุดที่พบร่องรอย ปรับตำแหน่งตามผลจริง|Numbered bait stations and traps on a station map, with every sighting logged and positions moved as the data says.}}</p>
+          <div class="svc-tags"><span>{{t|ผังจุดติดตั้ง|Station map}}</span><span>{{t|บันทึกร่องรอย|Activity log}}</span></div>
+        </article>
+        <article class="svc rv" style="--d:0.12s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-roach"/></svg></span>
+          <h3>{{t|แมลงสาบ|Cockroaches}}</h3>
+          <p>{{t|ใช้เจลและสารตกค้างเฉพาะจุดในครัวและพื้นที่รับของ ไม่ต้องปิดครัวและไม่ทิ้งกลิ่น|Gel and targeted residuals in kitchens and goods-in areas — no need to close, and nothing left to smell.}}</p>
+          <div class="svc-tags"><span>{{t|ไม่ต้องปิดครัว|Kitchen stays open}}</span><span>{{t|ไร้กลิ่น|Odour-free}}</span></div>
+        </article>
+        <article class="svc rv" style="--d:0.18s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-ant"/></svg></span>
+          <h3>{{t|มด|Ants}}</h3>
+          <p>{{t|ตามหาแหล่งรังและเส้นทางเดิน แล้วใช้เหยื่อให้กลับไปจัดการทั้งรัง ไม่ใช่แค่ตัวที่เห็น|We trace the trail back to the nest and bait it, so the colony goes — not just the ants you can see.}}</p>
+          <div class="svc-tags"><span>{{t|จัดการถึงรัง|Colony-level}}</span><span>{{t|เหยื่อเฉพาะชนิด|Species-matched bait}}</span></div>
+        </article>
+        <article class="svc rv" style="--d:0.24s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-mosquito"/></svg></span>
+          <h3>{{t|ยุง|Mosquitoes}}</h3>
+          <p>{{t|พ่นหมอกควันและ ULV รอบอาคาร พร้อมกำจัดแหล่งน้ำขังที่เป็นต้นทาง เหมาะกับรีสอร์ทและพื้นที่กลางแจ้ง|Fogging and ULV around the grounds, plus removing the standing water that breeds them — built for resorts and outdoor areas.}}</p>
+          <div class="svc-tags"><span>{{t|หมอกควัน / ULV|Fogging / ULV}}</span><span>{{t|จัดการแหล่งเพาะ|Breeding sites}}</span></div>
+        </article>
+        <article class="svc rv" style="--d:0.3s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-fly"/></svg></span>
+          <h3>{{t|แมลงวันและแมลงบิน|Flies & flying insects}}</h3>
+          <p>{{t|คุมด้วยเครื่องดักแมลงติดตั้งตามหลักการวางจุด ร่วมกับการจัดการจุดเกิดและถังขยะ|Controlled with correctly-placed light traps, together with managing the bins and breeding points that feed them.}}</p>
+          <div class="svc-tags"><span>{{t|เครื่องดักแมลง|Light traps}}</span><span>{{t|จัดการจุดเกิด|Source control}}</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="gear">
+    <div class="wrap gear-in">
+      <div class="gear-copy rv">
+        <span class="label">{{t|สินค้าและอุปกรณ์|Equipment}}</span>
+        <h2>{{t|เครื่องดักแมลง ซื้อขาด หรือเช่าพร้อมเซอร์วิส|Insect light traps — buy outright, or rent with service included}}</h2>
+        <p>{{t|ครัวและห้องอาหารส่วนใหญ่ต้องมีเครื่องดักแมลงติดตั้งอยู่แล้วเพื่อผ่านการตรวจ ปัญหาคือไม่มีใครเปลี่ยนหลอดกับแผ่นกาวตามรอบ เครื่องจึงกลายเป็นของประดับ|Most kitchens already need a light trap on the wall to pass inspection. The problem is that nobody changes the tubes and glue boards on schedule, so it ends up as decoration.}}</p>
+        <div class="gear-list">
+          <div class="gear-row"><svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg><div><b>{{t|เช่ารายเดือน|Monthly rental}}</b> {{t|ไม่ต้องลงทุนก้อนใหญ่ และรวมค่าเปลี่ยนอะไหล่แล้ว|no capital outlay, and consumables are included}}</div></div>
+          <div class="gear-row"><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg><div><b>{{t|เซอร์วิสตามรอบ|Scheduled service}}</b> {{t|เปลี่ยนหลอด UV และแผ่นกาวให้ตามกำหนด|we change the UV tubes and glue boards on the calendar}}</div></div>
+          <div class="gear-row"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg><div><b>{{t|ติดตั้งให้ตรงจุด|Placed correctly}}</b> {{t|วางตามหลักการควบคุมแมลง ไม่ใช่ตรงไหนก็ได้ที่มีปลั๊ก|positioned to the control standard, not wherever there is a socket}}</div></div>
+          <div class="gear-row"><svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg><div><b>{{t|มีบันทึกการเปลี่ยน|Logged}}</b> {{t|ใช้ยื่นตอนตรวจประเมินได้เหมือนงานบริการอื่น|the change record goes in the same audit file as the service reports}}</div></div>
+        </div>
+        <a class="btn btn-ink" href="#contact">{{t|ขอราคาเครื่องดักแมลง|Ask for trap pricing}}</a>
+      </div>
+      <div class="gear-art rv" style="--d:0.08s">
+        <div class="gear-unit" aria-hidden="true">
+          <span class="gear-tube gear-tube-1"></span>
+          <span class="gear-tube gear-tube-2"></span>
+          <span class="gear-board"></span>
+          <span class="gear-tag">{{t|เช่า + เซอร์วิส|Rent + service}}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="sectors">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|กลุ่มลูกค้า|Who we work for}}</span>
+        <h2>{{t|เราทำงานกับคนที่ถูกตรวจ|We work for the people who get inspected}}</h2>
+        <p>{{t|แต่ละประเภทมีข้อกำหนดและช่วงเวลาที่เข้าทำงานได้ไม่เหมือนกัน แผนงานจึงต่างกันตั้งแต่ต้น|Each sector has its own rules and its own window to work in, so the plan differs from the first visit.}}</p>
+      </div>
+      <div class="plan-grid">
+        <article class="plan plan-pop rv">
+          <span class="plan-flag">{{t|กลุ่มหลักของเรา|Our core}}</span>
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-hotel"/></svg></span>
+          <h3>{{t|โรงแรม & รีสอร์ท|Hotels & resorts}}</h3>
+          <p class="plan-size">{{t|ห้องพัก ครัว ห้องอาหาร พื้นที่กลางแจ้ง|Rooms, kitchens, restaurants, grounds}}</p>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|เข้าทำงานกลางคืนหรือช่วง low season|Night work or low-season windows}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|รายงานแยกตามอาคารและชั้น|Reports split by building and floor}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|เรียกเข้าด่วนเมื่อมีเคสจากห้องพัก|Priority call-out on a guest complaint}}</li>
+          </ul>
+          <a class="btn btn-ink" href="#contact">{{t|ขอใบเสนอราคา|Request a quote}}</a>
+        </article>
+        <article class="plan rv" style="--d:0.06s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-store"/></svg></span>
+          <h3>{{t|ร้านอาหาร & ครัวกลาง|Restaurants & central kitchens}}</h3>
+          <p class="plan-size">{{t|ร้านเดี่ยว เชน และครัวกลาง|Single sites, chains and commissaries}}</p>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|ทำนอกเวลาขาย ไม่กระทบยอด|Outside trading hours, no lost covers}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|เอกสารพร้อมสำหรับตรวจสุขาภิบาล|Paperwork ready for a hygiene audit}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|ราคาต่อสาขาสำหรับเชนร้าน|Per-branch pricing for chains}}</li>
+          </ul>
+          <a class="btn btn-out" href="#contact">{{t|ขอใบเสนอราคา|Request a quote}}</a>
+        </article>
+        <article class="plan rv" style="--d:0.12s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-building"/></svg></span>
+          <h3>{{t|คอนโด & อาคารสำนักงาน|Condominiums & offices}}</h3>
+          <p class="plan-size">{{t|พื้นที่ส่วนกลาง ห้องขยะ ที่จอดรถ|Common areas, refuse rooms, car parks}}</p>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|ทำงานร่วมกับนิติบุคคลและช่างอาคาร|We work with the juristic person and building team}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|เข้าห้องชุดตามนัดของลูกบ้าน|Unit visits booked around residents}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|สรุปรายงานให้ที่ประชุมนิติฯ|A summary for the committee meeting}}</li>
+          </ul>
+          <a class="btn btn-out" href="#contact">{{t|ขอใบเสนอราคา|Request a quote}}</a>
+        </article>
+        <article class="plan rv" style="--d:0.18s">
+          <span class="svc-ic"><svg aria-hidden="true"><use href="#i-factory"/></svg></span>
+          <h3>{{t|โรงงาน & คลังสินค้า|Factories & warehouses}}</h3>
+          <p class="plan-size">{{t|สายการผลิต คลังวัตถุดิบ พื้นที่รับของ|Production lines, raw stores, goods-in}}</p>
+          <ul>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|ผังจุดติดตั้งพร้อมหมายเลขกำกับ|A numbered station map for the whole site}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|บันทึกแนวโน้มรายเดือนเทียบย้อนหลัง|Monthly trend data against previous periods}}</li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>{{t|รองรับการตรวจจากลูกค้าปลายทาง|Built for your own customers' audits}}</li>
+          </ul>
+          <a class="btn btn-out" href="#contact">{{t|ขอใบเสนอราคา|Request a quote}}</a>
+        </article>
+      </div>
+      <div class="plan-note rv">
+        <span><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>{{t|ทุกงานเริ่มจากการสำรวจหน้างานฟรี|Every job starts with a free site survey}}</span>
+        <span><svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg>{{t|ราคาเป็นลายลักษณ์อักษร ไม่มีบวกเพิ่มหน้างาน|A written price, with nothing added on the day}}</span>
+        <span><svg class="ic" aria-hidden="true"><use href="#i-repeat"/></svg>{{t|สัญญารายปี เรียกเข้าเสริมได้|Annual contracts include call-backs}}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--stone" id="standard">
+    <div class="wrap std">
+      <div class="std-copy rv">
+        <span class="label">{{t|มาตรฐานการทำงาน|How we work}}</span>
+        <h2>{{t|งานที่ตรวจย้อนหลังได้ ไม่ใช่แค่ฉีดแล้วจบ|Work you can audit, not just a spray and a wave}}</h2>
+        <p>{{t|โรงแรมและร้านอาหารไม่ได้ซื้อการฉีดพ่น แต่ซื้อหลักฐานว่าพื้นที่ถูกดูแลอย่างเป็นระบบ ทุกงานของเราจึงจบด้วยเอกสาร ไม่ใช่จบด้วยคำบอกเล่า|A hotel is not buying a spray. It is buying evidence that the site is managed. So every visit of ours ends in a document rather than a verbal all-clear.}}</p>
+        <div class="std-list">
+          <div class="std-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-badge"/></svg>
+            <div><b>{{t|ใบอนุญาตและผู้ควบคุมการใช้วัตถุอันตราย|Licensed, with a registered supervisor}}</b><p>{{t|ขอสำเนาเอกสารเพื่อเก็บเข้าแฟ้มผู้รับเหมาของคุณได้|Copies are available for your contractor file whenever you need them.}}</p></div>
+          </div>
+          <div class="std-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg>
+            <div><b>{{t|รายงานหลังบริการทุกครั้ง|A report after every single visit}}</b><p>{{t|ระบุจุดที่พบ สิ่งที่ทำ สารที่ใช้ และสิ่งที่ต้องแก้ฝั่งอาคาร|What was found, what we did, what was used, and what your side needs to fix.}}</p></div>
+          </div>
+          <div class="std-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>
+            <div><b>{{t|ผังจุดติดตั้งมีหมายเลขกำกับ|A numbered station map}}</b><p>{{t|ผู้ตรวจเดินตามผังแล้วเจอทุกจุด ไม่ต้องพาเดินเอง|An inspector can walk the map alone and find every station.}}</p></div>
+          </div>
+          <div class="std-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-users"/></svg>
+            <div><b>{{t|ทีมงานประจำในเครื่องแบบ|Uniformed, and always the same crew}}</b><p>{{t|เข้าพื้นที่ชุดเดิม จำผังและประวัติหน้างานได้|They know your layout and the history of the site.}}</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="doc rv" style="--d:0.08s">
+        <div class="doc-sheet" aria-hidden="true">
+          <div class="doc-head">
+            <b>{{t|รายงานหลังบริการ|Service report}}</b>
+            <svg viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#14331D"/><g transform="translate(6.4 6.4) scale(0.8)" color="#EFECA6"><use href="#i-mark"/></g></svg>
+          </div>
+          <div class="doc-rows">
+            <div class="doc-row"><span>{{t|สถานที่|Site}}</span><i>{{t|โรงแรม · อาคาร A|Hotel · Building A}}</i></div>
+            <div class="doc-row"><span>{{t|รอบที่|Visit}}</span><i>{{t|08 / 12 · รายเดือน|08 of 12 · monthly}}</i></div>
+            <div class="doc-row"><span>{{t|จุดตรวจ|Stations}}</span><i>{{t|42 จุด · พบร่องรอย 2|42 checked · 2 with activity}}</i></div>
+          </div>
+          <div class="doc-bars"><b></b><b></b><b></b></div>
+          <div class="doc-foot"><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>{{t|ลงนามโดยเจ้าหน้าที่และผู้รับบริการ|Signed by the technician and your duty manager}}</div>
+        </div>
+        <span class="doc-stamp">{{t|เก็บเข้าแฟ้ม<br>ตรวจประเมิน|AUDIT<br>FILE READY}}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec cover" id="coverage">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|พื้นที่ให้บริการ|Where we work}}</span>
+        <h2>{{t|สำนักงานใหญ่กรุงเทพฯ และอีก 4 สาขาในเมืองท่องเที่ยว|Bangkok head office, plus four branches in the resort towns}}</h2>
+        <p>{{t|เชนโรงแรมและร้านอาหารที่มีหลายสาขาใช้สัญญาฉบับเดียว ดูแลได้ทุกที่ ไม่ต้องหาผู้รับเหมาแยกรายจังหวัด|A hotel or restaurant group runs one contract with us and gets every location covered, instead of hiring a different contractor in each province.}}</p>
+      </div>
+      <div class="cover-grid">
+        <div class="cover-item cover-item--hq rv">
+          <svg class="ic" aria-hidden="true"><use href="#i-pin-fill"/></svg>
+          <b>{{t|กรุงเทพฯ & ปริมณฑล|Bangkok & metro}}</b>
+          <span>{{t|สำนักงานใหญ่ · ทีมงานประจำ|Head office · resident crews}}</span>
+        </div>
+        <div class="cover-item rv" style="--d:0.06s">
+          <svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>
+          <b>{{t|พัทยา|Pattaya}}</b>
+          <span>{{t|ชลบุรีและพื้นที่ใกล้เคียง|Chonburi and nearby}}</span>
+        </div>
+        <div class="cover-item rv" style="--d:0.12s">
+          <svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>
+          <b>{{t|ภูเก็ต|Phuket}}</b>
+          <span>{{t|ทั่วเกาะภูเก็ต|Island-wide}}</span>
+        </div>
+        <div class="cover-item rv" style="--d:0.18s">
+          <svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>
+          <b>{{t|สมุย|Koh Samui}}</b>
+          <span>{{t|เกาะสมุยและเกาะใกล้เคียง|Samui and the nearby islands}}</span>
+        </div>
+        <div class="cover-item rv" style="--d:0.24s">
+          <svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>
+          <b>{{t|หัวหิน|Hua Hin}}</b>
+          <span>{{t|ประจวบคีรีขันธ์และเพชรบุรี|Prachuap Khiri Khan and Phetchaburi}}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="process">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|ขั้นตอน|How it works}}</span>
+        <h2>{{t|จากโทรครั้งแรก ถึงแฟ้มเอกสารที่ครบ|From the first call to a complete audit file}}</h2>
+      </div>
+      <div class="steps">
+        <article class="step rv">
+          <span class="step-n">01</span>
+          <h3>{{t|สำรวจหน้างาน|We survey the site}}</h3>
+          <p>{{t|ทีมเข้าดูพื้นที่จริง ระบุชนิดที่พบ จุดเสี่ยง และช่วงเวลาที่เข้าทำงานได้ ไม่มีค่าใช้จ่าย|We walk the site, identify the species, the risk points and the window we can work in. No charge.}}</p>
+        </article>
+        <article class="step rv" style="--d:0.08s">
+          <span class="step-n">02</span>
+          <h3>{{t|เสนอแผนและราคา|We quote a plan}}</h3>
+          <p>{{t|ระบุวิธีที่ใช้ ความถี่ จำนวนจุด และราคาต่อปีเป็นลายลักษณ์อักษร ก่อนเริ่มงานทุกครั้ง|Methods, frequency, station count and an annual price — in writing, before anything starts.}}</p>
+        </article>
+        <article class="step rv" style="--d:0.16s">
+          <span class="step-n">03</span>
+          <h3>{{t|เข้าบริการตามรอบ|We service on schedule}}</h3>
+          <p>{{t|ทีมงานประจำในเครื่องแบบ นัดนอกเวลาทำการได้ และแจ้งล่วงหน้าทุกรอบ|The same uniformed crew, outside your hours if needed, with notice before every visit.}}</p>
+        </article>
+        <article class="step rv" style="--d:0.24s">
+          <span class="step-n">04</span>
+          <h3>{{t|รายงานและปรับแผน|We report and adjust}}</h3>
+          <p>{{t|ส่งรายงานทุกครั้ง และปรับจุดหรือความถี่ตามสิ่งที่พบจริง ไม่ใช่ทำแบบเดิมไปเรื่อย ๆ|A report every time, and the stations or frequency change when the data says so — not the same routine forever.}}</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--stone" id="faq">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label label-c">{{t|คำถามที่พบบ่อย|Questions}}</span>
+        <h2>{{t|เรื่องที่ฝ่ายอาคารถามก่อนเซ็นทุกครั้ง|What facilities teams ask before they sign}}</h2>
+      </div>
+      <div class="faq rv">
+        <details>
+          <summary>{{t|สารเคมีที่ใช้ปลอดภัยกับพื้นที่เตรียมอาหารไหม?|Are your products safe around food preparation?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|เราเลือกวิธีและสารให้เหมาะกับแต่ละพื้นที่ครับ ในครัวและบริเวณสัมผัสอาหารจะใช้เจลและเหยื่อแบบเฉพาะจุดแทนการพ่นทั่ว และมีเอกสารข้อมูลความปลอดภัยของสารทุกตัวให้เก็บเข้าแฟ้ม|We match the method to the zone. In kitchens and food-contact areas we use targeted gels and baits rather than broadcast spraying, and the safety data sheet for every product is available for your file.}}</p>
+        </details>
+        <details>
+          <summary>{{t|ต้องปิดร้านหรือปิดครัวระหว่างเข้าบริการไหม?|Do we have to close while you work?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|งานส่วนใหญ่ไม่ต้องปิดครับ เราจัดรอบเข้าทำงานนอกเวลาขายหรือหลังปิดครัวได้ ส่วนงานที่ต้องเว้นระยะ เช่น การพ่นบางประเภท เราจะแจ้งเวลาที่ต้องเว้นไว้ในใบเสนอราคาตั้งแต่ต้น|Usually not. We schedule around your trading hours or work after the kitchen closes. Where a treatment does need a clearance period — some spray work does — that time is stated in the quotation up front, not discovered on the day.}}</p>
+        </details>
+        <details>
+          <summary>{{t|มีเอกสารให้ใช้ยื่นตอนตรวจประเมินไหม?|Do you provide documentation for our audits?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|มีครับ ทุกรอบบริการจะได้รายงานที่ระบุจุดตรวจ สิ่งที่พบ สิ่งที่ทำ และสารที่ใช้ พร้อมผังจุดติดตั้งที่มีหมายเลขกำกับ และสำเนาใบอนุญาตของบริษัทสำหรับเก็บเข้าแฟ้มผู้รับเหมาของคุณ|Yes. Every visit produces a report listing the stations checked, what was found, what was done and what was used, together with a numbered station map and copies of our licences for your contractor file.}}</p>
+        </details>
+        <details>
+          <summary>{{t|สัญญาขั้นต่ำกี่ปี ยกเลิกกลางทางได้ไหม?|How long is the contract, and can we cancel?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|รับได้ทั้งแบบรายครั้งและสัญญารายปีครับ สัญญารายปีจะคุ้มกว่าเพราะรวมการเข้าเสริมระหว่างรอบไว้แล้ว เงื่อนไขและระยะเวลาบอกเลิกจะระบุไว้ในใบเสนอราคาชัดเจนก่อนเซ็นเสมอ|We take both one-off jobs and annual contracts. The annual works out cheaper because call-backs between scheduled visits are included. The notice period and terms are written into the quotation before anything is signed.}}</p>
+        </details>
+        <details>
+          <summary>{{t|งานปลวกมีรับประกันไหม?|Is termite work guaranteed?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|งานปลวกมีเงื่อนไขการรับประกันและการเข้าตรวจตามรอบครับ ระยะเวลาขึ้นอยู่กับระบบที่เลือกและสภาพอาคาร ซึ่งจะประเมินตอนสำรวจหน้างานและระบุไว้ในใบเสนอราคา|Termite work carries a warranty with scheduled inspections. The length depends on which system suits the building, which is what the site survey decides — and it is written into the quotation.}}</p>
+        </details>
+        <details>
+          <summary>{{t|รับงานต่างจังหวัดไหม?|Do you cover sites outside Bangkok?}}<span class="mark"><svg aria-hidden="true"><use href="#i-plus"/></svg></span></summary>
+          <p class="faq-a">{{t|รับครับ นอกจากกรุงเทพฯ และปริมณฑลแล้ว เรามีสาขาที่พัทยา ภูเก็ต สมุย และหัวหิน เชนที่มีหลายสาขาใช้สัญญาฉบับเดียวครอบคลุมทุกที่ได้ พื้นที่นอกเหนือจากนี้สอบถามเข้ามาได้|Yes. Beyond Bangkok and the surrounding provinces we have branches in Pattaya, Phuket, Koh Samui and Hua Hin, and a group can cover every location on a single contract. Ask us about anywhere else.}}</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="book" id="contact">
+    <div class="wrap">
+      <div class="book-grid">
+        <div class="book-copy rv">
+          <span class="label">{{t|ขอสำรวจหน้างาน / ขอใบเสนอราคา|Request a survey or a quote}}</span>
+          <h2>{{t|บอกเราว่าเป็นสถานที่แบบไหน<br>เราเข้าไปดูให้ฟรี|Tell us what kind of site it is<br>we will come and look, free}}</h2>
+          <p>{{t|ไม่ต้องรู้ว่าต้องใช้บริการแบบไหน แค่บอกประเภทสถานที่และปัญหาที่เจอ ทีมงานจะติดต่อกลับเพื่อนัดวันเข้าสำรวจภายในวันทำการถัดไป|You do not need to know which service you need. Tell us the type of site and what you are seeing, and we will call to arrange a survey by the next working day.}}</p>
+          <div class="book-list">
+            <div class="book-row">
+              <svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>
+              <div><a href="tel:021234567">02-123-4567</a><small>{{t|จันทร์–เสาร์ 8:00–17:00|Mon–Sat 8am–5pm}}</small></div>
+            </div>
+            <div class="book-row">
+              <svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>
+              <div><a href="#contact">LINE: @spmthailand</a><small>{{t|ส่งรูปจุดที่เจอปัญหามาให้ดูก่อนได้|Send a photo of the problem before we visit}}</small></div>
+            </div>
+            <div class="book-row">
+              <svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>
+              <div><a href="mailto:info@spm-thailand.com">info@spm-thailand.com</a><small>{{t|สำหรับใบเสนอราคาและงานประมูล|For quotations and tender documents}}</small></div>
+            </div>
+            <div class="book-row">
+              <svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>
+              <div><b>{{t|พื้นที่ให้บริการ|Service area}}</b><small>{{t|กรุงเทพฯ · ปริมณฑล · พัทยา · ภูเก็ต · สมุย · หัวหิน|Bangkok · metro · Pattaya · Phuket · Samui · Hua Hin}}</small></div>
+            </div>
+          </div>
+          <div class="map-card">
+            <div class="map-view" aria-hidden="true">
+              <span class="map-road" style="left:0;right:0;top:44%;height:9px"></span>
+              <span class="map-road" style="top:0;bottom:0;left:38%;width:7px"></span>
+              <span class="map-road" style="left:56%;right:0;top:76%;height:5px"></span>
+              <span class="map-pin"><svg aria-hidden="true"><use href="#i-pin-fill"/></svg></span>
+            </div>
+            <div class="map-meta">
+              <span>{{t|สำนักงานใหญ่ กรุงเทพมหานคร (รอที่อยู่จริงจากบริษัท)|Head office, Bangkok (address to be confirmed)}}</span>
+              <a href="https://maps.google.com/?q=Bangkok" target="_blank" rel="noopener">{{t|เปิดแผนที่|Open map}}<svg class="ic" style="display:inline-block;vertical-align:-0.2em;width:1em;height:1em" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            </div>
+          </div>
+        </div>
+        <form class="book-form rv" id="bookForm" style="--d:0.08s">
+          <h3>{{t|นัดสำรวจหน้างาน|Book a site survey}}</h3>
+          <p class="form-sub">{{t|กรอกไม่ถึงนาที ทีมงานติดต่อกลับภายในวันทำการถัดไป|Under a minute. We reply by the next working day.}}</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="f-name">{{t|ชื่อผู้ติดต่อ|Contact name}}</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" placeholder="{{t|ชื่อที่ให้เรียก|What should we call you}}">
+            </div>
+            <div class="field">
+              <label for="f-tel">{{t|เบอร์โทร|Phone}} <em>*</em></label>
+              <input id="f-tel" name="tel" type="tel" inputmode="tel" required pattern="0[0-9]{8,9}" title="{{t|กรอกเบอร์ 9–10 หลัก เช่น 0812345678|Enter a 9–10 digit Thai number, e.g. 0812345678}}" placeholder="0812345678" autocomplete="tel">
+            </div>
+            <div class="field field-full">
+              <label for="f-company">{{t|ชื่อสถานประกอบการ|Business name}}</label>
+              <input id="f-company" name="company" type="text" autocomplete="organization" placeholder="{{t|เช่น โรงแรม / ร้าน / อาคาร ชื่ออะไร|e.g. the name of the hotel, restaurant or building}}">
+            </div>
+            <div class="field">
+              <label for="f-type">{{t|ประเภทสถานที่|Type of site}}</label>
+              <select id="f-type" name="type">
+                <option>{{t|โรงแรม / รีสอร์ท|Hotel / resort}}</option>
+                <option>{{t|ร้านอาหาร / ครัวกลาง|Restaurant / central kitchen}}</option>
+                <option>{{t|คอนโด / อาคารสำนักงาน|Condominium / office building}}</option>
+                <option>{{t|โรงงาน / คลังสินค้า|Factory / warehouse}}</option>
+                <option>{{t|โรงพยาบาล / สถานศึกษา|Hospital / school}}</option>
+                <option>{{t|บ้านพักอาศัย|Private home}}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-pest">{{t|ปัญหาที่พบ|What are you seeing}}</label>
+              <select id="f-pest" name="pest">
+                <option>{{t|ปลวก|Termites}}</option>
+                <option>{{t|หนู|Rodents}}</option>
+                <option>{{t|แมลงสาบ|Cockroaches}}</option>
+                <option>{{t|มด|Ants}}</option>
+                <option>{{t|ยุง|Mosquitoes}}</option>
+                <option>{{t|แมลงวัน / แมลงบิน|Flies / flying insects}}</option>
+                <option>{{t|ยังไม่แน่ใจ / หลายอย่าง|Not sure, or several}}</option>
+                <option>{{t|ขอราคาเครื่องดักแมลง|Light trap pricing}}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-size">{{t|พื้นที่โดยประมาณ (ตร.ม.)|Approximate area (sqm)}}</label>
+              <input id="f-size" name="size" type="number" min="10" max="200000" placeholder="{{t|เช่น 1200|e.g. 1200}}">
+            </div>
+            <div class="field">
+              <label for="f-date">{{t|วันที่สะดวกให้เข้าสำรวจ|Preferred survey date}}</label>
+              <input id="f-date" name="date" type="date">
+            </div>
+            <div class="field field-full">
+              <label for="f-note">{{t|รายละเอียดเพิ่มเติม|Anything else}}</label>
+              <textarea id="f-note" name="note" placeholder="{{t|เช่น มีกี่อาคาร เจอตรงไหน เข้าทำงานได้ช่วงไหน หรือกำลังจะถูกตรวจประเมินเมื่อไหร่|e.g. how many buildings, where you are seeing it, when we can work, or when your next audit is}}"></textarea>
+            </div>
+            <div class="hp" aria-hidden="true">
+              <label for="f-hp">{{t|อย่ากรอกช่องนี้|Leave this empty}}</label>
+              <input id="f-hp" name="wlc_hp" type="text" tabindex="-1" autocomplete="off">
+            </div>
+            <button class="btn btn-ink btn-lg field-full" type="submit">{{t|ส่งคำขอสำรวจหน้างาน|Request the survey}}</button>
+            <p class="form-err" id="formErr" role="alert">{{t|ส่งไม่สำเร็จ ขออภัยครับ — รบกวนโทร <a href="tel:021234567">02-123-4567</a> หรือทัก LINE: @spmthailand แทน|Sorry, that did not send. Please call <a href="tel:021234567">02-123-4567</a> or message LINE: @spmthailand instead.}}</p>
+            <p class="form-fine">
+              <svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>
+              {{t|คำขอจะเด้งเข้าระบบของทีมงานทันทีที่กดส่ง จึงไม่มีงานไหนตกหล่น · ข้อมูลของคุณใช้ติดต่อกลับเท่านั้น|Your request reaches our team the second you send it, so nothing gets missed · Your details are used only to contact you.}}
+              <a href="privacy.html">{{t|นโยบายความเป็นส่วนตัว|Privacy policy}}</a>
+            </p>
+          </div>
+          <div class="form-ok" role="status">
+            <span class="ok-ic"><svg aria-hidden="true"><use href="#i-check"/></svg></span>
+            <h4>{{t|ได้รับคำขอแล้ว|Request received}}</h4>
+            <p id="okText"
+               data-msg-th="ทีมงานจะติดต่อกลับเพื่อนัดวันเข้าสำรวจภายในวันทำการถัดไป หรือโทรหาเราได้ที่ 02-123-4567 ในเวลาทำการครับ"
+               data-msg-en="We will call to arrange the survey by the next working day. You can also reach us on 02-123-4567 during business hours."></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="wlc">
+  <div class="wrap wlc-in">
+    <svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg>
+    <span>{{t|<b>เว็บไซต์ตัวอย่าง</b> — เบอร์โทร อีเมล LINE และที่อยู่บนหน้านี้เป็นข้อมูลตัวอย่าง รอข้อมูลจริงจากบริษัท|<b>Demonstration site</b> — the phone number, email, LINE ID and address on this page are placeholders pending the company's own details.}}</span>
+    <span>{{t|ออกแบบและจัดทำโดย <b>Web Lead Craft</b> · LINE: <b>kitty4uu</b> · โทร 099-151-4049|Designed and built by <b>Web Lead Craft</b> · LINE: <b>kitty4uu</b> · 099-151-4049}}</span>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="logo" href="#top" aria-label="Scientific Pest Management (Thailand)">
+          <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+            <rect width="64" height="64" rx="11" fill="#14331D"/>
+            <g transform="translate(6.4 6.4) scale(0.8)" color="#EFECA6"><use href="#i-mark"/></g>
+          </svg>
+          <span class="logo-name">SPM Thailand<small>{{t|ตั้งแต่ปี 2537|Since 1994}}</small></span>
+        </a>
+        <p>{{t|Scientific Pest Management (Thailand) — บริษัท ไซเอ็นทิฟิค เพสท์ แมเนจเม้นท์ (ประเทศไทย) รับกำจัดแมลงและสัตว์พาหะให้โรงแรม ร้านอาหาร คอนโด และโรงงาน ตั้งแต่ปี 2537|Scientific Pest Management (Thailand) has protected hotels, restaurants, condominiums and factories from pests since 1994.}}</p>
+        <div class="socials">
+          <a class="soc" href="#top" aria-label="Facebook"><svg aria-hidden="true"><use href="#i-fb"/></svg></a>
+          <a class="soc" href="#top" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
+          <a class="soc" href="#contact" aria-label="{{t|ทัก LINE|Message us on LINE}}"><svg aria-hidden="true"><use href="#i-chat"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>{{t|บริการ|Services}}</h4>
+        <ul>
+          <li><a href="#services">{{t|กำจัดปลวก|Termite control}}</a></li>
+          <li><a href="#services">{{t|กำจัดหนู|Rodent control}}</a></li>
+          <li><a href="#services">{{t|กำจัดแมลงสาบและมด|Cockroaches & ants}}</a></li>
+          <li><a href="#services">{{t|กำจัดยุงและแมลงบิน|Mosquitoes & flies}}</a></li>
+          <li><a href="#sectors">{{t|กลุ่มลูกค้าที่เราดูแล|Sectors we serve}}</a></li>
+          <li><a href="privacy.html">{{t|นโยบายความเป็นส่วนตัว|Privacy policy}}</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>{{t|ภาษา|Language}}</h4>
+        <ul>
+          <li><button class="linklike" type="button" data-set-lang="th" lang="th">ไทย</button></li>
+          <li><button class="linklike" type="button" data-set-lang="en" lang="en">English</button></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>{{t|ติดต่อ|Contact}}</h4>
+        <ul>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:021234567">02-123-4567</a></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>LINE: @spmthailand</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>{{t|จันทร์–เสาร์ 8:00–17:00|Mon–Sat 8am–5pm}}</li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>{{t|กรุงเทพฯ · พัทยา · ภูเก็ต · สมุย · หัวหิน|Bangkok · Pattaya · Phuket · Samui · Hua Hin}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">{{t|© 2569 Scientific Pest Management (Thailand) — หน้านี้เป็นเว็บไซต์ตัวอย่างที่จัดทำโดย Web Lead Craft เพื่อเสนอรูปแบบ ข้อมูลติดต่อและตัวเลขบางส่วนยังเป็นค่าตัวอย่าง|© 2026 Scientific Pest Management (Thailand) — a demonstration site built by Web Lead Craft to present the design. Some contact details and figures are still placeholders.}}</div>
+  </div>
+</footer>
+
+<div class="mcta">
+  <a class="btn btn-out" href="tel:021234567"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>{{t|โทรเลย|Call}}</a>
+  <a class="btn btn-ink" href="#contact"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>{{t|ขอสำรวจฟรี|Free survey}}</a>
+</div>
+
+<!-- after .mcta on purpose: the phone rule lifts the bar clear of the mobile
+     CTA with a sibling selector, and that needs this order -->
+<div class="cookie" id="cookie" role="region" aria-label="{{t|การใช้คุกกี้|Cookie notice}}">
+  <p>{{t|เว็บไซต์นี้ใช้คุกกี้เพื่อวัดผลการเข้าชม ช่วยให้เราปรับปรุงบริการได้ตรงจุด|This site uses cookies to measure visits so we can improve the service.}} <a href="privacy.html">{{t|อ่านนโยบาย|Read the policy}}</a></p>
+  <button class="btn btn-ink" type="button" id="cookieOk">{{t|ยอมรับ|Accept}}</button>
+  <button class="btn btn-out" type="button" id="cookieNo">{{t|เฉพาะที่จำเป็น|Essential only}}</button>
+</div>
+
+<script>
+(function () {
+  var nav = document.getElementById('nav');
+  var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if ('IntersectionObserver' in window) {
+    document.querySelector('.site').classList.add('anim');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+  }
+
+  // cookie notice — asked once, and the answer is what decides whether the
+  // analytics in <head> ever loads. setConsent() lives there.
+  var bar = document.getElementById('cookie');
+  if (bar && !window.cookieChoice) window.setTimeout(function () { bar.classList.add('show'); }, 900);
+  var answer = function (v) { return function () { window.setConsent(v); bar.classList.remove('show'); }; };
+  if (bar) {
+    document.getElementById('cookieOk').addEventListener('click', answer('yes'));
+    document.getElementById('cookieNo').addEventListener('click', answer('no'));
+  }
+
+  var form = document.getElementById('bookForm');
+  var err = document.getElementById('formErr');
+  var submit = form.querySelector('[type=submit]');
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    err.classList.remove('show');
+    var label = submit.innerHTML;
+    submit.disabled = true;
+    window.wlcSend(form).then(function (sent) {
+      submit.disabled = false;
+      submit.innerHTML = label;
+      // A failed send must never show the success panel: an enquiry the
+      // company never hears about is the worst thing this page can do.
+      if (!sent) { err.classList.add('show'); return; }
+      var ok = document.getElementById('okText');
+      var code = document.documentElement.getAttribute('data-lang') || 'th';
+      var name = form.elements.name.value.trim();
+      var greeting = name ? (code === 'th' ? 'คุณ' + name + ' — ' : name + ', ') : '';
+      ok.textContent = greeting + (ok.getAttribute('data-msg-' + code) || ok.getAttribute('data-msg-th'));
+      form.classList.add('sent');
+    });
+  });
+})();
+</script>
+
+</div>
