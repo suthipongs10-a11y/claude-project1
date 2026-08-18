@@ -1,0 +1,14 @@
+{
+  "_comment": "คัดลอกไฟล์นี้เป็น _seller.json แล้วใส่ข้อมูลจริง — _seller.json ไม่ถูก track ใน git",
+  "name": "Web Lead Craft",
+  "legalName": "ชื่อ-นามสกุล ตามบัตรประชาชน",
+  "taxId": "0000000000000",
+  "tel": "0xx-xxx-xxxx",
+  "line": "lineid",
+  "email": "you@example.com",
+  "site": "example.com",
+  "bank": "ธนาคารตัวอย่าง",
+  "bankName": "ชื่อบัญชี",
+  "bankNo": "000-0-00000-0",
+  "promptpay": "0xx-xxx-xxxx"
+}

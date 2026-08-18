@@ -21,6 +21,15 @@ if (!src || !existsSync(src)) {
 }
 const q = JSON.parse(readFileSync(src, 'utf8'));
 const dir = dirname(src);
+// Our own identity lives outside the tracked quote file. A national ID number
+// and a bank account belong on the document and nowhere near git history.
+const sellerPath = join(dir, '_seller.json');
+if (!existsSync(sellerPath)) {
+  console.error(`missing ${sellerPath}`);
+  console.error(`copy ${join(dir, '_seller.example.json')} to it and fill in your own details`);
+  process.exit(1);
+}
+q.seller = { ...JSON.parse(readFileSync(sellerPath, 'utf8')), ...(q.seller ?? {}) };
 const tpl = readFileSync(join(dir, '_template.html'), 'utf8');
 const fonts = readFileSync(q.fontsFrom ?? 'sites/spm-pest/src/fonts.css', 'utf8');
 
@@ -62,6 +71,7 @@ const out = tpl
   .replaceAll('{{BANK_NO}}', field(q.seller.bankNo))
   .replaceAll('{{PROMPTPAY}}', field(q.seller.promptpay))
   .replaceAll('{{BUYER_NAME}}', esc(q.buyer.name))
+  .replaceAll('{{BUYER_NAME_TH}}', field(q.buyer.nameTh))
   .replaceAll('{{BUYER_ATTN}}', field(q.buyer.attn))
   .replaceAll('{{BUYER_ADDR}}', field(q.buyer.address))
   .replaceAll('{{BUYER_TEL}}', field(q.buyer.tel))

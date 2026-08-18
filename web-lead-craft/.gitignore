@@ -17,3 +17,9 @@ form-worker/.wrangler/
 # template is tracked, the assembled document is not.
 quotes/*.html
 !quotes/_template.html
+
+# Our own identity details. A national ID number and a bank account belong in
+# a quotation, not in git history — history is permanent, and the day this
+# repo is shared or made public is the day they leak. The .example file
+# beside it documents the shape.
+quotes/_seller.json
