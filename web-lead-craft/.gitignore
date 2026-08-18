@@ -12,3 +12,8 @@ sites/*/.qa/
 node_modules/
 form-worker/sites.json
 form-worker/.wrangler/
+
+# Built quotations. The .json beside each one is the source of truth; the
+# template is tracked, the assembled document is not.
+quotes/*.html
+!quotes/_template.html
