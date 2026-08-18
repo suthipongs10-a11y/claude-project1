@@ -1,0 +1,20 @@
+{
+  "name": "Scientific Pest Management (Thailand)",
+  "domain": "web-pest-navy.pages.dev",
+  "lang": "th",
+  "languages": [
+    { "code": "th", "label": "ไทย" },
+    { "code": "en", "label": "EN" }
+  ],
+  "notFound": {
+    "title": "ไม่พบหน้าที่คุณกำลังมองหา / Page not found",
+    "text": "หน้านี้อาจถูกย้ายหรือลบไปแล้ว — This page may have moved or been removed.",
+    "cta": "กลับหน้าแรก / Back to home",
+    "bg": "#F3F6FB",
+    "body": "#566076",
+    "ink": "#0E1E38",
+    "accent": "#0F2647",
+    "radius": "10px"
+  },
+  "note": "เดโม่แพ็กเกจ Business 1,990.- สำหรับ Scientific Pest Management (Thailand) — ธีมสี Navy & Azure — เบอร์โทร อีเมล LINE ที่อยู่ และตัวเลขผลงานทั้งหมดเป็นค่าตัวอย่าง รอข้อมูลจริงจากลูกค้า ดู docs/handover-spm-pest.md"
+}

@@ -1,0 +1,86 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{t|Scientific Pest Management (Thailand) — กำจัดแมลงครบวงจร|Scientific Pest Management (Thailand) — Pest Control}}</title>
+<meta name="description" content="{{t|รับกำจัดปลวก หนู แมลงสาบ มด ยุง และแมลงบิน สำหรับโรงแรม ร้านอาหาร คอนโด และโรงงาน ก่อตั้ง พ.ศ. 2537 ให้บริการกรุงเทพฯ พัทยา ภูเก็ต สมุย หัวหิน นัดสำรวจหน้างานฟรี|Termite, rodent, cockroach, ant and mosquito control for hotels, restaurants, condominiums and factories. Since 1994. Free site survey, documented service reports.}}">
+<meta property="og:title" content="{{t|Scientific Pest Management (Thailand) — กำจัดแมลงครบวงจร|Scientific Pest Management (Thailand) — Pest Control}}">
+<meta property="og:description" content="{{t|ดูแลโรงแรม ร้านอาหาร คอนโด และโรงงาน ตั้งแต่ปี 2537 · มีรายงานหลังบริการทุกครั้ง · นัดสำรวจหน้างานฟรี|Hotels, restaurants, condominiums and factories since 1994 · A written report after every visit · Free site survey.}}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="{{t|th_TH|en_US}}">
+<meta property="og:url" content="{{SITE_URL}}">
+<link rel="canonical" href="{{SITE_URL}}">
+<meta name="theme-color" content="#1E252B">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+<!-- Google Search Console: paste the verification tag the client is given.
+     <meta name="google-site-verification" content="..."> -->
+
+<!-- Google Analytics 4 — put the client's measurement ID in GA_ID below and
+     nothing else needs changing. It loads only after the visitor accepts the
+     cookie bar, which is what the privacy page promises; an empty ID loads
+     nothing at all, which is how the demo ships. Runs from <head> so the
+     stored choice is honoured before the page paints. -->
+<script>
+(function (w) {
+  w.GA_ID = '';
+  function load() {
+    if (!w.GA_ID || w.gaLoaded) return;
+    w.gaLoaded = true;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + w.GA_ID;
+    document.head.appendChild(s);
+    w.dataLayer = w.dataLayer || [];
+    w.gtag = function () { w.dataLayer.push(arguments); };
+    w.gtag('js', new Date());
+    w.gtag('config', w.GA_ID);
+  }
+  w.setConsent = function (v) {
+    try { localStorage.setItem('cookie', v); } catch (e) {}
+    if (v === 'yes') load();
+  };
+  var saved = '';
+  try { saved = localStorage.getItem('cookie') || ''; } catch (e) {}
+  w.cookieChoice = saved;
+  if (saved === 'yes') load();
+})(window);
+</script>
+
+<!-- Contact form delivery. A static site has nowhere to POST to, so the form
+     goes to our Cloudflare Worker (form-worker/ in the repo), which pushes the
+     enquiry into the client's inbox. Put that Worker's URL in FORM_ENDPOINT;
+     leave it empty and the form only pretends to send, which is how a demo
+     must behave. -->
+<script>
+(function (w) {
+  w.FORM_ENDPOINT = '';
+  var opened = Date.now();
+  // A promise for "did it get through" — never rejects, so the page always
+  // has something to say. A form that hangs on a network error is worse than
+  // one that says "call us instead".
+  w.wlcSend = function (form) {
+    var data = { page: location.pathname, elapsed: Date.now() - opened };
+    new FormData(form).forEach(function (v, k) { data[k] = v; });
+    if (!w.FORM_ENDPOINT) return Promise.resolve(true);
+    return fetch(w.FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  };
+})(window);
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "PestControlService",
+  "name": "Scientific Pest Management (Thailand)",
+  "alternateName": "บริษัท แซนติฟิค เพสท์ แมเนจเม้นท์ (ประเทศไทย) จำกัด",
+  "description": "{{t|บริการกำจัดปลวก หนู แมลงสาบ มด ยุง และแมลงบิน สำหรับโรงแรม ร้านอาหาร คอนโดและโรงงาน|Termite, rodent, cockroach, ant, mosquito and flying-insect control for hotels, restaurants, condominiums and factories}}",
+  "foundingDate": "1994",
+  "telephone": "+6621234567",
+  "areaServed": ["Bangkok", "Pattaya", "Phuket", "Koh Samui", "Hua Hin"],
+  "availableLanguage": ["th", "en"],
+  "openingHours": "Mo-Sa 08:00-17:00"
+}
+</script>

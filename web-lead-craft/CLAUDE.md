@@ -133,6 +133,31 @@ written scope or they eat the margin: the 30-day support window, the
 statistics reporting, and Google Business Profile (whose verification is
 Google's timeline and needs the client, not us).
 
+## Colour variants of a finished site
+
+A client who likes the layout but not the palette is routine. `tools/theme-variant.mjs`
+generates a sibling site folder from a declared colour map, and it is the only
+sanctioned way to do it — hand-editing hex values across five files is how a
+theme ends up 95% swapped, which reads as a bug rather than a decision.
+
+Two things make it work, and both are load-bearing:
+
+- **The source site keeps every colour in a small set of literals**, declared in
+  the `:root` block of its `styles.css`. If a new rule invents a colour inline,
+  the variants silently keep the old one there.
+- **Token names say what a colour does, not what it looks like** — `--brand`,
+  `--brand-deep`, `--highlight`, `--accent`. `--forest: #17386B` in a navy theme
+  is the confusion this avoids. `spm-pest` was renamed for exactly this reason.
+
+The tool fails loudly on two conditions rather than producing something
+plausible: any source colour surviving anywhere in the output, and any declared
+contrast pair falling under WCAG AA. Each theme lists its own pairs, so a
+palette is measured rather than admired. Run `qa-site.mjs` on every variant
+afterwards — it is a separate site as far as the checks are concerned.
+
+Real-world object colours stay put on purpose: the LINE green, the error reds,
+and the amber glue board in the light-trap illustration are not theme colours.
+
 ## Deployment
 
 Cloudflare Pages, framework preset **None** (no build step runs on their side).
@@ -164,4 +189,5 @@ Build one before guessing again: it is faster than a second wrong answer.
 In use: demo-cleaning is Mitr + Anuphan; demo-cleaning-biz is Noto Serif +
 Kanit (display) and IBM Plex Sans + Anuphan (body); demo-cleaning-pro is
 Archivo + Prompt (display) and Source Sans 3 + IBM Plex Sans Thai (body);
-spm-pest reuses demo-cleaning-biz's `fonts.css` unchanged. All OFL.
+spm-pest and its two colour variants reuse demo-cleaning-biz's `fonts.css`
+unchanged. All OFL.

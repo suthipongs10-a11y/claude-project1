@@ -40,13 +40,16 @@ tools/
   fetch-fonts.mjs   ดึง Google Fonts มาฝังเป็น data URI (ใช้ซ้ำได้ทุกเว็บ)
   build-site.mjs    ประกอบ src/ → dist/ (ของที่ deploy) + preview.html
   qa-site.mjs       ตรวจงานด้วยเบราว์เซอร์จริงก่อนส่งลูกค้า
+  theme-variant.mjs ทำเว็บสีใหม่จากเว็บเดิม (เนื้อหาเดิม เปลี่ยนแค่พาเลตต์)
 form-worker/        ตัวรับฟอร์ม → LINE (Cloudflare Worker ตัวเดียวใช้ทุกเว็บ)
 sites/
   demo-cleaning/      เดโม่ Starter 990.- (หน้าเดียว ภาษาเดียว)
   demo-cleaning-biz/  เดโม่ Business 1,990.- (หน้าเดียว 2 ภาษา + FAQ)
   demo-cleaning-pro/  เดโม่ Premium 5,990.- (8 หน้า + บทความ 6 บท 2 ภาษา)
   spm-pest/           งานลูกค้าจริง — SPM Thailand กำจัดแมลง (Business 1,990.-)
-                      ดู docs/handover-spm-pest.md ก่อนแก้ ยังมีค่าตัวอย่างค้างอยู่
+                      ธีม forest & cream · ดู docs/handover-spm-pest.md ก่อนแก้
+  spm-pest-navy/      ธีม navy & azure   ← สร้างจาก spm-pest ด้วย tools/theme-variant.mjs
+  spm-pest-amber/     ธีม graphite & amber  เนื้อหาเหมือนกันทุกตัวอักษร ต่างแค่สี
     src/pages/        หน้าเว็บ ไฟล์ละหน้า (เลขนำหน้าคือลำดับในเมนู)
     src/articles/     บทความ ไฟล์ละบท
     src/partials/     header · footer · article (ใช้ร่วมทุกหน้า)

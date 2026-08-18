@@ -1,18 +1,19 @@
 /* Scientific Pest Management (Thailand) — bilingual one-page site (Business package)
 
-   THEME: forest & cream
-   Palette: brand #1D4429 · deep #14331D · highlight #EFECA6 · stone #F4F7F0
-     Green is the claim this industry has to make — controlled chemicals,
-     handled safely — and the cream keeps it from reading as camouflage. The
-     butterfly blue appears only on the mark and the equipment band, so it
-     stays the logo's colour rather than becoming a third theme colour.
+   THEME: navy & azure
+   Palette: brand #17386B · deep #0F2647 · highlight #9FD0FF · stone #F3F6FB
+     Blue is the most-used colour in business anywhere, and here it is not
+     merely the safe choice: the company's own mark is a blue butterfly, so
+     this is the closest of the three themes to the brand they already own.
+     The amber on the equipment band is the one warm note, kept off-theme so
+     that band reads as a separate offer rather than more of the same page.
 
    Every colour on the page is one of the tokens below, and the token names say
    what a colour does rather than what it looks like: --brand is navy in the
    navy theme and graphite in the amber one. A sibling theme is therefore a
    substitution in :root plus the handful of literals in body.html,
    privacy.html, head.html, favicon.svg and site.json — never a structural
-   change. sites/spm-pest-navy and sites/spm-pest-amber were made that way.
+   change. This site is one of those variants; sites/spm-pest is the original.
 
    No photography by design. A pest-control page sold to hotels and restaurant
      groups is bought on licences and paperwork, and photographs of the pests
@@ -22,24 +23,24 @@
    Single light theme by design — a brand page ships one look everywhere. */
 
 :root {
-  --ink: #0F2A1A;
-  --body: #55635A;
-  --faint: #83907F;
-  --brand: #1D4429;
-  --brand-deep: #14331D;
-  --brand-ink: #0C2113;
-  --brand-tint: #E7EFE6;
-  --accent: #2F6B3B;
-  --accent-tint: #EAF2E6;
-  --highlight: #EFECA6;
-  --highlight-soft: #F6F4CE;
-  --band: #FAF9E4;
+  --ink: #0E1E38;
+  --body: #566076;
+  --faint: #8A93A6;
+  --brand: #17386B;
+  --brand-deep: #0F2647;
+  --brand-ink: #0A1A33;
+  --brand-tint: #E6EDF9;
+  --accent: #2B5FA8;
+  --accent-tint: #E8EFFA;
+  --highlight: #9FD0FF;
+  --highlight-soft: #C7E4FF;
+  --band: #EEF6FF;
   --mark-blue: #2F7FC4;
-  --stone: #F4F7F0;
-  --line: #DFE6DA;
+  --stone: #F3F6FB;
+  --line: #DDE3EE;
   --line-green: #06C755;
-  --shadow-soft: 0 12px 32px rgba(15, 42, 26, 0.07);
-  --shadow-lift: 0 22px 54px rgba(15, 42, 26, 0.14);
+  --shadow-soft: 0 12px 32px rgba(14, 30, 56, 0.07);
+  --shadow-lift: 0 22px 54px rgba(14, 30, 56, 0.14);
   /* One face per script, not one family for both. Each embedded font is
      subset to its own unicode-range, so the browser picks per character:
      Latin from the serif, Thai from Anuphan. Thai has no serif tradition —
@@ -161,7 +162,7 @@ img, svg { display: block; max-width: 100%; height: auto; }
 .btn-out:hover { border-color: var(--brand); color: var(--brand); }
 /* the reference board's signature move: the highlight on the dark field */
 .btn-hi { background: var(--highlight); color: var(--brand-ink); }
-.btn-hi:hover { background: #F6F3BE; }
+.btn-hi:hover { background: #B8DEFF; }
 .btn-light { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); }
 .btn-light:hover { background: rgba(255, 255, 255, 0.18); }
 
@@ -336,7 +337,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   top: 50%;
   transform: translateY(-50%);
   width: min(620px, 52%);
-  color: rgba(239, 236, 166, 0.05);
+  color: rgba(159, 208, 255, 0.05);
   pointer-events: none;
 }
 /* minmax(0,…) not plain fr: an fr column will not shrink below its content's
@@ -345,7 +346,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.78fr); gap: clamp(30px, 5vw, 64px); align-items: center; padding-block: clamp(58px, 8vw, 104px); }
 .hero-copy { display: grid; gap: 22px; justify-items: start; }
 .hero .label { color: var(--highlight); }
-.hero .label::before, .hero .label::after { background: rgba(239, 236, 166, 0.55); }
+.hero .label::before, .hero .label::after { background: rgba(159, 208, 255, 0.55); }
 .hero h1 { font-size: clamp(2rem, 4.3vw, 3.05rem); line-height: 1.34; color: #fff; }
 /* The rule is painted as a background, not an absolutely-positioned ::after,
    so the phrase is free to wrap — box-decoration-break underlines each line
@@ -385,7 +386,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 /* the credential card — what a hotel's purchasing officer is actually reading */
 .hero-card {
   background: rgba(255, 255, 255, 0.055);
-  border: 1px solid rgba(239, 236, 166, 0.22);
+  border: 1px solid rgba(159, 208, 255, 0.22);
   border-radius: 16px;
   padding: clamp(22px, 3vw, 30px);
   display: grid;
@@ -466,12 +467,12 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .gear { background: var(--band); border-block: 1px solid var(--line); }
 .gear-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr); gap: clamp(30px, 5vw, 62px); align-items: center; padding-block: clamp(52px, 7vw, 82px); }
 .gear-copy { display: grid; gap: 18px; justify-items: start; }
-.gear-copy .label { color: #1C5E96; }
-.gear-copy .label::before { background: #1C5E96; }
+.gear-copy .label { color: #8F5410; }
+.gear-copy .label::before { background: #8F5410; }
 .gear-copy h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
 .gear-list { display: grid; gap: 12px; width: 100%; }
 .gear-row { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem; line-height: 1.72; }
-.gear-row .ic { width: 1.2em; height: 1.2em; color: #1C5E96; margin-top: 0.32em; }
+.gear-row .ic { width: 1.2em; height: 1.2em; color: #8F5410; margin-top: 0.32em; }
 .gear-row b { color: var(--ink); font-weight: 600; }
 
 /* A light trap drawn in CSS: two glowing UV tubes over a yellow glue board is
@@ -624,10 +625,10 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .cover { background: var(--brand-deep); color: rgba(255, 255, 255, 0.78); }
 .cover .sec-head h2 { color: #fff; }
 .cover .sec-head .label { color: var(--highlight); }
-.cover .sec-head .label::before, .cover .sec-head .label::after { background: rgba(239, 236, 166, 0.55); }
+.cover .sec-head .label::before, .cover .sec-head .label::after { background: rgba(159, 208, 255, 0.55); }
 .cover-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
 .cover-item {
-  border: 1px solid rgba(239, 236, 166, 0.22);
+  border: 1px solid rgba(159, 208, 255, 0.22);
   border-radius: 14px;
   padding: 22px 20px;
   display: grid;
@@ -641,7 +642,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .cover-item span { font-size: 0.84rem; line-height: 1.6; color: rgba(255, 255, 255, 0.62); }
 .cover-item--hq .ic { color: var(--brand); }
 .cover-item--hq b { color: var(--brand-ink); }
-.cover-item--hq span { color: rgba(12, 33, 19, 0.68); }
+.cover-item--hq span { color: rgba(10, 26, 51, 0.68); }
 
 /* ---------- process ---------- */
 
@@ -700,7 +701,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .book-grid { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: clamp(34px, 5vw, 68px); align-items: start; }
 .book-copy { display: grid; gap: 22px; justify-items: start; }
 .book-copy .label { color: var(--highlight); }
-.book-copy .label::before, .book-copy .label::after { background: rgba(239, 236, 166, 0.55); }
+.book-copy .label::before, .book-copy .label::after { background: rgba(159, 208, 255, 0.55); }
 .book-copy h2 { color: #fff; font-size: clamp(1.7rem, 3vw, 2.3rem); }
 .book-copy > p { max-width: 30em; }
 .book-list { display: grid; gap: 2px; width: 100%; }
@@ -716,11 +717,11 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   position: relative;
   height: 128px;
   background:
-    repeating-linear-gradient(0deg, rgba(239, 236, 166, 0.09) 0 1px, transparent 1px 26px),
-    repeating-linear-gradient(90deg, rgba(239, 236, 166, 0.09) 0 1px, transparent 1px 26px),
-    linear-gradient(140deg, rgba(29, 68, 41, 0.72), rgba(12, 33, 19, 0.92));
+    repeating-linear-gradient(0deg, rgba(159, 208, 255, 0.09) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(159, 208, 255, 0.09) 0 1px, transparent 1px 26px),
+    linear-gradient(140deg, rgba(23, 56, 107, 0.72), rgba(10, 26, 51, 0.92));
 }
-.map-road { position: absolute; background: rgba(239, 236, 166, 0.16); border-radius: 2px; }
+.map-road { position: absolute; background: rgba(159, 208, 255, 0.16); border-radius: 2px; }
 .map-pin { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -74%); color: var(--highlight); filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45)); }
 .map-pin svg { width: 32px; height: 32px; }
 .map-meta { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 16px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.72); background: rgba(255, 255, 255, 0.04); }
