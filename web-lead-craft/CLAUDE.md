@@ -6,7 +6,7 @@ respond in Thai; keep code, comments and commits in English.
 ## What this is
 
 A Thai freelance web-building business. Packages sold: 990 THB (one-page),
-1,990 THB (one-page, 2 languages + LINE notify), 4,990 THB (multi-page + CMS).
+1,990 THB (one-page, 2 languages + LINE notify), 5,990 THB (multi-page + CMS).
 The operator sells and talks to clients; Claude builds. `README.md` (Thai) has
 the day-to-day workflow and Cloudflare Pages limits.
 
