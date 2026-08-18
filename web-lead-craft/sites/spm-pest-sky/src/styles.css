@@ -1,12 +1,12 @@
 /* Scientific Pest Management (Thailand) — bilingual one-page site (Business package)
 
-   THEME: navy & azure
-   Palette: brand #17386B · deep #0F2647 · highlight #9FD0FF · stone #F3F6FB
-     Blue is the most-used colour in business anywhere, and here it is not
-     merely the safe choice: the company's own mark is a blue butterfly, so
-     this is the closest of the three themes to the brand they already own.
-     The amber on the equipment band is the one warm note, kept off-theme so
-     that band reads as a separate offer rather than more of the same page.
+   THEME: sky & white
+   Palette: brand #115AA3 · deep #0E4A85 · highlight #115AA3 · stone #F5F7FA
+     The clean, light reading of the same page: white sections, pale blue
+     bands, and one strong blue doing all the work. Nothing about pest control
+     requires a dark page, and a facilities manager reading a quotation on a
+     bright office monitor is the person this is for. It is also the only one
+     of the four that a client can print without emptying a toner cartridge.
 
    Every colour on the page is one of the tokens below, and the token names say
    what a colour does rather than what it looks like: --brand is navy in the
@@ -23,51 +23,51 @@
    Single light theme by design — a brand page ships one look everywhere. */
 
 :root {
-  --ink: #0E1E38;
-  --body: #566076;
-  --faint: #8A93A6;
-  --brand: #17386B;
-  --brand-deep: #0F2647;
-  --brand-ink: #0A1A33;
-  --brand-tint: #E6EDF9;
-  --accent: #2B5FA8;
-  --accent-tint: #E8EFFA;
-  --highlight: #9FD0FF;
-  --highlight-soft: #C7E4FF;
-  --band: #EEF6FF;
+  --ink: #0B2545;
+  --body: #485A70;
+  --faint: #78889C;
+  --brand: #115AA3;
+  --brand-deep: #0E4A85;
+  --brand-ink: #0B2545;
+  --brand-tint: #E1ECF9;
+  --accent: #1462B8;
+  --accent-tint: #E6F0FC;
+  --highlight: #115AA3;
+  --highlight-soft: #0E4A85;
+  --band: #F2F8FE;
   --mark-blue: #2F7FC4;
-  --stone: #F3F6FB;
-  --line: #DDE3EE;
+  --stone: #F5F7FA;
+  --line: #DDE6F0;
   --line-green: #06C755;
   /* A dark band — the hero, the assurance strip, coverage, the survey form's
      ground — is structure, not decoration. So what sits on one is a token too,
      and a light theme can invert the whole page without editing a selector.
      Values here reproduce the forest theme exactly. */
-  --panel: var(--brand-deep);
-  --panel-deep: var(--brand-ink);
-  --on-panel: #FFFFFF;
-  --on-panel-body: rgba(255, 255, 255, 0.80);
-  --on-panel-dim: rgba(255, 255, 255, 0.61);
-  --on-panel-faint: rgba(255, 255, 255, 0.52);
-  --panel-line: rgba(255, 255, 255, 0.13);
-  --panel-card: rgba(255, 255, 255, 0.05);
-  --panel-card-line: rgba(159, 208, 255, 0.22);
-  --rule-on-panel: rgba(159, 208, 255, 0.55);
-  --mark-wash: rgba(159, 208, 255, 0.05);
-  --map-grid: rgba(159, 208, 255, 0.09);
-  --map-road: rgba(159, 208, 255, 0.16);
-  --map-ground: linear-gradient(140deg, rgba(23, 56, 107, 0.72), rgba(10, 26, 51, 0.92));
+  --panel: #E8F1FB;
+  --panel-deep: #D5E6F7;
+  --on-panel: #0B2545;
+  --on-panel-body: #43546C;
+  --on-panel-dim: #4F6076;
+  --on-panel-faint: #56677C;
+  --panel-line: #CBDDF0;
+  --panel-card: #FFFFFF;
+  --panel-card-line: #D2E2F3;
+  --rule-on-panel: #8FB9E2;
+  --mark-wash: rgba(17, 90, 163, 0.07);
+  --map-grid: rgba(17, 90, 163, 0.11);
+  --map-road: rgba(17, 90, 163, 0.22);
+  --map-ground: linear-gradient(140deg, #E3EEFA, #CEE0F4);
   /* what reads on a solid --highlight fill, and on a solid --brand fill */
-  --on-highlight: var(--brand-ink);
-  --on-highlight-dim: rgba(10, 26, 51, 0.68);
-  --on-brand: var(--highlight);
+  --on-highlight: #FFFFFF;
+  --on-highlight-dim: rgba(255, 255, 255, 0.82);
+  --on-brand: #FFFFFF;
   /* the outline button that only ever appears on a panel */
-  --ghost-bg: rgba(255, 255, 255, 0.1);
-  --ghost-bg-hover: rgba(255, 255, 255, 0.18);
-  --ghost-fg: #FFFFFF;
-  --ghost-line: rgba(255, 255, 255, 0.3);
-  --shadow-soft: 0 12px 32px rgba(14, 30, 56, 0.07);
-  --shadow-lift: 0 22px 54px rgba(14, 30, 56, 0.14);
+  --ghost-bg: #FFFFFF;
+  --ghost-bg-hover: #F1F7FD;
+  --ghost-fg: #0F3D6B;
+  --ghost-line: #C2D8EE;
+  --shadow-soft: 0 12px 32px rgba(11, 37, 69, 0.07);
+  --shadow-lift: 0 22px 54px rgba(11, 37, 69, 0.14);
   /* One face per script, not one family for both. Each embedded font is
      subset to its own unicode-range, so the browser picks per character:
      Latin from the serif, Thai from Anuphan. Thai has no serif tradition —
@@ -494,12 +494,12 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .gear { background: var(--band); border-block: 1px solid var(--line); }
 .gear-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr); gap: clamp(30px, 5vw, 62px); align-items: center; padding-block: clamp(52px, 7vw, 82px); }
 .gear-copy { display: grid; gap: 18px; justify-items: start; }
-.gear-copy .label { color: #8F5410; }
-.gear-copy .label::before { background: #8F5410; }
+.gear-copy .label { color: #1C5E96; }
+.gear-copy .label::before { background: #1C5E96; }
 .gear-copy h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
 .gear-list { display: grid; gap: 12px; width: 100%; }
 .gear-row { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem; line-height: 1.72; }
-.gear-row .ic { width: 1.2em; height: 1.2em; color: #8F5410; margin-top: 0.32em; }
+.gear-row .ic { width: 1.2em; height: 1.2em; color: #1C5E96; margin-top: 0.32em; }
 .gear-row b { color: var(--ink); font-weight: 600; }
 
 /* A light trap drawn in CSS: two glowing UV tubes over a yellow glue board is

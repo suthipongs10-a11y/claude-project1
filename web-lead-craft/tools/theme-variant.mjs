@@ -60,7 +60,7 @@ export const THEMES = {
       '#1D4429': '#17386B', '#14331D': '#0F2647', '#16351F': '#0F2647',
       '#0C2113': '#0A1A33', '#E7EFE6': '#E6EDF9', '#2F6B3B': '#2B5FA8',
       '#EAF2E6': '#E8EFFA', '#EFECA6': '#9FD0FF', '#F6F4CE': '#C7E4FF',
-      '#F6F3BE': '#B8DEFF', '#FAF9E4': '#EEF6FF', '#F4F7F0': '#F3F6FB',
+      '#FAF9E4': '#EEF6FF', '#F4F7F0': '#F3F6FB',
       '#F4F6F0': '#F3F6FB', '#DFE6DA': '#DDE3EE',
       '#3E8FCB': '#F5B843',  // butterfly body: amber, so the mark is not one flat blue
       '#1C5E96': '#8F5410',  // equipment band accent, kept off-theme on purpose
@@ -96,7 +96,7 @@ export const THEMES = {
       '#1D4429': '#2E363D', '#14331D': '#1E252B', '#16351F': '#1E252B',
       '#0C2113': '#14191E', '#E7EFE6': '#EDEFF1', '#2F6B3B': '#8F5C0C',
       '#EAF2E6': '#FBF0DC', '#EFECA6': '#F2B544', '#F6F4CE': '#F7CE7E',
-      '#F6F3BE': '#F7C463', '#FAF9E4': '#FDF6E8', '#F4F7F0': '#F5F6F7',
+      '#FAF9E4': '#FDF6E8', '#F4F7F0': '#F5F6F7',
       '#F4F6F0': '#F5F6F7', '#DFE6DA': '#E1E4E7',
       '#3E8FCB': '#4FA3D9',  // butterfly body stays blue — a nod to the real mark
       // #1C5E96 is deliberately absent: the equipment band keeps its blue,
@@ -121,6 +121,77 @@ export const THEMES = {
       ['#14191E', '#F2B544', 'dark text on the highlight button', 4.5],
       ['#5C646B', '#FFFFFF', 'body copy on white', 4.5],
       ['#1C5E96', '#FDF6E8', 'equipment band accent on its ground', 4.5],
+    ],
+  },
+
+  // The first three themes all put white type on a dark band. This one turns
+  // the page over: the bands stay, but they become tints of the same blue and
+  // everything on them goes dark. That is only possible because the base
+  // states what sits on a panel in tokens rather than in literal #fff, so a
+  // light theme is still a substitution and not a fork.
+  'spm-pest-sky': {
+    from: 'sites/spm-pest',
+    colours: {
+      // the mark first: its wings are the --highlight literal, and on this
+      // theme --highlight is a strong blue that would vanish on the blue square
+      'color="#EFECA6"': 'color="#FFFFFF"',
+      'fill="#EFECA6"': 'fill="#FFFFFF"',
+      'stroke="#EFECA6"': 'stroke="#FFFFFF"',
+
+      // then the panel contract, declaration by declaration
+      '--panel: var(--brand-deep);': '--panel: #E8F1FB;',
+      '--panel-deep: var(--brand-ink);': '--panel-deep: #D5E6F7;',
+      '--on-panel: #FFFFFF;': '--on-panel: #0B2545;',
+      '--on-panel-body: rgba(255, 255, 255, 0.80);': '--on-panel-body: #43546C;',
+      '--on-panel-dim: rgba(255, 255, 255, 0.61);': '--on-panel-dim: #4F6076;',
+      '--on-panel-faint: rgba(255, 255, 255, 0.52);': '--on-panel-faint: #56677C;',
+      '--panel-line: rgba(255, 255, 255, 0.13);': '--panel-line: #CBDDF0;',
+      '--panel-card: rgba(255, 255, 255, 0.05);': '--panel-card: #FFFFFF;',
+      '--panel-card-line: rgba(239, 236, 166, 0.22);': '--panel-card-line: #D2E2F3;',
+      '--rule-on-panel: rgba(239, 236, 166, 0.55);': '--rule-on-panel: #8FB9E2;',
+      '--mark-wash: rgba(239, 236, 166, 0.05);': '--mark-wash: rgba(17, 90, 163, 0.07);',
+      '--map-grid: rgba(239, 236, 166, 0.09);': '--map-grid: rgba(17, 90, 163, 0.11);',
+      '--map-road: rgba(239, 236, 166, 0.16);': '--map-road: rgba(17, 90, 163, 0.22);',
+      '--map-ground: linear-gradient(140deg, rgba(29, 68, 41, 0.72), rgba(12, 33, 19, 0.92));':
+        '--map-ground: linear-gradient(140deg, #E3EEFA, #CEE0F4);',
+      '--on-highlight: var(--brand-ink);': '--on-highlight: #FFFFFF;',
+      '--on-highlight-dim: rgba(12, 33, 19, 0.68);': '--on-highlight-dim: rgba(255, 255, 255, 0.82);',
+      '--on-brand: var(--highlight);': '--on-brand: #FFFFFF;',
+      '--ghost-bg: rgba(255, 255, 255, 0.1);': '--ghost-bg: #FFFFFF;',
+      '--ghost-bg-hover: rgba(255, 255, 255, 0.18);': '--ghost-bg-hover: #F1F7FD;',
+      '--ghost-fg: #FFFFFF;': '--ghost-fg: #0F3D6B;',
+      '--ghost-line: rgba(255, 255, 255, 0.3);': '--ghost-line: #C2D8EE;',
+
+      // and finally the ordinary palette
+      '#0F2A1A': '#0B2545', '#55635A': '#485A70', '#83907F': '#78889C',
+      '#1D4429': '#115AA3', '#14331D': '#0E4A85', '#16351F': '#0E4A85',
+      '#0C2113': '#0B2545', '#E7EFE6': '#E1ECF9', '#2F6B3B': '#1462B8',
+      '#EAF2E6': '#E6F0FC', '#EFECA6': '#115AA3', '#F6F4CE': '#0E4A85',
+      '#FAF9E4': '#F2F8FE', '#F4F7F0': '#F5F7FA', '#F4F6F0': '#F5F7FA',
+      '#DFE6DA': '#DDE6F0',
+      '#3E8FCB': '#8FC6F0',  // butterfly body, so the mark reads on a blue square
+      // #1C5E96 (equipment band) is left alone — it is already this family
+      'rgba(15, 42, 26': 'rgba(11, 37, 69',
+    },
+    wording: wording('web-pest-sky.pages.dev', 'sky & white',
+`     The clean, light reading of the same page: white sections, pale blue
+     bands, and one strong blue doing all the work. Nothing about pest control
+     requires a dark page, and a facilities manager reading a quotation on a
+     bright office monitor is the person this is for. It is also the only one
+     of the four that a client can print without emptying a toner cartridge.`,
+      'Sky & White'),
+    check: [
+      ['#115AA3', '#FFFFFF', 'primary on white (links, buttons)', 4.5],
+      ['#1462B8', '#FFFFFF', 'accent on white (labels, icons)', 4.5],
+      ['#115AA3', '#E8F1FB', 'highlight on the light panel', 4.5],
+      ['#FFFFFF', '#115AA3', 'white text on the highlight button', 4.5],
+      ['#485A70', '#FFFFFF', 'body copy on white', 4.5],
+      ['#43546C', '#E8F1FB', 'panel body copy', 4.5],
+      ['#4F6076', '#E8F1FB', 'panel secondary copy', 4.5],
+      ['#4F6076', '#D5E6F7', 'panel secondary copy on the deeper strip', 4.5],
+      ['#56677C', '#E8F1FB', 'panel faint copy', 4.5],
+      ['#0B2545', '#E8F1FB', 'panel headings', 4.5],
+      ['#1C5E96', '#F2F8FE', 'equipment band accent on its ground', 4.5],
     ],
   },
 };

@@ -38,6 +38,33 @@
   --stone: #F4F7F0;
   --line: #DFE6DA;
   --line-green: #06C755;
+  /* A dark band — the hero, the assurance strip, coverage, the survey form's
+     ground — is structure, not decoration. So what sits on one is a token too,
+     and a light theme can invert the whole page without editing a selector.
+     Values here reproduce the forest theme exactly. */
+  --panel: var(--brand-deep);
+  --panel-deep: var(--brand-ink);
+  --on-panel: #FFFFFF;
+  --on-panel-body: rgba(255, 255, 255, 0.80);
+  --on-panel-dim: rgba(255, 255, 255, 0.61);
+  --on-panel-faint: rgba(255, 255, 255, 0.52);
+  --panel-line: rgba(255, 255, 255, 0.13);
+  --panel-card: rgba(255, 255, 255, 0.05);
+  --panel-card-line: rgba(239, 236, 166, 0.22);
+  --rule-on-panel: rgba(239, 236, 166, 0.55);
+  --mark-wash: rgba(239, 236, 166, 0.05);
+  --map-grid: rgba(239, 236, 166, 0.09);
+  --map-road: rgba(239, 236, 166, 0.16);
+  --map-ground: linear-gradient(140deg, rgba(29, 68, 41, 0.72), rgba(12, 33, 19, 0.92));
+  /* what reads on a solid --highlight fill, and on a solid --brand fill */
+  --on-highlight: var(--brand-ink);
+  --on-highlight-dim: rgba(12, 33, 19, 0.68);
+  --on-brand: var(--highlight);
+  /* the outline button that only ever appears on a panel */
+  --ghost-bg: rgba(255, 255, 255, 0.1);
+  --ghost-bg-hover: rgba(255, 255, 255, 0.18);
+  --ghost-fg: #FFFFFF;
+  --ghost-line: rgba(255, 255, 255, 0.3);
   --shadow-soft: 0 12px 32px rgba(15, 42, 26, 0.07);
   --shadow-lift: 0 22px 54px rgba(15, 42, 26, 0.14);
   /* One face per script, not one family for both. Each embedded font is
@@ -63,7 +90,7 @@ body { background: #fff; }
   background: #fff;
   overflow-x: clip;
 }
-.site ::selection { background: var(--highlight); color: var(--ink); }
+.site ::selection { background: var(--highlight); color: var(--on-highlight); }
 
 h1, h2, h3 {
   font-family: var(--font-display);
@@ -160,10 +187,10 @@ img, svg { display: block; max-width: 100%; height: auto; }
 .btn-out { background: transparent; color: var(--ink); border: 1px solid var(--line); }
 .btn-out:hover { border-color: var(--brand); color: var(--brand); }
 /* the reference board's signature move: the highlight on the dark field */
-.btn-hi { background: var(--highlight); color: var(--brand-ink); }
-.btn-hi:hover { background: #F6F3BE; }
-.btn-light { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); }
-.btn-light:hover { background: rgba(255, 255, 255, 0.18); }
+.btn-hi { background: var(--highlight); color: var(--on-highlight); }
+.btn-hi:hover { background: var(--highlight-soft); }
+.btn-light { background: var(--ghost-bg); color: var(--ghost-fg); border: 1px solid var(--ghost-line); }
+.btn-light:hover { background: var(--ghost-bg-hover); }
 
 /* ---------- nav ---------- */
 
@@ -276,7 +303,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .mnav-btn::marker { content: ''; }
 .mnav-i { width: 22px; height: 22px; }
 .mnav-i-close { display: none; }
-.mnav[open] .mnav-btn { background: var(--brand); border-color: var(--brand); color: var(--highlight); }
+.mnav[open] .mnav-btn { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
 .mnav[open] .mnav-i-open { display: none; }
 .mnav[open] .mnav-i-close { display: block; }
 
@@ -328,7 +355,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 /* The dark field is the brand board, not decoration: it is the one place the
    highlight is allowed to be the loudest thing on screen, and it puts thirty years
    of trading in white type before a visitor has scrolled anything. */
-.hero { background: var(--brand-deep); position: relative; overflow: hidden; color: rgba(255, 255, 255, 0.78); }
+.hero { background: var(--panel); position: relative; overflow: hidden; color: var(--on-panel-body); }
 /* the mark, blown up and cropped — pattern, not illustration */
 .hero-mark {
   position: absolute;
@@ -336,7 +363,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   top: 50%;
   transform: translateY(-50%);
   width: min(620px, 52%);
-  color: rgba(239, 236, 166, 0.05);
+  color: var(--mark-wash);
   pointer-events: none;
 }
 /* minmax(0,…) not plain fr: an fr column will not shrink below its content's
@@ -345,8 +372,8 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.78fr); gap: clamp(30px, 5vw, 64px); align-items: center; padding-block: clamp(58px, 8vw, 104px); }
 .hero-copy { display: grid; gap: 22px; justify-items: start; }
 .hero .label { color: var(--highlight); }
-.hero .label::before, .hero .label::after { background: rgba(239, 236, 166, 0.55); }
-.hero h1 { font-size: clamp(2rem, 4.3vw, 3.05rem); line-height: 1.34; color: #fff; }
+.hero .label::before, .hero .label::after { background: var(--rule-on-panel); }
+.hero h1 { font-size: clamp(2rem, 4.3vw, 3.05rem); line-height: 1.34; color: var(--on-panel); }
 /* The rule is painted as a background, not an absolutely-positioned ::after,
    so the phrase is free to wrap — box-decoration-break underlines each line
    fragment. An ::after would need white-space:nowrap to look right, and that
@@ -363,7 +390,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 }
 .hero-lede { font-size: 1.1rem; max-width: 32em; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
-.hero-fine { display: flex; align-items: center; gap: 9px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); }
+.hero-fine { display: flex; align-items: center; gap: 9px; font-size: 0.9rem; color: var(--on-panel-dim); }
 .hero-fine .ic { width: 1.1em; height: 1.1em; color: var(--highlight); }
 
 .stats { display: flex; gap: clamp(18px, 3vw, 34px); padding-top: 6px; }
@@ -374,18 +401,18 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1.5rem;
-  color: #fff;
+  color: var(--on-panel);
   line-height: 1.25;
   font-variant-numeric: tabular-nums;
 }
 .stat b .ic { width: 0.72em; height: 0.72em; color: var(--highlight); }
-.stat span { display: block; font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); line-height: 1.5; }
-.stat + .stat { border-left: 1px solid rgba(255, 255, 255, 0.16); padding-left: clamp(18px, 3vw, 34px); }
+.stat > span { display: block; font-size: 0.85rem; color: var(--on-panel-dim); line-height: 1.5; }
+.stat + .stat { border-left: 1px solid var(--panel-line); padding-left: clamp(18px, 3vw, 34px); }
 
 /* the credential card — what a hotel's purchasing officer is actually reading */
 .hero-card {
-  background: rgba(255, 255, 255, 0.055);
-  border: 1px solid rgba(239, 236, 166, 0.22);
+  background: var(--panel-card);
+  border: 1px solid var(--panel-card-line);
   border-radius: 16px;
   padding: clamp(22px, 3vw, 30px);
   display: grid;
@@ -404,17 +431,17 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 }
 .hero-card-row { display: flex; align-items: flex-start; gap: 13px; }
 .hero-card-row .ic { width: 1.4em; height: 1.4em; color: var(--highlight); margin-top: 0.2em; }
-.hero-card-row b { display: block; color: #fff; font-weight: 600; font-size: 0.98rem; line-height: 1.5; }
-.hero-card-row span { font-size: 0.845rem; line-height: 1.6; color: rgba(255, 255, 255, 0.62); }
+.hero-card-row b { display: block; color: var(--on-panel); font-weight: 600; font-size: 0.98rem; line-height: 1.5; }
+.hero-card-row > div > span { font-size: 0.845rem; line-height: 1.6; color: var(--on-panel-dim); }
 
 /* ---------- assurance strip ---------- */
 
-.assure { background: var(--brand-ink); color: rgba(255, 255, 255, 0.82); }
+.assure { background: var(--panel-deep); color: var(--on-panel-body); }
 .assure-in { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 3vw, 40px); padding-block: 34px; }
 .assure-item { display: flex; align-items: flex-start; gap: 13px; }
 .assure-item .ic { width: 1.5em; height: 1.5em; color: var(--highlight); margin-top: 0.15em; }
-.assure-item b { display: block; color: #fff; font-weight: 600; font-size: 0.9575rem; line-height: 1.5; }
-.assure-item span { font-size: 0.84rem; line-height: 1.6; color: rgba(255, 255, 255, 0.62); }
+.assure-item b { display: block; color: var(--on-panel); font-weight: 600; font-size: 0.9575rem; line-height: 1.5; }
+.assure-item > div > span { font-size: 0.84rem; line-height: 1.6; color: var(--on-panel-dim); }
 
 /* ---------- services ---------- */
 
@@ -444,11 +471,11 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   transition: background 0.2s ease, color 0.2s ease;
 }
 .svc-ic svg { width: 32px; height: 32px; }
-.svc:hover .svc-ic { background: var(--brand); color: var(--highlight); }
+.svc:hover .svc-ic { background: var(--brand); color: var(--on-brand); }
 .svc h3 { font-size: 1.22rem; }
 .svc p { font-size: 0.9375rem; line-height: 1.78; }
 .svc-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; padding-top: 4px; }
-.svc-tags span {
+.svc-tags > span {
   font-size: 0.775rem;
   font-weight: 600;
   line-height: 1.5;
@@ -512,7 +539,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   left: -14px;
   bottom: -16px;
   background: var(--brand);
-  color: var(--highlight);
+  color: var(--on-brand);
   border-radius: 10px;
   padding: 9px 15px;
   font-size: 0.8rem;
@@ -541,7 +568,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   left: 50%;
   transform: translateX(-50%);
   background: var(--brand);
-  color: var(--highlight);
+  color: var(--on-brand);
   border-radius: 999px;
   padding: 4px 14px;
   font-size: 0.7rem;
@@ -557,7 +584,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .plan li .ic { width: 1.05em; height: 1.05em; color: var(--accent); margin-top: 0.3em; }
 .plan .btn { margin-top: auto; width: 100%; }
 .plan-note { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px clamp(20px, 4vw, 44px); margin-top: clamp(28px, 4vw, 40px); font-size: 0.9rem; }
-.plan-note span { display: inline-flex; align-items: center; gap: 8px; }
+.plan-note > span { display: inline-flex; align-items: center; gap: 8px; }
 .plan-note .ic { width: 1.05em; height: 1.05em; color: var(--accent); }
 
 /* ---------- standards & paperwork ---------- */
@@ -590,7 +617,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .doc-head svg { width: 30px; height: 30px; border-radius: 8px; flex: none; }
 .doc-rows { display: grid; gap: 10px; }
 .doc-row { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; align-items: center; font-size: 0.82rem; line-height: 1.6; }
-.doc-row span { color: var(--faint); }
+.doc-row > span { color: var(--faint); }
 .doc-row i { font-style: normal; color: var(--ink); font-weight: 600; }
 .doc-bars { display: grid; gap: 7px; padding-top: 3px; }
 .doc-bars b { height: 7px; border-radius: 999px; background: var(--brand-tint); display: block; }
@@ -621,27 +648,27 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
 /* ---------- coverage ---------- */
 
-.cover { background: var(--brand-deep); color: rgba(255, 255, 255, 0.78); }
-.cover .sec-head h2 { color: #fff; }
+.cover { background: var(--panel); color: var(--on-panel-body); }
+.cover .sec-head h2 { color: var(--on-panel); }
 .cover .sec-head .label { color: var(--highlight); }
-.cover .sec-head .label::before, .cover .sec-head .label::after { background: rgba(239, 236, 166, 0.55); }
+.cover .sec-head .label::before, .cover .sec-head .label::after { background: var(--rule-on-panel); }
 .cover-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
 .cover-item {
-  border: 1px solid rgba(239, 236, 166, 0.22);
+  border: 1px solid var(--panel-card-line);
   border-radius: 14px;
   padding: 22px 20px;
   display: grid;
   gap: 8px;
   justify-items: start;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--panel-card);
 }
 .cover-item--hq { background: var(--highlight); border-color: var(--highlight); }
 .cover-item .ic { width: 1.5em; height: 1.5em; color: var(--highlight); }
-.cover-item b { color: #fff; font-family: var(--font-display); font-weight: 600; font-size: 1.08rem; line-height: 1.4; }
-.cover-item span { font-size: 0.84rem; line-height: 1.6; color: rgba(255, 255, 255, 0.62); }
-.cover-item--hq .ic { color: var(--brand); }
-.cover-item--hq b { color: var(--brand-ink); }
-.cover-item--hq span { color: rgba(12, 33, 19, 0.68); }
+.cover-item b { color: var(--on-panel); font-family: var(--font-display); font-weight: 600; font-size: 1.08rem; line-height: 1.4; }
+.cover-item > span { font-size: 0.84rem; line-height: 1.6; color: var(--on-panel-dim); }
+.cover-item--hq .ic { color: var(--on-highlight); }
+.cover-item--hq b { color: var(--on-highlight); }
+.cover-item--hq > span { color: var(--on-highlight-dim); }
 
 /* ---------- process ---------- */
 
@@ -696,34 +723,34 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
 /* ---------- survey request ---------- */
 
-.book { background: var(--brand-deep); color: rgba(255, 255, 255, 0.8); }
+.book { background: var(--panel); color: var(--on-panel-body); }
 .book-grid { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: clamp(34px, 5vw, 68px); align-items: start; }
 .book-copy { display: grid; gap: 22px; justify-items: start; }
 .book-copy .label { color: var(--highlight); }
-.book-copy .label::before, .book-copy .label::after { background: rgba(239, 236, 166, 0.55); }
-.book-copy h2 { color: #fff; font-size: clamp(1.7rem, 3vw, 2.3rem); }
+.book-copy .label::before, .book-copy .label::after { background: var(--rule-on-panel); }
+.book-copy h2 { color: var(--on-panel); font-size: clamp(1.7rem, 3vw, 2.3rem); }
 .book-copy > p { max-width: 30em; }
 .book-list { display: grid; gap: 2px; width: 100%; }
-.book-row { display: flex; align-items: center; gap: 14px; padding-block: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-.book-row:first-child { border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.book-row { display: flex; align-items: center; gap: 14px; padding-block: 15px; border-bottom: 1px solid var(--panel-line); }
+.book-row:first-child { border-top: 1px solid var(--panel-line); }
 .book-row .ic { width: 1.3em; height: 1.3em; color: var(--highlight); }
-.book-row a, .book-row b { color: #fff; font-weight: 600; font-size: 0.9575rem; }
+.book-row a, .book-row b { color: var(--on-panel); font-weight: 600; font-size: 0.9575rem; }
 .book-row a:hover { color: var(--highlight); }
-.book-row small { display: block; font-size: 0.8rem; color: rgba(255, 255, 255, 0.52); font-weight: 400; line-height: 1.5; }
+.book-row small { display: block; font-size: 0.8rem; color: var(--on-panel-faint); font-weight: 400; line-height: 1.5; }
 
-.map-card { width: 100%; border: 1px solid rgba(255, 255, 255, 0.13); border-radius: 12px; overflow: hidden; }
+.map-card { width: 100%; border: 1px solid var(--panel-line); border-radius: 12px; overflow: hidden; }
 .map-view {
   position: relative;
   height: 128px;
   background:
-    repeating-linear-gradient(0deg, rgba(239, 236, 166, 0.09) 0 1px, transparent 1px 26px),
-    repeating-linear-gradient(90deg, rgba(239, 236, 166, 0.09) 0 1px, transparent 1px 26px),
-    linear-gradient(140deg, rgba(29, 68, 41, 0.72), rgba(12, 33, 19, 0.92));
+    repeating-linear-gradient(0deg, var(--map-grid) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, var(--map-grid) 0 1px, transparent 1px 26px),
+    var(--map-ground);
 }
-.map-road { position: absolute; background: rgba(239, 236, 166, 0.16); border-radius: 2px; }
+.map-road { position: absolute; background: var(--map-road); border-radius: 2px; }
 .map-pin { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -74%); color: var(--highlight); filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45)); }
 .map-pin svg { width: 32px; height: 32px; }
-.map-meta { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 16px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.72); background: rgba(255, 255, 255, 0.04); }
+.map-meta { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 16px; font-size: 0.85rem; color: var(--on-panel-body); background: var(--panel-card); }
 /* flex:none — the address beside it will happily squeeze this to nothing,
    and its label is nowrap, so the icon ends up outside the link */
 .map-meta a { color: var(--highlight); font-weight: 600; white-space: nowrap; flex: none; }

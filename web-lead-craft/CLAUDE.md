@@ -158,6 +158,30 @@ afterwards — it is a separate site as far as the checks are concerned.
 Real-world object colours stay put on purpose: the LINE green, the error reds,
 and the amber glue board in the light-trap illustration are not theme colours.
 
+**A light theme needs one more thing: the dark bands must be tokens too.** The
+hero, the assurance strip, coverage and the form's ground are structure, and
+what sits on them was written as literal `#fff` and `rgba(255,255,255,…)`. That
+makes a light variant impossible without forking the CSS. `spm-pest` therefore
+states the contract — `--panel`, `--on-panel`, `--on-panel-body/dim/faint`,
+`--panel-line`, `--panel-card`, `--ghost-*`, plus `--on-brand` and
+`--on-highlight` for what reads on a solid fill. `spm-pest-sky` is a pure
+substitution because of it. When adding a rule to any band, reach for those
+tokens, never `#fff`.
+
+## `.x span` is a trap in a bilingual site
+
+`{{t|…|…}}` compiles to `<span data-t>`. So a rule written `.assure-item span`
+also matches the translation span **inside the `<b>` beside the caption** — and
+both selectors weigh (0,1,1), so whichever is written second wins. Fourteen
+bold headings across four components were rendering at the caption's font size
+and dimmed colour, in every theme, and it survived several rounds of eyeballing
+because the text is still bold and the colour shift is subtle on a dark panel.
+
+Write the child combinator: `.assure-item > div > span`, `.stat > span`,
+`.cover-item > span`. The same applies to `.x b`, `.x i`, `.x small` wherever a
+translated sibling exists. Measuring beats looking — compare a `<b>`'s computed
+size and colour against the `[data-t]` span inside it; they must agree.
+
 ## Deployment
 
 Cloudflare Pages, framework preset **None** (no build step runs on their side).

@@ -49,7 +49,8 @@ sites/
   spm-pest/           งานลูกค้าจริง — SPM Thailand กำจัดแมลง (Business 1,990.-)
                       ธีม forest & cream · ดู docs/handover-spm-pest.md ก่อนแก้
   spm-pest-navy/      ธีม navy & azure   ← สร้างจาก spm-pest ด้วย tools/theme-variant.mjs
-  spm-pest-amber/     ธีม graphite & amber  เนื้อหาเหมือนกันทุกตัวอักษร ต่างแค่สี
+  spm-pest-amber/     ธีม graphite & amber
+  spm-pest-sky/       ธีม sky & white (แนวสว่าง)  เนื้อหาเหมือนกันหมด ต่างแค่สี
     src/pages/        หน้าเว็บ ไฟล์ละหน้า (เลขนำหน้าคือลำดับในเมนู)
     src/articles/     บทความ ไฟล์ละบท
     src/partials/     header · footer · article (ใช้ร่วมทุกหน้า)
