@@ -74,6 +74,8 @@
       <rect x="4" y="5.5" width="16" height="15" rx="2"/>
       <path d="M4 10.5h16M8.5 3.5v4M15.5 3.5v4"/>
     </symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6 18 18M18 6 6 18"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M7 17 17 7M9.5 7H17v7.5"/>
     </symbol>
@@ -98,6 +100,22 @@
     </nav>
     <a class="nav-tel" href="tel:0812345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>081-234-5678</a>
     <a class="btn btn-primary" href="#booking">จองคิว</a>
+    <details class="mnav" id="mnav">
+      <summary class="mnav-btn" aria-label="เปิดเมนู">
+        <svg class="mnav-i mnav-i-open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="mnav-i mnav-i-close" aria-hidden="true"><use href="#i-close"/></svg>
+      </summary>
+      <nav class="mnav-panel" aria-label="เมนูหลัก">
+        <a href="#services">บริการ</a>
+        <a href="#pricing">ราคา</a>
+        <a href="#how">ขั้นตอน</a>
+        <a href="#work">ผลงาน</a>
+        <a href="#reviews">รีวิว</a>
+        <span class="mnav-sep"></span>
+        <a class="mnav-tel" href="tel:0812345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>081-234-5678</a>
+        <a class="btn btn-primary" href="#booking">จองคิว</a>
+      </nav>
+    </details>
   </div>
 </header>
 
@@ -583,6 +601,23 @@
   var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  // The menu opens and closes on its own — this only handles the cases the
+  // <details> element has no opinion about: tapping a link inside it (which
+  // would otherwise leave the panel covering the section it jumped to),
+  // tapping anywhere else, and Escape.
+  var mnav = document.getElementById('mnav');
+  if (mnav) {
+    mnav.addEventListener('click', function (ev) {
+      if (ev.target.closest('.mnav-panel a')) mnav.open = false;
+    });
+    document.addEventListener('click', function (ev) {
+      if (mnav.open && !mnav.contains(ev.target)) mnav.open = false;
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && mnav.open) { mnav.open = false; mnav.firstElementChild.focus(); }
+    });
+  }
 
   if ('IntersectionObserver' in window) {
     document.querySelector('.site').classList.add('anim');

@@ -135,6 +135,67 @@ img, svg { display: block; max-width: 100%; height: auto; }
 .logo-name small { display: block; font-family: var(--font-body); font-weight: 500; font-size: 0.72rem; color: var(--faint); letter-spacing: 0.02em; margin-top: 3px; }
 
 .nav-links { display: flex; gap: 26px; font-weight: 500; font-size: 1rem; }
+
+/* ---------- mobile menu ---------- */
+
+.mnav { display: none; position: relative; flex: none; }
+.mnav-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.mnav-btn::-webkit-details-marker { display: none; }
+.mnav-btn::marker { content: ''; }
+.mnav-i { width: 22px; height: 22px; }
+.mnav-i-close { display: none; }
+.mnav[open] .mnav-btn { background: var(--aqua); border-color: var(--aqua); color: #fff; }
+.mnav[open] .mnav-i-open { display: none; }
+.mnav[open] .mnav-i-close { display: block; }
+.mnav-panel {
+  position: absolute;
+  top: calc(100% + 13px);
+  right: 0;
+  z-index: 1;
+  width: min(290px, calc(100vw - 40px));
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  box-shadow: var(--shadow-pop);
+}
+.mnav-panel a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding-inline: 14px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.mnav-panel a:hover { background: var(--mist); }
+.mnav-sep { height: 1px; background: var(--line-soft); margin: 6px 10px; }
+.mnav-tel { font-weight: 600 !important; color: var(--aqua-ink) !important; }
+.mnav-tel .ic { width: 1.15em; height: 1.15em; color: var(--zest); }
+.mnav-panel .btn {
+  margin-top: 6px;
+  min-height: 48px;
+  justify-content: center;
+  font-weight: 600;
+  color: #fff;
+  background: var(--aqua);
+}
+.mnav-panel .btn:hover { background: var(--aqua-deep); color: #fff; transform: none; }
 .nav-links a { color: var(--body); transition: color 0.15s ease; }
 .nav-links a:hover { color: var(--aqua-ink); }
 .nav-tel { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); font-size: 1rem; }
@@ -774,6 +835,7 @@ img, svg { display: block; max-width: 100%; height: auto; }
   .why-split { grid-template-columns: 1fr; }
   .why-photo { min-height: 0; aspect-ratio: 16 / 10; }
   .nav-links, .nav-tel { display: none; }
+  .mnav { display: block; }
   .book-grid { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; max-width: 560px; margin-inline: auto; }
   .steps::before { display: none; }
@@ -807,7 +869,7 @@ img, svg { display: block; max-width: 100%; height: auto; }
 
   /* every tappable thing gets a 44px-tall hit area (iOS HIG minimum) —
      text links in lists are the ones that fail this by default */
-  .logo, .nav .btn { min-height: 44px; }
+  .logo, .nav-in > .btn { min-height: 44px; }
   .soc { width: 44px; height: 44px; }
   .book-row a,
   .foot-col a,

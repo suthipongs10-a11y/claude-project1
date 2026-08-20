@@ -204,7 +204,7 @@ body.menu-open .nav-toggle .bars { display: none; }
 .console-head { display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: var(--green-deep); color: #fff; }
 .console-head .ic { color: var(--gold-light); }
 .console-head b { font-family: var(--font-display); font-weight: 600; font-size: 0.98rem; display: block; line-height: 1.35; }
-.console-head span { font-size: 0.76rem; color: rgba(255, 255, 255, 0.6); }
+.console-head > span > span { font-size: 0.76rem; color: rgba(255, 255, 255, 0.6); }
 .console-body { padding: 14px 18px 18px; display: grid; gap: 9px; }
 .console-body li { list-style: none; display: flex; gap: 10px; align-items: flex-start; font-size: 0.89rem; line-height: 1.55; color: var(--ink); }
 .console-body .ic { width: 1.05em; height: 1.05em; color: var(--green); margin-top: 0.28em; }
@@ -219,7 +219,7 @@ body.menu-open .nav-toggle .bars { display: none; }
 .trust-item { display: flex; gap: 13px; align-items: flex-start; }
 .trust-item .ic { width: 1.6em; height: 1.6em; color: var(--green); margin-top: 0.1em; }
 .trust-item b { display: block; font-family: var(--font-display); font-weight: 600; font-size: 0.96rem; color: var(--ink); line-height: 1.45; }
-.trust-item span { font-size: 0.84rem; line-height: 1.6; color: var(--faint); }
+.trust-item > div > span { font-size: 0.84rem; line-height: 1.6; color: var(--faint); }
 
 /* ---------- cards grid (services) ---------- */
 
@@ -243,7 +243,7 @@ body.menu-open .nav-toggle .bars { display: none; }
 .stat { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 22px 20px; display: grid; gap: 4px; }
 .stat .ic { width: 1.5em; height: 1.5em; color: var(--gold); margin-bottom: 6px; }
 .stat b { font-family: var(--font-display); font-weight: 700; font-size: 1.75rem; color: var(--ink); line-height: 1.15; font-variant-numeric: tabular-nums; }
-.stat span { font-size: 0.87rem; color: var(--faint); line-height: 1.5; }
+.stat > span { font-size: 0.87rem; color: var(--faint); line-height: 1.5; }
 
 /* ---------- split (why us / about) ---------- */
 
@@ -310,7 +310,7 @@ body.menu-open .nav-toggle .bars { display: none; }
 }
 .work-cap { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .work-cap b { font-family: var(--font-display); font-weight: 600; font-size: 0.96rem; color: var(--ink); }
-.work-cap span { font-size: 0.8rem; color: var(--faint); }
+.work-cap > span { font-size: 0.8rem; color: var(--faint); }
 
 /* ---------- pricing ---------- */
 
@@ -322,7 +322,7 @@ body.menu-open .nav-toggle .bars { display: none; }
 .plan-size { font-size: 0.84rem; color: var(--faint); margin-top: 2px; }
 .plan-price { display: flex; align-items: baseline; gap: 5px; margin-block: 14px 2px; }
 .plan-price b { font-family: var(--font-display); font-weight: 700; font-size: 1.9rem; color: var(--ink); line-height: 1; font-variant-numeric: tabular-nums; }
-.plan-price span { font-size: 0.84rem; color: var(--faint); }
+.plan-price > span { font-size: 0.84rem; color: var(--faint); }
 .plan ul { list-style: none; display: grid; gap: 9px; margin-top: 14px; font-size: 0.89rem; }
 .plan li { display: flex; gap: 8px; align-items: flex-start; line-height: 1.6; }
 .plan li .ic { width: 1em; height: 1em; color: var(--gold); margin-top: 0.32em; }
@@ -345,7 +345,7 @@ body.menu-open .nav-toggle .bars { display: none; }
 .rev-who { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 11px; }
 .rev-ava { width: 38px; height: 38px; border-radius: 9px; background: var(--green-tint); color: var(--green); font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; display: grid; place-items: center; flex: none; }
 .rev-who b { display: block; font-size: 0.9rem; font-weight: 600; color: var(--ink); line-height: 1.4; }
-.rev-who span { font-size: 0.78rem; color: var(--faint); }
+.rev-who > div > span { font-size: 0.78rem; color: var(--faint); }
 
 /* ---------- blog ---------- */
 

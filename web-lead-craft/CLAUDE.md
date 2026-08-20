@@ -179,8 +179,14 @@ because the text is still bold and the colour shift is subtle on a dark panel.
 
 Write the child combinator: `.assure-item > div > span`, `.stat > span`,
 `.cover-item > span`. The same applies to `.x b`, `.x i`, `.x small` wherever a
-translated sibling exists. Measuring beats looking — compare a `<b>`'s computed
-size and colour against the `[data-t]` span inside it; they must agree.
+translated sibling exists.
+
+**`qa-site.mjs` now measures this**, because looking never caught it: for every
+`<b>`/`<strong>`/`<em>`/`<i>`/`<small>`/heading holding a translation span, the
+element's computed size and colour must equal the span's. It shipped broken in
+`demo-cleaning-biz` (16 elements, including all four package prices at 13.6px
+grey where the design says 32px ink) and `demo-cleaning-pro` (20, the pricing
+page among them) and was invisible on both until it was measured.
 
 ## Deployment
 

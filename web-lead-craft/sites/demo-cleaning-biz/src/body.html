@@ -19,6 +19,8 @@
     <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M4.2 6.5h.01M4.2 12h.01M4.2 17.5h.01"/></symbol>
     <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5A2 2 0 0 1 5 6.5h2.2l1.3-2h7l1.3 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.4"/></symbol>
     <symbol id="i-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5.2"/><path d="M8.7 13.4 7.2 21l4.8-2.5L16.8 21l-1.5-7.6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6 18 18M18 6 6 18"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9.5 7H17v7.5"/></symbol>
     <symbol id="i-fb" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21.5v-7.2h2.4l0.4-2.8h-2.8V9.6c0-0.8 0.4-1.5 1.6-1.5h1.3V5.6c-0.7-0.1-1.5-0.2-2.3-0.2-2.3 0-3.9 1.4-3.9 4v2.1H7.8v2.8h2.4v7.2Z"/></symbol>
     <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/></symbol>
@@ -45,6 +47,22 @@
     {{SWITCHER}}
     <a class="nav-tel" href="tel:0822345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>082-234-5678</a>
     <a class="btn btn-ink" href="#booking">{{t|จองคิว|Book now}}</a>
+    <details class="mnav" id="mnav">
+      <summary class="mnav-btn" aria-label="{{t|เปิดเมนู|Open menu}}">
+        <svg class="mnav-i mnav-i-open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="mnav-i mnav-i-close" aria-hidden="true"><use href="#i-close"/></svg>
+      </summary>
+      <nav class="mnav-panel" aria-label="{{t|เมนูหลัก|Main menu}}">
+        <a href="#services">{{t|บริการ|Services}}</a>
+        <a href="#pricing">{{t|ราคา|Pricing}}</a>
+        <a href="#process">{{t|ขั้นตอน|Process}}</a>
+        <a href="#work">{{t|ผลงาน|Our work}}</a>
+        <a href="#faq">{{t|คำถามที่พบบ่อย|FAQ}}</a>
+        <span class="mnav-sep"></span>
+        <a class="mnav-tel" href="tel:0822345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>082-234-5678</a>
+        <a class="btn btn-ink" href="#booking">{{t|จองคิว|Book now}}</a>
+      </nav>
+    </details>
   </div>
 </header>
 
@@ -562,6 +580,23 @@
   var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  // The menu opens and closes on its own — this only handles the cases the
+  // <details> element has no opinion about: tapping a link inside it (which
+  // would otherwise leave the panel covering the section it jumped to),
+  // tapping anywhere else, and Escape.
+  var mnav = document.getElementById('mnav');
+  if (mnav) {
+    mnav.addEventListener('click', function (ev) {
+      if (ev.target.closest('.mnav-panel a')) mnav.open = false;
+    });
+    document.addEventListener('click', function (ev) {
+      if (mnav.open && !mnav.contains(ev.target)) mnav.open = false;
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && mnav.open) { mnav.open = false; mnav.firstElementChild.focus(); }
+    });
+  }
 
   if ('IntersectionObserver' in window) {
     document.querySelector('.site').classList.add('anim');

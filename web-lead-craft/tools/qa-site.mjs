@@ -197,6 +197,26 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       .map(h => h.slice(location.origin.length).split('#')[0])
       .filter(Boolean))];
 
+    // A translated phrase inside a styled element must keep that element's
+    // own type. `{{t|…}}` compiles to <span data-t>, so a rule written
+    // `.card span` also matches the translation span inside the sibling <b>
+    // — same specificity, later rule wins, and the heading silently renders
+    // at the caption's size and colour. It shipped that way in three sites
+    // and survived eyeballing every time, because the text is still bold.
+    const bleeds = [];
+    for (const el of document.querySelectorAll('b, strong, em, i, small, h1, h2, h3, h4')) {
+      const sp = el.querySelector(':scope > span[data-t]');
+      if (!sp || !vis(el)) continue;
+      const a = getComputedStyle(el), b = getComputedStyle(sp);
+      const diff = [];
+      if (a.fontSize !== b.fontSize) diff.push(`${a.fontSize}\u2192${b.fontSize}`);
+      if (a.color !== b.color) diff.push(`${a.color}\u2192${b.color}`);
+      if (diff.length) {
+        const where = el.parentElement?.className || el.tagName.toLowerCase();
+        bleeds.push(`<${el.tagName.toLowerCase()}> in .${where}: a CSS rule reaches its translation span (${diff.join(', ')}) \u2014 "${(sp.textContent || '').trim().slice(0, 24)}"`);
+      }
+    }
+
     // Content escaping its container sideways. The page-level overflow check
     // misses this whenever something else clips the page, and translated copy
     // is the usual cause: a phrase that fits in one language does not in the
@@ -232,6 +252,7 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       small: [...new Set(small)],
       badImages: [...new Set(badImages)],
       spills: [...new Set(spills)],
+      bleeds: [...new Set(bleeds)],
       stuck,
       deadAnchors: [...new Set(deadAnchors)],
       localLinks,
@@ -308,6 +329,7 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
   if (found.noAlt.length) note(label, `${found.noAlt.length} image(s) without alt text → ${found.noAlt.slice(0, 3).join(', ')}`);
   for (const b of found.badImages) note(label, b);
   for (const s of (found.spills ?? []).slice(0, 6)) note(label, s);
+  for (const b of (found.bleeds ?? [])) note(label, b);
   if (found.deadAnchors.length) note(label, `anchor links point nowhere → ${found.deadAnchors.join(', ')}`);
   if (size === 'phone') {
     // list every one — a QA tool that truncates its findings hides work
