@@ -1,0 +1,84 @@
+{
+  "segments": {
+    "s01": {
+      "key": "a2968f8f794671004e9a1b2bdc634ba7571086717c9a5af29cd96166dee0bc1a",
+      "sec": 15.931
+    },
+    "s02": {
+      "key": "3b12a48e0f5cbb89fcb7146eea08a5611d66859e3e8235c08a4230cc7d982f35",
+      "sec": 14.691
+    },
+    "s03": {
+      "key": "a1ec40fe525fb94b7a02169d3e13f4f5fdb57d12ccd2f495af9745b5a53b062a",
+      "sec": 16.891
+    },
+    "s04": {
+      "key": "f49b4d679bcf6337a3f7d64261a12fc27d4523af18fe7d8ad2a67f61a0bbbaea",
+      "sec": 15.891
+    },
+    "s05": {
+      "key": "f9b3e83f328907ee33a331dc597ba3e0c7415da927878b62d68fcb706c31cbfa",
+      "sec": 16.091
+    },
+    "s06": {
+      "key": "deb2ff991df9d889eb60b8c2d018d02abf22e474c1e3c0044af497795c43c9d2",
+      "sec": 18.891
+    },
+    "s07": {
+      "key": "a14a0bb00bea4050e476542fff9fa312c600eb91c537dc32023cdd03e435db6d",
+      "sec": 17.731
+    },
+    "s08": {
+      "key": "c556ff887efed51134a3522335ce9c921cebbdf0396445e1c6ea27cd412271c0",
+      "sec": 13.131
+    },
+    "s09": {
+      "key": "6fccfe99bf60bf4603a6a03a1fa57f4ffbff95b795b61cb5b798c7c94fae3dbd",
+      "sec": 17.811
+    },
+    "s10": {
+      "key": "ab1a6ab4ac8426dba2476b7b911ae1f44956264bb2595025604631ee1d91844e",
+      "sec": 14.651
+    },
+    "s11": {
+      "key": "1d9fd0eef478c52f48a722de5ac71618cf11b2ba916a2d3c90fa74816a9d21b8",
+      "sec": 14.731
+    },
+    "s12": {
+      "key": "2bad51691577ddfde4a39d25928616b0edc8aa80b19d6fbdcc971f80e1bf9b69",
+      "sec": 15.491
+    },
+    "s13": {
+      "key": "dd4e1198b76d5582f638364d6f51940be8445430d1ce3e7626ec33581312c0bb",
+      "sec": 16.371
+    },
+    "s14": {
+      "key": "9a07c2be75178491cf82af809d44fd3dcff1e7bc2e7bd6a02a28c37748cee4ad",
+      "sec": 17.931
+    },
+    "s15": {
+      "key": "c30f3c03ca78db806db431b1080078a6993fbd6b483805c72b43d80c10d52c78",
+      "sec": 21.091
+    },
+    "s16": {
+      "key": "ac8cca663e0c6f42c2e5423eb7d5cf676c064aec9f252006c2808f3fbce262b5",
+      "sec": 12.251
+    },
+    "s17": {
+      "key": "b8469d33688eee372c4396f791110db1baa4f429d156ec691f62ba751d35624f",
+      "sec": 22.611
+    },
+    "s18": {
+      "key": "16491d654ac3de33392f6e3216615f83dbfa95b908d399f6195d5414b2b5ea62",
+      "sec": 20.131
+    },
+    "s19": {
+      "key": "0cfca895ba574efddc33cf0a0867b4937d6df6d6710722ebb26dd1e3b4f8306e",
+      "sec": 22.731
+    },
+    "s20": {
+      "key": "59469a867f401010b53ced6d1166e4ef2c2403193ab66b5e32be1e8a0744656d",
+      "sec": 18.891
+    }
+  }
+}
