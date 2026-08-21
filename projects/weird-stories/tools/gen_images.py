@@ -94,7 +94,8 @@ def main():
             continue
         model = shot.get("model", default_model)
         aspect = shot.get("aspect", default_aspect)
-        prompt = f"{shot['prompt']}. {style}" if style else shot["prompt"]
+        shot_style = shot.get("style", style)
+        prompt = f"{shot['prompt']}. {shot_style}" if shot_style else shot["prompt"]
         key = cache.key_for(kind="image", model=model, prompt=prompt, aspect=aspect)
 
         for ext in (".jpg", ".png", ".webp"):

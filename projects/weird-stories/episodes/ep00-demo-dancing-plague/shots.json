@@ -164,6 +164,11 @@
       "prompt": "A 16th century woodcut style anatomical illustration on aged paper showing a human figure and blood vessels, drawn in black ink hatching, lying on a dark wooden desk with a magnifying lens. Archival lighting, scholarly, no readable lettering"
     },
     {
+      "id": "v27b",
+      "seg": "s16",
+      "prompt": "A worn pair of leather shoes left at the foot of a straw bed in a dim medieval room, a walking stick leaning against the wall beside them, nobody present. Single shaft of grey light, quiet and clinical"
+    },
+    {
       "id": "v28",
       "seg": "s17",
       "prompt": "A dense crowd of medieval townspeople seen from directly above, packed shoulder to shoulder, all of them turned in the same direction, faces indistinct. Flat overhead framing that reads as a diagram of collective behaviour, cold even light"
@@ -180,9 +185,31 @@
       "model": "gemini-3-pro-image"
     },
     {
-      "id": "v30b",
+      "id": "v30c",
       "seg": "s18",
+      "prompt": "Low angle along wet cobblestones at dawn, a single scuffed bare footprint visible in the dust between the stones, the street beyond empty and out of focus. Cold pale light, unresolved"
+    },
+    {
+      "id": "v30b",
+      "seg": "s19",
       "prompt": "Wide high view of the sleeping medieval town at first light seen from a rooftop, mist between the gables, cathedral spire catching the earliest sun, no people anywhere. Cool pale dawn, vast and quiet, a closing image"
+    },
+    {
+      "id": "v30d",
+      "seg": "s19",
+      "prompt": "A dense crowd of medieval townspeople standing shoulder to shoulder in a square, every face turned upward toward the same unseen thing, lit from above. Still, silent, unified, slightly unsettling"
+    },
+    {
+      "id": "v31",
+      "seg": "s20",
+      "prompt": "A US Navy patrol blimp from 1942 drifting low over a quiet suburban street at dusk, its gondola door hanging open, no crew visible, a few onlookers standing far below. Period-accurate, cold blue evening light, eerie and still",
+      "style": "cinematic documentary still, 1940s California, muted desaturated palette, 35mm film grain, absolutely no text or lettering or watermark anywhere in the image"
+    },
+    {
+      "id": "v31b",
+      "seg": "s20",
+      "prompt": "Interior of an empty 1940s airship gondola cockpit, the door swung open to grey sky, instrument dials still lit, two empty pilot seats, life jackets hanging untouched on a hook",
+      "style": "cinematic documentary still, 1940s California, muted desaturated palette, 35mm film grain, absolutely no text or lettering or watermark anywhere in the image"
     }
   ]
 }

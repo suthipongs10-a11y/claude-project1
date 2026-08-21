@@ -10,6 +10,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from pathlib import Path
 
 BASE = "https://generativelanguage.googleapis.com/v1beta/models"
 
@@ -28,7 +29,32 @@ def load_keys():
 
 KEYS = load_keys()
 _cursor = 0
-_dead = set()   # key ที่ใช้ไม่ได้ถาวรในเซสชันนี้ (เครดิตหมด / key ผิด) — ข้ามไปเลย
+
+# จำสถานะ key ข้ามการรัน — ไม่งั้นทุกครั้งที่รันคำสั่งใหม่จะเสียเวลายิงใส่ key ที่เครดิตหมดก่อนเสมอ
+# เก็บแค่ 6 ตัวท้ายของ key พอให้แยกออกว่าเป็นตัวไหน ไม่เก็บ key เต็ม
+_HEALTH = Path(os.environ.get("WS_CACHE_DIR", Path.home() / ".cache" / "weird-stories")) / "keys.json"
+_RECHECK_AFTER = 6 * 3600   # ผ่านไป 6 ชั่วโมงลองใหม่ เผื่อเติมเครดิตแล้ว
+
+
+def _load_dead():
+    try:
+        raw = json.loads(_HEALTH.read_text())
+    except Exception:
+        return set()
+    now = time.time()
+    return {k for k, ts in raw.items() if now - ts < _RECHECK_AFTER}
+
+
+def _save_dead():
+    try:
+        _HEALTH.parent.mkdir(parents=True, exist_ok=True)
+        _HEALTH.write_text(json.dumps({k[-6:]: time.time() for k in _dead}))
+    except Exception:
+        pass  # จำไม่ได้ก็ไม่เป็นไร แค่เสียเวลาลองใหม่รอบหน้า
+
+
+_dead_tails = _load_dead()
+_dead = {k for k in KEYS if k[-6:] in _dead_tails}   # key ที่ใช้ไม่ได้ (เครดิตหมด / key ผิด)
 
 # ข้อความที่บอกว่า "key นี้จบแล้ว" ไม่ใช่แค่ยิงถี่เกินไป
 # กรณีนี้รอไปก็ไม่หาย ต้องข้ามไป key อื่นทันที ไม่ให้เสียเวลา backoff เปล่าๆ
@@ -60,6 +86,7 @@ def _rotate():
 
 def mark_dead(key, why=""):
     _dead.add(key)
+    _save_dead()
     alive = len(KEYS) - len(_dead)
     print(f"  [key ...{key[-6:]}] ใช้ไม่ได้แล้ว: {why[:90]} (เหลือใช้ได้ {alive}/{len(KEYS)})",
           file=sys.stderr)

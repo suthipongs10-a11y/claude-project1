@@ -5,6 +5,8 @@
     python3 tools/gen_voice.py episodes/<ep>/script.json          # ใช้แคช + batch ถ้าโมเดลรองรับ
     python3 tools/gen_voice.py episodes/<ep>/script.json --now    # เรียกทีละท่อน ได้ผลเร็วแต่เต็มราคา
     python3 tools/gen_voice.py episodes/<ep>/script.json s03 s07  # ทำเฉพาะท่อนที่ระบุ
+    python3 tools/gen_voice.py episodes/<ep>/script.json --approve # ล็อกเสียงชุดนี้ว่าผ่านแล้ว
+    python3 tools/gen_voice.py episodes/<ep>/script.json --force   # อัดใหม่แม้จะล็อกไว้
 
 script.json รูปแบบ:
 {
@@ -121,6 +123,28 @@ def wav_seconds(wav):
     return round((len(wav) - 44) / 2 / rate, 3)
 
 
+def approve(script_path, cfg, model, voice, style):
+    """ล็อกเสียงชุดปัจจุบันว่า 'ผ่านแล้ว' — หลังจากนี้ gen_voice จะไม่ยิง TTS ให้ท่อนพวกนี้อีก"""
+    outdir = script_path.parent / "audio"
+    timing = json.loads((outdir / "timing.json").read_text())
+    segs = {}
+    for seg in cfg["segments"]:
+        sid = seg["id"]
+        if not (outdir / f"{sid}.wav").exists():
+            print(f"  ข้าม {sid}: ยังไม่มีไฟล์เสียง")
+            continue
+        segs[sid] = {
+            "key": cache.key_for(kind="audio", model=model, voice=seg.get("voice", voice),
+                                 style=seg.get("style", style), text=seg["text"]),
+            "sec": timing.get(sid),
+        }
+    (outdir / "approved.json").write_text(
+        json.dumps({"segments": segs}, ensure_ascii=False, indent=2))
+    print(f"ล็อกเสียงแล้ว {len(segs)} ท่อน -> {outdir / 'approved.json'}")
+    print("หลังจากนี้ gen_voice จะไม่ยิง TTS ให้ท่อนพวกนี้อีก แม้ข้อความจะถูกแก้")
+    print("ถ้าต้องการอัดใหม่จริงๆ ใช้ --force หรือลบ approved.json")
+
+
 def main():
     script_path = Path(sys.argv[1])
     flags = {a for a in sys.argv[2:] if a.startswith("--")}
@@ -132,6 +156,10 @@ def main():
     style = cfg.get("style")
     rate = float(cfg.get("rate", 1.0))
     use_batch = "--now" not in flags and model in BATCH_MODELS
+
+    if "--approve" in flags:
+        approve(script_path, cfg, model, voice, style)
+        return
 
     outdir = script_path.parent / "audio"
     outdir.mkdir(exist_ok=True)
@@ -145,11 +173,29 @@ def main():
         timing[sid] = wav_seconds(wav)
         return timing[sid]
 
+    # --- เสียงที่อนุมัติแล้ว = ห้ามแตะ ---
+    # เคสจริง: เสียงผ่านแล้วแต่คลิปไม่ผ่าน พอสร้างคลิปใหม่ต้องใช้เสียงเดิมเสมอ
+    # ห้ามยิง TTS ใหม่ ไม่ว่าข้อความจะถูกแก้ไปแล้วหรือไม่
+    lock_path = outdir / "approved.json"
+    locked = json.loads(lock_path.read_text())["segments"] if lock_path.exists() else {}
+    if "--force" in flags:
+        locked = {}
+
     # --- รอบแรก: เคลียร์ทุกอย่างที่หยิบจากแคชได้ก่อน ---
-    todo, hits = [], 0
+    todo, hits, kept = [], 0, 0
     for seg in cfg["segments"]:
         sid = seg["id"]
         if only and sid not in only:
+            continue
+        if sid in locked and (outdir / f"{sid}.wav").exists():
+            timing[sid] = locked[sid]["sec"]
+            kept += 1
+            cur_key = cache.key_for(kind="audio", model=model,
+                                    voice=seg.get("voice", voice),
+                                    style=seg.get("style", style), text=seg["text"])
+            if cur_key != locked[sid]["key"]:
+                print(f"  {sid}: ข้อความถูกแก้ แต่เสียงถูกล็อกไว้ จึงยังใช้เสียงเดิม "
+                      f"(ถ้าต้องการอัดใหม่จริงๆ ใช้ --force)")
             continue
         seg_voice = seg.get("voice", voice)
         seg_style = seg.get("style", style)
@@ -165,6 +211,8 @@ def main():
         else:
             todo.append((sid, seg_voice, seg_style, seg_rate, seg["text"], key))
 
+    if kept:
+        print(f"  ใช้เสียงเดิมที่อนุมัติแล้ว {kept} ท่อน (ล็อกไว้ ไม่ยิง TTS)")
     if hits:
         print(f"  หยิบจากแคช {hits} ท่อน (ไม่เสียเงิน)")
 

@@ -51,7 +51,8 @@ def backfill(ep):
             if not found:
                 continue
             img = found[0]
-            prompt = f"{shot['prompt']}. {style}" if style else shot["prompt"]
+            shot_style = shot.get("style", style)
+            prompt = f"{shot['prompt']}. {shot_style}" if shot_style else shot["prompt"]
             key = cache.key_for(kind="image", model=shot.get("model", model),
                                 prompt=prompt, aspect=shot.get("aspect", aspect))
             ext = img.suffix if img.suffix in EXT.values() else ".png"
