@@ -37,6 +37,9 @@ XFADE = 0.6         # ความยาวรอยต่อ cross-fade ระ�
 BGM_VOL = 0.073     # ระดับเสียงดนตรี = 0.13 เดิม ลดลง 5 dB (0.13 * 10^(-5/20))
 SUB_MARGIN = 0.075  # ระยะซับจากขอบล่าง (สัดส่วนของความสูงเฟรม)
 MAX_SHOT = 12       # ช็อตที่ค้างจอนานกว่านี้จะขึ้นเตือน (ควรเพิ่มภาพให้ segment นั้น)
+# CRF ของไฟล์สุดท้าย — เทียบที่ 1:1 แล้ว 19/21/23 แทบแยกไม่ออกเพราะเกรนกลบ artifact
+# แต่ขนาดต่างกันมาก (คลิป 4.6 นาที: 331 / 242 / 177 MB) จึงใช้ 21 เป็นจุดสมดุล
+CRF = 21
 UPSCALE = 2         # อัพสเกลก่อน zoompan กันภาพกระตุก (ซูมสูงสุด 1.14 เท่า 2 ก็พอ)
 
 # --- เกรนฟิล์ม ---
@@ -207,7 +210,7 @@ def main():
         out = ep / ("output_vertical.mp4" if vertical else "output.mp4")
         run([FFMPEG, "-y", *inputs, "-filter_complex", ";".join(chain),
              "-map", "[vout]", *amap, "-shortest", "-r", str(FPS),
-             "-c:v", "libx264", "-preset", "medium", "-crf", "19",
+             "-c:v", "libx264", "-preset", "medium", "-crf", str(CRF),
              "-pix_fmt", "yuv420p", "-movflags", "+faststart",
              "-c:a", "aac", "-b:a", "192k", str(out)])
 
