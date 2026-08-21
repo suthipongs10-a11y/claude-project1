@@ -1,0 +1,27 @@
+{
+  "model": "gemini-3-pro-image",
+  "aspect": "16:9",
+  "style": "cinematic historical documentary still, 16th century Alsace, muted desaturated earth palette, volumetric dusty light, 35mm film grain, shallow depth of field, painterly realism, absolutely no text or lettering or watermark anywhere in the image",
+  "shots": [
+    {
+      "id": "v01",
+      "seg": "s01",
+      "prompt": "A lone barefoot peasant woman in a coarse linen dress standing in the middle of a narrow cobblestone medieval street, caught mid-motion with her arms raised, head tilted back, eyes closed. Timber-framed houses lean over her. A few townspeople in the background have stopped and are staring at her. Harsh midday summer light, long shadows on wet stone"
+    },
+    {
+      "id": "v02",
+      "seg": "s02",
+      "prompt": "Dusk in a medieval town square. Roughly thirty ragged townspeople of different ages are dancing in a loose disordered mass, faces exhausted and blank rather than joyful, some collapsed on the ground while others step over them. No musicians present. Long amber light raking across the crowd, dust in the air"
+    },
+    {
+      "id": "v03",
+      "seg": "s03",
+      "prompt": "Interior of a stone council chamber. Grave city magistrates in dark fur-trimmed robes sit around a heavy oak table lit by a single high window, one gesturing toward a window through which distant dancing figures are visible. Cold grey-green light, heavy shadow, oppressive stillness"
+    },
+    {
+      "id": "v04",
+      "seg": "s04",
+      "prompt": "Wide overhead view of a large medieval guild hall packed with hundreds of dancing figures blurred by long exposure motion, hired pipers and drummers on a raised wooden platform, several motionless bodies lying at the edges of the floor while the dancing continues around them. Candlelight and torch smoke, deep shadows, feverish and nightmarish atmosphere"
+    }
+  ]
+}
