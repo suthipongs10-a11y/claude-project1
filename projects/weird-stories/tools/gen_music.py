@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from gemini_api import generate, inline_parts  # noqa: E402
+from gemini_api import GeminiError, generate, inline_parts  # noqa: E402
 
 MODEL = "lyria-3-clip-preview"
 EXT = {"audio/mpeg": ".mp3", "audio/wav": ".wav"}
@@ -39,4 +39,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except GeminiError as e:
+        sys.exit(f"เรียก Gemini ไม่สำเร็จ: {e}\n"
+                 f"ถ้าเป็น 429 ให้รอสัก 5-10 นาทีแล้วรันคำสั่งเดิมซ้ำ ของที่ทำไปแล้วจะถูกข้าม")

@@ -1,27 +1,163 @@
 {
-  "model": "gemini-3-pro-image",
+  "model": "gemini-3.1-flash-image",
   "aspect": "16:9",
-  "style": "cinematic historical documentary still, 16th century Alsace, muted desaturated earth palette, volumetric dusty light, 35mm film grain, shallow depth of field, painterly realism, absolutely no text or lettering or watermark anywhere in the image",
+  "style": "cinematic historical documentary still, early 16th century Alsace, muted desaturated earth palette, volumetric dusty light, shallow depth of field, painterly photographic realism, absolutely no text or lettering or watermark anywhere in the image",
   "shots": [
     {
       "id": "v01",
       "seg": "s01",
-      "prompt": "A lone barefoot peasant woman in a coarse linen dress standing in the middle of a narrow cobblestone medieval street, caught mid-motion with her arms raised, head tilted back, eyes closed. Timber-framed houses lean over her. A few townspeople in the background have stopped and are staring at her. Harsh midday summer light, long shadows on wet stone"
+      "prompt": "Low wide shot down a narrow medieval cobblestone street at dusk, a dozen ragged townspeople dancing in disordered motion, limbs blurred by long exposure, their faces exhausted and vacant rather than joyful. Torchlight and last daylight mixing, dust hanging in the air",
+      "model": "gemini-3-pro-image"
     },
     {
       "id": "v02",
-      "seg": "s02",
-      "prompt": "Dusk in a medieval town square. Roughly thirty ragged townspeople of different ages are dancing in a loose disordered mass, faces exhausted and blank rather than joyful, some collapsed on the ground while others step over them. No musicians present. Long amber light raking across the crowd, dust in the air"
+      "seg": "s01",
+      "prompt": "Ground-level close shot of bare human feet on wet cobblestones mid-step, worn and dirt-caked, the stones around them dark and slick. Shallow focus, cold evening light, restrained and non-graphic"
     },
     {
       "id": "v03",
-      "seg": "s03",
-      "prompt": "Interior of a stone council chamber. Grave city magistrates in dark fur-trimmed robes sit around a heavy oak table lit by a single high window, one gesturing toward a window through which distant dancing figures are visible. Cold grey-green light, heavy shadow, oppressive stillness"
+      "seg": "s02",
+      "prompt": "Overhead still-life of a 16th century municipal chronicle open on a wooden table, handwritten in iron gall ink, beside it a physician's prescription slip, a wax seal and a quill. Warm candlelight from the left, deep shadow, archival and documentary in feeling"
     },
     {
       "id": "v04",
+      "seg": "s03",
+      "prompt": "Silhouettes of robed city councillors standing at a tall arched window, backlit, looking down at a dim square where indistinct figures are moving. Cold blue-grey light, heavy shadow, an atmosphere of a decision being made"
+    },
+    {
+      "id": "v05",
       "seg": "s04",
-      "prompt": "Wide overhead view of a large medieval guild hall packed with hundreds of dancing figures blurred by long exposure motion, hired pipers and drummers on a raised wooden platform, several motionless bodies lying at the edges of the floor while the dancing continues around them. Candlelight and torch smoke, deep shadows, feverish and nightmarish atmosphere"
+      "prompt": "High wide establishing view of a prosperous early 16th century walled river city on the Rhine, timber-framed houses packed inside stone walls, a great cathedral spire dominating the skyline, barges on the river, hazy morning light"
+    },
+    {
+      "id": "v06",
+      "seg": "s04",
+      "prompt": "Busy medieval market street at mid-morning, merchants with cloth bales and barrels, a notary at a small table, ordinary civic life. Warm even light, documentary framing, sense of a working trade city"
+    },
+    {
+      "id": "v07",
+      "seg": "s05",
+      "prompt": "A long queue of gaunt townspeople waiting outside a bakery in grey rain, faces drawn, hands clutching coins, the baker's shutter half closed. Cold desaturated light, mud underfoot"
+    },
+    {
+      "id": "v08",
+      "seg": "s05",
+      "prompt": "Interior of a cramped medieval sickroom, several patients lying on straw pallets under coarse blankets, a physician in a dark robe holding a cloth over his face, single shaft of light through a shutter. Dim, grim, restrained and non-graphic"
+    },
+    {
+      "id": "v09",
+      "seg": "s06",
+      "prompt": "A thin family huddled against a stone wall in an alley at dawn, wrapped in rags, a child asleep against the mother, an empty bowl beside them. Grey pre-dawn light, quiet and desolate"
+    },
+    {
+      "id": "v10",
+      "seg": "s06",
+      "prompt": "Interior of a small stone chapel, a carved wooden saint figure in a niche lit by votive candles, worn smooth by hands, wax drippings pooled below. Warm flickering light against cold stone, reverent and slightly ominous"
+    },
+    {
+      "id": "v11",
+      "seg": "s07",
+      "prompt": "A lone barefoot peasant woman in a coarse linen dress standing in the middle of a narrow cobblestone street in harsh midday summer light, caught mid-motion with arms raised and head tilted back, eyes closed. Timber-framed houses lean over her, long shadows on the stones",
+      "model": "gemini-3-pro-image"
+    },
+    {
+      "id": "v12",
+      "seg": "s07",
+      "prompt": "Reverse angle from a doorway: three or four neighbours standing frozen, watching something off-frame, expressions of confusion and unease, a woman gripping a doorpost. Bright summer light outside, dark interior framing the shot"
+    },
+    {
+      "id": "v13",
+      "seg": "s08",
+      "prompt": "The same woman still dancing alone at night in the empty street, lit only by a single lantern hung on a bracket, her shadow thrown huge on the plaster wall behind her. Deep blue darkness, isolation"
+    },
+    {
+      "id": "v14",
+      "seg": "s08",
+      "prompt": "The woman collapsed asleep on the cobblestones at grey dawn, curled on her side, a thin shawl over her shoulders, the street otherwise completely empty. Soft cold light, stillness after exhaustion"
+    },
+    {
+      "id": "v15",
+      "seg": "s09",
+      "prompt": "Roughly thirty ragged townspeople of different ages dancing in a loose disordered mass in a town square at dusk, faces blank and exhausted, some already sitting on the ground while others step around them. No musicians present. Long amber raking light, dust in the air",
+      "model": "gemini-3-pro-image"
+    },
+    {
+      "id": "v16",
+      "seg": "s09",
+      "prompt": "Tight portrait of a middle aged man mid-dance, sweat on his face, eyes unfocused and looking past the camera, mouth slightly open, hands raised without purpose. Shallow focus, blurred moving figures behind him, unsettling"
+    },
+    {
+      "id": "v17",
+      "seg": "s10",
+      "prompt": "Grave city magistrates in dark fur-trimmed robes seated around a heavy oak table in a stone council chamber, two physicians in scholarly caps standing and gesturing, an anatomical chart and a bowl on the table. Cold grey-green light from a single high window"
+    },
+    {
+      "id": "v18",
+      "seg": "s11",
+      "prompt": "A wooden platform being hammered together in a market square, carpenters at work while pipers and a drummer climb up with their instruments, curious townspeople gathering at the edges. Late afternoon light, a sense of a terrible plan being executed efficiently"
+    },
+    {
+      "id": "v19",
+      "seg": "s11",
+      "prompt": "Two broad-shouldered men in work clothes lifting a limp exhausted dancer back onto her feet in the middle of a crowd, holding her upright by the arms while she cannot stand on her own. Torchlight, surrounding figures blurred in motion, grim and disturbing without being graphic"
+    },
+    {
+      "id": "v20",
+      "seg": "s12",
+      "prompt": "Edge of a dancing crowd at night: a young woman who had been watching steps forward into the mass, half turned back toward her family who are reaching after her. Firelight, motion blur in the crowd, sharp focus on her face"
+    },
+    {
+      "id": "v21",
+      "seg": "s12",
+      "prompt": "Wide view of a market square filling with dancers as evening falls, the crowd visibly larger than before, musicians small on their platform at the centre, windows above lit with watching faces. Smoke and torchlight"
+    },
+    {
+      "id": "v22",
+      "seg": "s13",
+      "prompt": "Overhead view of a large medieval guild hall packed with hundreds of dancing figures blurred by long exposure, hired pipers and drummers on a raised wooden platform at the centre, torch smoke thick under the beams. Feverish and nightmarish",
+      "model": "gemini-3-pro-image"
+    },
+    {
+      "id": "v23",
+      "seg": "s13",
+      "prompt": "The far edge of the guild hall floor where several exhausted people lie motionless while others continue dancing past them, a woman kneeling beside one of them. Low warm torchlight, deep shadow, sombre and non-graphic"
+    },
+    {
+      "id": "v24",
+      "seg": "s14",
+      "prompt": "A line of ox-drawn wooden carts carrying weakened people wrapped in blankets, moving along a dirt road out of the city gate toward wooded hills at dawn. Cool misty light, long procession receding into distance"
+    },
+    {
+      "id": "v25",
+      "seg": "s14",
+      "prompt": "A small stone hilltop shrine surrounded by kneeling pilgrims holding candles, a priest with raised hands, red shoes and votive offerings laid on the steps. Soft dawn light through trees, hushed and ceremonial",
+      "model": "gemini-3-pro-image"
+    },
+    {
+      "id": "v26",
+      "seg": "s15",
+      "prompt": "Extreme macro of ripe rye ears in a field, several grains replaced by dark purple-black curved ergot bodies protruding from the husks, morning dew on them. Razor thin focus, scientific and beautiful, slightly sinister"
+    },
+    {
+      "id": "v27",
+      "seg": "s16",
+      "prompt": "A 16th century woodcut style anatomical illustration on aged paper showing a human figure and blood vessels, drawn in black ink hatching, lying on a dark wooden desk with a magnifying lens. Archival lighting, scholarly, no readable lettering"
+    },
+    {
+      "id": "v28",
+      "seg": "s17",
+      "prompt": "A dense crowd of medieval townspeople seen from directly above, packed shoulder to shoulder, all of them turned in the same direction, faces indistinct. Flat overhead framing that reads as a diagram of collective behaviour, cold even light"
+    },
+    {
+      "id": "v29",
+      "seg": "s17",
+      "prompt": "A modern archive reading room: gloved hands holding open a fragile 16th century municipal register on a foam cradle under a focused lamp, blurred library shelves behind. Cool neutral light, present-day, quiet and forensic"
+    },
+    {
+      "id": "v30",
+      "seg": "s18",
+      "prompt": "The same narrow cobblestone street from the opening, now completely empty at first light, wet stones, a single abandoned shoe lying near the wall, shutters closed. Pale cold dawn, absolute stillness, a quiet ending",
+      "model": "gemini-3-pro-image"
     }
   ]
 }

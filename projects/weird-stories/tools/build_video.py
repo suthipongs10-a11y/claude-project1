@@ -21,20 +21,24 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections import Counter
 from pathlib import Path
 
 import imageio_ffmpeg
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from captions import build_cues  # noqa: E402
+from captions import build_cues, build_notice  # noqa: E402
 
 FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
 
 FPS = 30
-GAP = 0.35          # ช่องว่างระหว่างท่อนบรรยาย (วินาที) — ให้คนดูหายใจ
+GAP = 0.28          # ช่องว่างระหว่างท่อนบรรยาย (วินาที) — ให้คนดูหายใจ
 XFADE = 0.6         # ความยาวรอยต่อ cross-fade ระหว่างภาพ
-BGM_VOL = 0.13      # ระดับเสียงดนตรีเทียบกับเสียงพูด
+BGM_VOL = 0.073     # ระดับเสียงดนตรี = 0.13 เดิม ลดลง 5 dB (0.13 * 10^(-5/20))
 SUB_MARGIN = 0.075  # ระยะซับจากขอบล่าง (สัดส่วนของความสูงเฟรม)
+GRAIN = 9           # ความแรงเกรนฟิล์ม 0 = ปิด (แนะนำ 6-14)
+UPSCALE = 2         # อัพสเกลก่อน zoompan กันภาพกระตุก (ซูมสูงสุด 1.14 เท่า 2 ก็พอ)
+VIGNETTE = True     # ขอบมืดรอบเฟรม ช่วยให้ภาพดูเก่าเหมือนฟิล์ม
 
 
 def run(args, cwd=None):
@@ -50,33 +54,21 @@ def build_shot_clip(img, dur, w, h, out, idx):
     zoom_in = idx % 2 == 0
     z = "min(1.0006+0.0006*on,1.14)" if zoom_in else "max(1.14-0.0006*on,1.0006)"
     # อัพสเกลก่อน zoompan เพื่อกันภาพกระตุกเป็นขั้นบันไดตอนซูม
-    vf = (
-        f"scale={w * 4}:{h * 4}:force_original_aspect_ratio=increase,"
-        f"crop={w * 4}:{h * 4},"
-        f"zoompan=z='{z}':d={frames}:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s={w}x{h}:fps={FPS},"
-        f"format=yuv420p"
-    )
+    chain = [
+        f"scale={w * UPSCALE}:{h * UPSCALE}:force_original_aspect_ratio=increase",
+        f"crop={w * UPSCALE}:{h * UPSCALE}",
+        f"zoompan=z='{z}':d={frames}:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s={w}x{h}:fps={FPS}",
+    ]
+    if VIGNETTE:
+        chain.append("vignette=PI/6")
+    if GRAIN:
+        # allf=t คือสุ่มใหม่ทุกเฟรม ทำให้เกรนวิ่งเหมือนฟิล์มจริง ไม่ใช่จุดนิ่งค้างบนภาพ
+        chain.append(f"noise=alls={GRAIN}:allf=t")
+    chain.append("format=yuv420p")
+    vf = ",".join(chain)
     run([FFMPEG, "-y", "-loop", "1", "-i", str(img), "-t", f"{dur:.3f}",
          "-vf", vf, "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast",
          "-crf", "16", "-pix_fmt", "yuv420p", str(out)])
-
-
-def burn_captions(video, cues, w, h, out):
-    """overlay PNG ของแต่ละคิวทับวิดีโอ ตามช่วงเวลาของมัน"""
-    inputs, chain, cur = ["-i", str(video)], [], "0:v"
-    for i, c in enumerate(cues, start=1):
-        inputs += ["-i", str(c["png"])]
-        x = int((w - c["w"]) / 2)
-        y = int(h - h * SUB_MARGIN - c["h"])
-        nxt = f"v{i}"
-        chain.append(
-            f"[{cur}][{i}:v]overlay={x}:{y}:"
-            f"enable='between(t,{c['start']:.3f},{c['end']:.3f})'[{nxt}]"
-        )
-        cur = nxt
-    run([FFMPEG, "-y", *inputs, "-filter_complex", ";".join(chain),
-         "-map", f"[{cur}]", "-r", str(FPS), "-c:v", "libx264",
-         "-preset", "veryfast", "-crf", "16", "-pix_fmt", "yuv420p", str(out)])
 
 
 def main():
@@ -112,12 +104,23 @@ def main():
         run([FFMPEG, "-y", "-f", "concat", "-safe", "0", "-i", str(lst),
              "-c:a", "pcm_s16le", "-ar", "48000", str(narration)])
 
-        # --- แต่ละช็อตยาวเท่ากับผลรวมของ segment ที่มันคลุม ---
-        clips = []
+        # --- ความยาวช็อต ---
+        # ช็อตหนึ่งคลุมได้หลาย segment และ segment หนึ่งก็แชร์ได้หลายช็อต
+        # (ใส่หลายภาพในท่อนเดียวเพื่อให้ภาพเปลี่ยนบ่อยขึ้น) → หารเวลาเท่าๆ กันตามจำนวนช็อตที่แชร์
+        shot_segs = []
         for idx, shot in enumerate(shots):
             segs = shot.get("seg")
-            segs = [segs] if isinstance(segs, str) else (segs or [script["segments"][idx]["id"]])
-            dur = sum(timing[s] + GAP for s in segs)
+            shot_segs.append([segs] if isinstance(segs, str)
+                             else (segs or [script["segments"][idx]["id"]]))
+        claims = Counter(s for segs in shot_segs for s in segs)
+        missing = [s["id"] for s in script["segments"] if s["id"] not in claims]
+        if missing:
+            sys.exit(f"segment เหล่านี้ยังไม่มีช็อตไหนคลุมเลย: {', '.join(missing)}\n"
+                     f"ทุก segment ต้องถูกอ้างถึงใน shots.json อย่างน้อยหนึ่งช็อต")
+
+        clips = []
+        for idx, (shot, segs) in enumerate(zip(shots, shot_segs)):
+            dur = sum((timing[s] + GAP) / claims[s] for s in segs)
             img = next(iter(sorted((ep / "images").glob(f"{shot['id']}.*"))), None)
             if img is None:
                 sys.exit(f"ไม่พบภาพของช็อต {shot['id']} ใน {ep / 'images'}")
@@ -125,46 +128,64 @@ def main():
             build_shot_clip(img, dur + (XFADE if idx < len(shots) - 1 else 0), w, h, out, idx)
             clips.append((out, dur))
             print(f"  ช็อต {shot['id']}: {dur:.2f}s")
+        short = [(sh["id"], d) for sh, (_, d) in zip(shots, clips) if d <= XFADE]
+        if short:
+            sys.exit("ช็อตเหล่านี้สั้นกว่ารอยต่อ cross-fade ({}s) จนต่อคลิปไม่ได้: {}\n"
+                     "ลดจำนวนช็อตที่แชร์ segment เดียวกัน หรือลดค่า XFADE"
+                     .format(XFADE, ", ".join(f"{i} ({d:.2f}s)" for i, d in short)))
 
-        # --- ต่อคลิปด้วย cross-fade ทีละคู่ ---
-        cur, offset = clips[0][0], clips[0][1]
-        for i in range(1, len(clips)):
-            nxt, dur = clips[i]
-            merged = tmp / f"merge{i:03d}.mp4"
-            run([FFMPEG, "-y", "-i", str(cur), "-i", str(nxt), "-filter_complex",
-                 f"[0:v][1:v]xfade=transition=fade:duration={XFADE}:"
-                 f"offset={offset - XFADE:.3f},format=yuv420p[v]",
-                 "-map", "[v]", "-r", str(FPS), "-c:v", "libx264",
-                 "-preset", "veryfast", "-crf", "16", str(merged)])
-            cur, offset = merged, offset + dur
-        video = cur
-
-        # --- ซับไทย (เรนเดอร์ด้วย Pillow แล้ว overlay — ดูเหตุผลใน captions.py) ---
+        # --- ซับไทย: เรนเดอร์เป็น PNG ก่อน (ดูเหตุผลใน captions.py) ---
+        cues = []
         if want_subs:
             cuedir = tmp / "cues"
             cuedir.mkdir()
             cues = build_cues(script["segments"], seg_times, w, h, cuedir)
-            subbed = tmp / "subbed.mp4"
-            burn_captions(video, cues, w, h, subbed)
-            video = subbed
+            if script.get("disclaimer"):
+                cues.append(build_notice(script["disclaimer"], w, h, cuedir))
             print(f"  ซับ {len(cues)} คิว")
 
-        # --- มิกซ์เสียง: บรรยาย + BGM (วนลูป, เบา, fade ท้าย) ---
+        # --- ประกอบทั้งหมดในรอบเดียว ---
+        # ต่อภาพด้วย cross-fade + แปะซับ + มิกซ์เสียง จบใน ffmpeg คำสั่งเดียว
+        # (เดิมต่อทีละคู่แล้วเข้ารหัสใหม่ทุกครั้ง ซึ่งช้าเป็น O(n²) เมื่อภาพเยอะ
+        #  และคุณภาพตกลงทุกรอบที่เข้ารหัสซ้ำ)
         bgm = next(iter((ep / "audio").glob("bgm.*")), None)
-        inputs = ["-i", str(video), "-i", str(narration)]
+        inputs, chain = [], []
+        for clip, _ in clips:
+            inputs += ["-i", str(clip)]
+        for c in cues:
+            inputs += ["-i", str(c["png"])]
+        i_narr = len(clips) + len(cues)
+        inputs += ["-i", str(narration)]
         if bgm:
             inputs += ["-stream_loop", "-1", "-i", str(bgm)]
-            # input 0 = วิดีโอ (ไม่มีเสียง), 1 = narration, 2 = bgm
-            amap = ["-filter_complex",
-                    f"[2:a]volume={BGM_VOL},afade=t=out:st={max(total - 2, 0):.2f}:d=2[bg];"
-                    f"[1:a][bg]amix=inputs=2:duration=first:dropout_transition=0,"
-                    f"dynaudnorm=f=200:g=5[aout]",
-                    "-map", "[aout]"]
+
+        cur, offset = "0:v", clips[0][1]
+        for i in range(1, len(clips)):
+            chain.append(f"[{cur}][{i}:v]xfade=transition=fade:duration={XFADE}:"
+                         f"offset={offset - XFADE:.3f}[x{i}]")
+            cur, offset = f"x{i}", offset + clips[i][1]
+
+        for n, c in enumerate(cues):
+            idx = len(clips) + n
+            x = int((w - c["w"]) / 2)
+            y = c.get("y", int(h - h * SUB_MARGIN - c["h"]))
+            chain.append(f"[{cur}][{idx}:v]overlay={x}:{y}:"
+                         f"enable='between(t,{c['start']:.3f},{c['end']:.3f})'[c{n}]")
+            cur = f"c{n}"
+        chain.append(f"[{cur}]format=yuv420p[vout]")
+
+        if bgm:
+            chain.append(f"[{i_narr + 1}:a]volume={BGM_VOL},"
+                         f"afade=t=out:st={max(total - 2, 0):.2f}:d=2[bg]")
+            chain.append(f"[{i_narr}:a][bg]amix=inputs=2:duration=first:"
+                         f"dropout_transition=0,dynaudnorm=f=200:g=5[aout]")
+            amap = ["-map", "[aout]"]
         else:
-            amap = ["-map", "1:a"]
+            amap = ["-map", f"{i_narr}:a"]
 
         out = ep / ("output_vertical.mp4" if vertical else "output.mp4")
-        run([FFMPEG, "-y", *inputs, "-map", "0:v", *amap, "-shortest",
+        run([FFMPEG, "-y", *inputs, "-filter_complex", ";".join(chain),
+             "-map", "[vout]", *amap, "-shortest", "-r", str(FPS),
              "-c:v", "libx264", "-preset", "medium", "-crf", "19",
              "-pix_fmt", "yuv420p", "-movflags", "+faststart",
              "-c:a", "aac", "-b:a", "192k", str(out)])

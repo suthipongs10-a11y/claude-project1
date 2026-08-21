@@ -20,14 +20,25 @@ script.json รูปแบบ:
 import json
 import re
 import struct
+import subprocess
 import sys
 from pathlib import Path
 
+import imageio_ffmpeg
+
 sys.path.insert(0, str(Path(__file__).parent))
-from gemini_api import generate, inline_parts  # noqa: E402
+from gemini_api import GeminiError, generate, inline_parts  # noqa: E402
 
 MODEL = "gemini-2.5-flash-preview-tts"  # เสถียรสุดกับภาษาไทย
 # ทางเลือก: gemini-3.1-flash-tts-preview (ใหม่กว่า), gemini-2.5-pro-preview-tts (คุณภาพสูง ช้ากว่า)
+
+# จังหวะการอ่านคุมด้วย style prompt เป็นหลัก — ทดสอบแล้วได้ผลจริง:
+#   "พูดช้า เว้นจังหวะ"        -> ~4.4 ตัวอักษร/วินาที  (ช้าเกินไป ฟังแล้วอืด)
+#   "ความเร็วปกติ ไม่ยืดเสียง" -> ~10.9 ตัวอักษร/วินาที (ค่าเริ่มต้นตอนนี้)
+#   ไม่ใส่ style เลย            -> ~9.9 ตัวอักษร/วินาที
+# ถ้าอยากจูนละเอียดอีก ใส่ "rate" ใน script.json (1.0 = ตามที่ TTS ให้มา,
+# 1.1 = เร็วขึ้น 10%, 0.9 = ช้าลง 10%) — ใช้ atempo ซึ่งรักษาระดับเสียงไว้ไม่ให้เพี้ยน
+FFMPEG = imageio_ffmpeg.get_ffmpeg_exe()
 
 
 def pcm_to_wav(pcm, mime):
@@ -42,6 +53,14 @@ def pcm_to_wav(pcm, mime):
         + struct.pack("<I", len(pcm))
     )
     return hdr + pcm, rate
+
+
+def retime(wav_path, rate):
+    """ปรับความเร็วเสียงโดยไม่เปลี่ยน pitch คืนความยาวใหม่"""
+    tmp = wav_path.with_suffix(".tmp.wav")
+    subprocess.run([FFMPEG, "-y", "-loglevel", "error", "-i", str(wav_path),
+                    "-af", f"atempo={rate:.3f}", str(tmp)], check=True)
+    tmp.replace(wav_path)
 
 
 def synth(text, voice, style=None):
@@ -68,6 +87,7 @@ def main():
 
     voice = cfg.get("voice", "Charon")
     style = cfg.get("style")
+    rate = float(cfg.get("rate", 1.0))
     outdir = script_path.parent / "audio"
     outdir.mkdir(exist_ok=True)
 
@@ -84,9 +104,12 @@ def main():
         if wav_path.exists() and not only:
             print(f"  ข้าม {sid} (มีแล้ว)")
             continue
-        wav, rate = synth(seg["text"], seg.get("voice", voice), seg.get("style", style))
+        wav, sr = synth(seg["text"], seg.get("voice", voice), seg.get("style", style))
         wav_path.write_bytes(wav)
-        dur = round((len(wav) - 44) / 2 / rate, 3)
+        seg_rate = float(seg.get("rate", rate))
+        if abs(seg_rate - 1.0) > 0.01:
+            retime(wav_path, seg_rate)
+        dur = round((wav_path.stat().st_size - 44) / 2 / sr, 3)
         timing[sid] = dur
         print(f"  {sid}: {dur}s -> {wav_path.name}")
 
@@ -95,4 +118,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except GeminiError as e:
+        sys.exit(f"เรียก Gemini ไม่สำเร็จ: {e}\n"
+                 f"ถ้าเป็น 429 ให้รอสัก 5-10 นาทีแล้วรันคำสั่งเดิมซ้ำ ของที่ทำไปแล้วจะถูกข้าม")

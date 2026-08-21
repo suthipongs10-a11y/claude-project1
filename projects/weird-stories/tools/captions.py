@@ -67,6 +67,17 @@ def render_cue(lines, size, out, fill="white", stroke="black"):
     return out, w, h
 
 
+def build_notice(text, frame_w, frame_h, outdir, seconds=6.0):
+    """แถบข้อความกำกับด้านบนจอ (เช่น "ภาพประกอบเป็นภาพจำลอง") โผล่ช่วงต้นคลิป"""
+    size = round(frame_h * 0.028)
+    font = _font(size)
+    lines = wrap_lines(text, font, frame_w * 0.9)
+    png = Path(outdir) / "notice.png"
+    _, w, h = render_cue(lines, size, png, fill=(235, 235, 235, 255))
+    return {"png": png, "w": w, "h": h, "start": 0.4, "end": 0.4 + seconds,
+            "y": round(frame_h * 0.055)}
+
+
 def build_cues(segments, seg_times, frame_w, frame_h, outdir, max_lines=2):
     """สร้าง PNG ของทุกคิวจากสคริปต์ คืน list ของ dict {png,w,h,start,end}"""
     size = round(frame_h * 0.048)
