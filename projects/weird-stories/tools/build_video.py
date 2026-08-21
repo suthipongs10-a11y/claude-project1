@@ -36,8 +36,18 @@ GAP = 0.28          # ช่องว่างระหว่างท่อน�
 XFADE = 0.6         # ความยาวรอยต่อ cross-fade ระหว่างภาพ
 BGM_VOL = 0.073     # ระดับเสียงดนตรี = 0.13 เดิม ลดลง 5 dB (0.13 * 10^(-5/20))
 SUB_MARGIN = 0.075  # ระยะซับจากขอบล่าง (สัดส่วนของความสูงเฟรม)
-GRAIN = 9           # ความแรงเกรนฟิล์ม 0 = ปิด (แนะนำ 6-14)
 UPSCALE = 2         # อัพสเกลก่อน zoompan กันภาพกระตุก (ซูมสูงสุด 1.14 เท่า 2 ก็พอ)
+
+# --- เกรนฟิล์ม ---
+# วัดจริงกับคลิป 10 วินาที 1080p (CRF 19) แล้วได้ผลนี้:
+#   ไม่มีเกรน                        2.2 Mbps
+#   เกรน 9 ทุกช่องสี สุ่มใหม่ทุกเฟรม  108.6 Mbps   <- แพงกว่า 47 เท่า
+#   เกรน 9 เฉพาะ luma สุ่มทุกเฟรม     70.8 Mbps
+#   เกรน 9 เฉพาะ luma แบบคงที่         8.9 Mbps   <- ใช้ตัวนี้
+# เกรนที่สุ่มใหม่ทุกเฟรมทำลายการบีบอัดระหว่างเฟรมของ x264 จนบิตเรตพุ่ง
+# ส่วนเกรนคงที่ให้เท็กซ์เจอร์แบบฟิล์มเหมือนกัน แต่ไฟล์เล็กกว่าสิบเท่า
+GRAIN = 9           # ความแรงเกรน 0 = ปิด (แนะนำ 6-14)
+GRAIN_TEMPORAL = False  # True = เกรนวิ่งเหมือนฟิล์มจริง แต่ไฟล์ใหญ่ขึ้น ~8 เท่า
 VIGNETTE = True     # ขอบมืดรอบเฟรม ช่วยให้ภาพดูเก่าเหมือนฟิล์ม
 
 
@@ -61,10 +71,9 @@ def build_shot_clip(img, dur, w, h, out, idx):
     ]
     if VIGNETTE:
         chain.append("vignette=PI/6")
-    if GRAIN:
-        # allf=t คือสุ่มใหม่ทุกเฟรม ทำให้เกรนวิ่งเหมือนฟิล์มจริง ไม่ใช่จุดนิ่งค้างบนภาพ
-        chain.append(f"noise=alls={GRAIN}:allf=t")
     chain.append("format=yuv420p")
+    # เกรนไม่ได้ใส่ตรงนี้ — ใส่ตอนเข้ารหัสรอบสุดท้ายรอบเดียว
+    # ถ้าใส่ที่นี่ ไฟล์กลางจะใหญ่มากและถูกเข้ารหัสทับอีกรอบโดยไม่จำเป็น
     vf = ",".join(chain)
     run([FFMPEG, "-y", "-loop", "1", "-i", str(img), "-t", f"{dur:.3f}",
          "-vf", vf, "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast",
@@ -172,7 +181,12 @@ def main():
             chain.append(f"[{cur}][{idx}:v]overlay={x}:{y}:"
                          f"enable='between(t,{c['start']:.3f},{c['end']:.3f})'[c{n}]")
             cur = f"c{n}"
-        chain.append(f"[{cur}]format=yuv420p[vout]")
+        post = []
+        if GRAIN:
+            # c0s = เฉพาะช่อง luma ตาที่มองเห็นเป็นเกรนอยู่แล้ว และถูกกว่าใส่ทุกช่องสี
+            post.append(f"noise=c0s={GRAIN}" + (":c0f=t" if GRAIN_TEMPORAL else ""))
+        post.append("format=yuv420p")
+        chain.append(f"[{cur}]" + ",".join(post) + "[vout]")
 
         if bgm:
             chain.append(f"[{i_narr + 1}:a]volume={BGM_VOL},"
