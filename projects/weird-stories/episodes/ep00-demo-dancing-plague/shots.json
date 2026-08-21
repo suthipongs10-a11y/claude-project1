@@ -20,9 +20,19 @@
       "prompt": "Overhead still-life of a 16th century municipal chronicle open on a wooden table, handwritten in iron gall ink, beside it a physician's prescription slip, a wax seal and a quill. Warm candlelight from the left, deep shadow, archival and documentary in feeling"
     },
     {
+      "id": "v03b",
+      "seg": "s02",
+      "prompt": "Close detail of a 16th century handwritten chronicle page under raking candlelight, iron gall ink strokes and a pressed wax seal in the margin, the paper fibrous and stained with age. Extreme shallow focus, archival, no readable words"
+    },
+    {
       "id": "v04",
       "seg": "s03",
       "prompt": "Silhouettes of robed city councillors standing at a tall arched window, backlit, looking down at a dim square where indistinct figures are moving. Cold blue-grey light, heavy shadow, an atmosphere of a decision being made"
+    },
+    {
+      "id": "v04b",
+      "seg": "s03",
+      "prompt": "A single empty carved wooden chair at the head of a long council table in a dark stone chamber, papers and an inkwell in front of it, one shaft of cold light falling across the wood. Nobody present, heavy stillness, ominous"
     },
     {
       "id": "v05",
@@ -92,6 +102,11 @@
       "prompt": "Grave city magistrates in dark fur-trimmed robes seated around a heavy oak table in a stone council chamber, two physicians in scholarly caps standing and gesturing, an anatomical chart and a bowl on the table. Cold grey-green light from a single high window"
     },
     {
+      "id": "v17b",
+      "seg": "s10",
+      "prompt": "Close over-the-shoulder view of a physician's hands on an open medical treatise and a brass bleeding bowl on a dark table, a quill mid-note beside them, candle flame just out of focus. Warm pooled light, scholarly and grim"
+    },
+    {
       "id": "v18",
       "seg": "s11",
       "prompt": "A wooden platform being hammered together in a market square, carpenters at work while pipers and a drummer climb up with their instruments, curious townspeople gathering at the edges. Late afternoon light, a sense of a terrible plan being executed efficiently"
@@ -139,6 +154,11 @@
       "prompt": "Extreme macro of ripe rye ears in a field, several grains replaced by dark purple-black curved ergot bodies protruding from the husks, morning dew on them. Razor thin focus, scientific and beautiful, slightly sinister"
     },
     {
+      "id": "v26b",
+      "seg": "s15",
+      "prompt": "A farmer's open palm holding a handful of harvested rye grain with several dark ergot bodies mixed among the pale kernels, seen from directly above in soft overcast daylight. Documentary macro framing, plain and factual"
+    },
+    {
       "id": "v27",
       "seg": "s16",
       "prompt": "A 16th century woodcut style anatomical illustration on aged paper showing a human figure and blood vessels, drawn in black ink hatching, lying on a dark wooden desk with a magnifying lens. Archival lighting, scholarly, no readable lettering"
@@ -158,6 +178,11 @@
       "seg": "s18",
       "prompt": "The same narrow cobblestone street from the opening, now completely empty at first light, wet stones, a single abandoned shoe lying near the wall, shutters closed. Pale cold dawn, absolute stillness, a quiet ending",
       "model": "gemini-3-pro-image"
+    },
+    {
+      "id": "v30b",
+      "seg": "s18",
+      "prompt": "Wide high view of the sleeping medieval town at first light seen from a rooftop, mist between the gables, cathedral spire catching the earliest sun, no people anywhere. Cool pale dawn, vast and quiet, a closing image"
     }
   ]
 }

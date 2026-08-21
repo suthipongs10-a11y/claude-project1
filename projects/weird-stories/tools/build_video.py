@@ -36,6 +36,7 @@ GAP = 0.28          # ช่องว่างระหว่างท่อน�
 XFADE = 0.6         # ความยาวรอยต่อ cross-fade ระหว่างภาพ
 BGM_VOL = 0.073     # ระดับเสียงดนตรี = 0.13 เดิม ลดลง 5 dB (0.13 * 10^(-5/20))
 SUB_MARGIN = 0.075  # ระยะซับจากขอบล่าง (สัดส่วนของความสูงเฟรม)
+MAX_SHOT = 12       # ช็อตที่ค้างจอนานกว่านี้จะขึ้นเตือน (ควรเพิ่มภาพให้ segment นั้น)
 UPSCALE = 2         # อัพสเกลก่อน zoompan กันภาพกระตุก (ซูมสูงสุด 1.14 เท่า 2 ก็พอ)
 
 # --- เกรนฟิล์ม ---
@@ -137,6 +138,12 @@ def main():
             build_shot_clip(img, dur + (XFADE if idx < len(shots) - 1 else 0), w, h, out, idx)
             clips.append((out, dur))
             print(f"  ช็อต {shot['id']}: {dur:.2f}s")
+        long_shots = [(sh["id"], d) for sh, (_, d) in zip(shots, clips) if d > MAX_SHOT]
+        if long_shots:
+            print("  เตือน: ช็อตเหล่านี้ค้างจอนานเกิน {}s คนดูจะเริ่มหลุด "
+                  "ลองเพิ่มช็อตให้ segment นั้น: {}"
+                  .format(MAX_SHOT, ", ".join(f"{i} ({d:.1f}s)" for i, d in long_shots)))
+
         short = [(sh["id"], d) for sh, (_, d) in zip(shots, clips) if d <= XFADE]
         if short:
             sys.exit("ช็อตเหล่านี้สั้นกว่ารอยต่อ cross-fade ({}s) จนต่อคลิปไม่ได้: {}\n"
