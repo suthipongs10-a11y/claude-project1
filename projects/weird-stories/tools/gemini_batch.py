@@ -39,7 +39,7 @@ def _call(url_for, body=None, method="GET", timeout=120, retries=4):
     """
     last = None
     for attempt in range(retries):
-        key = pick_key()
+        key = pick_key("image")  # batch ต้องใช้ paid tier เสมอ
         try:
             return _raw(url_for(key), body, method, timeout)
         except GeminiError as e:

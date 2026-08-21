@@ -17,6 +17,9 @@ pipeline ทำคลิปสารคดีสั้นแบบ **ภาพ�
 ```bash
 cd projects/weird-stories
 
+# 0. เพิ่ม/เปลี่ยน key เมื่อไหร่ รันตัวนี้ก่อน เพื่อให้ระบบเลือก key ให้ตรงงาน
+python3 tools/check_keys.py
+
 # 1. เขียนสคริปต์ + shotlist ของตอนใหม่
 mkdir -p episodes/ep01-ghost-blimp
 # สร้าง script.json และ shots.json (ดูตัวอย่างใน episodes/ep00-demo-dancing-plague/)
@@ -68,6 +71,7 @@ tools/
   cache.py          แคชผลลัพธ์ที่เสียเงินเรียก API (content-addressed, เก็บนอก repo)
   cache_backfill.py เอาไฟล์ที่สร้างไว้แล้วใส่กลับเข้าแคช
   gemini_batch.py   เรียก Gemini แบบ batch — ราคาครึ่งเดียว
+  check_keys.py     ตรวจว่า key ไหนทำอะไรได้ (รันทุกครั้งที่เพิ่ม/เปลี่ยน key)
 assets/fonts/       Noto Sans Thai (SIL OFL)
 episodes/<ตอน>/
   script.json       สคริปต์บรรยาย แบ่งเป็น segments
