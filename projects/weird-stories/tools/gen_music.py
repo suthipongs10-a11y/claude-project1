@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
+import cache  # noqa: E402
 from gemini_api import GeminiError, generate, inline_parts  # noqa: E402
 
 MODEL = "lyria-3-clip-preview"
@@ -26,14 +27,25 @@ def main():
     )
     name = sys.argv[3] if len(sys.argv) > 3 else "bgm"
 
+    key = cache.key_for(kind="music", model=MODEL, prompt=prompt)
+    for ext in (".mp3", ".wav"):
+        cached = cache.get("music", key, ext)
+        if cached is not None:
+            out = outdir / (name + ext)
+            out.write_bytes(cached)
+            print(f"BGM: {len(cached) // 1024} KB -> {out} (แคช ไม่เสียเงิน)")
+            return
+
     parts = inline_parts(generate(MODEL, {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {"responseModalities": ["AUDIO"]},
     }))
     if not parts:
-        raise SystemExit("Lyria ไม่คืนเสียงกลับมา")
+        raise GeminiError("Lyria ไม่คืนเสียงกลับมา")
     data, mime = parts[0]
-    out = outdir / (name + EXT.get(mime, ".mp3"))
+    ext = EXT.get(mime, ".mp3")
+    cache.put("music", key, ext, data)
+    out = outdir / (name + ext)
     out.write_bytes(data)
     print(f"BGM: {len(data) // 1024} KB ({mime}) -> {out}")
 

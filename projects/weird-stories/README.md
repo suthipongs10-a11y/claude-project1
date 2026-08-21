@@ -8,6 +8,10 @@ pipeline ทำคลิปสารคดีสั้นแบบ **ภาพ�
 
 ---
 
+> **ค่าใช้จ่าย API:** อ่าน `COST.md` ก่อนเริ่มทำตอนใหม่ — มีแคชที่ทำให้ไม่ต้องจ่ายซ้ำ
+> และ Batch API ที่ลดราคาครึ่งหนึ่ง **สถานะ key ตอนนี้: 2 ใน 3 เครดิตหมด อีกตัวเป็น free tier
+> ซึ่งสร้างภาพไม่ได้** ต้องเติมเครดิตก่อนถึงจะทำตอนใหม่ได้
+
 ## เริ่มยังไง
 
 ```bash
@@ -20,8 +24,9 @@ mkdir -p episodes/ep01-ghost-blimp
 # 2. gen เสียง -> audio/*.wav + audio/timing.json
 python3 tools/gen_voice.py episodes/ep01-ghost-blimp/script.json
 
-# 3. gen ภาพ -> images/*.jpg
+# 3. gen ภาพ -> images/*.jpg   (ใช้ Batch API ราคาครึ่งเดียว รอคิวราว 10-15 นาที)
 python3 tools/gen_images.py episodes/ep01-ghost-blimp/shots.json
+#    ถ้าต้องการผลทันทีและยอมจ่ายเต็ม: เติม --now
 
 # 4. gen ดนตรีประกอบ -> audio/bgm.mp3   (ข้ามได้)
 python3 tools/gen_music.py episodes/ep01-ghost-blimp "dark ambient drone, tense, no vocals"
@@ -44,12 +49,15 @@ python3 tools/gen_images.py episodes/ep01/shots.json  v04       # วาดภ�
 
 ```
 tools/
-  gemini_api.py     ตัวกลางคุย Gemini API — หมุน 3 keys อัตโนมัติเมื่อโควตาเต็ม
+  gemini_api.py     ตัวกลางคุย Gemini API — หมุน key อัตโนมัติ ข้าม key ที่เครดิตหมด
   gen_voice.py      สคริปต์ -> เสียงบรรยายไทย (WAV แยกไฟล์ต่อท่อน + timing.json)
   gen_images.py     shotlist -> ภาพประกอบ
   gen_music.py      prompt -> BGM (Lyria)
   captions.py       เรนเดอร์ซับไทยเป็น PNG ด้วย Pillow (ห้ามเปลี่ยนไปใช้ libass — ดูเหตุผลในไฟล์)
   build_video.py    ประกอบทุกอย่างเป็น mp4
+  cache.py          แคชผลลัพธ์ที่เสียเงินเรียก API (content-addressed, เก็บนอก repo)
+  cache_backfill.py เอาไฟล์ที่สร้างไว้แล้วใส่กลับเข้าแคช
+  gemini_batch.py   เรียก Gemini แบบ batch — ราคาครึ่งเดียว
 assets/fonts/       Noto Sans Thai (SIL OFL)
 episodes/<ตอน>/
   script.json       สคริปต์บรรยาย แบ่งเป็น segments
@@ -58,6 +66,7 @@ episodes/<ตอน>/
   images/           ภาพที่ gen แล้ว (เอาภาพจริงมาวางเองก็ได้ ใช้ชื่อ id เดียวกัน)
   output.mp4        ผลลัพธ์  (ไม่ commit — .gitignore กัน *.mp4 ไว้)
 CAPABILITIES.md     ผลทดสอบความสามารถทั้งหมด (ทำได้ / ทำไม่ได้)
+COST.md             วิธีลดค่าใช้จ่าย API + สถานะ key
 story-ideas.md      หัวข้อที่รีเสิร์ชไว้แล้ว + สถานะความเป็นไปได้
 ```
 
@@ -85,7 +94,7 @@ story-ideas.md      หัวข้อที่รีเสิร์ชไว้
 **`shots.json`**
 ```json
 {
-  "model": "gemini-3-pro-image",
+  "model": "gemini-3.1-flash-image",
   "aspect": "16:9",
   "style": "cinematic documentary still, no text or watermark",
   "shots": [
@@ -162,6 +171,10 @@ story-ideas.md      หัวข้อที่รีเสิร์ชไว้
 
 ```bash
 pip3 install imageio-ffmpeg pillow
+pip3 install boto3        # เฉพาะตอนจะซิงก์แคชขึ้น S3/R2/B2
 ```
 
 ต้องมี env `GOOGLE_TTS_API_KEY` (ใส่ได้หลาย key คั่นด้วยคอมมา) — **อย่า commit key ลง repo**
+
+แคชอยู่ที่ `~/.cache/weird-stories` (ตั้งที่อื่นได้ด้วย `WS_CACHE_DIR`) container นี้เป็น ephemeral
+ถ้าอยากให้แคชอยู่ข้ามเซสชัน ให้ตั้งค่าซิงก์ขึ้น S3/R2/B2 ตาม `COST.md`
