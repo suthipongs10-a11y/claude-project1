@@ -1044,3 +1044,34 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   vertical-align: 0.08em;
 }
 .foot-addr { margin-top: 10px; font-size: 0.84rem; line-height: 1.7; color: var(--on-panel-faint); }
+
+/* ---------- LINE card ---------- */
+
+/* The QR is drawn from the account URL by tools/make-line-qr.py, never
+   embedded as the client's screenshot of it: a photograph of a QR is a
+   few hundred KB, soft at any size the page actually needs, and stops
+   scanning once a phone scales it down. */
+.lineq {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(16px, 2.4vw, 22px);
+  align-items: start;
+  margin-top: 22px;
+  padding: clamp(16px, 2.2vw, 22px);
+  background: var(--panel-card);
+  border: 1px solid var(--panel-card-line);
+  border-radius: 16px;
+}
+.lineq-qr { width: clamp(104px, 15vw, 132px); flex: none; }
+.lineq-qr svg { width: 100%; height: auto; display: block; border-radius: 8px; padding: 7px; background: #fff; color: var(--brand-ink); }
+.lineq-copy { display: grid; gap: 10px; justify-items: start; }
+.lineq-copy > b { font-size: 1rem; font-weight: 600; color: var(--on-panel); line-height: 1.55; }
+.lineq-copy p { font-size: 0.88rem; line-height: 1.75; color: var(--on-panel-body); }
+.lineq .btn-line { color: #fff; }
+.lineq .btn-line:hover { background: #05B44D; color: #fff; }
+
+@media (max-width: 480px) {
+  .lineq { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .lineq-copy { justify-items: center; }
+  .lineq-copy .btn { width: 100%; }
+}
