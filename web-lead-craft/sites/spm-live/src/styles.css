@@ -1067,6 +1067,8 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .lineq-copy { display: grid; gap: 10px; justify-items: start; }
 .lineq-copy > b { font-size: 1rem; font-weight: 600; color: var(--on-panel); line-height: 1.55; }
 .lineq-copy p { font-size: 0.88rem; line-height: 1.75; color: var(--on-panel-body); }
+.lineq-id { font-size: 0.82rem; color: var(--on-panel-dim); }
+.lineq-id b { font-weight: 600; color: var(--highlight); }
 .lineq .btn-line { color: #fff; }
 .lineq .btn-line:hover { background: #05B44D; color: #fff; }
 
