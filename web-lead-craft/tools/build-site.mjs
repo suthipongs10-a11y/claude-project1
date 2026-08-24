@@ -26,7 +26,7 @@
 // Usage: node tools/build-site.mjs <site-dir>
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, rmSync } from 'node:fs';
 import { join, dirname } from 'node:path';
-import { buildDerivatives, inlineMap, applyImages, listImages, WIDTHS } from './images.mjs';
+import { buildDerivatives, inlineMap, applyImages, listImages, widthsFor, WIDTHS } from './images.mjs';
 import { localize, checkTokens, expandAll, switcherFor } from './i18n.mjs';
 import {
   hasPages, collectPages, collectArticles, baseFor, parseFront,
@@ -114,6 +114,7 @@ mkdirSync(dist, { recursive: true });
 for (const p of multi ? pages : [{ out: 'index.html' }]) rmSync(join(dist, p.out), { force: true });
 
 const photos = await buildDerivatives(dir, dist);
+const imgWidths = await widthsFor(dir);
 
 /** A single-page head serves a second page once its four title/description
  *  tags are swapped. Function replacements keep `$` in Thai copy literal. */
@@ -212,7 +213,7 @@ ${css}
 </style>
 </head>
 <body>
-${applyImages(html, { base })}${langScriptFor(metaFor(page), data)}
+${applyImages(html, { base, widths: imgWidths })}${langScriptFor(metaFor(page), data)}
 </body>
 </html>
 `

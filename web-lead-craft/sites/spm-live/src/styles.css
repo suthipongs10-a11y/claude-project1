@@ -1,0 +1,1046 @@
+/* Scientific Pest Management (Thailand) — bilingual one-page site (Business package)
+
+   THEME: the company's own identity, taken from its printed brochure.
+   Palette: brand #005B9C · panel #0F3358 · highlight #5CC6F5 · stone #F3F7FB
+   #0078C8 is sampled from the wings of the Ulysses butterfly the company has
+   used as its mark since 1994; the navy panels come from the client's chosen
+   reference layout. Nothing here is invented — the mark, the blue and the
+   wordmark all exist on paper already.
+
+   Every colour on the page is one of the tokens below, and the token names say
+   what a colour does rather than what it looks like. A sibling theme is a
+   substitution in :root plus the handful of literals in body.html,
+   privacy.html, head.html, favicon.svg and site.json — never a structural
+   change.
+
+   PHOTOGRAPHY: the client supplied 20 photographs of their own crews at work.
+   They are the reason this build differs from the demo it grew out of, which
+   had none and was drawn instead. Photographs of the pests themselves are
+   still absent on purpose — they repel the exact buyer this page is for.
+*/
+
+:root {
+  --ink: #10263F;
+  --body: #4A5C71;
+  --faint: #616F82;
+  --brand: #005B9C;
+  --brand-deep: #0F3358;
+  --brand-ink: #0A1E35;
+  --brand-tint: #E6F1FA;
+  --accent: #0069AE;
+  --accent-tint: #E1EFFB;
+  --highlight: #5CC6F5;
+  --highlight-soft: #BCE6FA;
+  --band: #EAF4FB;
+  --mark-blue: #0078C8;
+  --stone: #F3F7FB;
+  --line: #D9E4EE;
+  --line-green: #06C755;
+  /* A dark band — the hero, the assurance strip, coverage, the survey form's
+     ground — is structure, not decoration. So what sits on one is a token too,
+     and a light theme can invert the whole page without editing a selector.
+     Values here reproduce the forest theme exactly. */
+  --panel: var(--brand-deep);
+  --panel-deep: var(--brand-ink);
+  --on-panel: #FFFFFF;
+  --on-panel-body: rgba(255, 255, 255, 0.80);
+  --on-panel-dim: rgba(255, 255, 255, 0.61);
+  --on-panel-faint: rgba(255, 255, 255, 0.52);
+  --panel-line: rgba(255, 255, 255, 0.13);
+  --panel-card: rgba(255, 255, 255, 0.05);
+  --panel-card-line: rgba(92, 198, 245, 0.24);
+  --rule-on-panel: rgba(92, 198, 245, 0.58);
+  --mark-wash: rgba(92, 198, 245, 0.06);
+  --map-grid: rgba(92, 198, 245, 0.10);
+  --map-road: rgba(92, 198, 245, 0.18);
+  --map-ground: linear-gradient(140deg, rgba(15, 51, 88, 0.74), rgba(10, 30, 53, 0.92));
+  /* what reads on a solid --highlight fill, and on a solid --brand fill */
+  --on-highlight: var(--brand-ink);
+  --on-highlight-dim: rgba(10, 30, 53, 0.70);
+  --on-brand: #FFFFFF;
+  /* the outline button that only ever appears on a panel */
+  --ghost-bg: rgba(255, 255, 255, 0.1);
+  --ghost-bg-hover: rgba(255, 255, 255, 0.18);
+  --ghost-fg: #FFFFFF;
+  --ghost-line: rgba(255, 255, 255, 0.3);
+  --shadow-soft: 0 12px 32px rgba(16, 38, 63, 0.08);
+  --shadow-lift: 0 22px 54px rgba(16, 38, 63, 0.15);
+  /* One face per script, not one family for both. Each embedded font is
+     subset to its own unicode-range, so the browser picks per character:
+     Latin from the serif, Thai from Anuphan. Thai has no serif tradition —
+     forcing a serif onto it gives thin, awkward loops — while English is
+     exactly where the serif earns the tone this company has earned since 2537. */
+  --font-display: 'Noto Serif', 'Kanit', Georgia, serif;
+  --font-body: 'IBM Plex Sans', 'Anuphan', -apple-system, 'Segoe UI', 'Leelawadee UI', sans-serif;
+  --gutter: clamp(20px, 4vw, 30px);
+  --page: 1180px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+body { background: #fff; }
+
+.site {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--body);
+  background: #fff;
+  overflow-x: clip;
+}
+.site ::selection { background: var(--highlight); color: var(--on-highlight); }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.42;
+  text-wrap: balance;
+}
+a { color: var(--brand); text-decoration: none; }
+img, svg { display: block; max-width: 100%; height: auto; }
+.ic { width: 1.25em; height: 1.25em; flex: none; }
+
+.site :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Thai stacks vowels and tone marks above and below the baseline, so it wants
+   more leading than Latin — and wide tracking, which flatters uppercase Latin
+   labels, pushes its marks away from the consonants they belong to. Each page
+   carries its own lang, so these apply only where they should. */
+:lang(th) h1 { line-height: 1.44; }
+:lang(th) h2, :lang(th) h3 { line-height: 1.52; }
+:lang(th) .label,
+:lang(th) .logo-name small,
+:lang(th) .foot-col h4,
+:lang(th) .plan-flag { letter-spacing: 0.05em; }
+:lang(th) .hero h1 em { padding-bottom: 0.28em; }
+
+.wrap { max-width: var(--page); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* ---------- shared type devices ---------- */
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  line-height: 1;
+}
+.label::before {
+  content: '';
+  width: 26px;
+  height: 1px;
+  background: var(--accent);
+  flex: none;
+}
+.label-c { justify-content: center; }
+.label-c::after {
+  content: '';
+  width: 26px;
+  height: 1px;
+  background: var(--accent);
+  flex: none;
+}
+
+.sec { padding-block: clamp(66px, 9vw, 108px); background: #fff; }
+.sec--stone { background: var(--stone); }
+.sec--ink { background: var(--brand-deep); }
+.sec-head { display: grid; gap: 16px; justify-items: center; text-align: center; max-width: 640px; margin: 0 auto clamp(42px, 6vw, 62px); }
+.sec-head h2 { font-size: clamp(1.75rem, 3.2vw, 2.45rem); }
+.sec-head p { max-width: 34em; }
+
+/* ---------- buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.82em 1.7em;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: none; }
+.btn-lg { padding: 0.95em 2em; font-size: 1.0625rem; }
+.btn-line { background: var(--line-green); color: #fff; }
+.btn-line:hover { background: #05B44D; }
+.btn-ink { background: var(--brand); color: #fff; }
+.btn-ink:hover { background: var(--brand-deep); }
+.btn-out { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn-out:hover { border-color: var(--brand); color: var(--brand); }
+/* the reference board's signature move: the highlight on the dark field */
+.btn-hi { background: var(--highlight); color: var(--on-highlight); }
+.btn-hi:hover { background: var(--highlight-soft); }
+.btn-light { background: var(--ghost-bg); color: var(--ghost-fg); border: 1px solid var(--ghost-line); }
+.btn-light:hover { background: var(--ghost-bg-hover); }
+
+/* ---------- nav ---------- */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s ease;
+}
+.nav.scrolled { border-bottom-color: var(--line); }
+.nav-in { display: flex; align-items: center; gap: 22px; height: 76px; }
+
+.logo { display: inline-flex; align-items: center; gap: 12px; margin-right: auto; }
+.logo-mark { width: 42px; height: 42px; border-radius: 11px; flex: none; }
+.logo-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.16rem;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  line-height: 1.15;
+}
+.logo-name small {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.655rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-top: 4px;
+}
+
+.nav-links { display: flex; gap: 22px; font-size: 0.9375rem; font-weight: 500; }
+.nav-links a { color: var(--body); transition: color 0.15s ease; }
+.nav-links a:hover { color: var(--ink); }
+
+/* language switcher — swaps the copy in place, no navigation */
+.lang {
+  display: inline-flex;
+  flex: none;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.lang button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  min-height: 34px;
+  padding: 0 11px;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: inherit;
+  font-weight: inherit;
+  color: var(--faint);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.lang button:hover { background: var(--stone); color: var(--ink); }
+.lang button[aria-current='true'] { background: var(--brand); color: #fff; }
+
+/* a button that has to read as a link (footer language list) */
+.linklike {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: inherit;
+  color: var(--body);
+  cursor: pointer;
+  text-align: left;
+}
+.linklike:hover { color: var(--ink); }
+
+/* Only the active language is shown. display:none also removes the other from
+   the accessibility tree, so a screen reader never reads the page twice. */
+html[data-lang='th'] [data-t]:not([lang='th']),
+html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
+
+/* ---------- mobile menu ----------
+   A <details> rather than a scripted drawer: it opens, closes and takes
+   keyboard focus with no JavaScript, so the only way to reach the sections on
+   a phone does not depend on a script having loaded. Hidden above 960px,
+   which is exactly where .nav-links comes back. */
+
+.mnav { display: none; position: relative; flex: none; }
+.mnav-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.mnav-btn::-webkit-details-marker { display: none; }
+.mnav-btn::marker { content: ''; }
+.mnav-i { width: 22px; height: 22px; }
+.mnav-i-close { display: none; }
+.mnav[open] .mnav-btn { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+.mnav[open] .mnav-i-open { display: none; }
+.mnav[open] .mnav-i-close { display: block; }
+
+.mnav-panel {
+  position: absolute;
+  top: calc(100% + 13px);
+  right: 0;
+  z-index: 1;
+  width: min(290px, calc(100vw - 2 * var(--gutter)));
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lift);
+}
+.mnav-panel a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding-inline: 14px;
+  border-radius: 9px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.mnav-panel a:hover { background: var(--stone); }
+.mnav-sep { height: 1px; background: var(--line); margin: 6px 10px; }
+.mnav-tel { font-weight: 600 !important; color: var(--brand) !important; }
+.mnav-tel .ic { width: 1.15em; height: 1.15em; color: var(--accent); }
+.mnav-panel .btn {
+  margin-top: 6px;
+  min-height: 48px;
+  justify-content: center;
+  font-weight: 600;
+  color: #fff;
+  background: var(--brand);
+}
+.mnav-panel .btn:hover { background: var(--brand-deep); color: #fff; transform: none; }
+
+.nav-tel { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); font-size: 0.9375rem; }
+.nav-tel .ic { color: var(--accent); }
+.nav-in > .btn { padding: 0.66em 1.35em; font-size: 0.9375rem; }
+
+/* ---------- hero ---------- */
+
+/* The dark field is the brand board, not decoration: it is the one place the
+   highlight is allowed to be the loudest thing on screen, and it puts thirty years
+   of trading in white type before a visitor has scrolled anything. */
+.hero { background: var(--panel); position: relative; overflow: hidden; color: var(--on-panel-body); }
+/* the mark, blown up and cropped — pattern, not illustration */
+.hero-mark {
+  position: absolute;
+  right: -6%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(620px, 52%);
+  color: var(--mark-wash);
+  pointer-events: none;
+}
+/* minmax(0,…) not plain fr: an fr column will not shrink below its content's
+   min-content width, so the longer English copy would otherwise steal width
+   from the panel beside it */
+.hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.78fr); gap: clamp(30px, 5vw, 64px); align-items: center; padding-block: clamp(58px, 8vw, 104px); }
+.hero-copy { display: grid; gap: 22px; justify-items: start; }
+.hero .label { color: var(--highlight); }
+.hero .label::before, .hero .label::after { background: var(--rule-on-panel); }
+.hero h1 { font-size: clamp(2rem, 4.3vw, 3.05rem); line-height: 1.34; color: var(--on-panel); }
+/* The rule is painted as a background, not an absolutely-positioned ::after,
+   so the phrase is free to wrap — box-decoration-break underlines each line
+   fragment. An ::after would need white-space:nowrap to look right, and that
+   is what makes the longer English phrase overflow. */
+.hero h1 em {
+  font-style: normal;
+  color: var(--highlight);
+  padding-bottom: 0.2em;
+  background: linear-gradient(var(--highlight), var(--highlight)) no-repeat;
+  background-size: 100% 0.085em;
+  background-position: 0 100%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.hero-lede { font-size: 1.1rem; max-width: 32em; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero-fine { display: flex; align-items: center; gap: 9px; font-size: 0.9rem; color: var(--on-panel-dim); }
+.hero-fine .ic { width: 1.1em; height: 1.1em; color: var(--highlight); }
+
+.stats { display: flex; gap: clamp(18px, 3vw, 34px); padding-top: 6px; }
+.stat b {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--on-panel);
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+.stat b .ic { width: 0.72em; height: 0.72em; color: var(--highlight); }
+.stat > span { display: block; font-size: 0.85rem; color: var(--on-panel-dim); line-height: 1.5; }
+.stat + .stat { border-left: 1px solid var(--panel-line); padding-left: clamp(18px, 3vw, 34px); }
+
+/* the credential card — what a hotel's purchasing officer is actually reading */
+/* The right-hand column: a photograph of the crew at work, with the
+   procurement checklist riding up over its lower edge. The photo is the
+   client's own — it is what a demo cannot have and a real site must. */
+.hero-side { display: grid; justify-items: stretch; }
+.hero-photo { position: relative; margin: 0; }
+.hero-photo img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: 50% 34%;
+  border-radius: 18px;
+  box-shadow: var(--shadow-lift);
+}
+.hero-photo figcaption {
+  margin: 12px 4px 0;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--on-panel-faint);
+}
+.hero-side .hero-card { margin-top: 20px; }
+
+.hero-card {
+  background: var(--panel-card);
+  border: 1px solid var(--panel-card-line);
+  border-radius: 16px;
+  padding: clamp(22px, 3vw, 30px);
+  display: grid;
+  gap: 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.hero-card h2 {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--highlight);
+  line-height: 1.5;
+}
+.hero-card-row { display: flex; align-items: flex-start; gap: 13px; }
+.hero-card-row .ic { width: 1.4em; height: 1.4em; color: var(--highlight); margin-top: 0.2em; }
+.hero-card-row b { display: block; color: var(--on-panel); font-weight: 600; font-size: 0.98rem; line-height: 1.5; }
+.hero-card-row > div > span { font-size: 0.845rem; line-height: 1.6; color: var(--on-panel-dim); }
+
+/* ---------- assurance strip ---------- */
+
+.assure { background: var(--panel-deep); color: var(--on-panel-body); }
+.assure-in { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 3vw, 40px); padding-block: 34px; }
+.assure-item { display: flex; align-items: flex-start; gap: 13px; }
+.assure-item .ic { width: 1.5em; height: 1.5em; color: var(--highlight); margin-top: 0.15em; }
+.assure-item b { display: block; color: var(--on-panel); font-weight: 600; font-size: 0.9575rem; line-height: 1.5; }
+.assure-item > div > span { font-size: 0.84rem; line-height: 1.6; color: var(--on-panel-dim); }
+
+/* ---------- services ---------- */
+
+/* Icon tiles rather than photographs, on purpose. The buyer here is a hotel's
+   engineering manager reading at their desk; a photograph of the thing being
+   controlled is the one image guaranteed to make them close the tab. */
+.svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.svc {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: clamp(22px, 2.6vw, 28px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.svc:hover { border-color: var(--brand); box-shadow: var(--shadow-soft); transform: translateY(-3px); }
+.svc-ic {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  background: var(--brand-tint);
+  color: var(--brand);
+  display: grid;
+  place-items: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.svc-ic svg { width: 32px; height: 32px; }
+.svc:hover .svc-ic { background: var(--brand); color: var(--on-brand); }
+.svc h3 { font-size: 1.22rem; }
+.svc p { font-size: 0.9375rem; line-height: 1.78; }
+/* The three things the client's own service sheet says about every pest —
+   prevent, control, advise — as a short list under the summary. Kept to two
+   rows so six cards still scan in one screen. */
+.svc-pts { list-style: none; display: grid; gap: 9px; margin: 0 0 4px; padding: 0; }
+.svc-pts li { display: flex; gap: 9px; align-items: flex-start; font-size: 0.88rem; line-height: 1.65; color: var(--body); }
+.svc-pts .ic { width: 1.05em; height: 1.05em; margin-top: 0.42em; color: var(--accent); }
+.svc-pts > li > div > b { color: var(--ink); font-weight: 600; }
+.svc-foot {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  max-width: 74ch;
+  margin: clamp(26px, 3vw, 36px) auto 0;
+  padding: 16px 20px;
+  background: var(--brand-tint);
+  border-radius: 12px;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--body);
+}
+.svc-foot .ic { width: 1.3em; height: 1.3em; margin-top: 0.24em; color: var(--brand); }
+
+.svc-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; padding-top: 4px; }
+.svc-tags > span {
+  font-size: 0.775rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--brand);
+  background: var(--brand-tint);
+  border-radius: 999px;
+  padding: 4px 11px;
+}
+
+/* ---------- equipment: the recurring-revenue line ---------- */
+
+/* Given its own band because renting a unit and servicing it monthly is the
+   part of this business that renews itself, and it is invisible in a list of
+   pests. Azure is the mark's colour and appears only here. */
+.gear { background: var(--band); border-block: 1px solid var(--line); }
+.gear-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr); gap: clamp(30px, 5vw, 62px); align-items: center; padding-block: clamp(52px, 7vw, 82px); }
+.gear-copy { display: grid; gap: 18px; justify-items: start; }
+.gear-copy .label { color: #1C5E96; }
+.gear-copy .label::before { background: #1C5E96; }
+.gear-copy h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.gear-list { display: grid; gap: 12px; width: 100%; }
+.gear-row { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem; line-height: 1.72; }
+.gear-row .ic { width: 1.2em; height: 1.2em; color: #1C5E96; margin-top: 0.32em; }
+.gear-row b { color: var(--ink); font-weight: 600; }
+
+/* Two of the client's own photographs, offset from each other so the pair
+   reads as a spread rather than a grid of stock. */
+.gear-art { position: relative; display: grid; gap: 16px; grid-template-columns: 1fr 1fr; align-items: start; }
+.gear-photo { margin: 0; }
+.gear-photo img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 16px; box-shadow: var(--shadow-soft); }
+.gear-photo--sm { margin-top: clamp(24px, 5vw, 52px); }
+.gear-tag {
+  position: absolute;
+  left: -10px;
+  bottom: -18px;
+  background: var(--brand);
+  color: var(--on-brand);
+  border-radius: 10px;
+  padding: 9px 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+  box-shadow: var(--shadow-soft);
+}
+
+/* ---------- sectors ---------- */
+
+.plan-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; align-items: stretch; }
+.plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: clamp(22px, 2.6vw, 28px);
+}
+.plan-pop { border-color: var(--brand); box-shadow: var(--shadow-lift); }
+.plan-flag {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--brand);
+  color: var(--on-brand);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.plan h3 { font-size: 1.18rem; }
+.plan-size { font-size: 0.875rem; color: var(--faint); line-height: 1.6; }
+.plan ul { list-style: none; display: grid; gap: 9px; margin-top: 2px; }
+.plan li { display: flex; align-items: flex-start; gap: 9px; font-size: 0.9rem; line-height: 1.7; }
+.plan li .ic { width: 1.05em; height: 1.05em; color: var(--accent); margin-top: 0.3em; }
+.plan .btn { margin-top: auto; width: 100%; }
+.plan-note { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px clamp(20px, 4vw, 44px); margin-top: clamp(28px, 4vw, 40px); font-size: 0.9rem; }
+.plan-note > span { display: inline-flex; align-items: center; gap: 8px; }
+.plan-note .ic { width: 1.05em; height: 1.05em; color: var(--accent); }
+
+/* ---------- standards & paperwork ---------- */
+
+.std { display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 68px); align-items: center; }
+.std-copy { display: grid; gap: 18px; justify-items: start; }
+.std-copy h2 { font-size: clamp(1.7rem, 3.1vw, 2.3rem); }
+.std-list { display: grid; gap: 18px; margin-top: 4px; width: 100%; }
+.std-row { display: flex; align-items: flex-start; gap: 14px; }
+.std-row .ic { width: 1.35em; height: 1.35em; color: var(--accent); margin-top: 0.28em; }
+.std-row b { display: block; color: var(--ink); font-weight: 600; font-size: 1rem; line-height: 1.55; }
+.std-row p { font-size: 0.9125rem; line-height: 1.75; margin-top: 3px; }
+
+/* The service report, drawn rather than photographed. It is the single
+   artefact that decides this sale — an audit file needs a document in it —
+   so the page shows one instead of describing it. */
+.std-art { display: grid; gap: clamp(20px, 3vw, 28px); align-content: start; }
+.std-photo { margin: 0; }
+.std-photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 16px; box-shadow: var(--shadow-soft); }
+.doc-mark { width: 34px; height: 34px; }
+
+/* The certification marks the client supplied. They are the reason a
+   purchasing department reads this section at all, so they sit with the
+   standards copy rather than in a logo strip at the bottom nobody reaches. */
+.certs { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: clamp(18px, 2.4vw, 24px); }
+.certs-head { font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--ink); margin-bottom: 16px; }
+.certs-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.certs-row figure { margin: 0; display: grid; justify-items: center; gap: 9px; text-align: center; }
+.certs-row img { width: 62px; height: 62px; object-fit: contain; }
+.certs-row figcaption { font-size: 0.76rem; line-height: 1.5; color: var(--faint); }
+.certs-note { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 0.84rem; line-height: 1.7; color: var(--body); }
+
+/* ---------- work gallery ---------- */
+
+.gal-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.2vw, 24px); }
+.gal-item { margin: 0; }
+.gal-item img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; box-shadow: var(--shadow-soft); }
+.gal-item figcaption { margin-top: 11px; font-size: 0.84rem; line-height: 1.65; color: var(--body); }
+
+/* ---------- client roster ---------- */
+
+/* A dark band, because this is the section a purchasing manager screenshots
+   and sends to their boss. Names only, never logos — a logo is a trademark
+   and needs a permission we do not have. */
+.clients { background: var(--panel-deep); color: var(--on-panel); padding-block: clamp(52px, 7vw, 84px); }
+.sec-head--panel h2 { color: var(--on-panel); }
+.sec-head--panel .label { color: var(--highlight); }
+.sec-head--panel .label::before, .sec-head--panel .label::after { background: var(--rule-on-panel); }
+.cl-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 26px); }
+.cl-col {
+  background: var(--panel-card);
+  border: 1px solid var(--panel-card-line);
+  border-radius: 15px;
+  padding: clamp(18px, 2.2vw, 24px);
+  display: grid;
+  gap: 11px;
+  align-content: start;
+}
+.cl-ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 11px; background: rgba(255,255,255,0.08); color: var(--highlight); }
+.cl-ic svg { width: 22px; height: 22px; }
+.cl-col > b { font-size: 0.9575rem; font-weight: 600; color: var(--on-panel); }
+.cl-col p { font-size: 0.9rem; line-height: 1.85; color: var(--on-panel-body); }
+.cl-note { max-width: 76ch; margin: clamp(24px, 3vw, 34px) auto 0; text-align: center; font-size: 0.86rem; line-height: 1.75; color: var(--on-panel-faint); }
+
+/* ---------- letters ---------- */
+
+.rev-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 26px); align-items: stretch; }
+.rev {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: clamp(20px, 2.6vw, 28px);
+  box-shadow: var(--shadow-soft);
+}
+.rev-q { width: 30px; height: 30px; color: var(--highlight-soft); flex: none; }
+.rev blockquote { margin: 0; font-size: 0.94rem; line-height: 1.85; color: var(--body); }
+.rev figcaption { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); display: grid; gap: 3px; }
+.rev figcaption > b { font-size: 0.9375rem; font-weight: 600; color: var(--ink); }
+.rev figcaption > span { font-size: 0.82rem; line-height: 1.6; color: var(--faint); }
+
+/* ---------- coverage ---------- */
+
+.cover { background: var(--panel); color: var(--on-panel-body); }
+.cover .sec-head h2 { color: var(--on-panel); }
+.cover .sec-head .label { color: var(--highlight); }
+.cover .sec-head .label::before, .cover .sec-head .label::after { background: var(--rule-on-panel); }
+.cover-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.cover-item {
+  border: 1px solid var(--panel-card-line);
+  border-radius: 14px;
+  padding: 22px 20px;
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  background: var(--panel-card);
+}
+.cover-item--hq { background: var(--highlight); border-color: var(--highlight); }
+.cover-item .ic { width: 1.5em; height: 1.5em; color: var(--highlight); }
+.cover-item b { color: var(--on-panel); font-family: var(--font-display); font-weight: 600; font-size: 1.08rem; line-height: 1.4; }
+.cover-item > span { font-size: 0.84rem; line-height: 1.6; color: var(--on-panel-dim); }
+.cover-item--hq .ic { color: var(--on-highlight); }
+.cover-item--hq b { color: var(--on-highlight); }
+.cover-item--hq > span { color: var(--on-highlight-dim); }
+
+/* ---------- process ---------- */
+
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(22px, 3vw, 34px); }
+.step { display: grid; gap: 12px; }
+.step-n {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.28;
+}
+.step h3 { font-size: 1.14rem; padding-top: 14px; border-top: 1px solid var(--line); }
+.step p { font-size: 0.9125rem; line-height: 1.78; }
+
+/* ---------- faq ---------- */
+
+.faq { max-width: 820px; margin-inline: auto; border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 21px 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.08rem;
+  line-height: 1.55;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { color: var(--brand); }
+.faq .mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  flex: none;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.faq .mark svg { width: 14px; height: 14px; }
+.faq details[open] summary .mark { transform: rotate(45deg); background: var(--accent-tint); border-color: var(--accent-tint); }
+.faq-a { padding-bottom: 22px; font-size: 0.9375rem; line-height: 1.85; max-width: 62em; }
+
+/* ---------- survey request ---------- */
+
+.book { background: var(--panel); color: var(--on-panel-body); }
+.book-grid { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: clamp(34px, 5vw, 68px); align-items: start; }
+.book-copy { display: grid; gap: 22px; justify-items: start; }
+.book-copy .label { color: var(--highlight); }
+.book-copy .label::before, .book-copy .label::after { background: var(--rule-on-panel); }
+.book-copy h2 { color: var(--on-panel); font-size: clamp(1.7rem, 3vw, 2.3rem); }
+.book-copy > p { max-width: 30em; }
+.book-list { display: grid; gap: 2px; width: 100%; }
+.book-row { display: flex; align-items: center; gap: 14px; padding-block: 15px; border-bottom: 1px solid var(--panel-line); }
+.book-row:first-child { border-top: 1px solid var(--panel-line); }
+.book-row .ic { width: 1.3em; height: 1.3em; color: var(--highlight); }
+.book-row a, .book-row b { color: var(--on-panel); font-weight: 600; font-size: 0.9575rem; }
+.book-row a:hover { color: var(--highlight); }
+.book-row small { display: block; font-size: 0.8rem; color: var(--on-panel-faint); font-weight: 400; line-height: 1.5; }
+
+.map-card { width: 100%; border: 1px solid var(--panel-line); border-radius: 12px; overflow: hidden; }
+.map-view {
+  position: relative;
+  height: 128px;
+  background:
+    repeating-linear-gradient(0deg, var(--map-grid) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, var(--map-grid) 0 1px, transparent 1px 26px),
+    var(--map-ground);
+}
+.map-road { position: absolute; background: var(--map-road); border-radius: 2px; }
+.map-pin { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -74%); color: var(--highlight); filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45)); }
+.map-pin svg { width: 32px; height: 32px; }
+.map-meta { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 16px; font-size: 0.85rem; color: var(--on-panel-body); background: var(--panel-card); }
+/* flex:none — the address beside it will happily squeeze this to nothing,
+   and its label is nowrap, so the icon ends up outside the link */
+.map-meta a { color: var(--highlight); font-weight: 600; white-space: nowrap; flex: none; }
+
+.book-form { background: #fff; border-radius: 14px; padding: clamp(26px, 3.2vw, 38px); box-shadow: var(--shadow-lift); }
+.book-form h3 { font-size: 1.3rem; }
+.form-sub { font-size: 0.9rem; color: var(--faint); margin-top: 5px; margin-bottom: 22px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.field { display: grid; gap: 6px; }
+.field-full { grid-column: 1 / -1; }
+.field label { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+.field label em { font-style: normal; color: #C0392B; }
+.field input, .field select, .field textarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.9575rem;
+  color: var(--ink);
+  background: var(--stone);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 11px 13px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.field textarea { resize: vertical; min-height: 88px; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--brand); background: #fff; }
+.form-grid .btn { margin-top: 4px; width: 100%; }
+.form-fine { grid-column: 1 / -1; display: flex; align-items: flex-start; gap: 9px; font-size: 0.82rem; color: var(--faint); line-height: 1.6; }
+.form-fine .ic { width: 1.05em; height: 1.05em; color: var(--accent); margin-top: 0.25em; }
+/* Hidden from people, reachable by a bot. Never named website/url/email2:
+   a browser would autofill those for a real customer and drop the enquiry. */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form-err { grid-column: 1 / -1; display: none; font-size: 0.875rem; line-height: 1.65; color: #B03A2E; background: #FDEDEC; border: 1px solid #F5C6C1; border-radius: 8px; padding: 11px 13px; }
+.form-err.show { display: block; }
+.form-err a { color: #B03A2E; font-weight: 700; text-decoration: underline; }
+
+.form-ok { display: none; text-align: center; padding: 26px 8px; }
+.book-form.sent .form-grid { display: none; }
+.book-form.sent .form-ok { display: grid; gap: 12px; justify-items: center; }
+.ok-ic { width: 66px; height: 66px; border-radius: 50%; background: var(--accent-tint); color: var(--accent); display: grid; place-items: center; }
+.ok-ic svg { width: 32px; height: 32px; }
+.form-ok h4 { font-family: var(--font-display); font-weight: 600; font-size: 1.28rem; color: var(--ink); }
+.form-ok p { font-size: 0.9375rem; max-width: 27em; }
+
+/* ---------- credit + footer ---------- */
+
+.wlc { background: var(--stone); border-top: 1px solid var(--line); }
+.wlc-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 20px; padding-block: 20px; text-align: center; font-size: 0.9rem; }
+.wlc-in .ic { width: 1.15em; height: 1.15em; color: var(--accent); }
+.wlc-in b { color: var(--ink); }
+
+.footer { background: #fff; border-top: 1px solid var(--line); }
+.foot-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 36px; padding-block: clamp(44px, 6vw, 62px); }
+.foot-brand { display: grid; gap: 16px; justify-items: start; }
+.foot-brand p { font-size: 0.9rem; max-width: 25em; }
+.socials { display: flex; gap: 9px; }
+.soc { width: 38px; height: 38px; border-radius: 9px; border: 1px solid var(--line); color: var(--brand); display: grid; place-items: center; transition: border-color 0.15s ease, background 0.15s ease; }
+.soc:hover { border-color: var(--brand); background: var(--stone); }
+.soc svg { width: 18px; height: 18px; }
+.foot-col h4 { font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); margin-bottom: 14px; }
+.foot-col ul { list-style: none; display: grid; gap: 9px; font-size: 0.9375rem; }
+.foot-col a { color: var(--body); }
+.foot-col a:hover { color: var(--ink); }
+.foot-col li { display: flex; gap: 9px; align-items: flex-start; line-height: 1.6; }
+.foot-col li .ic { width: 1.1em; height: 1.1em; color: var(--accent); margin-top: 0.28em; }
+.foot-bottom { border-top: 1px solid var(--line); padding-block: 18px; font-size: 0.8rem; color: var(--faint); text-align: center; line-height: 1.7; }
+
+/* ---------- mobile action bar ---------- */
+
+.mcta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 70;
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+}
+.mcta .btn { width: 100%; padding: 0.75em 1em; }
+
+/* ---------- reveal ---------- */
+
+.anim .rv { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; transition-delay: var(--d, 0s); }
+.anim .rv.in { opacity: 1; transform: none; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1180px) {
+  .cover-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 1080px) {
+  .cl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rev-grid { grid-template-columns: 1fr; }
+  .svc-grid, .plan-grid { grid-template-columns: repeat(2, 1fr); }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 960px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-mark { display: none; }
+  .std, .gear-in { grid-template-columns: 1fr; }
+  .book-grid { grid-template-columns: 1fr; }
+  .assure-in { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .gal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nav-links, .nav-tel { display: none; }
+  .mnav { display: block; }
+  .steps { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 700px) {
+  .cover-grid { grid-template-columns: repeat(2, 1fr); }
+  .cl-grid { grid-template-columns: 1fr; }
+  .gal-grid { grid-template-columns: 1fr; }
+  .gear-art { grid-template-columns: 1fr; }
+  .gear-photo--sm { margin-top: 0; }
+}
+
+@media (max-width: 600px) {
+  .site { font-size: 1rem; padding-bottom: 78px; }
+  .svc-grid, .plan-grid, .cover-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; max-width: 560px; margin-inline: auto; }
+  .assure-in { grid-template-columns: 1fr; gap: 18px; }
+  .hero h1 { font-size: clamp(1.85rem, 8vw, 2.25rem); }
+  .hero-cta .btn { width: 100%; }
+  .stats { flex-wrap: wrap; gap: 14px 26px; }
+  .stat + .stat { border-left: 0; padding-left: 0; }
+  .gear-tag { left: 6px; }
+  .doc-stamp { position: static; transform: rotate(-6deg); margin: 16px auto 0; }
+  .form-grid { grid-template-columns: 1fr; }
+  .foot-grid { grid-template-columns: 1fr; gap: 30px; }
+  .faq-a { padding-right: 0; }
+  .mcta { display: grid; }
+  /* lift the cookie bar clear of the mobile action bar it would otherwise sit on */
+  .mcta ~ .cookie { bottom: calc(80px + env(safe-area-inset-bottom)); }
+
+  /* The header CTA comes off on a phone: the brand, the switcher and a button
+     do not fit in 390px, and .mcta already pins the same action to the bottom
+     of every screen. Shrinking it instead just clipped the switcher. */
+  .nav-in { gap: 12px; }
+  .nav-in > .btn { display: none; }
+  .logo-name { font-size: 1.04rem; }
+  .logo-name small { font-size: 0.6rem; letter-spacing: 0.1em; }
+
+  /* 44px minimum hit area on anything tappable (iOS HIG) */
+  .logo { min-height: 44px; }
+  .soc { width: 44px; height: 44px; }
+  .lang button { min-height: 44px; }
+  .book-row a,
+  .foot-col a,
+  .foot-col .linklike,
+  .map-meta a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .foot-col li { align-items: center; }
+  .foot-col li .ic { margin-top: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .site *, .site *::before, .site *::after { animation: none !important; transition: none !important; }
+  .rv { opacity: 1 !important; transform: none !important; }
+}
+
+/* ---------- cookie notice ----------
+   The answer decides whether the analytics in <head> ever loads, so the bar
+   is on every page the site emits, not only the home page. */
+
+.cookie {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 80;
+  width: min(660px, calc(100vw - 28px));
+  display: none;
+  gap: 12px 14px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lift);
+  padding: 16px 18px;
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+.cookie.show { display: flex; }
+.cookie p { flex: 1 1 250px; }
+.cookie a { color: var(--brand); font-weight: 600; }
+.cookie .btn { padding: 0.62em 1.2em; font-size: 0.86rem; }
+
+/* ---------- privacy page (dist/privacy.html) ----------
+   A legal page carries none of the home page's JS or icon sprite, so it is
+   written to stand on its own with the same palette and type. */
+
+.legal-top { border-bottom: 1px solid var(--line); background: #fff; }
+.legal-top-in { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-block: 12px; }
+.legal-top-end { display: flex; align-items: center; gap: 14px; }
+.legal-home { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; letter-spacing: 0.03em; color: var(--ink); text-decoration: none; }
+.legal-home svg { width: 32px; height: 32px; border-radius: 8px; flex: none; }
+.legal-tel { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: 0.95rem; color: var(--brand); text-decoration: none; }
+.legal-tel:hover { color: var(--brand-deep); }
+
+.legal { padding-block: clamp(34px, 6vw, 60px) clamp(48px, 8vw, 78px); }
+.legal-in { max-width: 760px; }
+.legal-crumb { font-size: 0.85rem; color: var(--faint); margin-bottom: 14px; }
+.legal-crumb a { color: var(--brand); }
+.legal h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.7rem, 4.2vw, 2.25rem); line-height: 1.35; color: var(--ink); }
+.legal-date { margin-top: 10px; font-size: 0.9rem; color: var(--faint); }
+
+.legal-note { margin-top: 26px; border-left: 4px solid var(--accent); background: var(--accent-tint); border-radius: 0 10px 10px 0; padding: 15px 19px; font-size: 0.94rem; color: var(--ink); }
+
+.prose { margin-top: 30px; }
+.prose h2 { margin-top: 34px; font-family: var(--font-display); font-weight: 600; font-size: 1.22rem; line-height: 1.5; color: var(--ink); }
+.prose p { margin-top: 12px; }
+.prose b { color: var(--ink); font-weight: 600; }
+.prose ul { margin-top: 12px; padding-left: 0; list-style: none; display: grid; gap: 8px; }
+.prose li { position: relative; padding-left: 26px; }
+.prose li::before { content: ""; position: absolute; left: 6px; top: 0.72em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+
+.legal-back { margin-top: 40px; }
+
+.legal-foot { background: var(--stone); border-top: 1px solid var(--line); padding-block: 26px; }
+.legal-foot p { font-size: 0.82rem; line-height: 1.75; color: var(--faint); text-align: center; }
+.legal-foot p + p { margin-top: 8px; }
+.legal-foot b { color: var(--ink); }
+
+@media (max-width: 700px) {
+  .cookie .btn { min-height: 44px; }
+  .cookie a,
+  .form-fine a,
+  .legal-crumb a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
+  .legal-back .btn { width: 100%; }
+  .legal-top-in { flex-wrap: wrap; }
+  .legal-crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; margin-bottom: 6px; }
+}
+
+/* Something the company has not supplied yet, marked so it cannot ship by
+   accident and so the client sees exactly what we are still waiting for. */
+.pending {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--band);
+  border: 1px dashed var(--brand);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--brand);
+  vertical-align: 0.08em;
+}
+.foot-addr { margin-top: 10px; font-size: 0.84rem; line-height: 1.7; color: var(--on-panel-faint); }

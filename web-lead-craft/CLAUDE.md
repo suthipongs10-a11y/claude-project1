@@ -188,6 +188,23 @@ element's computed size and colour must equal the span's. It shipped broken in
 grey where the design says 32px ink) and `demo-cleaning-pro` (20, the pricing
 page among them) and was invisible on both until it was measured.
 
+## A master narrower than 1200px used to ship a broken image
+
+`buildDerivatives()` refuses to upscale, but `applyImages()` wrote
+`src="…-1200.webp"` and a full three-width srcset regardless. Any master under
+1200px therefore pointed at a file that was never written — a broken `<img>` on
+the page. It never fired on the demos because every stock photo in them happens
+to be wider than 1200; the first client to send photographs off a phone hit it
+immediately.
+
+`availableWidths(masterWidth)` is now the single answer to "which files exist",
+called by the writer and the rewriter both, so they cannot disagree. It also
+adds the master's own width when it falls between two steps, so a 720px phone
+photo is served at 720 instead of dropping to 480.
+
+**Client photos come off phones.** Expect portrait, expect under 1200px wide,
+and crop rather than upscale — `tools/` has no upscaler and should not get one.
+
 ## Deployment
 
 Cloudflare Pages, framework preset **None** (no build step runs on their side).

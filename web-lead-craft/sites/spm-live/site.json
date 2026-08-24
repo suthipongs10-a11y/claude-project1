@@ -1,0 +1,26 @@
+{
+  "name": "Scientific Pest Management (Thailand)",
+  "domain": "spm-live.pages.dev",
+  "lang": "th",
+  "languages": [
+    {
+      "code": "th",
+      "label": "ไทย"
+    },
+    {
+      "code": "en",
+      "label": "EN"
+    }
+  ],
+  "notFound": {
+    "title": "ไม่พบหน้าที่คุณกำลังมองหา / Page not found",
+    "text": "หน้านี้อาจถูกย้ายหรือลบไปแล้ว — This page may have moved or been removed.",
+    "cta": "กลับหน้าแรก / Back to home",
+    "bg": "#F3F7FB",
+    "body": "#4A5C71",
+    "ink": "#10263F",
+    "accent": "#005B9C",
+    "radius": "10px"
+  },
+  "note": "เว็บไซต์จริงของ Scientific Pest Management (Thailand) — แพ็กเกจ Business 1,990.- เนื้อหา ภาพถ่าย รายชื่อลูกค้า และคำรับรอง มาจากเอกสารที่บริษัทส่งให้ ยังรอ: LINE ID, ยืนยันเวลาทำการ, ยืนยันสิทธิ์ใช้ชื่อลูกค้าและคำรับรอง, ข้อมูลสินค้า (ส่วนที่ 6). ดู docs/handover-spm-live.md"
+}

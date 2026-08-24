@@ -12,11 +12,44 @@ import { readdirSync, existsSync, statSync, mkdirSync, readFileSync } from 'node
 import { join, parse } from 'node:path';
 
 export const WIDTHS = [480, 800, 1200];
+
+/**
+ * The widths worth deriving from a master this wide.
+ *
+ * The standard steps, minus any that would upscale — plus the master's own
+ * width when it falls between two steps, so a 720px phone photo is still
+ * served at 720 rather than dropping to 480 and looking soft. Both the
+ * derivative writer and the markup rewriter call this, so they cannot
+ * disagree about which files exist.
+ */
+export function availableWidths(masterWidth) {
+  const fit = WIDTHS.filter(w => w <= masterWidth);
+  const largest = fit[fit.length - 1];
+  if (masterWidth < WIDTHS[WIDTHS.length - 1] && masterWidth !== largest) fit.push(masterWidth);
+  return fit.length ? fit : [masterWidth];
+}
 const PREVIEW_WIDTH = 800; // inlined into preview.html — the artifact cap is
                            // 16MB, so favour fidelity for client review
 const QUALITY = 78;
 
 const srcDir = dir => join(dir, 'src', 'img');
+
+/**
+ * The derivative widths that exist for each master, keyed by name.
+ *
+ * buildDerivatives() refuses to upscale, so a master narrower than 1200px
+ * has no 1200 file — and a srcset naming one, or worse a `src` pointing at
+ * one, is a broken image on the page. This map is what keeps the markup
+ * honest about which files were actually written.
+ */
+export async function widthsFor(dir) {
+  const map = new Map();
+  for (const name of listImages(dir)) {
+    const meta = await sharp(join(srcDir(dir), `${name}.webp`)).metadata();
+    map.set(name, availableWidths(meta.width));
+  }
+  return map;
+}
 
 export function listImages(dir) {
   const d = srcDir(dir);
@@ -35,9 +68,7 @@ export async function buildDerivatives(dir, dist) {
   for (const name of names) {
     const master = join(srcDir(dir), `${name}.webp`);
     const meta = await sharp(master).metadata();
-    for (const w of WIDTHS) {
-      // never upscale past the master
-      if (w > meta.width) continue;
+    for (const w of availableWidths(meta.width)) {
       const out = join(outDir, `${name}-${w}.webp`);
       if (existsSync(out) && statSync(out).mtimeMs >= statSync(master).mtimeMs) {
         bytes += statSync(out).size;
@@ -71,7 +102,7 @@ export async function inlineMap(dir) {
  * For preview: a single inlined data URI, and srcset/sizes are dropped
  * because there is nothing else to choose between.
  */
-export function applyImages(html, { inline = null, sizesDefault = '100vw', base = '' } = {}) {
+export function applyImages(html, { inline = null, sizesDefault = '100vw', base = '', widths = null } = {}) {
   return html.replace(/\{\{img:([a-z0-9-]+)(?::([^}]+))?\}\}/g, (_m, name, sizes) => {
     if (inline) {
       const uri = inline.get(name);
@@ -82,8 +113,11 @@ export function applyImages(html, { inline = null, sizesDefault = '100vw', base 
     // straight off disk, where "/img/…" would resolve to the drive root. `base`
     // carries the extra depth of a page in a subfolder — without it an article
     // asks for /articles/img/… and gets a 404.
-    const set = WIDTHS.map(w => `${base}img/${name}-${w}.webp ${w}w`).join(', ');
-    return `src="${base}img/${name}-1200.webp" srcset="${set}" sizes="${sizes || sizesDefault}"`;
+    const avail = widths?.get(name) ?? WIDTHS;
+    if (avail.length === 0) throw new Error(`no derivatives for image "${name}" — is src/img/${name}.webp readable?`);
+    const largest = avail[avail.length - 1];
+    const set = avail.map(w => `${base}img/${name}-${w}.webp ${w}w`).join(', ');
+    return `src="${base}img/${name}-${largest}.webp" srcset="${set}" sizes="${sizes || sizesDefault}"`;
   });
 }
 
