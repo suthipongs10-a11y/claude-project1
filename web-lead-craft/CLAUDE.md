@@ -40,15 +40,35 @@ the day-to-day workflow and Cloudflare Pages limits.
    Official Account. LINE Notify was discontinued March 2025 — never quote it.
    **A static site has nowhere to POST to, so every contact form goes through
    `form-worker/`** — one Cloudflare Worker for all clients, keyed on the
-   site's Origin, pushing into that client's LINE OA. A client is added by
-   editing the SITES secret, never by deploying. Point a site at it with
-   `FORM_ENDPOINT` in `head.html`; empty means demo mode, where the form only
-   pretends to send. Two rules that are not negotiable: **the success panel
-   may only appear after delivery is confirmed** — a lost enquiry the shop
-   never learns about is the worst thing this business can ship — and **a
-   honeypot field must never be named `website`, `url` or `email2`**, because
-   browser autofill would fill it for a real customer and drop every genuine
-   lead in silence.
+   site's Origin. A client is added by editing the SITES secret, never by
+   deploying. Point a site at it with `FORM_ENDPOINT` in `head.html`; empty
+   means demo mode, where the form only pretends to send.
+
+   **Delivery is channel-agnostic: LINE, email, or both** (2026-08-25).
+   Which one a client uses is decided by what they already run, not by what we
+   built. **Default to email.** Not because it is better — because LINE needs
+   the *client* to enable Messaging API and dig a `lineTo` out of the LINE
+   Developers Console, and a client who has never opened that page is a launch
+   that slips by weeks. Email needs nothing from them but an address: the
+   Resend account and the sending domain are ours. Adding LINE to a live client
+   later is one line in the SITES secret.
+   Email sends from **our** domain, never the client's — putting an `include:`
+   into a company's existing SPF record risks their whole outbound mail, and
+   `Reply-To` (the visitor's own address, validated first) gives the client
+   the one-click reply that was the point anyway. An address that fails
+   validation loses the header, never the enquiry.
+
+   Three rules that are not negotiable:
+   - **The success panel may only appear after delivery is confirmed** — a lost
+     enquiry the shop never learns about is the worst thing this business can
+     ship. With several channels that means *at least one confirmed*; all
+     channels are attempted, and 502 only when every one of them failed.
+   - **A site with no complete channel is a loud 500, every time.** Accepting a
+     form we cannot deliver is the same lost lead wearing a green tick, and it
+     would look fine from the outside — which is exactly why it must fail.
+   - **A honeypot field must never be named `website`, `url` or `email2`**,
+     because browser autofill would fill it for a real customer and drop every
+     genuine lead in silence.
    **Never add a Meta/Facebook Pixel to a client site** — dropped 2026-08-06.
    The snippet is trivial; the support is not. Selling it invites Business
    Suite questions the operator cannot answer, and a feature we cannot support

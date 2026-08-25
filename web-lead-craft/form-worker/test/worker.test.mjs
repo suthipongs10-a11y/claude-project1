@@ -1,6 +1,7 @@
 // Tests the Worker's real exported handler with real Request/Response objects.
-// Only the outbound call to LINE is stubbed — everything the Worker does with
-// the incoming request is the code that gets deployed, not a re-implementation.
+// Only the outbound calls — LINE and the email API — are stubbed; everything
+// the Worker does with the incoming request is the code that gets deployed,
+// not a re-implementation.
 //
 //   node --test form-worker/test/
 import { test } from 'node:test';
@@ -245,4 +246,200 @@ test('the optional webhook mirror does not delay or endanger the lead', async ()
     assert.ok(calls.some(u => u.includes('api.line.me')));
     assert.ok(calls.some(u => u.includes('mirror')));
   } finally { globalThis.fetch = real; }
+});
+
+
+// --- delivery channels ------------------------------------------------------
+//
+// The property under test throughout this block is one rule: the page may show
+// its success panel only when something actually confirmed the enquiry. Every
+// case below is that rule from a different angle — one channel, two channels,
+// one of two down, both down, and none configured at all.
+
+const EMAIL_ENV = { RESEND_KEY: 'test-key', EMAIL_FROM: 'WLC <leads@wlc.example>' };
+
+/** Stub both outbound APIs at once and choose what each of them answers.
+ *  Routes on the URL the Worker really calls, so a change of endpoint shows up
+ *  here as a test that stops seeing traffic rather than one that quietly passes. */
+function stubNet({ line = 200, email = 200, emailBody = '{"id":"e1"}' } = {}) {
+  const calls = { line: [], email: [] };
+  const real = globalThis.fetch;
+  globalThis.fetch = async (url, init) => {
+    const u = String(url);
+    const body = JSON.parse(init.body);
+    if (u.includes('line')) {
+      calls.line.push({ url: u, init, body });
+      return new Response('{"message":"nope"}', { status: line });
+    }
+    calls.email.push({ url: u, init, body });
+    return new Response(emailBody, { status: email });
+  };
+  return { calls, restore: () => { globalThis.fetch = real; } };
+}
+
+const envFor = (site, extra = {}) => ({
+  SITES: JSON.stringify({ [ORIGIN]: site }), ...extra,
+});
+
+const EMAIL_SITE = { name: 'SPM', emailTo: 'bangkok@spm.example' };
+const BOTH_SITE = { ...SITES[ORIGIN], ...EMAIL_SITE, name: 'CleanDay' };
+
+test('a client with only an email address still gets the lead', async () => {
+  const net = stubNet();
+  try {
+    const res = await call(post(valid), envFor(EMAIL_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    assert.deepEqual(await res.json(), { ok: true });
+
+    assert.equal(net.calls.line.length, 0, 'no LINE config means no LINE call');
+    assert.equal(net.calls.email.length, 1);
+    const sent = net.calls.email[0];
+    assert.equal(sent.url, 'https://api.resend.com/emails');
+    assert.equal(sent.init.headers.authorization, 'Bearer test-key');
+    assert.equal(sent.body.from, 'WLC <leads@wlc.example>');
+    assert.deepEqual(sent.body.to, ['bangkok@spm.example']);
+    assert.match(sent.body.text, /เบอร์โทร: 0812345678/);
+    assert.match(sent.body.html, /เบอร์โทร: 0812345678/);
+  } finally { net.restore(); }
+});
+
+test('the subject line says who it is and how to reach them', async () => {
+  // What the marketing desk sees in the inbox list decides whether this gets
+  // opened now or after lunch, so it has to carry the lead on its own.
+  const net = stubNet();
+  try {
+    await call(post({ ...valid, company: 'โรงแรมสมมติ' }), envFor(EMAIL_SITE, EMAIL_ENV));
+    const subject = net.calls.email[0].body.subject;
+    assert.match(subject, /SPM/);
+    assert.match(subject, /โรงแรมสมมติ/);
+    assert.match(subject, /0812345678/);
+    assert.doesNotMatch(subject, /\n/, 'a subject must be one line');
+  } finally { net.restore(); }
+});
+
+test('reply-to is the visitor, so answering is one click in their own mail client', async () => {
+  const net = stubNet();
+  try {
+    await call(post({ ...valid, email: 'khun@example.com' }), envFor(EMAIL_SITE, EMAIL_ENV));
+    assert.equal(net.calls.email[0].body.reply_to, 'khun@example.com');
+  } finally { net.restore(); }
+});
+
+test('a mistyped email costs the reply-to, never the enquiry', async () => {
+  // Resend rejects the whole message over a malformed Reply-To. Losing a lead
+  // to somebody's typo would be a ridiculous way to lose one, so the header is
+  // dropped and what they typed still travels in the body.
+  const net = stubNet();
+  try {
+    const res = await call(post({ ...valid, email: 'khun@ example, com' }),
+      envFor(EMAIL_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    const sent = net.calls.email[0].body;
+    assert.equal(sent.reply_to, undefined, 'no header we cannot vouch for');
+    assert.match(sent.text, /khun@ example, com/, 'the client still sees what was typed');
+  } finally { net.restore(); }
+});
+
+test('every address on the list gets it — a marketing desk is more than one person', async () => {
+  const net = stubNet();
+  try {
+    const site = { ...EMAIL_SITE, emailTo: ['bangkok@spm.example', ' wattana@spm.example '] };
+    await call(post(valid), envFor(site, EMAIL_ENV));
+    assert.deepEqual(net.calls.email[0].body.to,
+      ['bangkok@spm.example', 'wattana@spm.example']);
+  } finally { net.restore(); }
+});
+
+test('a client with both channels gets the enquiry in both places', async () => {
+  const net = stubNet();
+  try {
+    const res = await call(post(valid), envFor(BOTH_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    assert.equal(net.calls.line.length, 1);
+    assert.equal(net.calls.email.length, 1);
+    assert.equal(net.calls.line[0].body.messages[0].text, net.calls.email[0].body.text);
+  } finally { net.restore(); }
+});
+
+test('one channel down does not lose a lead the other one delivered', async () => {
+  const net = stubNet({ line: 401 });
+  try {
+    const res = await call(post(valid), envFor(BOTH_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200, 'the email arrived, so the visitor was right to see a tick');
+    assert.deepEqual(await res.json(), { ok: true });
+    assert.equal(net.calls.email.length, 1, 'a dead LINE must not skip the email');
+  } finally { net.restore(); }
+});
+
+test('the email is still attempted when LINE is the one that fails', async () => {
+  // Not first-one-wins and not sequential: a client with both expects both.
+  const net = stubNet({ email: 500 });
+  try {
+    const res = await call(post(valid), envFor(BOTH_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    assert.equal(net.calls.line.length, 1);
+  } finally { net.restore(); }
+});
+
+test('when every channel fails the page is told, so it can show the phone number', async () => {
+  const net = stubNet({ line: 401, email: 422 });
+  try {
+    const res = await call(post(valid), envFor(BOTH_SITE, EMAIL_ENV));
+    assert.equal(res.status, 502);
+    assert.deepEqual(await res.json(), { ok: false, error: 'delivery_failed' });
+  } finally { net.restore(); }
+});
+
+test('a client with no channel at all is a loud fault, never a silent ok', async () => {
+  // The failure this whole Worker exists to prevent: a form that looks like it
+  // worked and delivered nowhere. It must not be reachable by forgetting a key.
+  const net = stubNet();
+  try {
+    const res = await call(post(valid), envFor({ name: 'Half-Set-Up' }, EMAIL_ENV));
+    assert.equal(res.status, 500);
+    assert.deepEqual(await res.json(), { ok: false, error: 'server_misconfigured' });
+    assert.equal(net.calls.email.length + net.calls.line.length, 0);
+  } finally { net.restore(); }
+});
+
+test('an email channel missing its API key is a fault, not a skipped channel', async () => {
+  const net = stubNet();
+  try {
+    const res = await call(post(valid), envFor(EMAIL_SITE, {}));
+    assert.equal(res.status, 500, 'a client who believes their form works must not be left believing it');
+    assert.equal(net.calls.email.length, 0);
+  } finally { net.restore(); }
+});
+
+test('a half-configured channel does not stop the working one', async () => {
+  // emailTo set, no key: the email channel is broken, LINE is not. The lead
+  // goes out on LINE and the gap is logged rather than costing the enquiry.
+  const net = stubNet();
+  try {
+    const res = await call(post(valid), envFor({ ...BOTH_SITE }, {}));
+    assert.equal(res.status, 200);
+    assert.equal(net.calls.line.length, 1);
+    assert.equal(net.calls.email.length, 0);
+  } finally { net.restore(); }
+});
+
+test('the destination addresses come from our config, never from the body', async () => {
+  const net = stubNet();
+  try {
+    await call(post({ ...valid, emailTo: 'attacker@evil.example', to: 'attacker@evil.example' }),
+      envFor(EMAIL_SITE, EMAIL_ENV));
+    assert.deepEqual(net.calls.email[0].body.to, ['bangkok@spm.example']);
+    assert.doesNotMatch(JSON.stringify(net.calls.email[0].body), /evil\.example/);
+  } finally { net.restore(); }
+});
+
+test('a note cannot inject markup into the HTML part of the email', async () => {
+  const net = stubNet();
+  try {
+    await call(post({ ...valid, note: '<img src=x onerror=alert(1)>' }),
+      envFor(EMAIL_SITE, EMAIL_ENV));
+    const html = net.calls.email[0].body.html;
+    assert.doesNotMatch(html, /<img/);
+    assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/);
+  } finally { net.restore(); }
 });

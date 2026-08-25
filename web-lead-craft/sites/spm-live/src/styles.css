@@ -800,6 +800,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .field-full { grid-column: 1 / -1; }
 .field label { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
 .field label em { font-style: normal; color: #C0392B; }
+.field label .opt { font-weight: 500; font-size: 0.92em; color: var(--faint); }
 .field input, .field select, .field textarea {
   width: 100%;
   font-family: var(--font-body);

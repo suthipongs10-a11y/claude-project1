@@ -664,6 +664,10 @@
               <input id="f-tel" name="tel" type="tel" inputmode="tel" required pattern="0[0-9]{8,9}" title="{{t|กรอกเบอร์ 9–10 หลัก เช่น 0812345678|Enter a 9–10 digit Thai number, e.g. 0812345678}}" placeholder="0812345678" autocomplete="tel">
             </div>
             <div class="field field-full">
+              <label for="f-email">{{t|อีเมล|Email}} <span class="opt">{{t|ใส่ไว้จะส่งใบเสนอราคาให้ทางอีเมลได้|so we can send the quotation over}}</span></label>
+              <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="{{t|name@company.co.th|name@company.co.th}}">
+            </div>
+            <div class="field field-full">
               <label for="f-company">{{t|ชื่อสถานประกอบการ|Business name}}</label>
               <input id="f-company" name="company" type="text" autocomplete="organization" placeholder="{{t|เช่น โรงแรม / ร้าน / อาคาร ชื่ออะไร|e.g. the name of the hotel, restaurant or building}}">
             </div>
@@ -708,7 +712,7 @@
               <input id="f-hp" name="wlc_hp" type="text" tabindex="-1" autocomplete="off">
             </div>
             <button class="btn btn-ink btn-lg field-full" type="submit">{{t|ส่งคำขอสำรวจหน้างาน|Request the survey}}</button>
-            <p class="form-err" id="formErr" role="alert">{{t|ส่งไม่สำเร็จ ขออภัยครับ — รบกวนโทร <a href="tel:029413990">02-941-3990</a> หรือทัก LINE: @spmpest แทน|Sorry, that did not send. Please call <a href="tel:029413990">02-941-3990</a> or message LINE: @spmpest instead.}}</p>
+            <p class="form-err" id="formErr" role="alert">{{t|ส่งไม่สำเร็จ ขออภัยครับ — รบกวนโทร <a href="tel:029413990">02-941-3990</a> หรือทัก LINE: @560ipaso แทน|Sorry, that did not send. Please call <a href="tel:029413990">02-941-3990</a> or message LINE: @560ipaso instead.}}</p>
             <p class="form-fine">
               <svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg>
               {{t|คำขอจะเด้งเข้าระบบของทีมงานทันทีที่กดส่ง จึงไม่มีงานไหนตกหล่น · ข้อมูลของคุณใช้ติดต่อกลับเท่านั้น|Your request reaches our team the second you send it, so nothing gets missed · Your details are used only to contact you.}}

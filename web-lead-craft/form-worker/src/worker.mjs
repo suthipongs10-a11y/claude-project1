@@ -2,7 +2,14 @@
 //
 // A static site has nowhere to POST to, so this is the receiver: it takes the
 // form, works out which client it belongs to from the Origin header, and
-// pushes the enquiry into that client's LINE Official Account.
+// delivers the enquiry to whichever channels that client has configured —
+// their LINE Official Account, their email inbox, or both.
+//
+// Delivery is channel-agnostic on purpose. Which channel a client can actually
+// use is decided by what THEY already run, not by what we implemented: a shop
+// with a LINE OA wants LINE, an office that lives in Outlook wants email, and
+// asking a client to set up the one we happen to support is how a launch slips
+// by three weeks. Adding a channel to a live client stays a SITES edit.
 //
 // Deliberately one Worker rather than one per client. Adding a client is a
 // change to the SITES secret, never a deploy — the same rule the rest of this
@@ -61,10 +68,21 @@ const reply = (status, body, headers = {}) =>
  *
  *  { "https://cleanday.co.th": {
  *      "name": "CleanDay",
+ *
+ *      // LINE channel — both keys, or neither.
  *      "lineToken": "…channel access token…",
  *      "lineTo": "…userId or groupId to push to…",
+ *
+ *      // Email channel — one address or several. `emailFrom` may be omitted
+ *      // and defaults to the EMAIL_FROM secret; the API key always does.
+ *      "emailTo": ["sales@cleanday.co.th", "owner@cleanday.co.th"],
+ *      "emailFrom": "CleanDay Website <leads@ourdomain.com>",
+ *
  *      "webhook": "https://…"        // optional, gets the same JSON
  *  } }
+ *
+ *  At least one channel must be configured. A site entry with none is a
+ *  misconfiguration that gets a 500, never a cheerful 200 — see deliver().
  *
  *  Kept as one secret rather than one per client so adding a client is a
  *  single `wrangler secret put`, and so a token never lands in wrangler.toml.
@@ -125,6 +143,73 @@ function composeMessage(site, fields, meta) {
   return lines.join('\n').slice(0, 4900);
 }
 
+/** An address we are willing to put in a Reply-To header.
+ *
+ *  Deliberately strict about what it refuses rather than clever about what it
+ *  accepts: no whitespace, no comma or semicolon, no angle brackets. Those are
+ *  the characters that turn one recipient into several, or a bare address into
+ *  a display name pointing somewhere else. */
+const EMAIL_RE = /^[^\s@,;<>"]+@[^\s@,;<>"]+\.[a-z]{2,}$/i;
+
+/** Where the client wants their enquiries. Accepts one address or a list —
+ *  SPM's marketing desk is two people, and a lead should reach both. */
+function recipients(value) {
+  const list = Array.isArray(value) ? value : String(value ?? '').split(',');
+  return list.map(a => String(a).trim()).filter(a => EMAIL_RE.test(a));
+}
+
+const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ESCAPES[c]);
+
+/** The line the client sees in their inbox list, before they open anything.
+ *
+ *  Who and how-to-reach-them, because that is what decides whether this gets
+ *  opened now or after lunch. `note` is not in here — it is the one field that
+ *  keeps newlines, and a subject must be one line. */
+function composeSubject(site, fields) {
+  const who = fields.company || fields.name || 'ผู้ติดต่อใหม่';
+  const how = fields.tel || fields.email;
+  return `[${site.name ?? 'เว็บไซต์'}] ลูกค้าใหม่: ${who}${how ? ` · ${how}` : ''}`
+    .replace(/\s+/g, ' ')
+    .slice(0, 180);
+}
+
+/** Same text, wrapped so a mail client renders the line breaks. `pre-wrap`
+ *  rather than <br>: nothing to escape wrongly, and it still wraps on a phone. */
+const emailHtml = text =>
+  '<div style="font-family:system-ui,-apple-system,\'Segoe UI\',Roboto,sans-serif;' +
+  'font-size:15px;line-height:1.7;color:#10263F;white-space:pre-wrap">' +
+  escapeHtml(text) + '</div>';
+
+/** Send through Resend. Their REST API takes JSON, so no header of ours is
+ *  built by string concatenation and there is nothing for a newline to break.
+ *
+ *  Reply-To is the entire point of the email channel: the client hits reply in
+ *  the mail client they already have open and it goes to the customer. But an
+ *  address that fails EMAIL_RE is dropped rather than sent — Resend rejects the
+ *  whole message over a malformed Reply-To, and losing an enquiry to somebody's
+ *  typo would be a ridiculous way to lose it. What they typed still appears in
+ *  the body either way. */
+async function sendEmail(channel, fields, text, subject) {
+  const replyTo = EMAIL_RE.test(fields.email) ? fields.email : undefined;
+  const res = await fetch(`${channel.api}/emails`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: `Bearer ${channel.key}` },
+    body: JSON.stringify({
+      from: channel.from,
+      to: channel.to,
+      subject,
+      text,
+      html: emailHtml(text),
+      ...(replyTo ? { reply_to: replyTo } : {}),
+    }),
+  });
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    throw new Error(`email ${res.status}: ${detail.slice(0, 200)}`);
+  }
+}
+
 async function pushToLine(site, text) {
   const res = await fetch(`${site.lineApi ?? 'https://api.line.me'}/v2/bot/message/push`, {
     method: 'POST',
@@ -138,6 +223,64 @@ async function pushToLine(site, text) {
     const detail = await res.text().catch(() => '');
     throw new Error(`LINE ${res.status}: ${detail.slice(0, 200)}`);
   }
+}
+
+/** Work out which channels this client actually has, and say plainly why any
+ *  half-configured one was skipped.
+ *
+ *  "Half-configured" matters more than it looks: a site with `emailTo` but no
+ *  sending key is a client who believes their form works. Skipping that in
+ *  silence is how a lead disappears with nobody to notice, so it is logged
+ *  even when the other channel carries the message.
+ */
+function channelsFor(site, env, skipped) {
+  const channels = [];
+
+  if (site.lineToken && site.lineTo) {
+    channels.push({ name: 'line', send: text => pushToLine(site, text) });
+  } else if (site.lineToken || site.lineTo) {
+    skipped.push('line: needs both lineToken and lineTo');
+  }
+
+  if (site.emailTo) {
+    const key = site.resendKey ?? env.RESEND_KEY;
+    const from = site.emailFrom ?? env.EMAIL_FROM;
+    const to = recipients(site.emailTo);
+    if (key && from && to.length) {
+      const channel = { api: site.emailApi ?? 'https://api.resend.com', key, from, to };
+      channels.push({
+        name: 'email',
+        send: (text, fields, subject) => sendEmail(channel, fields, text, subject),
+      });
+    } else {
+      skipped.push(`email: missing ${[!key && 'API key', !from && 'from address',
+        !to.length && 'a valid recipient'].filter(Boolean).join(', ')}`);
+    }
+  }
+
+  return channels;
+}
+
+/** Try every channel, and treat the enquiry as delivered if any one of them
+ *  confirms.
+ *
+ *  Not sequential, and not first-one-wins. A client with both channels expects
+ *  the lead in both places, so both are attempted; and if LINE is down while
+ *  email is up, the visitor should still see "we got it", because we did.
+ *
+ *  The rule this exists to keep: the page may only show its success panel once
+ *  something actually confirmed. Zero confirmations is a 502 and a phone
+ *  number on screen, never a green tick. */
+async function deliver(channels, text, fields, subject) {
+  const results = await Promise.allSettled(
+    channels.map(c => c.send(text, fields, subject)));
+
+  const failures = results
+    .map((r, i) => r.status === 'rejected'
+      ? `${channels[i].name}: ${r.reason?.message ?? r.reason}` : null)
+    .filter(Boolean);
+
+  return { delivered: results.length - failures.length, failures };
 }
 
 export default {
@@ -162,6 +305,18 @@ export default {
     // An unknown origin gets the same answer as a wrong one, and no CORS
     // header — so a probe cannot enumerate which domains we serve.
     if (!site) return reply(403, { ok: false, error: 'unknown_site' });
+
+    // Before anything else: can we deliver at all? A client whose entry names
+    // no working channel must fail here, loudly and every time. The tempting
+    // alternative — accept the form and drop it — is the one failure this
+    // whole Worker exists to prevent, and it would look fine from the outside.
+    const skipped = [];
+    const channels = channelsFor(site, env, skipped);
+    if (skipped.length) console.error(`config gap for ${origin} — ${skipped.join(' | ')}`);
+    if (!channels.length) {
+      console.error(`no delivery channel configured for ${origin}`);
+      return reply(500, { ok: false, error: 'server_misconfigured' }, cors(origin, site));
+    }
 
     const length = Number(request.headers.get('content-length') ?? 0);
     if (length > MAX_BODY) {
@@ -204,19 +359,19 @@ export default {
 
     const meta = { page: clean(raw.page ?? '', 'name') };
     const text = composeMessage(site, fields, meta);
+    const subject = composeSubject(site, fields);
 
-    try {
-      await pushToLine(site, text);
-    } catch (err) {
-      // The enquiry is lost if we simply 500 here, so say so plainly and let
+    const { delivered, failures } = await deliver(channels, text, fields, subject);
+    if (failures.length) console.error(`delivery failed for ${origin} — ${failures.join(' | ')}`);
+    if (!delivered) {
+      // The enquiry is lost if we answer ok here, so say so plainly and let
       // the page show its fallback: call, or message the shop on LINE.
-      console.error(`push failed for ${origin}: ${err.message}`);
       return reply(502, { ok: false, error: 'delivery_failed' }, cors(origin, site));
     }
 
     // A mirror of the same enquiry to anywhere else the client wants it —
-    // email service, spreadsheet, CRM. Deliberately after the LINE push and
-    // deliberately not awaited: a broken webhook must not lose a lead.
+    // spreadsheet, CRM, Zapier. Deliberately after delivery and deliberately
+    // not awaited: a broken webhook must not lose a lead.
     if (site.webhook) {
       const mirror = fetch(site.webhook, {
         method: 'POST',

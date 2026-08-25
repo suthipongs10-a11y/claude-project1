@@ -1,7 +1,8 @@
 {
-  "_comment": "Shape of the SITES secret. Copy to sites.json (gitignored), fill in real values, then: wrangler secret put SITES < sites.json. The key is the site's origin exactly as the browser sends it — scheme, host, no trailing slash, and one entry per domain the site answers on (with and without www if both are live).",
+  "_comment": "Shape of the SITES secret. Copy to sites.json (gitignored), fill in real values, then: wrangler secret put SITES < sites.json. The key is the site's origin exactly as the browser sends it — scheme, host, no trailing slash, and one entry per domain the site answers on (with and without www if both are live). Every entry needs at least one complete delivery channel: LINE (lineToken AND lineTo), email (emailTo, with RESEND_KEY and EMAIL_FROM set as their own secrets), or both. An entry with neither is refused with a 500 rather than accepting forms it cannot deliver.",
 
   "https://cleanday.co.th": {
+    "_comment": "LINE only — the shop already runs an OA and lives on their phone.",
     "name": "CleanDay คลีนเดย์",
     "lineToken": "PUT-THE-CHANNEL-ACCESS-TOKEN-HERE",
     "lineTo": "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -13,10 +14,19 @@
     "lineTo": "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   },
 
+  "https://spm.example.com": {
+    "_comment": "Email only — an office that works in Outlook, and two people on the marketing desk. No LINE keys, and that is a complete configuration.",
+    "name": "Scientific Pest Management",
+    "emailTo": ["bangkok@spm.example.com", "marketing@spm.example.com"]
+  },
+
   "https://altahome.example.com": {
+    "_comment": "Both channels. Each is attempted; the enquiry counts as delivered if either confirms. emailFrom overrides the EMAIL_FROM secret for this one client.",
     "name": "ALTA Home Care",
     "lineToken": "PUT-THE-CHANNEL-ACCESS-TOKEN-HERE",
     "lineTo": "Cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "emailTo": "owner@altahome.example.com",
+    "emailFrom": "ALTA Home Care <alta@shopdashth.com>",
     "webhook": "https://optional-mirror.example.com/hook"
   }
 }
