@@ -1,0 +1,52 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200 — Lanna East to Mekong</title>
+<meta name="description" content="การปั่นทางไกลจากล้านนาตะวันออกสู่ลุ่มน้ำโขง รุ่นปฐมฤกษ์ สัมผัสธรรมชาติ วัฒนธรรม และมิตรภาพตลอดเส้นทาง ลงทะเบียนรับข่าวสารก่อนเปิดรับสมัคร">
+<meta property="og:title" content="ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200 รุ่นปฐมฤกษ์">
+<meta property="og:description" content="การเดินทางด้วยสองล้อ ผ่านเส้นทางแห่งล้านนา สู่เส้นชัยของลุ่มน้ำโขง — ลงทะเบียนรับข่าวสารก่อนใคร">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="th_TH">
+<meta property="og:url" content="{{SITE_URL}}">
+<link rel="canonical" href="{{SITE_URL}}">
+<meta name="theme-color" content="#0B1C12">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<!-- Contact form delivery. A static site has nowhere to POST to, so the form
+     goes to our Cloudflare Worker (form-worker/ in the repo), which delivers
+     the entry to the organiser by email, LINE, or both. Put that Worker's URL
+     in FORM_ENDPOINT; leave it empty and the form only pretends to send,
+     which is how a demo must behave. -->
+<script>
+(function (w) {
+  w.FORM_ENDPOINT = '';
+  var opened = Date.now();
+  // A promise for "did it get through" — never rejects, so the page always
+  // has something to say.
+  w.wlcSend = function (form) {
+    var data = { page: location.pathname, elapsed: Date.now() - opened };
+    new FormData(form).forEach(function (v, k) { data[k] = v; });
+    if (!w.FORM_ENDPOINT) return Promise.resolve(true);
+    return fetch(w.FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  };
+})(window);
+</script>
+
+<!-- Deliberately NOT a schema.org/Event: an Event needs a startDate, and this
+     page's whole point is that the date is not announced yet. Publishing a
+     guessed date to Google would be the one lie the design is built to avoid. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200",
+  "alternateName": "Lanna East to Mekong 1200",
+  "description": "กิจกรรมปั่นจักรยานทางไกลจากล้านนาตะวันออกสู่ลุ่มน้ำโขง รุ่นปฐมฤกษ์",
+  "url": "{{SITE_URL}}",
+  "email": "info@lannaeast1200.com",
+  "areaServed": "ภาคเหนือ ประเทศไทย"
+}
+</script>

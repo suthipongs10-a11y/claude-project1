@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200">
+  <rect width="64" height="64" rx="8" fill="#0B1C12"/>
+  <g fill="none" stroke="#C9A227" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 8v6M28 14h8M32 14c0 5-5 6-5 11h10c0-5-5-6-5-11Z"/>
+    <path d="M22 25h20l-3 6H25Z"/><path d="M18 31h28l-3 7H21Z"/><path d="M14 38h36l-3 8H17Z"/>
+    <path d="M10 46h44"/>
+  </g>
+  <path d="M6 54c7-4 13-4 20 0s13 4 20 0 8-3 12 0v6H6Z" fill="#C9A227" opacity=".5"/>
+</svg>
