@@ -157,7 +157,7 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       const r = el.getBoundingClientRect();
       if (r.width < minTap || r.height < minTap) {
         const name = (el.textContent || el.getAttribute('aria-label') || el.tagName).trim().slice(0, 34)
-          || `<${el.tagName.toLowerCase()} class="${el.className}">`;
+          || `<${el.tagName.toLowerCase()} class="${el.getAttribute('class') || ''}">`;
         small.push(`${name} (${Math.round(r.width)}x${Math.round(r.height)})`);
       }
     }
@@ -212,7 +212,7 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       if (a.fontSize !== b.fontSize) diff.push(`${a.fontSize}\u2192${b.fontSize}`);
       if (a.color !== b.color) diff.push(`${a.color}\u2192${b.color}`);
       if (diff.length) {
-        const where = el.parentElement?.className || el.tagName.toLowerCase();
+        const where = el.parentElement?.getAttribute('class') || el.tagName.toLowerCase();
         bleeds.push(`<${el.tagName.toLowerCase()}> in .${where}: a CSS rule reaches its translation span (${diff.join(', ')}) \u2014 "${(sp.textContent || '').trim().slice(0, 24)}"`);
       }
     }
@@ -239,10 +239,12 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       const r = el.getBoundingClientRect();
       const over = Math.round(Math.max(r.right - inner.right, inner.left - r.left));
       if (over > 4) {
-        const what = el.className && typeof el.className === 'string'
-          ? '.' + el.className.trim().split(/\s+/)[0]
-          : el.tagName.toLowerCase();
-        spills.push(`${what} spills ${over}px out of ${parent.className ? '.' + String(parent.className).trim().split(/\s+/)[0] : parent.tagName.toLowerCase()}`);
+        // className is an SVGAnimatedString on SVG elements — getAttribute
+        // is the one accessor that returns a string for both.
+        const cls = n => (n.getAttribute('class') || '').trim();
+        const what = cls(el) ? '.' + cls(el).split(/\s+/)[0] : el.tagName.toLowerCase();
+        const inWhat = cls(parent) ? '.' + cls(parent).split(/\s+/)[0] : parent.tagName.toLowerCase();
+        spills.push(`${what} spills ${over}px out of ${inWhat}`);
       }
     }
 
@@ -311,7 +313,7 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
           if (pcs.display === 'flex' || pcs.display === 'inline-flex') continue;
           if (!STRETCH.has(pcs.justifyItems) || !STRETCH.has(cs.justifySelf)) continue;
           if (cs.width === 'max-content' || cs.width === 'fit-content') continue;
-          const key = el.className.trim().split(/\s+/).filter(c => c !== 'in').join('.');
+          const key = (el.getAttribute('class') || '').trim().split(/\s+/).filter(c => c !== 'in').join('.');
           const n = (seen.get(key) ?? 0) + 1;
           seen.set(key, n);
           out[`${key}#${n}`] = Math.round(r.width);

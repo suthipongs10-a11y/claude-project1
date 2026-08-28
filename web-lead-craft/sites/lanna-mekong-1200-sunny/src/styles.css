@@ -1,0 +1,449 @@
+/* ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200 — "สดใส" variant.
+ *
+ * A deliberately different design language from the night version:
+ * white ground, sky blue + fresh green + sunny yellow, big rounded shapes,
+ * wave dividers between bands, and hand-drawn SVG scenery instead of a dark
+ * panel. The brief is a nature-and-tourism ride, so the page should look
+ * like a holiday, not like an endurance trial.
+ *
+ * Every colour is a token in :root — tools/theme-variant.mjs can only work if
+ * no rule invents one inline, and the tinted bands need tokens too. */
+
+:root {
+  /* text */
+  --ink: #123047;
+  --body: #4C6375;
+  --faint: #7E93A2;
+
+  /* sky — the primary */
+  --sky: #1B8FD1;
+  --sky-deep: #12699C;
+  --sky-ink: #0C4C74;
+  --sky-tint: #E7F4FC;
+  --sky-soft: #BFE2F6;
+
+  /* leaf — nature, the route, the "yes" colour */
+  --leaf: #2E9E4C;
+  --leaf-deep: #1E7638;
+  --leaf-tint: #E6F6EB;
+  --leaf-soft: #B5E3C3;
+
+  /* sun — the accent and every call to action */
+  --sun: #FFC42E;
+  --sun-strong: #F5B00E;
+  --sun-ink: #7A5200;          /* yellow is unreadable as text: use this */
+  --sun-tint: #FFF6DE;
+
+  /* grounds */
+  --paper: #FFFFFF;
+  --stone: #F6FAFD;
+
+  /* what reads on a solid fill */
+  --on-sky: #FFFFFF;
+  --on-leaf: #FFFFFF;
+  --on-sun: #2B1D00;
+
+  --line: #DCE8F0;
+  --line-soft: #EAF1F6;
+
+  --shadow-s: 0 2px 4px rgba(18, 48, 71, 0.05), 0 8px 22px rgba(18, 48, 71, 0.07);
+  --shadow-m: 0 4px 10px rgba(18, 48, 71, 0.07), 0 22px 50px rgba(18, 48, 71, 0.12);
+  --shadow-sun: 0 8px 22px rgba(245, 176, 14, 0.36);
+
+  --r: 20px;      /* the rounded language of this variant */
+  --r-s: 14px;
+  --r-pill: 999px;
+
+  --display: 'Nunito', 'Mitr', system-ui, sans-serif;
+  --text: 'Source Sans 3', 'Anuphan', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  font-family: var(--text);
+  font-size: 17px;
+  line-height: 1.72;
+  color: var(--body);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+/* Thai stacks vowels and tone marks above and below the line, so it wants
+   more leading and none of the Latin letter-spacing. */
+:lang(th) { line-height: 1.86; letter-spacing: 0; }
+
+h1, h2, h3, h4 {
+  font-family: var(--display);
+  color: var(--ink);
+  line-height: 1.28;
+  margin: 0 0 0.5em;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+:lang(th) h1, :lang(th) h2, :lang(th) h3, :lang(th) h4 {
+  font-weight: 600; line-height: 1.5; letter-spacing: 0;
+}
+h2 { font-size: clamp(1.55rem, 3.2vw, 2.2rem); }
+h3 { font-size: 1.14rem; }
+p { margin: 0 0 1em; }
+p:last-child { margin-bottom: 0; }
+a { color: var(--sky-deep); }
+
+.wrap { width: min(1140px, calc(100% - 40px)); margin-inline: auto; }
+@media (max-width: 640px) { .wrap { width: calc(100% - 32px); } }
+.ic { width: 1.25em; height: 1.25em; flex: none; }
+
+/* ---------- buttons: pill-shaped, sunny ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  padding: 14px 26px; border-radius: var(--r-pill); border: 2px solid transparent;
+  font-family: var(--display); font-weight: 800; font-size: 0.98rem;
+  text-decoration: none; cursor: pointer; min-height: 50px;
+  transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+:lang(th) .btn { font-weight: 600; }
+.btn:hover { transform: translateY(-2px); }
+.btn-lg { padding: 16px 32px; font-size: 1.05rem; min-height: 56px; }
+.btn-sun { background: var(--sun); color: var(--on-sun); box-shadow: var(--shadow-sun); }
+.btn-sun:hover { background: var(--sun-strong); }
+.btn-sky { background: var(--sky); color: var(--on-sky); }
+.btn-sky:hover { background: var(--sky-deep); }
+.btn-out { background: var(--paper); color: var(--sky-deep); border-color: var(--sky-soft); }
+.btn-out:hover { border-color: var(--sky); background: var(--sky-tint); }
+.btn-leaf { background: var(--leaf); color: var(--on-leaf); }
+.btn-leaf:hover { background: var(--leaf-deep); }
+
+/* ---------- header: white and light, not a dark bar ---------- */
+.hdr {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(255, 255, 255, 0.93);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line-soft);
+}
+.hdr-in { display: flex; align-items: center; gap: 16px; min-height: 70px; }
+.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; margin-right: auto; }
+.brand svg { width: 40px; height: 40px; flex: none; }
+.brand-tx { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-tx b { font-family: var(--display); font-weight: 800; font-size: 1rem; color: var(--ink); }
+:lang(th) .brand-tx b { font-weight: 600; }
+.brand-tx span { font-size: 0.68rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--sky); font-weight: 700; }
+
+.nav { display: flex; align-items: center; gap: 2px; }
+.nav a {
+  color: var(--body); text-decoration: none; font-size: 0.94rem; font-weight: 600;
+  padding: 10px 13px; border-radius: var(--r-pill); min-height: 44px;
+  display: inline-flex; align-items: center;
+}
+.nav a:hover { color: var(--sky-deep); background: var(--sky-tint); }
+.hdr .btn { padding: 11px 22px; min-height: 44px; font-size: 0.93rem; }
+
+.burger {
+  display: none; background: var(--sky-tint); border: 0; color: var(--sky-deep);
+  width: 48px; height: 48px; border-radius: var(--r-s); cursor: pointer;
+  align-items: center; justify-content: center;
+}
+.burger svg { width: 22px; height: 22px; }
+@media (max-width: 940px) {
+  .nav { display: none; }
+  .burger { display: inline-flex; }
+  .hdr > .wrap > .btn { display: none; }
+  .nav.open {
+    display: flex; flex-direction: column; align-items: stretch; gap: 2px;
+    position: absolute; left: 0; right: 0; top: 100%;
+    background: var(--paper); border-bottom: 1px solid var(--line);
+    padding: 12px 20px 20px; box-shadow: var(--shadow-s);
+  }
+  .nav.open a { padding: 13px 14px; border-radius: var(--r-s); }
+  .nav.open .btn { margin-top: 10px; }
+}
+
+/* ---------- hero: sky gradient, centred, scenery underneath ---------- */
+.hero {
+  position: relative;
+  background: linear-gradient(180deg, #CFEBFA 0%, #E9F6FD 46%, var(--paper) 100%);
+  padding: 54px 0 0; text-align: center; overflow: hidden;
+}
+.pill {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--paper); color: var(--sky-deep);
+  border: 2px solid var(--sky-soft); border-radius: var(--r-pill);
+  padding: 8px 18px; font-family: var(--display); font-weight: 800; font-size: 0.87rem;
+  box-shadow: var(--shadow-s);
+}
+:lang(th) .pill { font-weight: 600; }
+.pill .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--leaf); flex: none; }
+
+.hero h1 {
+  font-size: clamp(2rem, 5.4vw, 3.5rem); margin: 20px auto 0;
+  max-width: 16ch; color: var(--ink);
+}
+.hero h1 em {
+  font-style: normal; color: var(--sky-deep);
+  /* a painted highlight rather than text-decoration: a real underline
+     collides with Thai below-vowels (ุ ู) */
+  background: linear-gradient(var(--sun), var(--sun)) no-repeat 0 88% / 100% 0.32em;
+  padding: 0 0.1em; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+.hero-en {
+  font-family: var(--display); font-weight: 700; font-size: clamp(0.78rem, 1.7vw, 0.95rem);
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--sky);
+  margin: 16px 0 0;
+}
+.hero-lede { font-size: 1.08rem; max-width: 56ch; margin: 18px auto 0; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 30px; }
+
+/* The landscape. At full width height:auto matches the viewBox exactly, so
+   the "slice" fit changes nothing there; on a phone the same ratio would
+   squash it to a 116px sliver showing only the sky, so give it a real height
+   and let slice crop the sides instead. */
+.scene { display: block; width: 100%; height: auto; margin-top: 34px; }
+@media (max-width: 760px) { .scene { height: 230px; margin-top: 22px; } }
+
+/* ---------- number bubbles, floating over the scene's foot ---------- */
+.bubbles {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;
+  margin-top: -58px; position: relative; z-index: 2;
+}
+.bub {
+  background: var(--paper); border-radius: var(--r); padding: 22px 14px;
+  text-align: center; box-shadow: var(--shadow-m);
+}
+.bub b {
+  display: block; font-family: var(--display); font-weight: 800;
+  font-size: clamp(1.5rem, 3.2vw, 2.05rem); line-height: 1.1; color: var(--sky-deep);
+  font-variant-numeric: tabular-nums;
+}
+.bub > span { display: block; font-size: 0.85rem; color: var(--faint); margin-top: 3px; }
+.bub:nth-child(2) b { color: var(--leaf-deep); }
+.bub:nth-child(3) b { color: var(--sun-ink); }
+@media (max-width: 720px) {
+  .bubbles { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: -34px; }
+}
+
+/* ---------- sections and wave dividers ---------- */
+.sec { padding: 76px 0; position: relative; }
+.sec-sky { background: var(--sky-tint); }
+.sec-leaf { background: var(--leaf-tint); }
+.sec-stone { background: var(--stone); }
+.wave { display: block; width: 100%; height: auto; }
+.wave-flip { transform: rotate(180deg); }
+
+.sec-head { max-width: 60ch; margin: 0 auto 44px; text-align: center; }
+.sec-head.left { margin-inline: 0; text-align: left; }
+.label {
+  display: inline-block; background: var(--sun-tint); color: var(--sun-ink);
+  border-radius: var(--r-pill); padding: 6px 16px; margin-bottom: 14px;
+  font-family: var(--display); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.04em;
+}
+:lang(th) .label { font-weight: 600; }
+.label-sky { background: var(--sky-tint); color: var(--sky-deep); }
+.label-leaf { background: var(--leaf-tint); color: var(--leaf-deep); }
+.sec-head p { font-size: 1.05rem; margin-top: 4px; }
+
+/* ---------- why-ride cards, each with its own little scene ---------- */
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+@media (max-width: 880px) { .cards { grid-template-columns: minmax(0, 1fr); max-width: 480px; margin-inline: auto; } }
+.card {
+  background: var(--paper); border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--shadow-s); transition: transform .2s ease, box-shadow .2s ease;
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-m); }
+.card > svg { display: block; width: 100%; height: auto; }
+.card-tx { padding: 22px 24px 26px; }
+.card-tx h3 { margin-bottom: 6px; }
+.card-tx p { font-size: 0.96rem; margin: 0; }
+.card-tag {
+  display: inline-block; font-size: 0.76rem; font-weight: 700; border-radius: var(--r-pill);
+  padding: 3px 12px; margin-bottom: 10px; background: var(--leaf-tint); color: var(--leaf-deep);
+}
+
+/* ---------- the route, as a journey line ---------- */
+.journey { display: grid; gap: 0; max-width: 860px; margin-inline: auto; }
+.stop {
+  display: grid; grid-template-columns: 74px 34px minmax(0, 1fr);
+  gap: 0 16px; align-items: start; position: relative;
+}
+.stop-km {
+  text-align: right; font-family: var(--display); font-weight: 800; font-size: 1.05rem;
+  color: var(--ink); font-variant-numeric: tabular-nums; padding-top: 14px;
+}
+.stop-km small { display: block; font-size: 0.66rem; font-weight: 700; color: var(--faint); }
+/* the line runs through the middle column; the dot sits on it */
+/* the rail must span the whole grid row, or it collapses to nothing: the
+   column's only child is an absolutely-positioned dot, so without stretch
+   its auto height is zero and the line renders in broken stubs */
+.stop-rail { position: relative; justify-self: center; align-self: stretch; width: 34px; }
+.stop-rail::before {
+  content: ''; position: absolute; left: 50%; top: 0; bottom: -1px; width: 3px;
+  margin-left: -1.5px; background: var(--sky-soft);
+}
+.stop:first-child .stop-rail::before { top: 22px; }
+.stop:last-child .stop-rail::before { bottom: auto; height: 22px; }
+.stop-dot {
+  position: absolute; left: 50%; top: 16px; width: 15px; height: 15px; margin-left: -7.5px;
+  border-radius: 50%; background: var(--paper); border: 3.5px solid var(--sky); z-index: 1;
+}
+.stop-river .stop-dot { border-color: var(--leaf); }
+.stop-big .stop-dot { width: 21px; height: 21px; margin-left: -10.5px; top: 13px; border-color: var(--sun-strong); }
+.stop-tx { padding: 12px 0 18px; min-width: 0; }
+.stop-tx b { display: block; font-family: var(--display); font-weight: 800; font-size: 1.04rem; color: var(--ink); }
+:lang(th) .stop-tx b { font-weight: 600; }
+.stop-tx > span { display: block; font-size: 0.9rem; color: var(--faint); }
+.chip {
+  display: inline-block; font-size: 0.73rem; font-weight: 700; border-radius: var(--r-pill);
+  padding: 2px 10px; margin-left: 8px; vertical-align: 2px;
+}
+.chip-river { background: var(--leaf-tint); color: var(--leaf-deep); }
+.chip-sleep { background: var(--sun-tint); color: var(--sun-ink); }
+.chip-time { background: var(--sky-tint); color: var(--sky-deep); }
+@media (max-width: 560px) {
+  .stop { grid-template-columns: 56px 26px minmax(0, 1fr); gap: 0 10px; }
+  .stop-km { font-size: 0.95rem; }
+}
+
+/* ---------- two-column facts (rules + kit) ---------- */
+.duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+@media (max-width: 820px) { .duo { grid-template-columns: minmax(0, 1fr); } }
+.panel {
+  background: var(--paper); border-radius: var(--r); padding: 28px 28px 30px;
+  box-shadow: var(--shadow-s);
+}
+.panel-head { display: flex; align-items: center; gap: 13px; margin-bottom: 16px; }
+.panel-ic { width: 48px; height: 48px; border-radius: 15px; display: grid; place-items: center; flex: none; }
+.panel-ic .ic { width: 24px; height: 24px; }
+.ic-sky { background: var(--sky-tint); color: var(--sky-deep); }
+.ic-leaf { background: var(--leaf-tint); color: var(--leaf-deep); }
+.ic-sun { background: var(--sun-tint); color: var(--sun-ink); }
+.panel-head h3 { margin: 0; }
+.ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.ticks li { display: flex; gap: 12px; align-items: flex-start; font-size: 0.97rem; }
+.ticks .ic { color: var(--leaf); margin-top: 0.28em; }
+.ticks b { color: var(--ink); font-weight: 600; }
+
+/* ---------- fee: a sunny band ---------- */
+.fee-band { background: var(--sun-tint); }
+.fee { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 34px; align-items: center; }
+@media (max-width: 860px) { .fee { grid-template-columns: minmax(0, 1fr); } }
+.price {
+  background: var(--paper); border-radius: var(--r); padding: 30px 28px;
+  box-shadow: var(--shadow-m); text-align: center;
+}
+.price .lbl { font-size: 0.88rem; color: var(--faint); }
+.price .amt {
+  font-family: var(--display); font-weight: 800; font-size: 3.2rem; line-height: 1.05;
+  color: var(--ink); margin: 6px 0 0; font-variant-numeric: tabular-nums;
+}
+.price .amt span { font-size: 1.15rem; color: var(--faint); margin-left: 5px; }
+.price .late { font-size: 0.92rem; margin-top: 8px; }
+.price .btn { width: 100%; margin-top: 18px; }
+.price .why { font-size: 0.86rem; color: var(--faint); border-top: 1px solid var(--line-soft); margin-top: 18px; padding-top: 14px; }
+
+/* ---------- FAQ ---------- */
+.faq { max-width: 800px; margin-inline: auto; }
+.faq details {
+  background: var(--paper); border-radius: var(--r-s); margin-bottom: 12px;
+  box-shadow: var(--shadow-s); overflow: hidden;
+}
+.faq summary {
+  cursor: pointer; list-style: none; padding: 18px 24px; min-height: 58px;
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  font-family: var(--display); font-weight: 800; color: var(--ink); font-size: 1rem;
+}
+:lang(th) .faq summary { font-weight: 600; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: ''; width: 22px; height: 22px; flex: none; border-radius: 50%;
+  background: var(--sky-tint) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2312699C' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / 14px no-repeat;
+  transition: transform .2s ease;
+}
+.faq details[open] summary::after { transform: rotate(180deg); }
+.faq .ans { padding: 0 24px 22px; font-size: 0.97rem; }
+
+/* ---------- form ---------- */
+.reg-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 30px; align-items: start; }
+@media (max-width: 880px) { .reg-grid { grid-template-columns: minmax(0, 1fr); } }
+.form { display: grid; gap: 15px; background: var(--paper); border-radius: var(--r); padding: 28px; box-shadow: var(--shadow-m); }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+.field .req { color: var(--sky); }
+.field input, .field select, .field textarea {
+  font-family: var(--text); font-size: 1rem; color: var(--ink);
+  background: var(--stone); border: 2px solid var(--line-soft);
+  border-radius: var(--r-s); padding: 13px 15px; min-height: 52px; width: 100%;
+}
+.field textarea { min-height: 96px; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--sky); background: var(--paper);
+}
+.field input::placeholder, .field textarea::placeholder { color: var(--faint); }
+.row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 15px; }
+@media (max-width: 520px) { .row2 { grid-template-columns: minmax(0, 1fr); } }
+/* honeypot: never named website/url/email2 — autofill would fill those for a
+   real rider and drop the entry in silence */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form-fine { font-size: 0.85rem; color: var(--faint); }
+/* an inline link still needs a 44px thumb target; the negative margin keeps
+   the padding from opening up the line spacing around it */
+.form-fine a { display: inline-block; padding-block: 13px; margin-block: -13px; font-weight: 600; }
+.form-msg { border-radius: var(--r-s); padding: 14px 16px; font-size: 0.95rem; display: none; }
+.form-msg.show { display: block; }
+.form-msg.ok { background: var(--leaf-tint); border: 2px solid var(--leaf-soft); color: var(--leaf-deep); }
+.form-msg.err { background: #FDECEC; border: 2px solid #F5C2C2; color: #A02020; }
+
+.aside { display: grid; gap: 16px; }
+.a-card { background: var(--paper); border-radius: var(--r); padding: 22px 24px; box-shadow: var(--shadow-s); }
+.a-card h3 { font-size: 1.02rem; margin-bottom: 8px; }
+.a-card p { font-size: 0.95rem; margin: 0; }
+.a-card .big { font-family: var(--display); font-weight: 800; font-size: 1.55rem; color: var(--sky-deep); }
+.a-card a { display: inline-block; padding-block: 12px; margin-block: -6px; font-weight: 600; }
+
+/* ---------- footer ---------- */
+.ftr { background: var(--ink); color: rgba(255, 255, 255, 0.72); padding: 54px 0 26px; font-size: 0.93rem; }
+.ftr-top { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(0, 1fr)); gap: 30px; }
+@media (max-width: 760px) { .ftr-top { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+.ftr h4 { color: #fff; font-size: 0.98rem; margin-bottom: 10px; }
+.ftr-links { display: grid; gap: 2px; }
+.ftr a { color: rgba(255, 255, 255, 0.82); text-decoration: none; padding: 10px 0; display: inline-block; min-height: 44px; line-height: 24px; }
+.ftr a:hover { color: var(--sun); }
+.ftr-bot { border-top: 1px solid rgba(255, 255, 255, 0.15); margin-top: 34px; padding-top: 20px; display: grid; gap: 12px; font-size: 0.86rem; }
+.demo-note { background: rgba(255, 255, 255, 0.07); border-radius: var(--r-s); padding: 14px 16px; font-size: 0.88rem; }
+.demo-note b { color: var(--sun); }
+.wlc { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; }
+.wlc b { color: #fff; }
+
+/* ---------- privacy page ---------- */
+.legal-top { border-bottom: 1px solid var(--line-soft); background: var(--paper); }
+.legal-top-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.legal-home { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-family: var(--display); font-weight: 800; font-size: 1rem; color: var(--ink); text-decoration: none; }
+:lang(th) .legal-home { font-weight: 600; }
+.legal-home svg { width: 32px; height: 32px; flex: none; }
+.legal-tel { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 4px; font-weight: 700; color: var(--sky-deep); text-decoration: none; }
+.legal { padding-block: clamp(36px, 6vw, 64px) clamp(48px, 8vw, 80px); }
+.legal-in { max-width: 760px; }
+.legal-crumb { font-size: 0.86rem; color: var(--faint); margin-bottom: 14px; }
+.legal-crumb a { display: inline-block; padding-block: 12px; margin-block: -12px; }
+.legal h1 { font-size: clamp(1.7rem, 4.4vw, 2.3rem); }
+.legal-date { margin-top: 10px; font-size: 0.92rem; color: var(--faint); }
+.legal-note { margin-top: 26px; border-left: 5px solid var(--sun); background: var(--sun-tint); border-radius: 0 var(--r-s) var(--r-s) 0; padding: 16px 20px; font-size: 0.96rem; color: var(--ink); }
+.prose { margin-top: 30px; }
+.prose h2 { margin-top: 34px; font-size: 1.25rem; line-height: 1.5; }
+.prose p { margin-top: 12px; }
+.prose b { color: var(--ink); font-weight: 600; }
+.prose ul { margin-top: 12px; padding-left: 0; list-style: none; display: grid; gap: 8px; }
+.prose li { position: relative; padding-left: 26px; }
+.prose li::before { content: ""; position: absolute; left: 6px; top: 0.78em; width: 8px; height: 8px; border-radius: 50%; background: var(--leaf); }
+.legal-back { margin-top: 40px; }
+.legal-foot { background: var(--stone); border-top: 1px solid var(--line-soft); padding-block: 26px; }
+.legal-foot p { font-size: 0.84rem; line-height: 1.75; color: var(--faint); text-align: center; }
+.legal-foot p + p { margin-top: 8px; }
+.legal-foot b { color: var(--ink); }
+
+/* ---------- reveal on scroll ----------
+   gated behind a JS-added class so nothing is hidden when scripts do not run */
+.anim .rv { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+.anim .rv.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .anim .rv { opacity: 1; transform: none; transition: none; } }
