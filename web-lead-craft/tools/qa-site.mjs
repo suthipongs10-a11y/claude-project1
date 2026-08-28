@@ -179,6 +179,12 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
           badImages.push(`${name} distorted (drawn ${drawn.toFixed(2)}:1 vs file ${natural.toFixed(2)}:1)`);
         }
       }
+      // did not load at all. A broken <img> keeps its CSS box, so it stays
+      // "visible", and its alt attribute still parses — nothing else here
+      // fails, which is how a site shipped with every photo missing.
+      if (im.complete && im.naturalWidth === 0) {
+        badImages.push(`${name} did not load — check the src`);
+      }
       // runaway box: usually a height attribute beating a CSS aspect-ratio
       if (r.height > r.width * 2.2) {
         badImages.push(`${name} renders ${Math.round(r.width)}x${Math.round(r.height)} — far taller than wide, check height:auto`);
