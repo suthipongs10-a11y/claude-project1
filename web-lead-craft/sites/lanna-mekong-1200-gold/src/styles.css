@@ -157,6 +157,7 @@ a { color: var(--gold-ink); }
 .hero { position: relative; background: var(--forest-deep); overflow: hidden; }
 .hero-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
 .hero-scene svg { width: 100%; height: 100%; display: block; }
+.hero-scene img { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* the dark wash that lets cream text sit on the picture */
 .hero::after {
   content: ''; position: absolute; inset: 0;
@@ -209,11 +210,13 @@ a { color: var(--gold-ink); }
 .virtue p { font-size: 0.9rem; margin: 0; }
 
 /* ---------- atmosphere strip ---------- */
-.strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+.strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 940px) { .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .strip { grid-template-columns: minmax(0, 1fr); } }
 .tile { border-radius: var(--r); overflow: hidden; border: 1px solid var(--line-forest); background: var(--tile-forest); }
 .tile svg { display: block; width: 100%; height: auto; }
+/* height:auto keeps the width/height attributes from beating aspect-ratio */
+.tile img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
 
 /* ---------- how the event is run: 6 columns ---------- */
 .sixes { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
