@@ -161,7 +161,9 @@ a { color: var(--gold-ink); }
 /* the dark wash that lets cream text sit on the picture */
 .hero::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(96deg, var(--forest-deep) 4%, rgba(11, 28, 18, 0.92) 30%, rgba(11, 28, 18, 0.28) 62%, rgba(11, 28, 18, 0.42) 100%);
+  background:
+    linear-gradient(94deg, rgba(11, 28, 18, 0.94) 0%, rgba(11, 28, 18, 0.82) 26%, rgba(11, 28, 18, 0.34) 52%, rgba(11, 28, 18, 0.14) 72%, rgba(11, 28, 18, 0.42) 100%),
+    linear-gradient(180deg, rgba(11, 28, 18, 0.45) 0%, transparent 22%, transparent 74%, rgba(11, 28, 18, 0.5) 100%);
 }
 .hero-in { position: relative; z-index: 2; padding: 92px 0 96px; max-width: 640px; }
 .hero h1 {
@@ -188,7 +190,21 @@ a { color: var(--gold-ink); }
 .sec-cream2 { background: var(--cream-2); }
 .sec-dark { background: var(--forest); color: var(--on-forest-body); position: relative; overflow: hidden; }
 .sec-dark h2, .sec-dark h3 { color: var(--on-forest); }
-.sec-darker { background: var(--forest-deep); color: var(--on-forest-body); overflow: hidden; }
+.sec-darker { background: var(--forest-deep); color: var(--on-forest-body); overflow: hidden; position: relative; }
+.sec-bg { position: absolute; inset: 0; z-index: 0; }
+.sec-bg img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .3; }
+.sec-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, var(--forest-deep) 0%, rgba(11, 28, 18, 0.62) 34%, rgba(11, 28, 18, 0.72) 66%, var(--forest-deep) 100%);
+}
+#signup .wrap { position: relative; z-index: 2; }
+/* On a phone the sign-up band is tall and narrow, so a full-height cover crop
+   left a 390x1149 sliver of the photo — nothing recognisable. Anchor it to the
+   top instead and let it fade into the band. */
+@media (max-width: 760px) {
+  .sec-bg { bottom: auto; height: 340px; }
+  .sec-bg::after { background: linear-gradient(180deg, rgba(11, 28, 18, 0.5) 0%, rgba(11, 28, 18, 0.72) 58%, var(--forest-deep) 100%); }
+}
 .sec-darker h2, .sec-darker h3 { color: var(--on-forest); }
 
 .eyebrow {
@@ -210,13 +226,21 @@ a { color: var(--gold-ink); }
 .virtue p { font-size: 0.9rem; margin: 0; }
 
 /* ---------- atmosphere strip ---------- */
-.strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
-@media (max-width: 940px) { .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 520px) { .strip { grid-template-columns: minmax(0, 1fr); } }
+/* A magazine grid: the strongest frame takes a 2x2 cell and the other four
+   fill the remaining column pair, so the row keeps one height while the
+   pictures stop being thumbnails. */
+.strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 176px; gap: 14px; }
+.strip > :first-child { grid-column: span 2; grid-row: span 2; }
+@media (max-width: 940px) { .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 150px; } }
+@media (max-width: 520px) { .strip { grid-auto-rows: 130px; } }
 .tile { border-radius: var(--r); overflow: hidden; border: 1px solid var(--line-forest); background: var(--tile-forest); }
 .tile svg { display: block; width: 100%; height: auto; }
-/* height:auto keeps the width/height attributes from beating aspect-ratio */
-.tile img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+/* an explicit height, so the grid cell decides the shape and object-fit
+   crops into it — never object-fit:fill, which would stretch faces */
+.tile img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.tile:hover img, .op:hover img { transform: scale(1.045); }
+.op img { transition: transform .6s ease; }
+.op { overflow: hidden; }
 
 /* ---------- how the event is run: 6 columns ---------- */
 .sixes { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
