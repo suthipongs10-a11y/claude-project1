@@ -1,0 +1,601 @@
+<div class="site">
+
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="i-bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="5.5" cy="17" r="3.6"/><circle cx="18.5" cy="17" r="3.6"/>
+      <path d="M5.5 17 10 8h4.5M9 8h4M14.5 8l4 9M12 17l2.5-6.5"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5.3l3.4 2"/>
+    </symbol>
+    <symbol id="i-mountain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2.5 19.5 9 7.5l4 7 2.2-3.5 6.3 8.5Z"/><path d="M7.2 12.2 9 9.2l1.7 3"/>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="8" r="3.4"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/>
+      <path d="M16.2 5.2a3.4 3.4 0 0 1 0 5.6M17.6 14.4A6.2 6.2 0 0 1 21.2 20"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 12.5l5 5 10-11"/>
+    </symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9"/>
+    </symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 21c4-4.4 6.5-7.8 6.5-11a6.5 6.5 0 1 0-13 0c0 3.2 2.5 6.6 6.5 11Z"/><circle cx="12" cy="10" r="2.4"/>
+    </symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 8c2.5-2.4 4.5-2.4 7 0s4.5 2.4 7 0 4.5-2.4 6 0"/>
+      <path d="M2 13.5c2.5-2.4 4.5-2.4 7 0s4.5 2.4 7 0 4.5-2.4 6 0"/>
+      <path d="M2 19c2.5-2.4 4.5-2.4 7 0s4.5 2.4 7 0 4.5-2.4 6 0"/>
+    </symbol>
+    <symbol id="i-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9.2 17.5h5.6M10 20.5h4"/>
+      <path d="M12 3a6 6 0 0 1 3.6 10.8c-.6.5-.9 1-.9 1.7H9.3c0-.7-.3-1.2-.9-1.7A6 6 0 0 1 12 3Z"/>
+    </symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3l7 2.6v5.6c0 4.3-2.9 7.6-7 9.2-4.1-1.6-7-4.9-7-9.2V5.6Z"/><path d="M9 11.8l2.1 2.1 4-4.4"/>
+    </symbol>
+    <symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="5.5" width="18" height="13" rx="2.2"/><path d="M3 10h18M6.5 14.5h4"/>
+    </symbol>
+    <symbol id="i-medal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="15" r="5.2"/><path d="M9 10.2 6.5 3h11L15 10.2"/><path d="M12 13.2l.9 1.8 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2L9 15.3l2-.3Z"/>
+    </symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 6A2.5 2.5 0 0 1 6.5 3.5h11A2.5 2.5 0 0 1 20 6v7.5a2.5 2.5 0 0 1-2.5 2.5H12l-4.5 4v-4h-1A2.5 2.5 0 0 1 4 13.5Z"/>
+    </symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 4h4l1.5 4.5-2.3 1.6a12 12 0 0 0 5.7 5.7l1.6-2.3L20 15v4a2 2 0 0 1-2.2 2A16.8 16.8 0 0 1 3 6.2 2 2 0 0 1 5 4Z"/>
+    </symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="5.5" width="16" height="15" rx="2"/><path d="M4 10.5h16M8.5 3.5v4M15.5 3.5v4"/>
+    </symbol>
+    <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="5.5" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/>
+      <path d="M6 8v4a4 4 0 0 0 4 4h4.5"/>
+    </symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6 18 18M18 6 6 18"/></symbol>
+  </defs>
+</svg>
+
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="13" fill="rgba(255,255,255,.07)"/>
+        <path d="M6 47c6-4 11-4 17 0s11 4 17 0 11-4 18 0" fill="none" stroke="#3FB3AC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="32" cy="26" r="15" fill="none" stroke="#F0B23F" stroke-width="4.5"/>
+        <circle cx="32" cy="26" r="4" fill="#F0B23F"/>
+      </svg>
+      <span class="brand-tx">
+        <b>ล้านนาตะวันออกสู่ลุ่มน้ำโขง</b>
+        <span>Lanna East to Mekong 1200</span>
+      </span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#about">รู้จักงาน</a>
+      <a href="#route">เส้นทาง</a>
+      <a href="#rules">คุณสมบัติ</a>
+      <a href="#kit">อุปกรณ์</a>
+      <a href="#fee">ค่าสมัคร</a>
+      <a href="#faq">คำถาม</a>
+      <a class="btn btn-primary" href="#register">สมัครเข้าร่วม</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="nav">
+      <svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div>
+        <span class="kicker">รุ่นปฐมฤกษ์ · 12–15 พฤศจิกายน 2569</span>
+        <h1>1,200 กิโลเมตร<br>สองคืนบนอาน<br><em>ผ่านล้านนาสู่ลุ่มน้ำโขง</em></h1>
+        <p class="hero-en">Lanna East to Mekong 1200 — Inaugural Edition</p>
+        <p class="hero-lede">แรลลี่จักรยานทางไกลระยะ 1,200 กิโลเมตร ที่ต้องปั่นให้จบภายใน 90 ชั่วโมง ออกจากเชียงราย ผ่านพะเยา น่าน แพร่ แล้ววนกลับสู่ริมฝั่งโขง — ไม่มีการจัดอันดับ ไม่มีรถติดตาม มีแค่คุณ จักรยาน และเวลาที่เดินอยู่ตลอด</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-lg" href="#register">
+            <svg class="ic" aria-hidden="true"><use href="#i-bike"/></svg>สมัครเข้าร่วม
+          </a>
+          <a class="btn btn-ghost btn-lg" href="#route">
+            <svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>ดูเส้นทางและจุดควบคุม
+          </a>
+        </div>
+        <p class="hero-note">
+          <svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg>
+          รับรองผลโดย Audax Club Parisien (ACP) — ผลงานบันทึกในระบบสากล
+        </p>
+      </div>
+
+      <aside class="hero-card rv">
+        <div class="hero-fact"><span>ปล่อยตัว</span><b>พฤหัสบดี 12 พ.ย. 2569<br>05:00 น.</b></div>
+        <div class="hero-fact"><span>ปิดสนาม</span><b>อาทิตย์ 15 พ.ย.<br>23:00 น.</b></div>
+        <div class="hero-fact"><span>เริ่มและจบ</span><b>อ.เมือง จ.เชียงราย</b></div>
+        <div class="hero-fact"><span>ค่าสมัคร</span><b class="gold">1,200 บาท</b></div>
+        <div class="hero-fact"><span>ปิดรับสมัคร</span><b>15 ตุลาคม 2569</b></div>
+      </aside>
+    </div>
+
+    <div class="wrap">
+      <div class="profile rv">
+        <div class="profile-head">
+          <b>Elevation Profile</b>
+          <span>ระยะสะสมความสูงประมาณ 13,200 เมตร · จุดสูงสุด 1,250 เมตร ช่วงน่าน</span>
+        </div>
+        <svg viewBox="0 0 1200 210" preserveAspectRatio="none" role="img"
+             aria-label="กราฟระดับความสูงของเส้นทาง 1,200 กิโลเมตร เริ่มที่เชียงราย ไต่สูงสุดประมาณ 1,250 เมตรช่วงจังหวัดน่าน แล้วลดระดับสู่ที่ราบก่อนวนกลับเชียงราย">
+          <defs>
+            <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F0B23F" stop-opacity=".42"/>
+              <stop offset="100%" stop-color="#F0B23F" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#pg)" d="M0,148.6 30,120 60,110 90,135 120,151.1 150,120 180,84.3 210,105 235,140.9 270,95 300,39.3 330,80 355,155 400,140 435,160 470,174.3 520,150 560,168 600,179.4 640,120 670,97.1 700,130 730,158.9 780,125 820,150 865,148.6 910,115 950,140 1000,142.1 1050,120 1080,145 1105,151.1 1150,125 1200,148.6 L1200,210 L0,210 Z"/>
+          <polyline fill="none" stroke="#F0B23F" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"
+            points="0,148.6 30,120 60,110 90,135 120,151.1 150,120 180,84.3 210,105 235,140.9 270,95 300,39.3 330,80 355,155 400,140 435,160 470,174.3 520,150 560,168 600,179.4 640,120 670,97.1 700,130 730,158.9 780,125 820,150 865,148.6 910,115 950,140 1000,142.1 1050,120 1080,145 1105,151.1 1150,125 1200,148.6"/>
+          <g fill="#0C1330" stroke="#3FB3AC" stroke-width="2.5" vector-effect="non-scaling-stroke">
+            <circle cx="120" cy="151.1" r="5"/>
+            <circle cx="600" cy="179.4" r="5"/>
+            <circle cx="1105" cy="151.1" r="5"/>
+          </g>
+        </svg>
+        <div class="profile-scale">
+          <span>เชียงราย · 0 กม.</span>
+          <span>แพร่ · 600 กม.</span>
+          <span>เชียงราย · 1,200 กม.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat"><b>1,200</b><span>กิโลเมตร</span></div>
+        <div class="stat"><b>90</b><span>ชั่วโมง เวลาจำกัด</span></div>
+        <div class="stat"><b>13,200</b><span>เมตร ความสูงสะสม</span></div>
+        <div class="stat"><b>300</b><span>ที่นั่ง รุ่นปฐมฤกษ์</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="about">
+    <div class="wrap about">
+      <div class="rv">
+        <span class="label">รู้จักงานนี้</span>
+        <h2>นี่ไม่ใช่การแข่งขัน<br>แต่เป็นการพิสูจน์ตัวเอง</h2>
+        <p>แรลลี่จักรยานทางไกลแบบ <b>Audax Randonneurs</b> ไม่มีการจับเวลาเพื่อจัดอันดับ ไม่มีถ้วยรางวัลให้ที่หนึ่ง ทุกคนที่ปั่นครบ 1,200 กิโลเมตรภายใน 90 ชั่วโมง ถือว่า “จบ” เท่ากันหมด และได้รับสถานะ <b>Randonneur</b> เหมือนกัน</p>
+        <p>สิ่งที่ต้องเอาชนะจึงไม่ใช่คนอื่น แต่เป็นนาฬิกาที่เดินตลอดเวลา ทั้งตอนคุณปั่น ตอนคุณกินข้าว และตอนคุณนอน</p>
+        <div class="about-points">
+          <div class="about-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>
+            <div>
+              <b>เวลาไม่เคยหยุดเดิน</b>
+              <span>90 ชั่วโมงนับต่อเนื่องตั้งแต่ปล่อยตัว รวมเวลาพัก เวลานอน และเวลารออาหารทั้งหมด</span>
+            </div>
+          </div>
+          <div class="about-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-card"/></svg>
+            <div>
+              <b>บัตรควบคุมเวลา (Brevet Card)</b>
+              <span>ต้องประทับตราครบทุกจุดควบคุม ตามลำดับ และภายในเวลาเปิด–ปิดของจุดนั้น ขาดจุดใดจุดหนึ่งถือว่าไม่จบ</span>
+            </div>
+          </div>
+          <div class="about-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-bike"/></svg>
+            <div>
+              <b>พึ่งพาตัวเอง</b>
+              <span>ห้ามมีรถติดตามบนเส้นทาง รับความช่วยเหลือได้เฉพาะที่จุดควบคุม นอกนั้นต้องซ่อมเอง หาข้าวกินเอง หาที่นอนเอง</span>
+            </div>
+          </div>
+          <div class="about-row">
+            <svg class="ic" aria-hidden="true"><use href="#i-medal"/></svg>
+            <div>
+              <b>ผลถูกบันทึกระดับสากล</b>
+              <span>ผู้ที่จบจะได้รับการรับรอง (homologation) จาก Audax Club Parisien ประเทศฝรั่งเศส และสะสมเป็นคุณสมบัติสำหรับรายการ 1200 อื่นทั่วโลก</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-note rv">
+        <h3>ทำไมต้อง “ล้านนาตะวันออกสู่ลุ่มน้ำโขง”</h3>
+        <p>เส้นทางนี้ร้อยสี่จังหวัดล้านนาตะวันออก — เชียงราย พะเยา น่าน แพร่ — เข้ากับแนวแม่น้ำโขงตอนบน ผ่านทั้งสันเขาที่ชันที่สุดของภาคเหนือ และที่ราบริมโขงที่กว้างที่สุด</p>
+        <p>คุณจะได้เห็นพระอาทิตย์ขึ้นเหนือแม่น้ำโขงที่เชียงของในเช้าวันแรก และเห็นมันอีกครั้งที่เชียงแสนในเช้าวันที่สาม โดยที่ระหว่างนั้นคุณไม่ได้กลับบ้านเลย</p>
+        <p class="fine">รุ่นปฐมฤกษ์ (Inaugural Edition) คือการจัดครั้งแรกของรายการนี้ ผู้ที่จบจะถูกบันทึกชื่อไว้ในทำเนียบรุ่นแรกอย่างถาวร</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-stone" id="route">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label">เส้นทางและจุดควบคุม</span>
+        <h2>11 จุดควบคุมเวลา ตลอด 1,200 กิโลเมตร</h2>
+        <p>เวลาปิดคำนวณตามมาตรฐาน ACP นับจากเวลาปล่อยตัว ถึงจุดหลังเวลาปิดเมื่อไร ถือว่าจบการแข่งขันของคุณตรงนั้น</p>
+      </div>
+
+      <div class="controls rv">
+        <div class="cp cp-start">
+          <span class="cp-km">0<small>กม.</small></span>
+          <span class="cp-name"><b>เชียงราย — จุดปล่อยตัว</b><span>พฤหัสบดี 12 พ.ย. เวลา 05:00 น.</span></span>
+          <span class="cp-close">เริ่มจับเวลา</span>
+        </div>
+        <div class="cp">
+          <span class="cp-km">120<small>กม.</small></span>
+          <span class="cp-name"><b>เชียงของ<span class="cp-tag river">ริมโขง</span></b><span>จุดควบคุมที่ 1 · จ.เชียงราย</span></span>
+          <span class="cp-close">ปิด 08:06 ชม.</span>
+        </div>
+        <div class="cp">
+          <span class="cp-km">235<small>กม.</small></span>
+          <span class="cp-name"><b>เชียงคำ</b><span>จุดควบคุมที่ 2 · จ.พะเยา</span></span>
+          <span class="cp-close">ปิด 15:47 ชม.</span>
+        </div>
+        <div class="cp">
+          <span class="cp-km">355<small>กม.</small></span>
+          <span class="cp-name"><b>ปัว</b><span>จุดควบคุมที่ 3 · จ.น่าน — ช่วงภูเขาหนักที่สุด</span></span>
+          <span class="cp-close">ปิด 23:51 ชม.</span>
+        </div>
+        <div class="cp">
+          <span class="cp-km">470<small>กม.</small></span>
+          <span class="cp-name"><b>น่าน</b><span>จุดควบคุมที่ 4 · จ.น่าน</span></span>
+          <span class="cp-close">ปิด 31:33 ชม.</span>
+        </div>
+        <div class="cp">
+          <span class="cp-km">600<small>กม.</small></span>
+          <span class="cp-name"><b>แพร่<span class="cp-tag sleep">จุดพักนอน</span></b><span>จุดควบคุมที่ 5 · จ.แพร่ — รับถุงสัมภาระ (drop bag)</span></span>
+          <span class="cp-close">ปิด 40:00 ชม.</span>
+        </div>
+        <div class="cp">
+          <span class="cp-km">730<small>กม.</small></span>
+          <span class="cp-name"><b>งาว</b><span>จุดควบคุมที่ 6 · จ.ลำปาง</span></span>
+          <span class="cp-close">ปิด 51:22 ชม.</span>
+        </div>
+        <div class="cp">
+          <span class="cp-km">865<small>กม.</small></span>
+          <span class="cp-name"><b>พะเยา<span class="cp-tag sleep">จุดพักนอน</span></b><span>จุดควบคุมที่ 7 · จ.พะเยา</span></span>
+          <span class="cp-close">ปิด 63:11 ชม.</span>
+        </div>
+        <div class="cp">
+          <span class="cp-km">1,000<small>กม.</small></span>
+          <span class="cp-name"><b>เทิง</b><span>จุดควบคุมที่ 8 · จ.เชียงราย</span></span>
+          <span class="cp-close">ปิด 75:00 ชม.</span>
+        </div>
+        <div class="cp">
+          <span class="cp-km">1,105<small>กม.</small></span>
+          <span class="cp-name"><b>เชียงแสน<span class="cp-tag river">ริมโขง</span></b><span>จุดควบคุมที่ 9 · จ.เชียงราย — สามเหลี่ยมทองคำ</span></span>
+          <span class="cp-close">ปิด 82:52 ชม.</span>
+        </div>
+        <div class="cp cp-end">
+          <span class="cp-km">1,200<small>กม.</small></span>
+          <span class="cp-name"><b>เชียงราย — เส้นชัย</b><span>อาทิตย์ 15 พ.ย. เวลา 23:00 น.</span></span>
+          <span class="cp-close">ปิด 90:00 ชม.</span>
+        </div>
+      </div>
+      <p class="route-fine">ระยะทางและเวลาปิดเป็นตัวเลขประมาณการสำหรับประกาศรับสมัคร ตัวเลขที่ใช้จริงจะยืนยันอีกครั้งในหนังสือคู่มือเส้นทาง (Route Book) ที่ส่งให้ผู้สมัครก่อนงาน 30 วัน พร้อมไฟล์ GPX</p>
+    </div>
+  </section>
+
+  <section class="sec" id="rules">
+    <div class="wrap">
+      <div class="sec-head mid rv">
+        <span class="label">คุณสมบัติผู้สมัคร</span>
+        <h2>ใครสมัครได้บ้าง</h2>
+        <p>รายการ 1200 ไม่รับผู้เริ่มต้น เพราะระยะนี้อันตรายกับคนที่ร่างกายยังไม่เคยผ่านการปั่นข้ามคืน</p>
+      </div>
+      <div class="grid3">
+        <div class="tile rv">
+          <div class="tile-ic"><svg class="ic" aria-hidden="true"><use href="#i-medal"/></svg></div>
+          <h3>ผ่าน Super Randonneur</h3>
+          <p>ต้องจบ BRM ครบชุด 200 · 300 · 400 · 600 กิโลเมตร ภายในฤดูกาลปี 2569 หรือเคยจบรายการ 1000 กิโลเมตรขึ้นไปภายใน 3 ปีที่ผ่านมา</p>
+        </div>
+        <div class="tile rv">
+          <div class="tile-ic"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg></div>
+          <h3>อายุ 18 ปีขึ้นไป</h3>
+          <p>ผู้สมัครอายุ 18–20 ปี ต้องมีหนังสือยินยอมจากผู้ปกครอง ไม่จำกัดอายุสูงสุด แต่ต้องผ่านเกณฑ์ข้อแรกเหมือนกันทุกคน</p>
+        </div>
+        <div class="tile rv">
+          <div class="tile-ic"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg></div>
+          <h3>ใบรับรองแพทย์</h3>
+          <p>ยื่นใบรับรองแพทย์ที่ออกไม่เกิน 90 วันก่อนวันแข่ง พร้อมข้อมูลผู้ติดต่อฉุกเฉินและโรคประจำตัว (ถ้ามี)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-band" id="kit">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label">อุปกรณ์บังคับ</span>
+        <h2>ตรวจก่อนปล่อยตัว ขาดข้อใดข้อหนึ่ง ไม่ได้ออกสตาร์ท</h2>
+        <p>คุณจะปั่นในความมืดอย่างน้อยสองคืน กติกาข้อนี้จึงไม่มีการยืดหยุ่น</p>
+      </div>
+      <div class="grid2">
+        <div class="tile rv">
+          <div class="tile-ic"><svg class="ic" aria-hidden="true"><use href="#i-light"/></svg></div>
+          <h3>ระบบไฟ</h3>
+          <ul class="checklist">
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span><b>ไฟหน้า 2 ชุด</b> ติดตั้งถาวรกับตัวรถ ใช้งานได้จริงทั้งคู่</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span><b>ไฟท้ายสีแดง 2 ชุด</b> อย่างน้อย 1 ชุดต้องเป็นแบบติดค้าง ไม่กะพริบ</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span><b>แบตเตอรี่หรือถ่านสำรอง</b> เพียงพอต่อการใช้งานสองคืนเต็ม</span></li>
+          </ul>
+        </div>
+        <div class="tile rv">
+          <div class="tile-ic"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg></div>
+          <h3>ความปลอดภัยและเอกสาร</h3>
+          <ul class="checklist">
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span><b>เสื้อกั๊กหรือสายสะท้อนแสง</b> สวมตลอดเวลาระหว่างพระอาทิตย์ตกถึงพระอาทิตย์ขึ้น</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span><b>หมวกกันน็อกมาตรฐาน</b> สวมตลอดเวลาที่อยู่บนจักรยาน</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span><b>กระดิ่ง</b> และบัตรประชาชนหรือหนังสือเดินทาง</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span><b>โทรศัพท์ที่ใช้งานได้</b> พร้อมแบตสำรอง สำหรับติดต่อฉุกเฉิน</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="fee">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label">ค่าสมัครและสิ่งที่ได้รับ</span>
+        <h2>หนึ่งบาทต่อหนึ่งกิโลเมตร</h2>
+        <p>ตามธรรมเนียมของ Audax ในประเทศไทย ค่าสมัครคิดตามระยะทางที่ปั่นจริง</p>
+      </div>
+      <div class="fee">
+        <div class="price-card rv">
+          <p class="lbl">ค่าสมัครล่วงหน้า ถึง 30 กันยายน 2569</p>
+          <p class="amt">1,200<span>บาท</span></p>
+          <p class="late">สมัครหลัง 30 ก.ย. — 1,500 บาท</p>
+          <p class="why">คิดจากอัตรา 1 บาทต่อ 1 กิโลเมตร ซึ่งเป็นเกณฑ์ที่ใช้กันในรายการ Audax ทั่วประเทศ ไม่ใช่ราคาที่ตั้งขึ้นเอง</p>
+          <a class="btn btn-primary" href="#register">กรอกใบสมัคร</a>
+        </div>
+        <div class="rv">
+          <ul class="checklist">
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg><span><b>บัตรควบคุมเวลาและหมายเลขประจำตัว</b> พร้อมสติกเกอร์สะท้อนแสงติดจักรยาน</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg><span><b>หนังสือคู่มือเส้นทางและไฟล์ GPX</b> ส่งให้ล่วงหน้า 30 วัน</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg><span><b>อาหารและน้ำที่จุดควบคุมทุกจุด</b> ตลอด 90 ชั่วโมง</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg><span><b>ที่พักแบบรวมที่จุดพักนอน</b> กิโลเมตรที่ 600 และ 865 พร้อมบริการฝากถุงสัมภาระ</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg><span><b>รถเก็บตกและทีมช่วยเหลือฉุกเฉิน</b> ประจำตลอดเส้นทาง</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg><span><b>ประกันอุบัติเหตุระหว่างงาน</b> ตามเงื่อนไขกรมธรรม์</span></li>
+            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg><span><b>เหรียญผู้พิชิตและการรับรองผลจาก ACP</b> สำหรับผู้ที่จบภายในเวลา</span></li>
+          </ul>
+          <p class="route-fine">เสื้อจักรยานประจำรุ่นปฐมฤกษ์สั่งซื้อเพิ่มได้ในขั้นตอนสมัคร · ค่าสมัครไม่รวมค่าเดินทางและที่พักก่อน–หลังงาน</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-stone" id="faq">
+    <div class="wrap">
+      <div class="sec-head mid rv">
+        <span class="label">คำถามที่พบบ่อย</span>
+        <h2>เรื่องที่นักปั่นถามมามากที่สุด</h2>
+      </div>
+      <div class="faq rv">
+        <details>
+          <summary>ถ้าปั่นไม่ทันเวลาปิดจุดควบคุม จะเกิดอะไรขึ้น</summary>
+          <div class="ans"><p>ถือว่าจบการแข่งขันของคุณที่จุดนั้น (DNF) เจ้าหน้าที่จะบันทึกไว้ในบัตรควบคุม และคุณสามารถขึ้นรถเก็บตกกลับจุดปล่อยตัวได้ เราไม่อนุญาตให้ปั่นต่อนอกเวลา เพราะจุดควบคุมข้างหน้าจะปิดและไม่มีทีมงานดูแลแล้ว</p></div>
+        </details>
+        <details>
+          <summary>นอนได้ไหม แล้วนอนที่ไหน</summary>
+          <div class="ans"><p>นอนได้และควรนอน เรามีที่พักแบบรวมเตรียมไว้ที่กิโลเมตรที่ 600 (แพร่) และ 865 (พะเยา) ให้ใช้ฟรี แต่เวลาที่นอนนับรวมอยู่ใน 90 ชั่วโมงทั้งหมด นักปั่นส่วนใหญ่ในรายการ 1200 นอนรวมกันประมาณ 6–10 ชั่วโมงตลอดงาน</p></div>
+        </details>
+        <details>
+          <summary>ให้เพื่อนขับรถตามไปคอยส่งน้ำส่งข้าวได้ไหม</summary>
+          <div class="ans"><p>ไม่ได้ครับ กติกา Audax ห้ามมีรถสนับสนุนส่วนตัวบนเส้นทางอย่างเด็ดขาด คุณรับความช่วยเหลือจากใครก็ได้เฉพาะภายในบริเวณจุดควบคุมเท่านั้น นอกจุดควบคุมคุณต้องพึ่งร้านค้าริมทางเหมือนนักปั่นคนอื่นทุกคน การฝ่าฝืนมีโทษปรับออกจากการแข่งขัน</p></div>
+        </details>
+        <details>
+          <summary>ยังไม่ครบ Super Randonneur จะสมัครได้ไหม</summary>
+          <div class="ans"><p>สมัครไว้ก่อนได้ และแจ้งสถานะตามจริงในใบสมัคร เราจะจองที่นั่งไว้ให้จนถึงวันปิดรับคุณสมบัติ คือ 15 ตุลาคม 2569 ถ้าถึงวันนั้นยังไม่ครบชุด 200/300/400/600 ที่นั่งจะถูกส่งต่อให้คิวสำรอง และคืนค่าสมัครเต็มจำนวน</p></div>
+        </details>
+        <details>
+          <summary>ใช้จักรยานประเภทไหนได้บ้าง</summary>
+          <div class="ans"><p>จักรยานที่ขับเคลื่อนด้วยแรงคนทุกประเภท — เสือหมอบ ทัวร์ริ่ง กราเวล เสือภูเขา รีคัมเบนต์ หรือจักรยานพับ ขอเพียงติดตั้งระบบไฟตามข้อกำหนดได้ครบ <b>ไม่อนุญาตจักรยานไฟฟ้า (e-bike) ทุกชนิด</b></p></div>
+        </details>
+        <details>
+          <summary>สมัครแล้วยกเลิกได้ไหม</summary>
+          <div class="ans"><p>ยกเลิกก่อน 30 กันยายน 2569 คืนเงิน 100% · ก่อน 20 ตุลาคม คืน 50% · หลังจากนั้นไม่สามารถคืนเงินได้ เพราะทีมงานสั่งผลิตบัตรควบคุม เหรียญ และจองที่พักตามจำนวนผู้สมัครไปแล้ว แต่สามารถโอนสิทธิ์ให้ผู้อื่นที่มีคุณสมบัติครบได้จนถึง 1 พฤศจิกายน</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec reg" id="register">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="label">ใบสมัคร</span>
+        <h2>สมัครเข้าร่วมรุ่นปฐมฤกษ์</h2>
+        <p>กรอกข้อมูลไว้ก่อน ทีมงานจะติดต่อกลับภายใน 3 วันทำการ พร้อมรายละเอียดการชำระเงินและเอกสารที่ต้องเตรียม</p>
+      </div>
+      <div class="reg-grid">
+        <form class="form rv" id="regForm" novalidate>
+          <div class="row2">
+            <div class="field">
+              <label for="f-name">ชื่อ–นามสกุล <span class="req">*</span></label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required placeholder="ชื่อจริงตามบัตรประชาชน">
+            </div>
+            <div class="field">
+              <label for="f-tel">เบอร์โทรศัพท์ <span class="req">*</span></label>
+              <input id="f-tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" required placeholder="08x-xxx-xxxx">
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="f-email">อีเมล <span class="req">*</span></label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required placeholder="rider@example.com">
+            </div>
+            <div class="field">
+              <label for="f-line">LINE ID</label>
+              <input id="f-line" name="line" type="text" placeholder="สำหรับกลุ่มแจ้งข่าวผู้สมัคร">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-qual">สถานะคุณสมบัติ <span class="req">*</span></label>
+            <select id="f-qual" name="qualification" required>
+              <option value="">— เลือกสถานะของคุณ —</option>
+              <option>ครบ Super Randonneur ฤดูกาล 2569 แล้ว</option>
+              <option>เคยจบรายการ 1000 กม. ขึ้นไป ภายใน 3 ปี</option>
+              <option>กำลังเก็บระยะ ยังไม่ครบชุด</option>
+              <option>ยังไม่เคยจบ BRM รายการใด</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-club">ชมรมหรือกลุ่มที่สังกัด</label>
+            <input id="f-club" name="club" type="text" placeholder="ไม่มีก็ไม่เป็นไร">
+          </div>
+          <div class="field">
+            <label for="f-note">คำถามหรือข้อมูลเพิ่มเติม</label>
+            <textarea id="f-note" name="note" placeholder="เช่น ต้องการสั่งเสื้อประจำรุ่น ขนาด M / มีข้อจำกัดด้านอาหาร"></textarea>
+          </div>
+          <div class="hp" aria-hidden="true">
+            <label for="f-brevet-ref">อย่ากรอกช่องนี้</label>
+            <input id="f-brevet-ref" name="brevet_ref" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <button class="btn btn-primary btn-lg" type="submit" id="regSubmit">
+            <svg class="ic" aria-hidden="true"><use href="#i-bike"/></svg>ส่งใบสมัคร
+          </button>
+          <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
+          <p class="form-fine">การกดส่งถือว่าคุณยอมรับกติกาของรายการ และยินยอมให้เก็บข้อมูลตาม <a href="privacy.html">นโยบายความเป็นส่วนตัว</a></p>
+        </form>
+
+        <div class="reg-aside rv">
+          <div class="reg-card">
+            <h3>เปิดรับสมัครถึง</h3>
+            <p class="big">15 ตุลาคม 2569</p>
+            <p>หรือจนกว่าที่นั่ง 300 ที่จะเต็ม — รุ่นปฐมฤกษ์ไม่เพิ่มโควตา</p>
+          </div>
+          <div class="reg-card">
+            <h3>สอบถามก่อนสมัคร</h3>
+            <p>ทีมงานตอบทุกวัน 09:00–20:00 น.</p>
+            <p style="margin-top:10px">
+              <a href="tel:0812345678">โทร 081-234-5678</a><br>
+              <a href="https://line.me/R/ti/p/@example">LINE: @lannamekong1200</a>
+            </p>
+          </div>
+          <div class="reg-card">
+            <h3>วันสำคัญ</h3>
+            <p>
+              15 ต.ค. — ปิดรับสมัครและปิดรับคุณสมบัติ<br>
+              12 ต.ค. — ส่งคู่มือเส้นทางและ GPX<br>
+              11 พ.ย. — รับบัตรควบคุมและตรวจจักรยาน<br>
+              12 พ.ย. 05:00 น. — ปล่อยตัว
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr-top">
+      <div>
+        <h4>ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200</h4>
+        <p>แรลลี่จักรยานทางไกล 1,200 กิโลเมตร รุ่นปฐมฤกษ์<br>12–15 พฤศจิกายน 2569 · เริ่มและจบที่จังหวัดเชียงราย</p>
+        <p style="margin-top:10px">รับรองผลโดย Audax Club Parisien (ACP)</p>
+      </div>
+      <div>
+        <h4>เมนู</h4>
+        <div class="ftr-links">
+          <a href="#about">รู้จักงาน</a>
+          <a href="#route">เส้นทางและจุดควบคุม</a>
+          <a href="#rules">คุณสมบัติผู้สมัคร</a>
+          <a href="#kit">อุปกรณ์บังคับ</a>
+        </div>
+      </div>
+      <div>
+        <h4>ติดต่อ</h4>
+        <div class="ftr-links">
+          <a href="tel:0812345678">081-234-5678</a>
+          <a href="https://line.me/R/ti/p/@example">LINE: @lannamekong1200</a>
+          <a href="#register">กรอกใบสมัคร</a>
+          <a href="privacy.html">นโยบายความเป็นส่วนตัว</a>
+        </div>
+      </div>
+    </div>
+    <div class="ftr-bot">
+      <p class="demo-note"><b>เว็บไซต์ตัวอย่าง (เดโม่)</b> — ชื่อผู้จัด เบอร์โทร LINE ID วันที่ ระยะทางจุดควบคุม และค่าสมัครทั้งหมดในหน้านี้เป็นข้อมูลสมมติเพื่อสาธิตงานออกแบบเท่านั้น ยังไม่ใช่ข้อมูลจริงของรายการ</p>
+      <p class="wlc">
+        <b>ออกแบบและพัฒนาโดย Web Lead Craft</b>
+        <span>รับทำเว็บไซต์ธุรกิจ เริ่มต้น 990 บาท</span>
+        <span>LINE: kitty4uu</span>
+        <span>โทร 099-151-4049</span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  // Reveal-on-scroll is gated behind this class, so if the script never runs
+  // (or throws above this line) every section stays visible.
+  document.body.classList.add('anim');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -40px 0px', threshold: 0.05 });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+
+  var burger = document.getElementById('burger');
+  var nav = document.getElementById('nav');
+  burger.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.setAttribute('aria-label', open ? 'ปิดเมนู' : 'เปิดเมนู');
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.closest('a')) {
+      nav.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  var form = document.getElementById('regForm');
+  var msg = document.getElementById('formMsg');
+  var submit = document.getElementById('regSubmit');
+  var TEL = /^[0-9+\-\s()]{9,}$/;
+  var MAIL = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
+
+  function say(kind, text) {
+    msg.className = 'form-msg show ' + kind;
+    msg.textContent = text;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = form.name.value.trim();
+    var tel = form.tel.value.trim();
+    var email = form.email.value.trim();
+    var qual = form.qualification.value;
+    if (!name || !tel || !email || !qual) {
+      say('err', 'กรุณากรอกชื่อ เบอร์โทร อีเมล และเลือกสถานะคุณสมบัติให้ครบก่อนส่ง');
+      return;
+    }
+    if (!TEL.test(tel)) { say('err', 'เบอร์โทรศัพท์ดูไม่ถูกต้อง ลองตรวจอีกครั้ง'); return; }
+    if (!MAIL.test(email)) { say('err', 'อีเมลดูไม่ถูกต้อง ลองตรวจอีกครั้ง'); return; }
+
+    submit.disabled = true;
+    say('ok', 'กำลังส่งใบสมัคร…');
+    // The success panel appears only once delivery is confirmed. A form that
+    // says "sent" and delivered nothing is the worst thing this page can do.
+    window.wlcSend(form).then(function (ok) {
+      submit.disabled = false;
+      if (ok) {
+        form.reset();
+        say('ok', 'รับใบสมัครแล้ว ทีมงานจะติดต่อกลับภายใน 3 วันทำการ');
+      } else {
+        say('err', 'ส่งไม่สำเร็จ กรุณาโทร 081-234-5678 หรือทัก LINE @lannamekong1200 แทน');
+      }
+    });
+  });
+})();
+</script>

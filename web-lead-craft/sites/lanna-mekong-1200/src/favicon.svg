@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200">
+  <rect width="64" height="64" rx="13" fill="#0C1330"/>
+  <!-- Mekong: the river the route runs to -->
+  <path d="M6 47c6-4 11-4 17 0s11 4 17 0 11-4 18 0" fill="none" stroke="#157F7A" stroke-width="4" stroke-linecap="round"/>
+  <!-- wheel: 1200 km of it -->
+  <circle cx="32" cy="26" r="15" fill="none" stroke="#F0B23F" stroke-width="4.5"/>
+  <circle cx="32" cy="26" r="4" fill="#F0B23F"/>
+  <path d="M32 11v30M17 26h30M21.4 15.4l21.2 21.2M42.6 15.4 21.4 36.6" stroke="#F0B23F" stroke-width="1.8" opacity=".55"/>
+</svg>

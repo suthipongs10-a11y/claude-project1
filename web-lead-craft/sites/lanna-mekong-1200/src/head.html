@@ -1,0 +1,70 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200 — BRM 1200 กม. เชียงราย</title>
+<meta name="description" content="แรลลี่จักรยานทางไกล BRM 1200 กม. รุ่นปฐมฤกษ์ เชียงราย–พะเยา–น่าน–แพร่ สู่ริมโขง ภายใน 90 ชั่วโมง รับรองผลโดย Audax Club Parisien เปิดรับ 300 คน 12–15 พ.ย. 2569">
+<meta property="og:title" content="ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200 รุ่นปฐมฤกษ์">
+<meta property="og:description" content="1,200 กิโลเมตร 90 ชั่วโมง สองคืนบนอาน ผ่านล้านนาตะวันออกสู่ลุ่มน้ำโขง — ไม่ใช่การแข่งขัน แต่เป็นการพิสูจน์ตัวเอง">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="th_TH">
+<meta property="og:url" content="{{SITE_URL}}">
+<link rel="canonical" href="{{SITE_URL}}">
+<meta name="theme-color" content="#0C1330">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<!-- Contact form delivery. A static site has nowhere to POST to, so the form
+     goes to our Cloudflare Worker (form-worker/ in the repo), which delivers
+     the entry to the organiser by email, LINE, or both. Put that Worker's URL
+     in FORM_ENDPOINT; leave it empty and the form only pretends to send,
+     which is how a demo must behave. -->
+<script>
+(function (w) {
+  w.FORM_ENDPOINT = '';
+  var opened = Date.now();
+  // A promise for "did it get through" — never rejects, so the page always
+  // has something to say. A form that hangs on a network error is worse than
+  // one that says "call us instead".
+  w.wlcSend = function (form) {
+    var data = { page: location.pathname, elapsed: Date.now() - opened };
+    new FormData(form).forEach(function (v, k) { data[k] = v; });
+    if (!w.FORM_ENDPOINT) return Promise.resolve(true);
+    return fetch(w.FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  };
+})(window);
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SportsEvent",
+  "name": "ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200 รุ่นปฐมฤกษ์",
+  "alternateName": "Lanna East to Mekong 1200 — Inaugural Edition",
+  "description": "แรลลี่จักรยานทางไกล (Audax / BRM) ระยะ 1,200 กิโลเมตร ภายใน 90 ชั่วโมง เส้นทางล้านนาตะวันออกสู่ลุ่มน้ำโขง",
+  "sport": "Cycling",
+  "startDate": "2026-11-12T05:00:00+07:00",
+  "endDate": "2026-11-15T23:00:00+07:00",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "location": {
+    "@type": "Place",
+    "name": "จุดปล่อยตัว อำเภอเมือง จังหวัดเชียงราย",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "เมืองเชียงราย",
+      "addressRegion": "เชียงราย",
+      "addressCountry": "TH"
+    }
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "1200",
+    "priceCurrency": "THB",
+    "availability": "https://schema.org/InStock",
+    "url": "{{SITE_URL}}#register"
+  },
+  "maximumAttendeeCapacity": 300
+}
+</script>
