@@ -210,7 +210,7 @@ a { color: var(--gold-ink); }
 .virtue p { font-size: 0.9rem; margin: 0; }
 
 /* ---------- atmosphere strip ---------- */
-.strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 940px) { .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .strip { grid-template-columns: minmax(0, 1fr); } }
 .tile { border-radius: var(--r); overflow: hidden; border: 1px solid var(--line-forest); background: var(--tile-forest); }
@@ -224,10 +224,18 @@ a { color: var(--gold-ink); }
 @media (max-width: 640px) { .sixes { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 16px; } }
 .six { text-align: center; }
 .six > svg { width: 54px; height: 48px; color: var(--gold); }
-.six .shot { margin: 12px 0 12px; border-radius: var(--r); overflow: hidden; border: 1px solid var(--line-cream); }
-.six .shot svg { display: block; width: 100%; height: auto; }
-.six h3 { font-size: 0.98rem; margin: 0 0 4px; }
+.six h3 { font-size: 0.98rem; margin: 14px 0 4px; }
 .six p { font-size: 0.85rem; margin: 0; line-height: 1.65; }
+
+/* the two genuine behind-the-scenes photographs, given room */
+.ops { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 46px; }
+@media (max-width: 760px) { .ops { grid-template-columns: minmax(0, 1fr); } }
+.op { border-radius: var(--r); overflow: hidden; background: var(--paper); box-shadow: var(--shadow-s); }
+/* height:auto keeps the width/height attributes from beating aspect-ratio */
+.op img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.op-tx { padding: 18px 22px 20px; }
+.op-tx h3 { margin: 0 0 4px; }
+.op-tx p { font-size: 0.93rem; margin: 0; }
 
 /* ---------- the sample route ---------- */
 .route { display: grid; grid-template-columns: minmax(0, 0.72fr) minmax(0, 2fr); gap: 44px; align-items: center; }
