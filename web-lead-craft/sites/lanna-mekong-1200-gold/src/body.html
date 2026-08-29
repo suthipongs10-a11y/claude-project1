@@ -84,6 +84,10 @@
     <symbol id="i-mega" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
       <path d="M5 12v6h4l9 6V6l-9 6Z"/><path d="M22 11a6 6 0 0 1 0 8"/>
     </symbol>
+    <symbol id="i-weather" viewBox="0 0 46 42" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 24a7 7 0 0 1 .6-13.9A10 10 0 0 1 34 12a6 6 0 0 1 .4 12Z"/>
+      <path d="M15 31l-2 6M23 31l-2 6M31 31l-2 6"/>
+    </symbol>
     <symbol id="i-env" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
       <rect x="5" y="10" width="34" height="24" rx="2"/><path d="M5 13l17 12 17-12"/>
     </symbol>
@@ -123,7 +127,7 @@
     <nav class="nav" id="nav">
       <a class="on" href="#top">หน้าหลัก</a>
       <a href="#about">เกี่ยวกับกิจกรรม</a>
-      <a href="#route">เส้นทางตัวอย่าง</a>
+      <a href="#route">เส้นทาง</a>
       <a href="#organise">การจัดงาน</a>
       <a href="#perks">สิ่งที่จะได้รับ</a>
       <a href="#info">ข้อมูลกิจกรรม</a>
@@ -145,7 +149,7 @@
       <div class="hero-in">
         <h1>ล้านนาตะวันออก<br>สู่ลุ่มน้ำโขง <i>1200</i></h1>
         <p class="hero-en">Lanna East to Mekong 1200 — Inaugural Edition</p>
-        <p class="hero-lede">การเดินทางด้วยสองล้อ ผ่านเส้นทางแห่งล้านนา สู่เส้นชัยของลุ่มน้ำโขง<br>ท้าทายตัวเอง สัมผัสธรรมชาติ วัฒนธรรม และมิตรภาพตลอดเส้นทาง</p>
+        <p class="hero-lede">1,200 กิโลเมตร จากข่วงเมืองปัว จังหวัดน่าน ผ่านภูเขาและเมืองเก่า 6 จังหวัด สู่ริมฝั่งโขงที่เชียงคาน แล้ววนกลับสู่จุดเริ่มต้น<br>ท้าทายตัวเอง สัมผัสธรรมชาติ วัฒนธรรม และมิตรภาพตลอดเส้นทาง</p>
         <div class="hero-cta">
           <a class="btn btn-gold btn-lg" href="#contact">ติดตามรายละเอียด <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           <a class="btn btn-out btn-lg" href="#info">ลงทะเบียนเร็ว ๆ นี้</a>
@@ -182,23 +186,37 @@
     </div>
   </section>
 
-  <section class="sec sec-dark">
+  <section class="sec sec-dark" id="highlights">
     <svg class="deco-corner deco-tl" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
       <path d="M0 40c30 0 40-10 40-40M0 70c46 0 70-24 70-70M0 100c62 0 100-38 100-100"/>
       <path d="M18 18c14 4 22 12 26 26M46 8c10 16 18 24 34 28"/>
       <circle cx="14" cy="52" r="3"/><circle cx="52" cy="14" r="3"/>
     </svg>
     <div class="wrap">
-      <div class="sec-head rv">
-        <h2>ทีมปั่น / บรรยากาศ</h2>
-        <p>ภาพบรรยากาศจากนักปั่นและเส้นทางจริง</p>
+      <div class="sec-head mid rv">
+        <span class="tag-gold">ไฮไลต์เส้นทาง / HIGHLIGHTS</span>
       </div>
-      <div class="strip rv">
-        <div class="tile"><img {{img:temple-sunrise:(max-width:520px) 88vw, (max-width:940px) 44vw, 19vw}} width="1672" height="941" alt="นักปั่นแวะชมวิวแม่น้ำโขงที่ลานวัดล้านนายามพระอาทิตย์ขึ้น"></div>
-        <div class="tile"><img {{img:peloton-curve:(max-width:520px) 88vw, (max-width:940px) 44vw, 19vw}} width="1672" height="941" alt="กลุ่มนักปั่นเรียงแถวลงทางโค้งริมแม่น้ำโขงยามเช้า"></div>
-        <div class="tile"><img {{img:team-viewpoint:(max-width:520px) 88vw, (max-width:940px) 44vw, 19vw}} width="1672" height="941" alt="นักปั่นทั้งทีมยืนถ่ายรูปร่วมกันที่จุดชมวิวเหนือแม่น้ำโขง"></div>
-        <div class="tile"><img {{img:finish-highfive:(max-width:520px) 88vw, (max-width:940px) 44vw, 19vw}} width="1672" height="941" alt="นักปั่นสองคนแปะมือแสดงความยินดีกันบนยอดเขาตอนพระอาทิตย์ตก"></div>
-        <div class="tile"><img {{img:route-check:(max-width:520px) 88vw, (max-width:940px) 44vw, 19vw}} width="1672" height="941" alt="นักปั่นสามคนหยุดดูเส้นทางในโทรศัพท์ริมถนนเหนือแม่น้ำโขง"></div>
+      <div class="hl-grid rv">
+        <figure class="hl">
+          <span class="hl-shot"><img {{img:peloton-curve:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="กลุ่มนักปั่นเรียงแถวลงทางโค้งบนถนนภูเขา"></span>
+          <figcaption>เส้นทางภูเขา<span>สุดท้าทาย</span></figcaption>
+        </figure>
+        <figure class="hl">
+          <span class="hl-shot"><img {{img:temple-sunrise:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="นักปั่นแวะชมวิวที่ลานวัดล้านนายามพระอาทิตย์ขึ้น"></span>
+          <figcaption>วัดภูมินทร์<span>และวัฒนธรรมล้านนา</span></figcaption>
+        </figure>
+        <figure class="hl">
+          <span class="hl-shot"><img {{img:route-check:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="นักปั่นสามคนหยุดดูเส้นทางริมถนนเหนือแม่น้ำ"></span>
+          <figcaption>เชียงคาน<span>เมืองเก่าเสน่ห์ริมโขง</span></figcaption>
+        </figure>
+        <figure class="hl">
+          <span class="hl-shot"><img {{img:team-viewpoint:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="นักปั่นทั้งทีมยืนถ่ายรูปร่วมกันที่จุดชมวิวเหนือแม่น้ำโขง"></span>
+          <figcaption>ลุ่มน้ำโขง<span>สายน้ำแห่งชีวิต</span></figcaption>
+        </figure>
+        <figure class="hl">
+          <span class="hl-shot"><img {{img:finish-highfive:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="นักปั่นแปะมือแสดงความยินดีกันเมื่อจบเส้นทาง"></span>
+          <figcaption>ข่วงเมืองปัว<span>จุดเริ่มต้นและจุดหมาย</span></figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -266,43 +284,83 @@
       <path d="M18 18c14 4 22 12 26 26M46 8c10 16 18 24 34 28"/>
       <circle cx="14" cy="52" r="3"/><circle cx="52" cy="14" r="3"/>
     </svg>
-    <div class="wrap route">
-      <div class="rv">
-        <h2>เส้นทางตัวอย่าง</h2>
-        <p>เส้นทางตัวอย่างเพื่อแสดงภาพรวมของการเดินทางจากล้านนาสู่ลุ่มน้ำโขง</p>
-        <p class="route-note">หมายเหตุ: เป็นภาพจำลอง เปลี่ยนแปลงตามความเหมาะสม</p>
+    <div class="wrap">
+      <div class="sec-head rv">
+        <p class="eyebrow">เส้นทาง</p>
+        <h2>1,200 กิโลเมตร ผ่าน 6 จังหวัด</h2>
+        <p>เริ่มและจบที่เดียวกัน ที่ข่วงเมืองปัว จังหวัดน่าน วนผ่านน่าน แพร่ อุตรดิตถ์ พิษณุโลก เพชรบูรณ์ และเลย ก่อนเลียบแม่น้ำโขงแล้ววนกลับ</p>
       </div>
-      <svg class="route-map rv" viewBox="0 0 900 300" role="img"
-           aria-label="แผนผังเส้นทางตัวอย่าง จุดเริ่มต้น ผ่านจุดพักสามจุด ไปสิ้นสุดที่จุดหมาย">
-        <g opacity=".16" fill="none" stroke="#C9A227" stroke-width="2">
-          <path d="M300 150 356 88 406 140 468 76 528 144"/>
-          <path d="M620 196c30-26 58-26 88 0s58 26 88 0"/>
-          <path d="M620 214c30-26 58-26 88 0s58 26 88 0"/>
-        </g>
-        <path d="M90 150C170 176 210 182 270 178s132-62 180-60 132 56 180 52 118-70 180-82"
-              fill="none" stroke="#C9A227" stroke-width="2.6" stroke-dasharray="9 12"/>
-        <g fill="#C9A227">
-          <circle cx="270" cy="178" r="5"/><circle cx="450" cy="118" r="5"/><circle cx="630" cy="170" r="5"/>
-        </g>
-        <g fill="none" stroke="#E6CC72" stroke-width="2.4" stroke-linecap="round">
-          <path d="M90 150v-34M90 116h26l-5 8 5 8H90"/>
-          <path d="M810 138v-34M810 104h26l-5 8 5 8h-26"/>
-        </g>
-        <g fill="#0B1C12" stroke="#E6CC72" stroke-width="3">
-          <circle cx="90" cy="150" r="9"/><circle cx="810" cy="138" r="9"/>
-        </g>
-        <g fill="#C6D2C8" font-family="Jost, sans-serif" font-size="15" text-anchor="middle">
-          <text x="90" y="192">จุดเริ่มต้น</text><text x="90" y="212" fill="#91A197" font-size="13">ประกาศเร็ว ๆ นี้</text>
-          <text x="270" y="220">จุดพัก</text><text x="270" y="240" fill="#91A197" font-size="13">ตัวอย่าง</text>
-          <text x="450" y="160">จุดพัก</text><text x="450" y="180" fill="#91A197" font-size="13">ตัวอย่าง</text>
-          <text x="630" y="212">จุดพัก</text><text x="630" y="232" fill="#91A197" font-size="13">ตัวอย่าง</text>
-          <text x="810" y="180">จุดหมาย</text><text x="810" y="200" fill="#91A197" font-size="13">ประกาศเร็ว ๆ นี้</text>
-        </g>
-      </svg>
+      <div class="ends rv">
+        <div class="end">
+          <svg aria-hidden="true"><use href="#i-flag"/></svg>
+          <div><b>จุดเริ่มต้น</b><span>ข่วงเมืองปัว อำเภอปัว จังหวัดน่าน</span></div>
+        </div>
+        <div class="end">
+          <svg aria-hidden="true"><use href="#i-pin"/></svg>
+          <div><b>จุดสิ้นสุด</b><span>ข่วงเมืองปัว อำเภอปัว จังหวัดน่าน</span></div>
+        </div>
+      </div>
+      <div class="stages rv">
+        <div class="stage">
+          <span class="stage-no">1</span>
+          <div>
+            <b>น่าน · แพร่ · อุตรดิตถ์ · พิษณุโลก</b>
+            <p>จากปัวลงมาตัวเมืองน่าน ผ่านจังหวัดแพร่ เข้าอุตรดิตถ์ แล้วลงใต้ผ่านวังทอง จังหวัดพิษณุโลก</p>
+          </div>
+        </div>
+        <div class="stage">
+          <span class="stage-no">2</span>
+          <div>
+            <b>เพชรบูรณ์ · เลย · ริมแม่น้ำโขง</b>
+            <p>มุ่งหน้าสู่หล่มสัก จังหวัดเพชรบูรณ์ ขึ้นไปจังหวัดเลย ผ่านปากชม แล้วเลียบแม่น้ำโขงที่เชียงคาน</p>
+          </div>
+        </div>
+        <div class="stage">
+          <span class="stage-no">3</span>
+          <div>
+            <b>ภูเรือ · พิษณุโลก · อุตรดิตถ์</b>
+            <p>วนกลับทางภูเรือ ด่านซ้าย จังหวัดเลย เข้าสู่รอยต่อนครไทย–ชาติตระการ จังหวัดพิษณุโลก ผ่านทองแสนขัน และสี่แยกน้ำอ่าง กลับสู่จังหวัดอุตรดิตถ์อีกครั้ง</p>
+          </div>
+        </div>
+        <div class="stage">
+          <span class="stage-no">4</span>
+          <div>
+            <b>แพร่ · เวียงสา · น่าน</b>
+            <p>ผ่านเด่นชัย เข้าจังหวัดแพร่ ร้องกวาง ข้ามเข้าเวียงสา และตัวเมืองน่าน ก่อนผ่านท่าวังผาและกลับสู่ข่วงเมืองปัว</p>
+          </div>
+        </div>
+      </div>
+      <p class="route-note">ลำดับเส้นทางเป็นไปตามข้อมูลของผู้จัด ระยะทางและจุดพักแต่ละช่วงจะยืนยันอีกครั้งพร้อมไฟล์ GPX</p>
     </div>
   </section>
 
-  <section class="sec sec-cream2" id="perks">
+  <section class="sec sec-cream2" id="tips">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <p class="eyebrow">ก่อนออกเดินทาง</p>
+        <h2>ข้อแนะนำสำหรับเส้นทางนี้</h2>
+      </div>
+      <div class="tips rv">
+        <div class="tip">
+          <svg aria-hidden="true"><use href="#i-nature"/></svg>
+          <h3>ความชันและภูมิประเทศ</h3>
+          <p>เส้นทางส่วนใหญ่เป็นภูเขาสูงชันและทางโค้งสลับซับซ้อน โดยเฉพาะช่วงรอยต่ออุตรดิตถ์–พิษณุโลก–เพชรบูรณ์ และช่วงภูเรือ ควรเตรียมร่างกายและตรวจระบบเบรกให้พร้อม</p>
+        </div>
+        <div class="tip">
+          <svg aria-hidden="true"><use href="#i-weather"/></svg>
+          <h3>สภาพอากาศ</h3>
+          <p>วางแผนหลีกเลี่ยงช่วงฤดูฝนจัดที่มีความเสี่ยงเรื่องดินสไลด์ และตรวจสอบสภาพอากาศล่วงหน้าก่อนออกเดินทางทุกครั้ง</p>
+        </div>
+        <div class="tip">
+          <svg aria-hidden="true"><use href="#i-drink"/></svg>
+          <h3>การเตรียมตัว</h3>
+          <p>ระยะทางรวม 1,200 กิโลเมตร ควรวางแผนจุดพักแรม อาหาร และน้ำดื่มในแต่ละอำเภอให้รอบคอบ เพราะบางช่วงทางขึ้นเขาค่อนข้างห่างไกลชุมชน</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-cream" id="perks">
     <div class="wrap">
       <div class="sec-head rv">
         <h2>สิ่งที่ผู้ร่วมปั่นจะได้รับ</h2>
@@ -327,9 +385,9 @@
       <div class="tbas rv">
         <div class="tba"><svg aria-hidden="true"><use href="#i-calendar"/></svg><b>วันจัดกิจกรรม</b><span>ประกาศเร็ว ๆ นี้</span></div>
         <div class="tba"><svg aria-hidden="true"><use href="#i-pencil"/></svg><b>การลงทะเบียน</b><span>ประกาศเร็ว ๆ นี้</span></div>
-        <div class="tba"><svg aria-hidden="true"><use href="#i-map"/></svg><b>รายละเอียดเส้นทาง</b><span>ประกาศเร็ว ๆ นี้</span></div>
-        <div class="tba"><svg aria-hidden="true"><use href="#i-pin"/></svg><b>จุดเริ่มต้น</b><span>ประกาศเร็ว ๆ นี้</span></div>
-        <div class="tba"><svg aria-hidden="true"><use href="#i-flag"/></svg><b>จุดหมาย</b><span>ประกาศเร็ว ๆ นี้</span></div>
+        <div class="tba"><svg aria-hidden="true"><use href="#i-map"/></svg><b>รายละเอียดเส้นทาง</b><span>4 ช่วง · 6 จังหวัด</span></div>
+        <div class="tba"><svg aria-hidden="true"><use href="#i-pin"/></svg><b>จุดเริ่มต้น</b><span>ข่วงเมืองปัว จ.น่าน</span></div>
+        <div class="tba"><svg aria-hidden="true"><use href="#i-flag"/></svg><b>จุดหมาย</b><span>ข่วงเมืองปัว จ.น่าน</span></div>
         <div class="tba"><svg aria-hidden="true"><use href="#i-mega"/></svg><b>ประกาศเพิ่มเติม</b><span>ติดตามข่าวสารเร็ว ๆ นี้</span></div>
       </div>
     </div>
