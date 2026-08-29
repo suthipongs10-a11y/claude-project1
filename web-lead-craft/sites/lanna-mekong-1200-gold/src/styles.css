@@ -216,9 +216,37 @@ a { color: var(--gold-ink); }
 .sec-head { margin-bottom: 44px; max-width: 62ch; }
 .sec-head p { margin-top: 6px; }
 
-/* about: copy on the left, three virtues on the right */
-.about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 56px; align-items: start; }
-@media (max-width: 940px) { .about { grid-template-columns: minmax(0, 1fr); gap: 40px; } }
+/* about: copy on the left, one of the organiser's own photographs on the
+   right, with the three virtues moved to a full-width row underneath. The
+   picture is the point of this section now, so it gets the larger column. */
+.about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 56px; align-items: center; margin-bottom: 58px; }
+@media (max-width: 940px) { .about { grid-template-columns: minmax(0, 1fr); gap: 36px; margin-bottom: 40px; } }
+
+.about-shot { margin: 0; }
+/* .about-media is what the offset rule is measured against — on the <figure>
+   it would enclose the caption too, and the gold line would cross the text */
+.about-media { position: relative; display: block; }
+.about-shot img {
+  display: block; position: relative; z-index: 1;
+  width: 100%; height: 400px; object-fit: cover;
+  border-radius: var(--r);
+}
+/* an offset gold rule behind the frame — the same ornament language as the
+   section corners, without another image to load */
+.about-frame {
+  position: absolute; z-index: 0; inset: 0;
+  transform: translate(16px, 16px);
+  border: 1px solid var(--line-gold); border-radius: var(--r);
+}
+/* clears the offset rule's bottom edge rather than crossing it */
+.about-shot figcaption { margin-top: 30px; font-size: 0.86rem; color: var(--faint); letter-spacing: 0.02em; }
+@media (max-width: 940px) { .about-shot img { height: 300px; } }
+@media (max-width: 560px) {
+  .about-shot img { height: 230px; }
+  .about-frame { transform: translate(10px, 10px); }
+  .about-shot figcaption { margin-top: 24px; }
+}
+
 .virtues { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; text-align: center; }
 @media (max-width: 560px) { .virtues { grid-template-columns: minmax(0, 1fr); gap: 30px; } }
 .virtue svg { width: 76px; height: 62px; color: var(--gold); }
