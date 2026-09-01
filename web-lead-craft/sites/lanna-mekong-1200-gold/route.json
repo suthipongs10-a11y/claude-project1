@@ -1,0 +1,93 @@
+{
+  "_comment": [
+    "The 1,200 km loop as the organiser described it. Coordinates are the",
+    "district towns they named, to roughly 100 m; the line drawn between them",
+    "is an overview of the corridor, NOT surveyed road geometry. When the GPX",
+    "arrives, replace each stage's `points` with the track and re-run",
+    "`node tools/route-map.mjs sites/lanna-mekong-1200-gold`.",
+    "",
+    "The Nan-Pua corridor is ridden twice - outbound in stage 1, home in",
+    "stage 4 - so those two lines overlap on the map. That is the route."
+  ],
+  "title": "ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200",
+  "provinces": ["Nan", "Phrae", "Uttaradit", "Phitsanulok", "Phetchabun", "Loei"],
+  "context": [
+    "Chiang Rai", "Phayao", "Lampang", "Lamphun", "Chiang Mai", "Sukhothai",
+    "Tak", "Kamphaeng Phet", "Phichit", "Nakhon Sawan", "Chaiyaphum",
+    "Khon Kaen", "Nong Bua Lam Phu", "Udon Thani", "Nong Khai"
+  ],
+  "start": { "name": "ข่วงเมืองปัว", "sub": "อ.ปัว จ.น่าน", "lat": 19.178, "lon": 100.909 },
+  "river": {
+    "name": "แม่น้ำโขง",
+    "points": [
+      [17.795, 101.398], [17.878, 101.520], [17.898, 101.664], [17.960, 101.810],
+      [18.020, 101.945], [18.027, 102.063], [18.058, 102.200], [18.040, 102.330],
+      [17.980, 102.470], [17.920, 102.610], [17.878, 102.742]
+    ]
+  },
+  "stages": [
+    {
+      "no": 1,
+      "title": "น่าน · แพร่ · อุตรดิตถ์ · พิษณุโลก",
+      "note": "จากปัวลงมาตัวเมืองน่าน ผ่านแพร่ เข้าอุตรดิตถ์ แล้วลงใต้ผ่านวังทอง",
+      "points": [
+        { "name": "ข่วงเมืองปัว", "key": true, "lat": 19.178, "lon": 100.909, "stop": true },
+        { "name": "ท่าวังผา", "lat": 19.108, "lon": 100.803 },
+        { "name": "เมืองน่าน", "key": true, "lat": 18.783, "lon": 100.778, "stop": true },
+        { "name": "เวียงสา", "lat": 18.573, "lon": 100.744 },
+        { "name": "ร้องกวาง", "lat": 18.341, "lon": 100.318 },
+        { "name": "เมืองแพร่", "key": true, "lat": 18.145, "lon": 100.141, "stop": true },
+        { "name": "เด่นชัย", "lat": 17.985, "lon": 99.928 },
+        { "name": "เมืองอุตรดิตถ์", "key": true, "lat": 17.625, "lon": 100.099, "stop": true },
+        { "name": "พรหมพิราม", "lat": 17.030, "lon": 100.203 },
+        { "name": "เมืองพิษณุโลก", "key": true, "lat": 16.824, "lon": 100.259, "stop": true },
+        { "name": "วังทอง", "lat": 16.819, "lon": 100.443, "stop": true }
+      ]
+    },
+    {
+      "no": 2,
+      "title": "เพชรบูรณ์ · เลย · ริมแม่น้ำโขง",
+      "note": "มุ่งหน้าหล่มสัก ขึ้นไปเมืองเลย ผ่านปากชม แล้วเลียบโขงที่เชียงคาน",
+      "points": [
+        { "name": "วังทอง", "lat": 16.819, "lon": 100.443, "stop": true },
+        { "name": "เขาค้อ", "lat": 16.660, "lon": 100.968 },
+        { "name": "หล่มสัก", "key": true, "lat": 16.774, "lon": 101.246, "stop": true },
+        { "name": "หล่มเก่า", "lat": 16.887, "lon": 101.222 },
+        { "name": "ภูกระดึง", "lat": 16.885, "lon": 101.885 },
+        { "name": "เมืองเลย", "key": true, "lat": 17.489, "lon": 101.727, "stop": true },
+        { "name": "ปากชม", "lat": 18.027, "lon": 102.063, "stop": true },
+        { "name": "เชียงคาน", "key": true, "lat": 17.898, "lon": 101.664, "stop": true }
+      ]
+    },
+    {
+      "no": 3,
+      "title": "ภูเรือ · พิษณุโลก · อุตรดิตถ์",
+      "note": "วนกลับทางภูเรือ ด่านซ้าย เข้ารอยต่อนครไทย–ชาติตระการ ผ่านทองแสนขันและสี่แยกน้ำอ่าง",
+      "points": [
+        { "name": "เชียงคาน", "key": true, "lat": 17.898, "lon": 101.664, "stop": true },
+        { "name": "ภูเรือ", "key": true, "lat": 17.470, "lon": 101.363, "stop": true },
+        { "name": "ด่านซ้าย", "lat": 17.276, "lon": 101.152, "stop": true },
+        { "name": "นครไทย", "lat": 17.100, "lon": 100.835, "stop": true },
+        { "name": "ชาติตระการ", "lat": 17.283, "lon": 100.622 },
+        { "name": "ทองแสนขัน", "lat": 17.611, "lon": 100.324 },
+        { "name": "สี่แยกน้ำอ่าง", "lat": 17.470, "lon": 100.200 },
+        { "name": "เมืองอุตรดิตถ์", "key": true, "lat": 17.625, "lon": 100.099, "stop": true }
+      ]
+    },
+    {
+      "no": 4,
+      "title": "แพร่ · เวียงสา · น่าน",
+      "note": "ผ่านเด่นชัย เข้าแพร่ ร้องกวาง ข้ามเวียงสาและเมืองน่าน ก่อนผ่านท่าวังผากลับสู่ปัว",
+      "points": [
+        { "name": "เมืองอุตรดิตถ์", "key": true, "lat": 17.625, "lon": 100.099, "stop": true },
+        { "name": "เด่นชัย", "lat": 17.985, "lon": 99.928, "stop": true },
+        { "name": "เมืองแพร่", "key": true, "lat": 18.145, "lon": 100.141, "stop": true },
+        { "name": "ร้องกวาง", "lat": 18.341, "lon": 100.318, "stop": true },
+        { "name": "เวียงสา", "lat": 18.573, "lon": 100.744, "stop": true },
+        { "name": "เมืองน่าน", "key": true, "lat": 18.783, "lon": 100.778, "stop": true },
+        { "name": "ท่าวังผา", "lat": 19.108, "lon": 100.803, "stop": true },
+        { "name": "ข่วงเมืองปัว", "key": true, "lat": 19.178, "lon": 100.909, "stop": true }
+      ]
+    }
+  ]
+}

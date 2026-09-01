@@ -225,6 +225,44 @@ photo is served at 720 instead of dropping to 480.
 **Client photos come off phones.** Expect portrait, expect under 1200px wide,
 and crop rather than upscale — `tools/` has no upscaler and should not get one.
 
+## Route maps without Google Maps
+
+`tools/route-map.mjs` turns a site's `route.json` into one inline SVG map —
+real province outlines, a smoothed route line, numbered stops, pan, zoom,
+pinch, and a stage picker that frames a leg and dims the rest. Boundaries come
+from `tools/geo/th-provinces.json` (MIT, vendored, all 77 provinces), so any
+Thai client can have one.
+
+**A Google Maps embed was the obvious answer and it is the wrong one**, for
+three reasons that all outrank "it would look familiar":
+rule 4 says a deliverable makes zero external requests, so it works from the
+zip and offline; an embed sets Google's cookies on the client's domain, which
+drags a consent bar and a PDPA disclosure onto a 990 THB page; and the Embed
+API wants a key, which is a secret with nowhere to live on a static site.
+
+What we give up is real road geometry, and that has to be said out loud rather
+than glossed: the line is a corridor drawn through the towns the organiser
+named. The generated caption says so, and each stage links out to genuine
+Google Maps directions (`/maps/dir/?api=1`, no key, ≤ 9 waypoints, one link per
+stage) for anyone who wants turn-by-turn. When a client sends a GPX, replace
+each stage's `points` and re-run — the line becomes the real thing and nothing
+else changes.
+
+Three things it learned the hard way, all of which will recur on the next map:
+
+- **Two towns 20 km apart print their names on top of each other.** There is a
+  placement pass that tries six positions per label; its vertical steps must
+  clear a whole line box or a "lower" candidate lands on the label it was
+  dodging. Every marker is seeded as an obstacle first, so a name is never
+  printed across another town's dot.
+- **A phone needs its own framing, not smaller type.** SVG units scale with
+  width, so a 1000-unit viewBox at 390px renders 15px type at under 6px. The
+  generator emits a second, portrait viewBox — computed from the route *and*
+  the labels that will print — and the script swaps it under 700px. Minor
+  labels drop out there; the stage chips carry those names.
+- **A scale bar outside the panned group lies the moment anyone zooms.** It is
+  recomputed on every transform from a `data-km-per-unit` the generator writes.
+
 ## Deployment
 
 Cloudflare Pages, framework preset **None** (no build step runs on their side).

@@ -32,6 +32,19 @@
   --body: #4E5F54;
   --faint: #7C8B81;
 
+  /* the route map reads as a map, not as the brand. Three steps of land, so
+     the six route provinces are the brightest thing on it — and the backdrop
+     is land too: what surrounds this route is Laos and Myanmar, and painting
+     it sea blue drew Thailand as an island. Only the Mekong is water. */
+  --map-outside: #D6D0BE;       /* beyond the provinces we drew */
+  --map-land-off: #E7E1D1;      /* Thai provinces flanking the route */
+  --map-land: #F6F2E6;          /* the six the route crosses */
+  --map-line: #C9C0A9;
+  --map-water-line: #5E9FCA;    /* the Mekong */
+  --map-case: #FFFFFF;
+  --map-route: #1A63C8;
+  --map-ink: #3E4A40;
+
   /* what reads on a solid fill */
   --on-forest: #FFFFFF;
   --on-forest-body: #C6D2C8;
@@ -454,6 +467,130 @@ a { color: var(--gold-ink); }
   border: 1px solid var(--line-gold); border-radius: var(--r); margin-bottom: 30px;
 }
 @media (max-width: 640px) { .route-banner { height: 180px; } }
+.route-banner-end { margin: 34px 0 0; }
+
+/* ---------- the route map ----------
+ * Drawn by tools/route-map.mjs from route.json plus real province outlines.
+ * Deliberately styled like a road map rather than like the rest of the page:
+ * a map that matches a forest-and-gold brand stops reading as a map. It sits
+ * in the theme's gold frame instead, and gold is what marks the stage the
+ * reader has selected. */
+.mapwrap { margin-bottom: 34px; }
+
+.map {
+  position: relative; overflow: hidden; touch-action: none;
+  border: 1px solid var(--line-gold); border-radius: var(--r);
+  background: var(--map-outside);
+  cursor: grab;
+}
+.map.is-drag { cursor: grabbing; }
+.map-svg { display: block; width: 100%; height: auto; }
+.map-pan { transition: transform .45s cubic-bezier(.22, .61, .36, 1); }
+.map.is-drag .map-pan { transition: none; }
+
+/* land */
+.pv { fill: var(--map-land-off); stroke: var(--map-line); stroke-width: 1; stroke-linejoin: round; }
+.pv-on { fill: var(--map-land); }
+.mekong { fill: none; stroke: var(--map-water-line); stroke-width: 6; stroke-linecap: round; }
+
+/* the route: a white casing under a coloured line is what makes a drawn route
+   read as a road at any zoom, and it is why every road map does it */
+.rt-case { fill: none; stroke: var(--map-case); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.rt-line { fill: none; stroke: var(--map-route); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.map.is-focus .rt-case, .map.is-focus .rt-line { opacity: .18; }
+.map.is-focus .rt-case.on, .map.is-focus .rt-line.on { opacity: 1; }
+.rt-line.on { stroke: var(--gold-strong); }
+
+/* stops */
+.mk-dot { fill: var(--map-case); stroke: var(--map-route); stroke-width: 2.5; }
+.mk-tx {
+  font-family: var(--text); font-size: 15px; font-weight: 600; fill: var(--map-ink);
+  paint-order: stroke; stroke: var(--map-case); stroke-width: 3.5; stroke-linejoin: round;
+}
+.map.is-focus .mk { opacity: .2; }
+.map.is-focus .mk.on { opacity: 1; }
+.map.is-focus .mk.on .mk-dot { fill: var(--gold-light); stroke: var(--gold-strong); }
+
+.pin-sh { fill: var(--gold-strong); stroke: var(--map-case); stroke-width: 2; }
+.pin-in { fill: var(--map-case); }
+.mk-tx-start { font-size: 17px; font-weight: 700; }
+
+.map-scale { fill: none; stroke: var(--map-ink); stroke-width: 1.5; opacity: .65; }
+.map-scale text {
+  stroke: none; fill: var(--map-ink); font-family: var(--text); font-size: 13px;
+  text-anchor: middle; opacity: .9;
+}
+
+/* controls — 44px, the tap-target floor qa-site.mjs enforces. It caught
+   these at 40px, which is why the number is written down here now. */
+.map-ui { position: absolute; top: 12px; right: 12px; display: grid; gap: 6px; justify-items: end; }
+.map-btn {
+  min-width: 44px; height: 44px; padding: 0 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--text); font-size: 1.15rem; line-height: 1; color: var(--map-ink);
+  background: var(--map-case); border: 1px solid var(--map-line); border-radius: var(--r);
+  box-shadow: 0 1px 4px rgba(11, 28, 18, 0.18); cursor: pointer;
+}
+.map-btn-w { font-size: 0.86rem; padding: 0 14px; }
+.map-btn:hover { background: var(--cream-2); }
+.map-btn:focus-visible { outline: 2px solid var(--gold-strong); outline-offset: 2px; }
+
+.map-hint {
+  position: absolute; left: 12px; top: 12px; margin: 0;
+  font-size: 0.76rem; color: var(--map-ink);
+  background: var(--map-case); border-radius: var(--r); padding: 5px 9px;
+  pointer-events: none;
+}
+@media (max-width: 560px) { .map-hint { display: none; } }
+
+/* stage chips */
+.map-legend { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+@media (max-width: 940px) { .map-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .map-legend { grid-template-columns: minmax(0, 1fr); } }
+
+.mc {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--line-forest); border-radius: var(--r);
+  background: var(--tile-forest); overflow: hidden;
+}
+.mc.on { border-color: var(--gold); background: rgba(201, 162, 39, 0.12); }
+.mc-pick {
+  flex: 1; display: flex; gap: 11px; align-items: flex-start; text-align: left;
+  padding: 14px 14px 12px; background: none; border: 0; cursor: pointer;
+  color: inherit; font: inherit;
+}
+.mc-pick:focus-visible { outline: 2px solid var(--gold); outline-offset: -3px; }
+.mc-no {
+  flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--display); font-size: 0.86rem; font-weight: 600;
+  color: var(--on-gold); background: var(--gold);
+}
+.mc-tx { min-width: 0; }
+.mc-tx > b { display: block; font-size: 0.94rem; color: var(--on-forest); line-height: 1.45; }
+:lang(th) .mc-tx > b { font-weight: 600; }
+.mc-tx > span { display: block; margin-top: 4px; font-size: 0.82rem; color: var(--on-forest-dim); line-height: 1.6; }
+.mc-go {
+  display: flex; align-items: center; min-height: 46px; padding: 0 14px;
+  font-size: 0.8rem; color: var(--gold-light); text-decoration: none;
+  border-top: 1px solid var(--line-forest);
+}
+.mc-go:hover { color: var(--gold-pale); text-decoration: underline; }
+
+/* The portrait viewBox is roughly half the width of the landscape one, so
+   in-map type is already near its design size on a phone — it needs a nudge,
+   not the wholesale rescale the landscape frame would have required. What a
+   phone genuinely has no room for is sixteen town labels, so only the key
+   ones print; the stage chips carry the rest of the names. */
+@media (max-width: 700px) {
+  .mk-tx { font-size: 17px; stroke-width: 4; }
+  .mk-tx-start { font-size: 19px; }
+  .mk:not(.mk-key) .mk-tx { display: none; }
+  .mk-dot { r: 6.5; }
+  .map-scale text { font-size: 15px; }
+}
+
+.map-note { margin: 14px 0 0; font-size: 0.8rem; color: var(--on-forest-dim); line-height: 1.7; }
 
 /* ---------- the four stages ---------- */
 .ends { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
