@@ -8,7 +8,7 @@
 // image files with a srcset, and only the artifact preview inlines them
 // (an artifact is a single page — it has no sibling files to link to).
 import sharp from 'sharp';
-import { readdirSync, existsSync, statSync, mkdirSync, readFileSync } from 'node:fs';
+import { readdirSync, existsSync, statSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
 import { join, parse } from 'node:path';
 
 export const WIDTHS = [480, 800, 1200];
@@ -64,6 +64,11 @@ export async function buildDerivatives(dir, dist) {
   const outDir = join(dist, 'img');
   mkdirSync(outDir, { recursive: true });
 
+  // dist/img survives build-site's wipe because regenerating it is expensive,
+  // so a derivative whose master has been deleted would otherwise live on in
+  // the deploy folder forever — shipping a photo the site no longer shows.
+  const wanted = new Set();
+
   let bytes = 0;
   for (const name of names) {
     const master = join(srcDir(dir), `${name}.webp`);
@@ -77,8 +82,17 @@ export async function buildDerivatives(dir, dist) {
       const info = await sharp(master).resize({ width: w }).webp({ quality: QUALITY }).toFile(out);
       bytes += info.size;
     }
+    for (const w of availableWidths(meta.width)) wanted.add(`${name}-${w}.webp`);
   }
-  return { count: names.length, bytes };
+
+  let pruned = 0;
+  for (const f of readdirSync(outDir)) {
+    if (f.endsWith('.webp') && !wanted.has(f)) {
+      rmSync(join(outDir, f), { force: true });
+      pruned++;
+    }
+  }
+  return { count: names.length, bytes, pruned };
 }
 
 /** name -> data URI at PREVIEW_WIDTH, for inlining into preview.html. */

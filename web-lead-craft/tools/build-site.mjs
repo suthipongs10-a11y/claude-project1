@@ -382,7 +382,8 @@ writeFileSync(
 const kb = n => `${(n / 1024).toFixed(0)} KB`;
 console.log(`built ${dist}/  (${langs.map(l => l.code).join(' + ')})`);
 for (const w of written) console.log(`  ${w.out.padEnd(34)} ${kb(w.bytes)}`);
-console.log(`  img/${' '.repeat(30)} ${photos.count} photo(s) x ${WIDTHS.join('/')} = ${kb(photos.bytes)}`);
+console.log(`  img/${' '.repeat(30)} ${photos.count} photo(s) x ${WIDTHS.join('/')} = ${kb(photos.bytes)}`
+  + (photos.pruned ? `  (pruned ${photos.pruned} orphan${photos.pruned > 1 ? 's' : ''})` : ''));
 console.log(`  + 404.html, favicon.svg, robots.txt, _headers${isReal ? ', sitemap.xml' : ''}`);
 if (!isReal) console.log(`  note: site.json has no real domain yet — sitemap/canonical skipped`);
 console.log(`preview.html ${kb(readFileSync(join(dir, 'preview.html')).length)} (site root, do not deploy)`);
