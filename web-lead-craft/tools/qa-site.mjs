@@ -134,8 +134,10 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       const r = el.getBoundingClientRect();
       return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
     };
+    const decorative = i =>
+      i.getAttribute('aria-hidden') === 'true' || i.getAttribute('role') === 'presentation';
     const noAlt = [...document.querySelectorAll('img')]
-      .filter(i => i.alt === null || i.alt.trim() === '')
+      .filter(i => i.getAttribute('alt') === null || (i.alt.trim() === '' && !decorative(i)))
       .map(i => i.getAttribute('src')?.slice(0, 60) ?? '(inline)');
 
     // A card carrying a .stretch-link is one hit area covering the whole card,

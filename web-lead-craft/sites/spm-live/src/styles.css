@@ -386,7 +386,8 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   top: 50%;
   transform: translateY(-50%);
   width: min(620px, 52%);
-  color: rgba(38, 50, 107, 0.045);
+  height: auto;
+  opacity: 0.055;
   pointer-events: none;
 }
 /* minmax(0,…) not plain fr: an fr column will not shrink below its content's
