@@ -26,6 +26,7 @@
   --ink: #10152B;
   --body: #59617D;
   --faint: #8B93AC;
+  --logo-rule: #3A93D7;   /* the hairlines in the company's own logo — not a theme colour */
   --brand: #26326B;
   --brand-deep: #1A2450;
   --brand-ink: #131B3D;
@@ -209,26 +210,46 @@ img, svg { display: block; max-width: 100%; height: auto; }
 .nav.scrolled { border-bottom-color: var(--line); }
 .nav-in { display: flex; align-items: center; gap: 22px; height: 76px; }
 
-.logo { display: inline-flex; align-items: center; gap: 12px; margin-right: auto; }
-.logo-mark { width: 42px; height: 42px; border-radius: 11px; flex: none; }
+.logo { display: inline-flex; align-items: center; gap: 14px; margin-right: auto; padding-block: 7px; }
+/* the company's own photographic butterfly — height:auto so the width/height
+   attributes cannot beat the sizing here (see CLAUDE.md rule 4) */
+.logo-mark { width: 76px; height: auto; flex: none; }
 .logo-name {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.16rem;
-  letter-spacing: 0.02em;
   color: var(--ink);
-  line-height: 1.15;
+  line-height: 1;
+  display: grid;
+  gap: 3px;
+  border-top: 1.5px solid var(--logo-rule);
+  border-bottom: 1.5px solid var(--logo-rule);
+  padding: 4px 0;
 }
-.logo-name small {
-  display: block;
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 0.655rem;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--faint);
-  margin-top: 4px;
+.logo-name > b {
+  font-weight: 700; font-style: italic; font-size: 1.34rem;
+  letter-spacing: 0.005em; line-height: 1.08;
 }
+.logo-name > i {
+  font-weight: 600; font-style: italic; font-size: 0.735rem;
+  letter-spacing: 0.052em; color: var(--brand);
+  border-top: 1px solid var(--logo-rule); padding-top: 3px;
+}
+.logo-name > small {
+  font-family: var(--font-body); font-weight: 600; font-size: 0.575rem;
+  letter-spacing: 0.44em; text-indent: 0.44em; color: var(--faint);
+  border-top: 1px solid var(--logo-rule); padding-top: 3px;
+}
+@media (max-width: 560px) {
+  .logo { gap: 10px; }
+  .logo-mark { width: 54px; }
+  .logo-name > b { font-size: 1.08rem; }
+  .logo-name > i { font-size: 0.64rem; }
+  .logo-name > small { font-size: 0.5rem; letter-spacing: 0.34em; text-indent: 0.34em; }
+}
+
+/* the Other pests card carries one sentence where the others carry a list, so
+   it is set as a lede. `.svc p` weighs (0,1,1) and beats a bare class — the
+   same specificity trap CLAUDE.md records for `.x span`. */
+.svc p.svc-lede { font-size: 1.06rem; line-height: 1.85; color: var(--ink); margin-top: 4px; }
 
 .nav-links { display: flex; gap: 22px; font-size: 0.9375rem; font-weight: 500; }
 .nav-links a { color: var(--body); transition: color 0.15s ease; }
