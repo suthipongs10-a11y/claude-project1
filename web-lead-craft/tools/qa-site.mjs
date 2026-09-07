@@ -173,8 +173,10 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       if (!vis(im)) continue;
       const r = im.getBoundingClientRect();
       const name = (im.currentSrc || im.src).split('/').pop().split('?')[0].slice(0, 40);
+      const cs = getComputedStyle(im);
+      const objectFit = cs.objectFit;
       // stretched: object-fit lets the box differ from the file, fill does not
-      if (getComputedStyle(im).objectFit === 'fill' && im.naturalWidth) {
+      if (objectFit === 'fill' && im.naturalWidth) {
         const drawn = r.width / r.height;
         const natural = im.naturalWidth / im.naturalHeight;
         if (Math.abs(drawn - natural) / natural > 0.02) {
@@ -187,8 +189,14 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       if (im.complete && im.naturalWidth === 0) {
         badImages.push(`${name} did not load — check the src`);
       }
-      // runaway box: usually a height attribute beating a CSS aspect-ratio
-      if (r.height > r.width * 2.2) {
+      // Runaway box: usually a height attribute beating a CSS aspect-ratio.
+      // The one shape that is meant to be arbitrary is a photograph laid in as
+      // a ground — absolutely positioned to fill its container, under an
+      // explicit object-fit. Both halves are required on purpose: an image that
+      // merely forgot height:auto is never positioned, and never declares
+      // object-fit, so this cannot excuse it.
+      const laidIn = objectFit !== 'fill' && cs.position === 'absolute';
+      if (!laidIn && r.height > r.width * 2.2) {
         badImages.push(`${name} renders ${Math.round(r.width)}x${Math.round(r.height)} — far taller than wide, check height:auto`);
       }
     }
