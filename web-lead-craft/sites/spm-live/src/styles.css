@@ -246,10 +246,16 @@ img, svg { display: block; max-width: 100%; height: auto; }
   .logo-name > small { font-size: 0.5rem; letter-spacing: 0.34em; text-indent: 0.34em; }
 }
 
-/* the Other pests card carries one sentence where the others carry a list, so
-   it is set as a lede. `.svc p` weighs (0,1,1) and beats a bare class — the
-   same specificity trap CLAUDE.md records for `.x span`. */
-.svc p.svc-lede { font-size: 1.06rem; line-height: 1.85; color: var(--ink); margin-top: 4px; }
+/* the three post-construction options, nested under their own point */
+.svc-sub { list-style: none; margin: 7px 0 0; padding: 0; display: grid; gap: 5px; }
+.svc-sub li {
+  position: relative; padding-left: 15px;
+  font-size: 0.86rem; line-height: 1.65; color: var(--body);
+}
+.svc-sub li::before {
+  content: ''; position: absolute; left: 2px; top: 0.66em;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+}
 
 .nav-links { display: flex; gap: 22px; font-size: 0.9375rem; font-weight: 500; }
 .nav-links a { color: var(--body); transition: color 0.15s ease; }
@@ -693,13 +699,16 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 }
 .cl-ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 11px; background: rgba(255,255,255,0.08); color: var(--highlight); }
 .cl-ic svg { width: 22px; height: 22px; }
+/* "+500 Hotels" reads as one line, so the figure sits inline with the name
+   rather than stacked above it. The <b> carries the name's own size and
+   colour — qa-site compares those against the translation span inside it. */
+.cl-h { display: block; font-size: 0.9575rem; font-weight: 600; color: var(--on-panel); line-height: 1.5; }
 .cl-n {
-  display: block; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(1.65rem, 3.4vw, 2.05rem); line-height: 1.05;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 1.85rem); line-height: 1;
   color: var(--highlight); font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.02em; margin-right: 0.4em;
 }
-.cl-col > b { font-size: 0.9575rem; font-weight: 600; color: var(--on-panel); }
 .cl-note-sm { font-size: 0.83rem !important; color: var(--on-panel-dim) !important; }
 .cl-col p { font-size: 0.9rem; line-height: 1.85; color: var(--on-panel-body); }
 .cl-note { max-width: 76ch; margin: clamp(24px, 3vw, 34px) auto 0; text-align: center; font-size: 0.86rem; line-height: 1.75; color: var(--on-panel-faint); }
