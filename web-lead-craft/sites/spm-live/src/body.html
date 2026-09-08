@@ -114,7 +114,10 @@
 
 <main id="top">
 
-  <section class="hero">
+  <section class="hero sec-photo">
+    <div class="sec-photo-bg" aria-hidden="true">
+      <img {{img:ceiling-inspection:100vw}} width="960" height="1280" fetchpriority="high" decoding="async" alt="" aria-hidden="true">
+    </div>
     <img class="hero-mark" {{img:logo-butterfly:600px}} width="360" height="336" alt="" aria-hidden="true">
     <div class="wrap hero-grid">
       <div class="hero-copy">
@@ -133,11 +136,6 @@
         </div>
       </div>
       <div class="hero-side">
-        <figure class="hero-photo">
-          <img {{img:ceiling-inspection:(max-width:960px) 92vw, 40vw}} width="960" height="1280" fetchpriority="high" decoding="async"
-               alt="{{t|เจ้าหน้าที่ SPM ยืนบนบันได ใช้ไฟฉายส่องตรวจโพรงเหนือฝ้าเพดานในห้องเก็บของ|An SPM technician on a ladder, using a torch to inspect the void above a false ceiling in a storeroom}}">
-          <figcaption>{{t|ตรวจโพรงเหนือฝ้าเพดานในห้องเก็บของ — จุดที่สัตว์รบกวนมักเข้าไปอาศัยโดยไม่มีใครเห็น|Checking the void above a false ceiling in a storeroom — where pests get in and settle out of sight.}}</figcaption>
-        </figure>
         <div class="hero-card">
           <h2>{{t|บริษัทจัดการสัตว์รบกวนที่ก้าวหน้าที่สุดในประเทศไทย เพราะ|Considered the most advanced pest management company in Thailand because}}</h2>
           <div class="hero-card-row">
@@ -265,7 +263,10 @@
     </div>
   </section>
 
-  <section class="gear">
+  <section class="gear sec-photo">
+    <div class="sec-photo-bg" aria-hidden="true">
+      <img {{img:garden-spray:100vw}} width="1108" height="831" loading="lazy" decoding="async" alt="" aria-hidden="true">
+    </div>
     <div class="wrap gear-in">
       <div class="gear-copy rv">
         <span class="label">{{t|หลักการทำงาน|Our approach}}</span>
@@ -278,17 +279,6 @@
           <div class="gear-row"><svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg><div><b>{{t|ลดผลกระทบต่อสิ่งแวดล้อม|A lighter footprint}}</b> {{t|เป็นเหตุผลที่บริษัทเลือกวิธีนี้มาตั้งแต่ต้น ไม่ใช่เพิ่งมาปรับทีหลัง|the reason the company chose this approach from the beginning}}</div></div>
         </div>
         <a class="btn btn-ink" href="#contact">{{t|ขอให้เข้าประเมินหน้างาน|Ask us to assess your site}}</a>
-      </div>
-      <div class="gear-art rv" style="--d:0.08s">
-        <figure class="gear-photo">
-          <img {{img:garden-spray:(max-width:960px) 92vw, 45vw}} width="1108" height="831" loading="lazy" decoding="async"
-               alt="{{t|เจ้าหน้าที่ SPM สะพายถังพ่นน้ำยา กำลังทำงานกับแนวพุ่มไม้รอบอาคารรีสอร์ท|An SPM technician with a backpack sprayer treating the shrub line around a resort building}}">
-        </figure>
-        <figure class="gear-photo gear-photo--sm">
-          <img {{img:food-safe:(max-width:960px) 92vw, 45vw}} width="720" height="540" loading="lazy" decoding="async"
-               alt="{{t|เจ้าหน้าที่สวมหมวกคลุมผมและหน้ากาก กำลังตรวจอุปกรณ์ในพื้นที่เตรียมอาหาร|A technician in a hairnet and mask checking equipment in a food-preparation area}}">
-        </figure>
-        <span class="gear-tag">{{t|ประเมินก่อน พ่นทีหลัง|Assess first, spray second}}</span>
       </div>
     </div>
   </section>
@@ -365,48 +355,6 @@
     </div>
   </section>
 
-  <section class="sec gal" id="work">
-    <div class="wrap">
-      <div class="sec-head rv">
-        <span class="label label-c">{{t|งานของเรา|On site}}</span>
-        <h2>{{t|งานจริงของทีมเรา|Real work carried out by our own crews}}</h2>
-        <p>{{t|ภาพทั้งหมดในหน้านี้ถ่ายจากหน้างานจริงของบริษัท ไม่ใช่ภาพสต็อก|Every photograph on this page was taken on one of our jobs. None of it is stock.}}</p>
-      </div>
-      <div class="gal-grid">
-        <figure class="gal-item rv">
-          <img {{img:hotel-corridor:(max-width:600px) 88vw, (max-width:1080px) 44vw, 30vw}} width="960" height="720" loading="lazy" decoding="async"
-               alt="{{t|ทางเดินโรงแรม — เดินตรวจและพ่นตามแนวขอบผนังทีละชั้น|A hotel corridor — treating the skirting line floor by floor}}">
-          <figcaption>{{t|ทางเดินโรงแรม — เดินตรวจและพ่นตามแนวขอบผนังทีละชั้น|A hotel corridor — treating the skirting line floor by floor}}</figcaption>
-        </figure>
-        <figure class="gal-item rv" style="--d:0.05s">
-          <img {{img:kitchen-equipment:(max-width:600px) 88vw, (max-width:1080px) 44vw, 30vw}} width="960" height="720" loading="lazy" decoding="async"
-               alt="{{t|ครัวเชิงพาณิชย์ — เข้าถึงใต้และหลังอุปกรณ์ ซึ่งเป็นจุดที่ปัญหาเริ่ม|A commercial kitchen — reaching under and behind the equipment, where it starts}}">
-          <figcaption>{{t|ครัวเชิงพาณิชย์ — เข้าถึงใต้และหลังอุปกรณ์ ซึ่งเป็นจุดที่ปัญหาเริ่ม|A commercial kitchen — reaching under and behind the equipment, where it starts}}</figcaption>
-        </figure>
-        <figure class="gal-item rv" style="--d:0.10s">
-          <img {{img:fogging-resort:(max-width:600px) 88vw, (max-width:1080px) 44vw, 30vw}} width="960" height="720" loading="lazy" decoding="async"
-               alt="{{t|พ่นหมอกควันรอบพื้นที่กลางแจ้งของรีสอร์ทก่อนเปิดให้บริการ|Fogging a resort’s outdoor areas before service begins}}">
-          <figcaption>{{t|พ่นหมอกควันรอบพื้นที่กลางแจ้งของรีสอร์ทก่อนเปิดให้บริการ|Fogging a resort’s outdoor areas before service begins}}</figcaption>
-        </figure>
-        <figure class="gal-item rv" style="--d:0.15s">
-          <img {{img:drain:(max-width:600px) 88vw, (max-width:1080px) 44vw, 30vw}} width="1108" height="831" loading="lazy" decoding="async"
-               alt="{{t|งานท่อระบายน้ำ — ต้นทางของแมลงสาบและหนูในอาคารส่วนใหญ่|Drain work — where most of a building’s cockroaches and rodents come from}}">
-          <figcaption>{{t|งานท่อระบายน้ำ — ต้นทางของแมลงสาบและหนูในอาคารส่วนใหญ่|Drain work — where most of a building’s cockroaches and rodents come from}}</figcaption>
-        </figure>
-        <figure class="gal-item rv" style="--d:0.20s">
-          <img {{img:crawlspace:(max-width:600px) 88vw, (max-width:1080px) 44vw, 30vw}} width="1108" height="831" loading="lazy" decoding="async"
-               alt="{{t|ใต้พื้นอาคาร จุดที่ต้องเข้าไปถึงจึงจะคุมปลวกได้จริง|Under the slab — you have to get in there to control termites properly}}">
-          <figcaption>{{t|ใต้พื้นอาคาร จุดที่ต้องเข้าไปถึงจึงจะคุมปลวกได้จริง|Under the slab — you have to get in there to control termites properly}}</figcaption>
-        </figure>
-        <figure class="gal-item rv" style="--d:0.25s">
-          <img {{img:truck:(max-width:600px) 88vw, (max-width:1080px) 44vw, 30vw}} width="1477" height="923" loading="lazy" decoding="async"
-               alt="{{t|รถบริการของบริษัท ติดตราและเบอร์ติดต่อ เข้าพื้นที่ในเครื่องแบบทุกครั้ง|Our own marked service vehicles — crews arrive in uniform, every time}}">
-          <figcaption>{{t|รถบริการของบริษัท ติดตราและเบอร์ติดต่อ เข้าพื้นที่ในเครื่องแบบทุกครั้ง|Our own marked service vehicles — crews arrive in uniform, every time}}</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
   <section class="clients">
     <div class="wrap">
       <div class="sec-head sec-head--panel rv">
@@ -467,7 +415,10 @@
     </div>
   </section>
 
-  <section class="sec sec--stone" id="standard">
+  <section class="sec sec-photo" id="standard">
+    <div class="sec-photo-bg" aria-hidden="true">
+      <img {{img:inspection:100vw}} width="960" height="720" loading="lazy" decoding="async" alt="" aria-hidden="true">
+    </div>
     <div class="wrap std">
       <div class="std-copy rv">
         <span class="label">{{t|มาตรฐานการทำงาน|How we work}}</span>
@@ -493,10 +444,6 @@
         </div>
       </div>
       <div class="std-art rv" style="--d:0.08s">
-        <figure class="std-photo">
-          <img {{img:inspection:(max-width:960px) 92vw, 42vw}} width="960" height="720" loading="lazy" decoding="async"
-               alt="{{t|เจ้าหน้าที่ SPM ติดบัตรประจำตัว กำลังส่องไฟตรวจรอยต่อฝ้าเพดาน|An SPM technician wearing an ID badge, checking a ceiling joint with a torch}}">
-        </figure>
         <div class="certs">
           <p class="certs-head">{{t|การรับรอง|Certified and accredited}}</p>
           <div class="certs-row">

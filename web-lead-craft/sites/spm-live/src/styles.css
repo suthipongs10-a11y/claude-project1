@@ -67,14 +67,21 @@
   --ghost-bg-hover: rgba(255, 255, 255, 0.18);
   --ghost-fg: #FFFFFF;
   --ghost-line: rgba(255, 255, 255, 0.3);
-  /* THE PHOTOGRAPH VEIL — one value, every picture on the page.
-     The client asked for the pictures to sit back like a ground rather than
-     stand forward like exhibits, and asked for it everywhere, not just the
-     hero. Navy and not white: a white film reads as a faded print, which is
-     the version they turned down. Denser at the foot so a caption has
-     something to sit against. */
-  --photo-veil: linear-gradient(178deg, rgba(26, 36, 80, 0.38) 0%, rgba(19, 27, 61, 0.58) 100%);
-  --photo-fade: saturate(0.72) contrast(0.94);
+  /* THE PHOTOGRAPH BAND — one value, every photo-backed section on the page.
+     The client's second round asked for more than a veiled exhibit: the
+     picture itself becomes the section's ground, full-bleed, with copy
+     standing directly on it — the same idea the hero already used, now
+     applied everywhere a photo appears. Darkest under the text side (left),
+     fading toward the photo's visible side, plus a soft top edge so the band
+     doesn't cut the image with a hard line. */
+  --band-veil:
+    linear-gradient(94deg,
+      rgba(19, 27, 61, 0.93) 0%,
+      rgba(19, 27, 61, 0.88) 34%,
+      rgba(19, 27, 61, 0.68) 62%,
+      rgba(26, 36, 80, 0.52) 100%),
+    linear-gradient(180deg, rgba(19, 27, 61, 0.30) 0%, rgba(19, 27, 61, 0) 34%);
+  --band-fade: brightness(1.12) contrast(1.04) saturate(1.06);
   --shadow-soft: 0 12px 32px rgba(16, 21, 43, 0.07);
   --shadow-lift: 0 22px 54px rgba(16, 21, 43, 0.13);
   /* One face per script, not one family for both. Each embedded font is
@@ -129,7 +136,6 @@ img, svg { display: block; max-width: 100%; height: auto; }
 :lang(th) .logo-name small,
 :lang(th) .foot-col h4,
 :lang(th) .plan-flag { letter-spacing: 0.05em; }
-:lang(th) .hero h1 em { padding-bottom: 0.28em; }
 
 .wrap { max-width: var(--page); margin-inline: auto; padding-inline: var(--gutter); }
 
@@ -387,13 +393,34 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .nav-tel .ic { color: var(--accent); }
 .nav-in > .btn { padding: 0.66em 1.35em; font-size: 0.9375rem; }
 
-/* ---------- hero ---------- */
+/* ---------- full-bleed photograph bands ---------- */
 
-/* The dark field is the brand board, not decoration: it is the one place the
-   highlight is allowed to be the loudest thing on screen, and it puts thirty years
-   of trading in white type before a visitor has scrolled anything. */
-.hero { background: var(--stone); position: relative; overflow: hidden; color: var(--body); }
-/* the mark, blown up and cropped — pattern, not illustration */
+/* The second round asked for the hero's treatment on every photo-bearing
+   section, and for the documentary work-gallery gone entirely: no more photos
+   presented as exhibits, only as ground. One pattern, three sections (hero,
+   gear, standard) — each supplies only its own picture and crop point.
+
+   An <img>, not a CSS background-image: the {{img:}} token ships a srcset,
+   and background-image would pin one derivative and one hashed filename. */
+.sec-photo { position: relative; overflow: hidden; background: var(--panel-deep); color: var(--on-panel-body); }
+.sec-photo-bg { position: absolute; inset: 0; pointer-events: none; }
+.sec-photo-bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--band-pos, 50% 50%);
+  filter: var(--band-fade);
+}
+.sec-photo-bg::after { content: ''; position: absolute; inset: 0; background: var(--band-veil); }
+.sec-photo .label { color: var(--highlight); }
+.sec-photo .label::before, .sec-photo .label::after { background: var(--rule-on-panel); }
+.sec-photo h2 { color: var(--on-panel); text-shadow: 0 1px 26px rgba(19, 27, 61, 0.5); }
+
+/* the mark, blown up and cropped — pattern, not illustration.
+   brightness(0) invert(1) turns the photographic cutout into a white
+   silhouette, the only version of it that reads over a photograph */
 .hero-mark {
   position: absolute;
   right: -6%;
@@ -401,35 +428,24 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   transform: translateY(-50%);
   width: min(620px, 52%);
   height: auto;
-  opacity: 0.055;
+  filter: brightness(0) invert(1);
+  opacity: 0.10;
   pointer-events: none;
 }
+/* Each section supplies only its own crop point — where the subject sits in
+   its own photo — as one custom property, consumed by the shared rule above. */
+.hero { --band-pos: 52% 12%; }  /* the torch, the hand, the opened ceiling */
 /* minmax(0,…) not plain fr: an fr column will not shrink below its content's
    min-content width, so the longer English copy would otherwise steal width
    from the panel beside it */
 .hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.78fr); gap: clamp(30px, 5vw, 64px); align-items: center; padding-block: clamp(58px, 8vw, 104px); }
 .hero-copy { display: grid; gap: 22px; justify-items: start; }
-.hero .label { color: var(--accent); }
-.hero .label::before, .hero .label::after { background: var(--accent); opacity: 0.5; }
-.hero h1 { font-size: clamp(2rem, 4.3vw, 3.05rem); line-height: 1.34; color: var(--ink); }
-/* The rule is painted as a background, not an absolutely-positioned ::after,
-   so the phrase is free to wrap — box-decoration-break underlines each line
-   fragment. An ::after would need white-space:nowrap to look right, and that
-   is what makes the longer English phrase overflow. */
-.hero h1 em {
-  font-style: normal;
-  color: var(--brand);
-  padding-bottom: 0.2em;
-  background: linear-gradient(var(--highlight), var(--highlight)) no-repeat;
-  background-size: 100% 0.085em;
-  background-position: 0 100%;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}
+.hero h1 { font-size: clamp(2rem, 4.3vw, 3.05rem); line-height: 1.34; color: var(--on-panel); text-shadow: 0 1px 26px rgba(19, 27, 61, 0.5); }
+.hero h1 em { font-style: normal; color: var(--highlight); }
 .hero-lede { font-size: 1.1rem; max-width: 32em; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
-.hero-fine { display: flex; align-items: center; gap: 9px; font-size: 0.9rem; color: var(--faint); }
-.hero-fine .ic { width: 1.1em; height: 1.1em; color: var(--accent); }
+.hero-fine { display: flex; align-items: center; gap: 9px; font-size: 0.9rem; color: var(--on-panel-dim); }
+.hero-fine .ic { width: 1.1em; height: 1.1em; color: var(--highlight); }
 
 .stats { display: flex; gap: clamp(18px, 3vw, 34px); padding-top: 6px; }
 .stat b {
@@ -439,12 +455,12 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1.5rem;
-  color: var(--ink);
+  color: var(--on-panel);
   line-height: 1.25;
   font-variant-numeric: tabular-nums;
 }
-.stat b .ic { width: 0.72em; height: 0.72em; color: var(--accent); }
-.stat > span { display: block; font-size: 0.85rem; color: var(--faint); line-height: 1.5; }
+.stat b .ic { width: 0.72em; height: 0.72em; color: var(--highlight); }
+.stat > span { display: block; font-size: 0.85rem; color: var(--on-panel-dim); line-height: 1.5; }
 .stat + .stat { border-left: 1px solid var(--panel-line); padding-left: clamp(18px, 3vw, 34px); }
 /* "ทั่วประเทศ" is a word where the other two are figures. Left at the numeral
    size it dwarfs them; set smaller, it floats off the row's baseline instead.
@@ -453,38 +469,19 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .stat-wide b { font-size: 1.12rem; letter-spacing: -0.01em; padding-bottom: 0.12rem; }
 :lang(th) .stat-wide b { font-size: 1.06rem; }
 
-/* the credential card — what a hotel's purchasing officer is actually reading */
-/* The right-hand column: a photograph of the crew at work, with the
-   procurement checklist riding up over its lower edge. The photo is the
-   client's own — it is what a demo cannot have and a real site must. */
+/* the credential card — what a hotel's purchasing officer is actually reading.
+   It stays solid white: it is the one block on the hero that gets read word by
+   word, and the photograph behind it must not compete for that. */
 .hero-side { display: grid; justify-items: stretch; }
-.hero-photo { margin: 0; }
-.hero-photo img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  object-position: 50% 34%;
-  border-radius: 18px;
-  box-shadow: var(--shadow-lift);
-}
-.hero-photo figcaption {
-  margin: 12px 4px 0;
-  font-size: 0.8rem;
-  line-height: 1.6;
-  color: var(--faint);
-}
-.hero-side .hero-card { margin-top: 20px; }
 
 .hero-card {
   background: #fff;
   border: 1px solid var(--line);
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-lift);
   border-radius: 16px;
   padding: clamp(22px, 3vw, 30px);
   display: grid;
   gap: 16px;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
 }
 .hero-card h2 {
   font-family: var(--font-body);
@@ -494,42 +491,12 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   text-transform: uppercase;
   color: var(--accent);
   line-height: 1.5;
+  text-shadow: none;
 }
 .hero-card-row { display: flex; align-items: center; gap: 13px; }
 .hero-card-row .ic { width: 1.4em; height: 1.4em; flex: 0 0 auto; color: var(--accent); }
 .hero-card-row b { display: block; color: var(--ink); font-weight: 600; font-size: 0.98rem; line-height: 1.5; }
 .hero-card-row > div > span { font-size: 0.845rem; line-height: 1.6; color: var(--body); }
-
-/* ---------- the photograph treatment ---------- */
-
-/* Every photograph carries the same veil so that ten pictures read as one
-   material. The four components differ only in the two numbers each declares.
-
-   inset: 0 0 auto 0 plus the picture's own aspect-ratio — never inset: 0. A
-   <figure> is taller than its image the moment it has a caption, and a veil
-   drawn over a caption is exactly how this was got wrong the first time. */
-.hero-photo, .gear-photo, .std-photo, .gal-item { position: relative; }
-.hero-photo::after,
-.gear-photo::after,
-.std-photo::after,
-.gal-item::after {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  aspect-ratio: var(--ph-ratio);
-  border-radius: var(--ph-radius);
-  pointer-events: none;
-  background: var(--photo-veil);
-}
-.hero-photo { --ph-ratio: 4 / 3;  --ph-radius: 18px; }
-.gear-photo { --ph-ratio: 3 / 4;  --ph-radius: 16px; }
-.std-photo  { --ph-ratio: 4 / 3;  --ph-radius: 16px; }
-.gal-item   { --ph-ratio: 4 / 3;  --ph-radius: 14px; }
-.hero-photo img, .gear-photo img, .std-photo img, .gal-item img { filter: var(--photo-fade); }
-
-/* Not the certification seals and not the mark. Those are printed devices on a
-   white ground, and a tint over one reads as a rendering fault, not a
-   treatment. */
 
 /* ---------- assurance strip ---------- */
 
@@ -609,36 +576,22 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 /* Given its own band because renting a unit and servicing it monthly is the
    part of this business that renews itself, and it is invisible in a list of
    pests. Azure is the mark's colour and appears only here. */
-.gear { background: var(--band); border-block: 1px solid var(--line); }
-.gear-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr); gap: clamp(30px, 5vw, 62px); align-items: center; padding-block: clamp(52px, 7vw, 82px); }
+.gear { --band-pos: 42% 58%; }  /* the sprayer and the hedge line, not the roofline */
+/* No second column: the two photographs that used to sit here are the
+   section's background now. The copy keeps a reading-width cap so the photo
+   stays visible to its right on a wide screen, instead of the text sprawling
+   edge to edge over it. */
+/* position:relative is load-bearing, not decorative: without it this sits in
+   the "static in-flow" paint layer, which CSS stacking rules paint *before*
+   the absolutely-positioned .sec-photo-bg regardless of DOM order — the text
+   would render, correctly, directly underneath its own background photo. */
+.gear-in { position: relative; max-width: 640px; padding-block: clamp(52px, 7vw, 82px); }
 .gear-copy { display: grid; gap: 18px; justify-items: start; }
-.gear-copy .label { color: #1C5E96; }
-.gear-copy .label::before { background: #1C5E96; }
 .gear-copy h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
 .gear-list { display: grid; gap: 12px; width: 100%; }
 .gear-row { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem; line-height: 1.72; }
-.gear-row .ic { width: 1.2em; height: 1.2em; color: #1C5E96; margin-top: 0.32em; }
-.gear-row b { color: var(--ink); font-weight: 600; }
-
-/* Two of the client's own photographs, offset from each other so the pair
-   reads as a spread rather than a grid of stock. */
-.gear-art { position: relative; display: grid; gap: 16px; grid-template-columns: 1fr 1fr; align-items: start; }
-.gear-photo { margin: 0; }
-.gear-photo img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 16px; box-shadow: var(--shadow-soft); }
-.gear-photo--sm { margin-top: clamp(24px, 5vw, 52px); }
-.gear-tag {
-  position: absolute;
-  left: -10px;
-  bottom: -18px;
-  background: var(--brand);
-  color: var(--on-brand);
-  border-radius: 10px;
-  padding: 9px 15px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  line-height: 1.5;
-  box-shadow: var(--shadow-soft);
-}
+.gear-row .ic { width: 1.2em; height: 1.2em; color: var(--highlight); margin-top: 0.32em; }
+.gear-row b { color: var(--on-panel); font-weight: 600; }
 
 /* ---------- sectors ---------- */
 
@@ -681,27 +634,25 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
 /* ---------- standards & paperwork ---------- */
 
-.std { display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 68px); align-items: center; }
+#standard { --band-pos: 58% 30%; }  /* the badge, the torch and the ceiling joint */
+.std { position: relative; display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 68px); align-items: center; }
 .std-copy { display: grid; gap: 18px; justify-items: start; }
 .std-copy h2 { font-size: clamp(1.7rem, 3.1vw, 2.3rem); }
 .std-list { display: grid; gap: 18px; margin-top: 4px; width: 100%; }
 .std-row { display: flex; align-items: flex-start; gap: 14px; }
-.std-row .ic { width: 1.35em; height: 1.35em; color: var(--accent); margin-top: 0.28em; }
-.std-row b { display: block; color: var(--ink); font-weight: 600; font-size: 1rem; line-height: 1.55; }
+.std-row .ic { width: 1.35em; height: 1.35em; color: var(--highlight); margin-top: 0.28em; }
+.std-row b { display: block; color: var(--on-panel); font-weight: 600; font-size: 1rem; line-height: 1.55; }
 .std-row p { font-size: 0.9125rem; line-height: 1.75; margin-top: 3px; }
 
-/* The service report, drawn rather than photographed. It is the single
-   artefact that decides this sale — an audit file needs a document in it —
-   so the page shows one instead of describing it. */
-.std-art { display: grid; gap: clamp(20px, 3vw, 28px); align-content: start; }
-.std-photo { margin: 0; }
-.std-photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 16px; box-shadow: var(--shadow-soft); }
-.doc-mark { width: 34px; height: 34px; }
+/* The photograph that used to anchor this column is the section's background
+   now; the certification card is the only thing left to float here, the same
+   way the hero's credential card floats over its own photo. */
+.std-art { display: grid; align-content: center; }
 
 /* The certification marks the client supplied. They are the reason a
    purchasing department reads this section at all, so they sit with the
    standards copy rather than in a logo strip at the bottom nobody reaches. */
-.certs { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: clamp(18px, 2.4vw, 24px); }
+.certs { background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-lift); border-radius: 16px; padding: clamp(18px, 2.4vw, 24px); }
 .certs-head { font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--ink); margin-bottom: 16px; }
 .certs-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .certs-row figure { margin: 0; display: grid; justify-items: center; gap: 9px; text-align: center; }
@@ -709,12 +660,6 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .certs-row figcaption { font-size: 0.76rem; line-height: 1.5; color: var(--faint); }
 .certs-note { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 0.84rem; line-height: 1.7; color: var(--body); }
 
-/* ---------- work gallery ---------- */
-
-.gal-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.2vw, 24px); }
-.gal-item { margin: 0; }
-.gal-item img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; box-shadow: var(--shadow-soft); }
-.gal-item figcaption { margin-top: 11px; font-size: 0.84rem; line-height: 1.65; color: var(--body); }
 
 /* ---------- client roster ---------- */
 
@@ -984,21 +929,22 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 @media (max-width: 960px) {
   .hero-grid { grid-template-columns: 1fr; }
   .hero-mark { display: none; }
-  .std, .gear-in { grid-template-columns: 1fr; }
+  .std { grid-template-columns: 1fr; }
   .book-grid { grid-template-columns: 1fr; }
   .assure-in { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  .gal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .nav-links, .nav-tel { display: none; }
   .mnav { display: block; }
   .steps { grid-template-columns: repeat(2, 1fr); }
+  /* Below this width every photo-backed section stacks to one column, so its
+     copy spans the full band instead of just the darker left side. A
+     directional fade stops making sense once there is no lighter side left
+     for it to fade toward — flatten it to one strong, even tint instead. */
+  .sec-photo-bg::after { background: rgba(19, 27, 61, 0.86); }
 }
 
 @media (max-width: 700px) {
   .cover-grid { grid-template-columns: repeat(2, 1fr); }
   .cl-grid { grid-template-columns: 1fr; }
-  .gal-grid { grid-template-columns: 1fr; }
-  .gear-art { grid-template-columns: 1fr; }
-  .gear-photo--sm { margin-top: 0; }
 }
 
 @media (max-width: 600px) {
@@ -1010,7 +956,6 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   .hero-cta .btn { width: 100%; }
   .stats { flex-wrap: wrap; gap: 14px 26px; }
   .stat + .stat { border-left: 0; padding-left: 0; }
-  .gear-tag { left: 6px; }
   .doc-stamp { position: static; transform: rotate(-6deg); margin: 16px auto 0; }
   .form-grid { grid-template-columns: 1fr; }
   .foot-grid { grid-template-columns: 1fr; gap: 30px; }

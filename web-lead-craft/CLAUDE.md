@@ -225,31 +225,59 @@ photo is served at 720 instead of dropping to 480.
 **Client photos come off phones.** Expect portrait, expect under 1200px wide,
 and crop rather than upscale — `tools/` has no upscaler and should not get one.
 
-## Veiling a photograph without veiling its caption
+## A photograph as a section's ground, not an exhibit beside it
 
-A client can ask for the pictures to sit back like a ground rather than stand
-forward like exhibits — SPM asked for it twice, and the second time for every
-photograph on the page. It is one `::after` over each picture, but the pin is
-the whole job:
+SPM asked for this three times before it was actually what they meant. Round
+one: a veil over a framed photo in a side column. Rejected — "faint like a
+background", not a tinted exhibit. Round two: the same veil on every framed
+photo on the page. Still rejected — they wanted the *hero's* full-bleed
+treatment specifically, on every section, and the documentary work-gallery
+gone outright, because a grid of captioned photos is the opposite of a photo
+used as ground. Round three is the one that shipped. The lesson isn't the CSS
+gradient; it's that "make it faint" and "make it a background" are different
+requests, and only a picture of what the client means (they sent one) resolves
+which.
 
-- **`inset: 0 0 auto 0` plus the picture's own `aspect-ratio`, never
-  `inset: 0`.** A `<figure>` is taller than its image the moment it has a
-  caption, and `inset: 0` draws the veil over the words too. This was got wrong
-  once, spotted by eye, and got wrong again in the same file a day later.
-- **Match the radius**, or the veil's square corners show outside the picture's
-  rounded ones. Each component declares `--ph-ratio` and `--ph-radius`; the
-  veil rule itself is written once.
+The shipped pattern, `.sec-photo`/`.sec-photo-bg` in `styles.css`: an `<img>`
+absolutely positioned to fill the section (never a CSS `background-image` —
+the `{{img:}}` token ships a `srcset`, which a `background-image` cannot use),
+under one shared veil gradient, with copy standing directly on top. One
+section, one photo, one crop point — `--band-pos`, set per section — is the
+entire per-component API.
+
+- **The absolutely-positioned background can paint *over* the text despite
+  coming first in the DOM, and the fix is `position: relative` on the text's
+  wrapper — not a z-index.** CSS stacking is not simple DOM order: a
+  `position: static` box paints in the "in-flow" layer, and *any* positioned
+  descendant with `z-index: auto` — even one with no `z-index` set at all —
+  paints in a later layer than every static box in the same context,
+  regardless of which one is later in the markup. `.hero-grid` already had
+  `position: relative` and was fine. `.gear-in` and `.std` did not, and every
+  word of copy in both sections rendered — correctly, per the DOM and the
+  computed styles — directly underneath its own opaque background image.
+  Nothing in DevTools' computed-style panel flags this, because every value
+  it shows is correct; only the *stacking rule* is unfamiliar. If a photo
+  band ever ships with invisible copy again, check this before anything else.
+- **Reveal-on-scroll can look like the same bug and isn't.** Screenshotting a
+  section below the fold needs `.rv` elements' `IntersectionObserver` to have
+  actually fired first — `element.scrollIntoView()` alone, if the page sets
+  `scroll-behavior: smooth`, returns before the animated scroll finishes, so
+  a `getBoundingClientRect()` read immediately after it is stale. Walk the
+  whole page with `window.scrollTo({top, behavior:'instant'})` in steps first,
+  *then* jump to the target section, to get a trustworthy screenshot.
 - **Not the certification seals, not the logo.** A tint over a printed mark on
   white reads as a rendering fault, not a treatment.
-- **Measure it, do not look at it.** `z-check`-style: for every figure, the
-  `::after` box must equal the `<img>` box to the pixel and the radii must be
-  equal strings. Ten pictures, four components, three viewports — the eye
-  passes the one that is 33px too tall.
+- **A directional veil (dark under the copy, lighter toward the photo) stops
+  making sense the moment a section collapses to one column on mobile** —
+  there is no "lighter side" left to fade toward once the copy spans the full
+  band. Flatten it to one flat, strong tint under the same breakpoint the
+  layout itself collapses at, rather than carrying the desktop gradient down.
 
-Strength is subjective and the operator will iterate, so keep it in **one
-token** (`--photo-veil`, `--photo-fade`) and send a rendered comparison sheet
-of two or three strengths rather than guessing. The same argument as the font
-sheet above: it is faster than a second wrong answer.
+Strength and crop point are both subjective and the client iterates on both,
+so keep the veil in **one token** (`--band-veil`, `--band-fade`) shared by
+every section, and each section's crop in **one custom property**
+(`--band-pos`) declared right on that section's own class. Send a rendered
+comparison sheet rather than guessing — faster than a second wrong answer.
 
 ## Route maps without Google Maps
 
