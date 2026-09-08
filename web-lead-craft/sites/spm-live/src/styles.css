@@ -67,6 +67,14 @@
   --ghost-bg-hover: rgba(255, 255, 255, 0.18);
   --ghost-fg: #FFFFFF;
   --ghost-line: rgba(255, 255, 255, 0.3);
+  /* THE PHOTOGRAPH VEIL — one value, every picture on the page.
+     The client asked for the pictures to sit back like a ground rather than
+     stand forward like exhibits, and asked for it everywhere, not just the
+     hero. Navy and not white: a white film reads as a faded print, which is
+     the version they turned down. Denser at the foot so a caption has
+     something to sit against. */
+  --photo-veil: linear-gradient(178deg, rgba(26, 36, 80, 0.38) 0%, rgba(19, 27, 61, 0.58) 100%);
+  --photo-fade: saturate(0.72) contrast(0.94);
   --shadow-soft: 0 12px 32px rgba(16, 21, 43, 0.07);
   --shadow-lift: 0 22px 54px rgba(16, 21, 43, 0.13);
   /* One face per script, not one family for both. Each embedded font is
@@ -121,6 +129,7 @@ img, svg { display: block; max-width: 100%; height: auto; }
 :lang(th) .logo-name small,
 :lang(th) .foot-col h4,
 :lang(th) .plan-flag { letter-spacing: 0.05em; }
+:lang(th) .hero h1 em { padding-bottom: 0.28em; }
 
 .wrap { max-width: var(--page); margin-inline: auto; padding-inline: var(--gutter); }
 
@@ -382,45 +391,9 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
 /* The dark field is the brand board, not decoration: it is the one place the
    highlight is allowed to be the loudest thing on screen, and it puts thirty years
-   of trading in white type before a visitor has scrolled anything.
-
-   Its ground is the client's own photograph, full-bleed. The picture is not a
-   framed exhibit beside the copy — it is what the copy stands on, which is what
-   the client asked for and what the reference site they pointed at does. */
-.hero { background: var(--panel-deep); position: relative; overflow: hidden; color: var(--on-panel-body); }
-/* An <img> rather than a CSS background: the {{img:}} token ships a srcset, and
-   a background-image would pin one derivative and one hashed filename. The veil
-   goes on the wrapper's ::after so it cannot leak onto anything but the photo. */
-.hero-bg { position: absolute; inset: 0; pointer-events: none; }
-.hero-bg img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* A wide viewport shows barely half this portrait frame, so the crop has to
-     be aimed: at 12% the band holds the cap, the torch and the opened ceiling.
-     Lower values slide down to the shoulder, which is not a photograph of
-     anything. A phone sees the whole height and ignores this. */
-  object-position: 52% 12%;
-  /* the room is lit by one fluorescent tube; the veil takes what is left */
-  filter: brightness(1.12) contrast(1.04) saturate(1.06);
-}
-.hero-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(94deg,
-      rgba(19, 27, 61, 0.93) 0%,
-      rgba(19, 27, 61, 0.88) 34%,
-      rgba(19, 27, 61, 0.68) 62%,
-      rgba(26, 36, 80, 0.52) 100%),
-    linear-gradient(180deg, rgba(19, 27, 61, 0.30) 0%, rgba(19, 27, 61, 0) 34%);
-}
-/* the mark, blown up and cropped — pattern, not illustration.
-   brightness(0) invert(1) turns the photographic cutout into a white
-   silhouette, the only version of it that reads over a photograph */
+   of trading in white type before a visitor has scrolled anything. */
+.hero { background: var(--stone); position: relative; overflow: hidden; color: var(--body); }
+/* the mark, blown up and cropped — pattern, not illustration */
 .hero-mark {
   position: absolute;
   right: -6%;
@@ -428,8 +401,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   transform: translateY(-50%);
   width: min(620px, 52%);
   height: auto;
-  filter: brightness(0) invert(1);
-  opacity: 0.10;
+  opacity: 0.055;
   pointer-events: none;
 }
 /* minmax(0,…) not plain fr: an fr column will not shrink below its content's
@@ -437,14 +409,27 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
    from the panel beside it */
 .hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.78fr); gap: clamp(30px, 5vw, 64px); align-items: center; padding-block: clamp(58px, 8vw, 104px); }
 .hero-copy { display: grid; gap: 22px; justify-items: start; }
-.hero .label { color: var(--highlight); }
-.hero .label::before, .hero .label::after { background: var(--rule-on-panel); }
-.hero h1 { font-size: clamp(2rem, 4.3vw, 3.05rem); line-height: 1.34; color: var(--on-panel); text-shadow: 0 1px 26px rgba(19, 27, 61, 0.5); }
-.hero h1 em { font-style: normal; color: var(--highlight); }
+.hero .label { color: var(--accent); }
+.hero .label::before, .hero .label::after { background: var(--accent); opacity: 0.5; }
+.hero h1 { font-size: clamp(2rem, 4.3vw, 3.05rem); line-height: 1.34; color: var(--ink); }
+/* The rule is painted as a background, not an absolutely-positioned ::after,
+   so the phrase is free to wrap — box-decoration-break underlines each line
+   fragment. An ::after would need white-space:nowrap to look right, and that
+   is what makes the longer English phrase overflow. */
+.hero h1 em {
+  font-style: normal;
+  color: var(--brand);
+  padding-bottom: 0.2em;
+  background: linear-gradient(var(--highlight), var(--highlight)) no-repeat;
+  background-size: 100% 0.085em;
+  background-position: 0 100%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
 .hero-lede { font-size: 1.1rem; max-width: 32em; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
-.hero-fine { display: flex; align-items: center; gap: 9px; font-size: 0.9rem; color: var(--on-panel-dim); }
-.hero-fine .ic { width: 1.1em; height: 1.1em; color: var(--highlight); }
+.hero-fine { display: flex; align-items: center; gap: 9px; font-size: 0.9rem; color: var(--faint); }
+.hero-fine .ic { width: 1.1em; height: 1.1em; color: var(--accent); }
 
 .stats { display: flex; gap: clamp(18px, 3vw, 34px); padding-top: 6px; }
 .stat b {
@@ -454,12 +439,12 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1.5rem;
-  color: var(--on-panel);
+  color: var(--ink);
   line-height: 1.25;
   font-variant-numeric: tabular-nums;
 }
-.stat b .ic { width: 0.72em; height: 0.72em; color: var(--highlight); }
-.stat > span { display: block; font-size: 0.85rem; color: var(--on-panel-dim); line-height: 1.5; }
+.stat b .ic { width: 0.72em; height: 0.72em; color: var(--accent); }
+.stat > span { display: block; font-size: 0.85rem; color: var(--faint); line-height: 1.5; }
 .stat + .stat { border-left: 1px solid var(--panel-line); padding-left: clamp(18px, 3vw, 34px); }
 /* "ทั่วประเทศ" is a word where the other two are figures. Left at the numeral
    size it dwarfs them; set smaller, it floats off the row's baseline instead.
@@ -468,10 +453,27 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .stat-wide b { font-size: 1.12rem; letter-spacing: -0.01em; padding-bottom: 0.12rem; }
 :lang(th) .stat-wide b { font-size: 1.06rem; }
 
-/* the credential card — what a hotel's purchasing officer is actually reading.
-   It stays solid white: it is the one block on the hero that gets read word by
-   word, and the photograph behind it must not compete for that. */
+/* the credential card — what a hotel's purchasing officer is actually reading */
+/* The right-hand column: a photograph of the crew at work, with the
+   procurement checklist riding up over its lower edge. The photo is the
+   client's own — it is what a demo cannot have and a real site must. */
 .hero-side { display: grid; justify-items: stretch; }
+.hero-photo { margin: 0; }
+.hero-photo img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: 50% 34%;
+  border-radius: 18px;
+  box-shadow: var(--shadow-lift);
+}
+.hero-photo figcaption {
+  margin: 12px 4px 0;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--faint);
+}
+.hero-side .hero-card { margin-top: 20px; }
 
 .hero-card {
   background: #fff;
@@ -481,7 +483,8 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   padding: clamp(22px, 3vw, 30px);
   display: grid;
   gap: 16px;
-  box-shadow: var(--shadow-lift);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 .hero-card h2 {
   font-family: var(--font-body);
@@ -496,6 +499,37 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .hero-card-row .ic { width: 1.4em; height: 1.4em; flex: 0 0 auto; color: var(--accent); }
 .hero-card-row b { display: block; color: var(--ink); font-weight: 600; font-size: 0.98rem; line-height: 1.5; }
 .hero-card-row > div > span { font-size: 0.845rem; line-height: 1.6; color: var(--body); }
+
+/* ---------- the photograph treatment ---------- */
+
+/* Every photograph carries the same veil so that ten pictures read as one
+   material. The four components differ only in the two numbers each declares.
+
+   inset: 0 0 auto 0 plus the picture's own aspect-ratio — never inset: 0. A
+   <figure> is taller than its image the moment it has a caption, and a veil
+   drawn over a caption is exactly how this was got wrong the first time. */
+.hero-photo, .gear-photo, .std-photo, .gal-item { position: relative; }
+.hero-photo::after,
+.gear-photo::after,
+.std-photo::after,
+.gal-item::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  aspect-ratio: var(--ph-ratio);
+  border-radius: var(--ph-radius);
+  pointer-events: none;
+  background: var(--photo-veil);
+}
+.hero-photo { --ph-ratio: 4 / 3;  --ph-radius: 18px; }
+.gear-photo { --ph-ratio: 3 / 4;  --ph-radius: 16px; }
+.std-photo  { --ph-ratio: 4 / 3;  --ph-radius: 16px; }
+.gal-item   { --ph-ratio: 4 / 3;  --ph-radius: 14px; }
+.hero-photo img, .gear-photo img, .std-photo img, .gal-item img { filter: var(--photo-fade); }
+
+/* Not the certification seals and not the mark. Those are printed devices on a
+   white ground, and a tint over one reads as a rendering fault, not a
+   treatment. */
 
 /* ---------- assurance strip ---------- */
 

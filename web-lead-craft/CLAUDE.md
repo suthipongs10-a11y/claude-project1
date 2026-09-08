@@ -225,6 +225,32 @@ photo is served at 720 instead of dropping to 480.
 **Client photos come off phones.** Expect portrait, expect under 1200px wide,
 and crop rather than upscale — `tools/` has no upscaler and should not get one.
 
+## Veiling a photograph without veiling its caption
+
+A client can ask for the pictures to sit back like a ground rather than stand
+forward like exhibits — SPM asked for it twice, and the second time for every
+photograph on the page. It is one `::after` over each picture, but the pin is
+the whole job:
+
+- **`inset: 0 0 auto 0` plus the picture's own `aspect-ratio`, never
+  `inset: 0`.** A `<figure>` is taller than its image the moment it has a
+  caption, and `inset: 0` draws the veil over the words too. This was got wrong
+  once, spotted by eye, and got wrong again in the same file a day later.
+- **Match the radius**, or the veil's square corners show outside the picture's
+  rounded ones. Each component declares `--ph-ratio` and `--ph-radius`; the
+  veil rule itself is written once.
+- **Not the certification seals, not the logo.** A tint over a printed mark on
+  white reads as a rendering fault, not a treatment.
+- **Measure it, do not look at it.** `z-check`-style: for every figure, the
+  `::after` box must equal the `<img>` box to the pixel and the radii must be
+  equal strings. Ten pictures, four components, three viewports — the eye
+  passes the one that is 33px too tall.
+
+Strength is subjective and the operator will iterate, so keep it in **one
+token** (`--photo-veil`, `--photo-fade`) and send a rendered comparison sheet
+of two or three strengths rather than guessing. The same argument as the font
+sheet above: it is faster than a second wrong answer.
+
 ## Route maps without Google Maps
 
 `tools/route-map.mjs` turns a site's `route.json` into one inline SVG map —

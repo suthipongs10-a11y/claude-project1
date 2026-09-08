@@ -115,9 +115,6 @@
 <main id="top">
 
   <section class="hero">
-    <div class="hero-bg" aria-hidden="true">
-      <img {{img:ceiling-inspection:100vw}} width="960" height="1280" fetchpriority="high" decoding="async" alt="" aria-hidden="true">
-    </div>
     <img class="hero-mark" {{img:logo-butterfly:600px}} width="360" height="336" alt="" aria-hidden="true">
     <div class="wrap hero-grid">
       <div class="hero-copy">
@@ -136,6 +133,11 @@
         </div>
       </div>
       <div class="hero-side">
+        <figure class="hero-photo">
+          <img {{img:ceiling-inspection:(max-width:960px) 92vw, 40vw}} width="960" height="1280" fetchpriority="high" decoding="async"
+               alt="{{t|เจ้าหน้าที่ SPM ยืนบนบันได ใช้ไฟฉายส่องตรวจโพรงเหนือฝ้าเพดานในห้องเก็บของ|An SPM technician on a ladder, using a torch to inspect the void above a false ceiling in a storeroom}}">
+          <figcaption>{{t|ตรวจโพรงเหนือฝ้าเพดานในห้องเก็บของ — จุดที่สัตว์รบกวนมักเข้าไปอาศัยโดยไม่มีใครเห็น|Checking the void above a false ceiling in a storeroom — where pests get in and settle out of sight.}}</figcaption>
+        </figure>
         <div class="hero-card">
           <h2>{{t|บริษัทจัดการสัตว์รบกวนที่ก้าวหน้าที่สุดในประเทศไทย เพราะ|Considered the most advanced pest management company in Thailand because}}</h2>
           <div class="hero-card-row">
