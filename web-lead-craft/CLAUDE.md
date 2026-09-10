@@ -225,25 +225,51 @@ photo is served at 720 instead of dropping to 480.
 **Client photos come off phones.** Expect portrait, expect under 1200px wide,
 and crop rather than upscale — `tools/` has no upscaler and should not get one.
 
+**`buildDerivatives` derives every master in `src/img/`, referenced or not.**
+It only prunes a derivative whose *master* is gone, so a photo the design has
+moved on from keeps shipping in `dist/` forever — a third of spm-live's deploy
+was images no page requested. A client's own photographs should not be deleted
+just because this round replaced them, so park them in `src/img/unused/`:
+`listImages` reads one level and filters on `.webp`, so a subdirectory drops
+out of the build while staying in the repo and in reach.
+
 ## A photograph as a section's ground, not an exhibit beside it
 
-SPM asked for this three times before it was actually what they meant. Round
+SPM asked for this four times before it was actually what they meant. Round
 one: a veil over a framed photo in a side column. Rejected — "faint like a
 background", not a tinted exhibit. Round two: the same veil on every framed
 photo on the page. Still rejected — they wanted the *hero's* full-bleed
 treatment specifically, on every section, and the documentary work-gallery
 gone outright, because a grid of captioned photos is the opposite of a photo
-used as ground. Round three is the one that shipped. The lesson isn't the CSS
-gradient; it's that "make it faint" and "make it a background" are different
-requests, and only a picture of what the client means (they sent one) resolves
-which.
+used as ground. Round three shipped that. Round four is the one that settled
+it: the client sent a deck naming one photograph per section, and with it the
+sentence the whole design turns on — *"ตัวหนังสือก็ทำกรอบ ใส่พื้นหลังเพื่อให้อ่านง่าย
+รูป BG ใส่ไว้เฉยๆ ไม่ต้องเน้น ขอแค่ให้มี ให้เห็นก็พอ"*. The photograph is backdrop;
+the copy carries its own ground.
 
 The shipped pattern, `.sec-photo`/`.sec-photo-bg` in `styles.css`: an `<img>`
 absolutely positioned to fill the section (never a CSS `background-image` —
 the `{{img:}}` token ships a `srcset`, which a `background-image` cannot use),
-under one shared veil gradient, with copy standing directly on top. One
-section, one photo, one crop point — `--band-pos`, set per section — is the
-entire per-component API.
+under one shared veil, with every block of copy on `--read-panel`. One section,
+one photo, one crop point — `--band-pos` — is the entire per-component API.
+
+- **Where the contrast comes from is the whole design decision, and it
+  inverts once every section has a photo.** Rounds one to three leaned on a
+  heavy veil, which works only where copy *is* the section's entire content —
+  a hero, a single column of prose. It cannot work for a page of card grids,
+  an accordion and a form: veil it enough to read small type over any
+  photograph the client sends next and the photograph is gone, which is the
+  opposite of what they asked for. So the veil went to a flat, moderate
+  `--band-veil` and readability moved to `--read-panel` behind each block.
+  Contrast became a property of the system rather than of the photograph.
+- **Components that already carry a solid card are deliberately left out of
+  that list.** `.svc`, `.plan`, `.rev`, `.certs`, `.book-form` and the hero's
+  credential card are frames already; panelling them again would be a card in
+  a card, and the photograph showing *between* them is the point.
+- **State the stacking fix once, on the wrapper every section already has.**
+  `.sec-photo > .wrap { position: relative; }` — see the bullet below for why
+  it is load-bearing. Filed per-component it was missed on two sections and
+  cost a debugging round; filed here, a new photo band cannot reintroduce it.
 
 - **The absolutely-positioned background can paint *over* the text despite
   coming first in the DOM, and the fix is `position: relative` on the text's
@@ -270,14 +296,24 @@ entire per-component API.
 - **A directional veil (dark under the copy, lighter toward the photo) stops
   making sense the moment a section collapses to one column on mobile** —
   there is no "lighter side" left to fade toward once the copy spans the full
-  band. Flatten it to one flat, strong tint under the same breakpoint the
-  layout itself collapses at, rather than carrying the desktop gradient down.
+  band. Only the hero still uses one, because the hero is the one band whose
+  copy stands on the picture rather than on a panel; it overrides `--band-veil`
+  on its own class, and flattens it again under the breakpoint where its grid
+  collapses. Everywhere else the flat token is already correct at every width.
+- **Client photographs are portrait phone shots being read through a wide
+  letterbox, and a centred `cover` crop loses the subject in about half of
+  them.** Of the eleven SPM sent, a default crop cut the company's own sign
+  off its office building, left a fog-machine section showing only treeline,
+  and reduced a torch-lit inspection to an empty wall. Open each one and pick
+  `--band-pos` against what is actually in frame — the same "measure, don't
+  guess" rule the fonts and the map labels each arrived at separately.
 
-Strength and crop point are both subjective and the client iterates on both,
-so keep the veil in **one token** (`--band-veil`, `--band-fade`) shared by
-every section, and each section's crop in **one custom property**
-(`--band-pos`) declared right on that section's own class. Send a rendered
-comparison sheet rather than guessing — faster than a second wrong answer.
+Keep the veil in **one token** (`--band-veil`, `--band-fade`) and the panels in
+another (`--read-panel`), both shared by every section. Keep the crop points
+**together in one table** rather than filed under each component: the client
+iterates on them as a set, so a set is what they should be able to read at
+once. Send a rendered comparison sheet rather than guessing — faster than a
+second wrong answer, which is now four rounds of evidence rather than one.
 
 ## Route maps without Google Maps
 

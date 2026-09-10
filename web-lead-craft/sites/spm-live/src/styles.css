@@ -68,20 +68,20 @@
   --ghost-fg: #FFFFFF;
   --ghost-line: rgba(255, 255, 255, 0.3);
   /* THE PHOTOGRAPH BAND — one value, every photo-backed section on the page.
-     The client's second round asked for more than a veiled exhibit: the
-     picture itself becomes the section's ground, full-bleed, with copy
-     standing directly on it — the same idea the hero already used, now
-     applied everywhere a photo appears. Darkest under the text side (left),
-     fading toward the photo's visible side, plus a soft top edge so the band
-     doesn't cut the image with a hard line. */
-  --band-veil:
-    linear-gradient(94deg,
-      rgba(19, 27, 61, 0.93) 0%,
-      rgba(19, 27, 61, 0.88) 34%,
-      rgba(19, 27, 61, 0.68) 62%,
-      rgba(26, 36, 80, 0.52) 100%),
-    linear-gradient(180deg, rgba(19, 27, 61, 0.30) 0%, rgba(19, 27, 61, 0) 34%);
-  --band-fade: brightness(1.12) contrast(1.04) saturate(1.06);
+     Round four moved the job of readability off this veil and onto the panels
+     below: the client sent a photograph per section and asked for the picture
+     to be present but unemphasised, with every block of copy sitting on a
+     ground of its own. So this is now flat and moderate — dark enough to hold
+     white type at panel edges, light enough that the photograph still reads. */
+  --band-veil: linear-gradient(180deg, rgba(19, 27, 61, 0.68) 0%, rgba(19, 27, 61, 0.76) 100%);
+  --band-fade: brightness(1.04) contrast(1.02) saturate(0.92);
+  /* A block of copy standing on a photograph needs a ground of its own, or the
+     picture reads through the letterforms at exactly the sizes body text uses.
+     One value for every such block, so contrast is a property of the system
+     rather than of whichever photograph the client sends next. */
+  --read-panel: rgba(19, 27, 61, 0.82);
+  --read-panel-line: rgba(255, 255, 255, 0.11);
+  --mark-open: rgba(217, 164, 65, 0.26);   /* the FAQ's open +, on a dark panel */
   --shadow-soft: 0 12px 32px rgba(16, 21, 43, 0.07);
   --shadow-lift: 0 22px 54px rgba(16, 21, 43, 0.13);
   /* One face per script, not one family for both. Each embedded font is
@@ -395,10 +395,14 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
 /* ---------- full-bleed photograph bands ---------- */
 
-/* The second round asked for the hero's treatment on every photo-bearing
-   section, and for the documentary work-gallery gone entirely: no more photos
-   presented as exhibits, only as ground. One pattern, three sections (hero,
-   gear, standard) — each supplies only its own picture and crop point.
+/* Round four settled the direction and it is now the whole page: the client
+   sent one photograph per section and asked for all of them as ground, with
+   the copy in a frame of its own so it stays legible — "ตัวหนังสือก็ทำกรอบ
+   ใส่พื้นหลังเพื่อให้อ่านง่าย … รูป BG ใส่ไว้เฉยๆ ขอแค่ให้มี ให้เห็นก็พอ".
+
+   That inverts where contrast comes from. Rounds one to three leaned on a
+   heavy veil, which works only where copy is the section's whole content;
+   here the veil is moderate and every block of text carries --read-panel.
 
    An <img>, not a CSS background-image: the {{img:}} token ships a srcset,
    and background-image would pin one derivative and one hashed filename. */
@@ -414,9 +418,55 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   filter: var(--band-fade);
 }
 .sec-photo-bg::after { content: ''; position: absolute; inset: 0; background: var(--band-veil); }
+
+/* position:relative is load-bearing, not decorative: a static in-flow box is
+   painted *before* the absolutely-positioned .sec-photo-bg regardless of DOM
+   order, so without this every word renders underneath its own background
+   photograph. It cost a full debugging round when only .gear-in and .std were
+   missing it; stated once here, on the wrapper every section already has, a
+   new photo band cannot reintroduce the bug. */
+.sec-photo > .wrap { position: relative; }
+
 .sec-photo .label { color: var(--highlight); }
 .sec-photo .label::before, .sec-photo .label::after { background: var(--rule-on-panel); }
-.sec-photo h2 { color: var(--on-panel); text-shadow: 0 1px 26px rgba(19, 27, 61, 0.5); }
+.sec-photo h2 { color: var(--on-panel); }
+
+/* THE READABLE PANEL — every block of copy that would otherwise sit straight
+   on a photograph. Components that already carry their own solid card (.svc,
+   .plan, .rev, .certs, .book-form, the white hero card) are deliberately
+   absent: they are frames already, and the photograph showing between them is
+   the point. */
+.sec-photo .sec-head,
+.sec-photo .gear-copy,
+.sec-photo .std-copy,
+.sec-photo .book-copy,
+.sec-photo .faq,
+.sec-photo .step,
+.sec-photo .plan-note,
+.sec-photo .cl-note {
+  background: var(--read-panel);
+  border: 1px solid var(--read-panel-line);
+  border-radius: 18px;
+  padding: clamp(20px, 2.8vw, 32px);
+}
+
+/* One crop point per band: every photograph the client sent is a portrait
+   phone shot being read through a wide letterbox, so a centred cover crop
+   loses the subject in about half of them. Kept together rather than filed
+   under each component — the client iterates on these as a set, and a set is
+   what they should be able to see at once. The hero declares its own, beside
+   the veil it also overrides. */
+#services   { --band-pos: 45% 45%; }  /* the technician and the cylinder */
+.gear       { --band-pos: 50% 46%; }  /* the torch, the hands, the open duct */
+#perma-kill { --band-pos: 50% 68%; }  /* the fog bank, not the treeline above it */
+#sectors    { --band-pos: 56% 38%; }  /* the respirator */
+.clients    { --band-pos: 50% 50%; }  /* the hairnet and the tray */
+#words      { --band-pos: 50% 62%; }  /* the torch under the banquette */
+#standard   { --band-pos: 50% 44%; }  /* the ladder, mid-kitchen */
+#coverage   { --band-pos: 55% 22%; }  /* the building's own sign, which a centred crop cuts */
+#process    { --band-pos: 50% 50%; }  /* under the stainless line */
+#faq        { --band-pos: 50% 40%; }  /* the drill at the ceiling edge */
+#contact    { --band-pos: 50% 55%; }  /* the truck bed and its kit */
 
 /* the mark, blown up and cropped — pattern, not illustration.
    brightness(0) invert(1) turns the photographic cutout into a white
@@ -434,7 +484,21 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 }
 /* Each section supplies only its own crop point — where the subject sits in
    its own photo — as one custom property, consumed by the shared rule above. */
-.hero { --band-pos: 52% 12%; }  /* the torch, the hand, the opened ceiling */
+/* The hero is the one band whose copy still stands directly on the picture —
+   it is what the client approved and asked not to change — so it keeps the
+   heavy directional veil the rest of the page has now handed to its panels.
+   Darkest under the text, fading toward the side the photograph shows on. */
+.hero {
+  --band-pos: 52% 12%;  /* the torch, the hand, the opened ceiling */
+  --band-veil:
+    linear-gradient(94deg,
+      rgba(19, 27, 61, 0.93) 0%,
+      rgba(19, 27, 61, 0.88) 34%,
+      rgba(19, 27, 61, 0.68) 62%,
+      rgba(26, 36, 80, 0.52) 100%),
+    linear-gradient(180deg, rgba(19, 27, 61, 0.30) 0%, rgba(19, 27, 61, 0) 34%);
+  --band-fade: brightness(1.12) contrast(1.04) saturate(1.06);
+}
 /* minmax(0,…) not plain fr: an fr column will not shrink below its content's
    min-content width, so the longer English copy would otherwise steal width
    from the panel beside it */
@@ -552,13 +616,13 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   max-width: 74ch;
   margin: clamp(26px, 3vw, 36px) auto 0;
   padding: 16px 20px;
-  background: var(--brand-tint);
+  background: var(--read-panel);
+  border: 1px solid var(--read-panel-line);
   border-radius: 12px;
   font-size: 0.92rem;
   line-height: 1.7;
-  color: var(--body);
 }
-.svc-foot .ic { width: 1.3em; height: 1.3em; margin-top: 0.24em; color: var(--brand); }
+.svc-foot .ic { width: 1.3em; height: 1.3em; margin-top: 0.24em; color: var(--highlight); }
 
 .svc-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; padding-top: 4px; }
 .svc-tags > span {
@@ -576,16 +640,11 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 /* Given its own band because renting a unit and servicing it monthly is the
    part of this business that renews itself, and it is invisible in a list of
    pests. Azure is the mark's colour and appears only here. */
-.gear { --band-pos: 42% 58%; }  /* the sprayer and the hedge line, not the roofline */
-/* No second column: the two photographs that used to sit here are the
-   section's background now. The copy keeps a reading-width cap so the photo
-   stays visible to its right on a wide screen, instead of the text sprawling
+/* No second column: the photographs that used to sit here are the section's
+   background now. The copy keeps a reading-width cap so the photo stays
+   visible to its right on a wide screen, instead of the panel sprawling
    edge to edge over it. */
-/* position:relative is load-bearing, not decorative: without it this sits in
-   the "static in-flow" paint layer, which CSS stacking rules paint *before*
-   the absolutely-positioned .sec-photo-bg regardless of DOM order — the text
-   would render, correctly, directly underneath its own background photo. */
-.gear-in { position: relative; max-width: 640px; padding-block: clamp(52px, 7vw, 82px); }
+.gear-in { max-width: 640px; padding-block: clamp(52px, 7vw, 82px); }
 .gear-copy { display: grid; gap: 18px; justify-items: start; }
 .gear-copy h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
 .gear-list { display: grid; gap: 12px; width: 100%; }
@@ -630,12 +689,11 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .plan .btn { margin-top: auto; width: 100%; }
 .plan-note { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px clamp(20px, 4vw, 44px); margin-top: clamp(28px, 4vw, 40px); font-size: 0.9rem; }
 .plan-note > span { display: inline-flex; align-items: center; gap: 8px; }
-.plan-note .ic { width: 1.05em; height: 1.05em; color: var(--accent); }
+.plan-note .ic { width: 1.05em; height: 1.05em; color: var(--highlight); }
 
 /* ---------- standards & paperwork ---------- */
 
-#standard { --band-pos: 58% 30%; }  /* the badge, the torch and the ceiling joint */
-.std { position: relative; display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 68px); align-items: center; }
+.std { display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 68px); align-items: center; }
 .std-copy { display: grid; gap: 18px; justify-items: start; }
 .std-copy h2 { font-size: clamp(1.7rem, 3.1vw, 2.3rem); }
 .std-list { display: grid; gap: 18px; margin-top: 4px; width: 100%; }
@@ -654,7 +712,11 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
    standards copy rather than in a logo strip at the bottom nobody reaches. */
 .certs { background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow-lift); border-radius: 16px; padding: clamp(18px, 2.4vw, 24px); }
 .certs-head { font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--ink); margin-bottom: 16px; }
-.certs-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+/* auto-fit, not a fixed count: the row went from three marks to four when the
+   client added the FDA seal, and it will go to five the next time they earn
+   one. Each mark keeps a floor wide enough for its caption to sit on two
+   lines, so a phone drops to two per row instead of shredding the words. */
+.certs-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 16px; }
 .certs-row figure { margin: 0; display: grid; justify-items: center; gap: 9px; text-align: center; }
 .certs-row img { width: 62px; height: 62px; object-fit: contain; }
 .certs-row figcaption { font-size: 0.76rem; line-height: 1.5; color: var(--faint); }
@@ -673,8 +735,8 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .sec-head--panel .label::before, .sec-head--panel .label::after { background: var(--rule-on-panel); }
 .cl-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 26px); }
 .cl-col {
-  background: var(--panel-card);
-  border: 1px solid var(--panel-card-line);
+  background: var(--read-panel);
+  border: 1px solid var(--read-panel-line);
   border-radius: 15px;
   padding: clamp(18px, 2.2vw, 24px);
   display: grid;
@@ -686,7 +748,11 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 /* "+500 Hotels" reads as one line, so the figure sits inline with the name
    rather than stacked above it. The <b> carries the name's own size and
    colour — qa-site compares those against the translation span inside it. */
-.cl-h { display: block; font-size: 0.9575rem; font-weight: 600; color: var(--on-panel); line-height: 1.5; }
+/* Gold, matching the figure beside it — the client asked for the category to
+   read as one gold phrase with its number rather than a white caption under
+   it: "ขอตัวหนังสือ สีทองเหมือนตัวเลขนะคะ". The <b> carries the colour, not
+   just the span inside it; qa-site compares the two and fails if they differ. */
+.cl-h { display: block; font-size: 0.9575rem; font-weight: 600; color: var(--highlight); line-height: 1.5; }
 .cl-n {
   font-family: var(--font-display); font-weight: 700;
   font-size: clamp(1.5rem, 3vw, 1.85rem); line-height: 1;
@@ -725,13 +791,13 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .cover .sec-head .label::before, .cover .sec-head .label::after { background: var(--rule-on-panel); }
 .cover-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
 .cover-item {
-  border: 1px solid var(--panel-card-line);
+  border: 1px solid var(--read-panel-line);
   border-radius: 14px;
   padding: 22px 20px;
   display: grid;
   gap: 8px;
   justify-items: start;
-  background: var(--panel-card);
+  background: var(--read-panel);
 }
 .cover-item--hq { background: var(--highlight); border-color: var(--highlight); }
 .cover-item .ic { width: 1.5em; height: 1.5em; color: var(--highlight); }
@@ -750,17 +816,20 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   font-weight: 700;
   font-size: 2.6rem;
   line-height: 1;
-  color: var(--brand);
+  color: var(--highlight);
   font-variant-numeric: tabular-nums;
-  opacity: 0.28;
+  opacity: 0.62;
 }
-.step h3 { font-size: 1.14rem; padding-top: 14px; border-top: 1px solid var(--line); }
+.step h3 { font-size: 1.14rem; padding-top: 14px; border-top: 1px solid var(--panel-line); color: var(--on-panel); }
 .step p { font-size: 0.9125rem; line-height: 1.78; }
 
 /* ---------- faq ---------- */
 
-.faq { max-width: 820px; margin-inline: auto; border-top: 1px solid var(--line); }
-.faq details { border-bottom: 1px solid var(--line); }
+/* Rules between the rows, not around them: the accordion sits inside a
+   --read-panel now, so a border on the outer edges would double the panel's
+   own and a trailing one would float above its bottom padding. */
+.faq { max-width: 820px; margin-inline: auto; }
+.faq details + details { border-top: 1px solid var(--panel-line); }
 .faq summary {
   display: flex;
   align-items: center;
@@ -771,30 +840,34 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   font-weight: 600;
   font-size: 1.08rem;
   line-height: 1.55;
-  color: var(--ink);
+  color: var(--on-panel);
   cursor: pointer;
   list-style: none;
 }
 .faq summary::-webkit-details-marker { display: none; }
-.faq summary:hover { color: var(--brand); }
+.faq summary:hover { color: var(--highlight); }
 .faq .mark {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 1px solid var(--line);
-  color: var(--accent);
+  border: 1px solid var(--panel-line);
+  color: var(--highlight);
   display: grid;
   place-items: center;
   flex: none;
   transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 .faq .mark svg { width: 14px; height: 14px; }
-.faq details[open] summary .mark { transform: rotate(45deg); background: var(--accent-tint); border-color: var(--accent-tint); }
+.faq details[open] summary .mark { transform: rotate(45deg); background: var(--mark-open); border-color: var(--mark-open); }
 .faq-a { padding-bottom: 22px; font-size: 0.9375rem; line-height: 1.85; max-width: 62em; }
 
 /* ---------- survey request ---------- */
 
-.book { background: var(--panel); color: var(--on-panel-body); }
+/* This section had no vertical padding at all, so its label sat hard against
+   the band's top edge — the client's note reads "ขยับขอบขึ้นอีกหน่อย
+   มันกินเนื้อตัวอักษร". Every other band on the page pads itself; this one
+   was the exception, and it looked like a clipping fault rather than a gap. */
+.book { background: var(--panel); color: var(--on-panel-body); padding-block: clamp(56px, 8vw, 96px); }
 .book-grid { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); gap: clamp(34px, 5vw, 68px); align-items: start; }
 .book-copy { display: grid; gap: 22px; justify-items: start; }
 .book-copy .label { color: var(--highlight); }
@@ -877,6 +950,19 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .foot-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 36px; padding-block: clamp(44px, 6vw, 62px); }
 .foot-brand { display: grid; gap: 16px; justify-items: start; }
 .foot-brand p { font-size: 0.9rem; max-width: 25em; }
+/* The company's own statement of intent, which the client asked to be on the
+   page. Set in the display serif at reading size so it reads as a claim the
+   business is making, rather than as one more line of the address block under
+   it — two classes, so it outweighs `.foot-brand p` without !important. */
+.foot-brand .foot-purpose {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  line-height: 1.62;
+  color: var(--ink);
+  max-width: 22em;
+  border-left: 3px solid var(--accent);
+  padding-left: 15px;
+}
 .socials { display: flex; gap: 9px; }
 .soc { width: 38px; height: 38px; border-radius: 9px; border: 1px solid var(--line); color: var(--brand); display: grid; place-items: center; transition: border-color 0.15s ease, background 0.15s ease; }
 .soc:hover { border-color: var(--brand); background: var(--stone); }
@@ -935,11 +1021,11 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   .nav-links, .nav-tel { display: none; }
   .mnav { display: block; }
   .steps { grid-template-columns: repeat(2, 1fr); }
-  /* Below this width every photo-backed section stacks to one column, so its
-     copy spans the full band instead of just the darker left side. A
-     directional fade stops making sense once there is no lighter side left
-     for it to fade toward — flatten it to one strong, even tint instead. */
-  .sec-photo-bg::after { background: rgba(19, 27, 61, 0.86); }
+  /* The hero stacks to one column here, so its copy spans the full band
+     instead of just the darker left side — and a directional fade stops
+     making sense once there is no lighter side left to fade toward. Every
+     other band already reads off its own panel and needs no adjustment. */
+  .hero { --band-veil: linear-gradient(180deg, rgba(19, 27, 61, 0.88) 0%, rgba(19, 27, 61, 0.92) 100%); }
 }
 
 @media (max-width: 700px) {
