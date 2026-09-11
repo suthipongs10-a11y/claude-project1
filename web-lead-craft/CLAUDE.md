@@ -315,6 +315,45 @@ iterates on them as a set, so a set is what they should be able to read at
 once. Send a rendered comparison sheet rather than guessing — faster than a
 second wrong answer, which is now four rounds of evidence rather than one.
 
+## Text nobody can read, and why looking never finds it
+
+`.sec-photo` sets a light body colour for the copy standing on its photograph.
+A solid white card *inside* that section inherits it. So on spm-live the
+services description and every sector bullet rendered white on white — and it
+was delivered that way, because the cards were plainly present and plainly
+correct and only their words were gone. A screenshot review reads straight
+past that; the eye sees a card, not an absence.
+
+`qa-site.mjs` now measures the contrast of every text-bearing element against
+its composited ancestor background, and fails under **2.5:1**. Three decisions
+in it are worth keeping:
+
+- **The gate is "can this be read", not WCAG AA.** AA is 4.5:1 (3:1 for large
+  text) and several of these sites sit just under it on captions and form
+  hints. That is a real shortfall and a palette decision to take deliberately
+  — not a build break. Below 2.5 nothing is a decision; it is text the cascade
+  swallowed. The case that shipped measured 1.00.
+- **When the ground cannot be known, say so and skip.** `backgroundColor` is
+  blind to gradients, so walking past a gradient to whatever is further up
+  invents a ground that is not there — the first version reported white-on-white
+  for every button on a gradient across four sites. A check that cries wolf
+  gets switched off, which is worse than never having written it. Same for a
+  label parked at `left: -9999px`: the honeypot is *supposed* to be unreadable.
+- **A brand's own pairing is not ours to correct.** White on LINE's green is
+  2.26:1 and it stays — a LINE button nobody recognises is worse than one that
+  is hard to squint at. Opt out with `data-contrast-exempt="<reason>"` on the
+  element; the reason is in the markup where the next person will see it.
+
+It was verified the only way worth trusting: the fix was taken back out, the
+check reported 72 unreadable elements, and the fix restored. A check nobody has
+watched fail is a check nobody knows works — this is the fourth time on this
+project that building the instrument was the actual fix.
+
+Two findings it turned up on sites nobody was looking at: `lanna-mekong-1200`'s
+"สมัครเข้าร่วม" button is **1.16:1**, pale blue-grey on amber — its primary call
+to action, effectively blank — and `demo-cleaning-biz`'s step numerals are
+2.07:1, which may well be the intended watermark and is the owner's call.
+
 ## Route maps without Google Maps
 
 `tools/route-map.mjs` turns a site's `route.json` into one inline SVG map —

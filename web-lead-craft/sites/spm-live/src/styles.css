@@ -25,13 +25,22 @@
 :root {
   --ink: #10152B;
   --body: #59617D;
-  --faint: #8B93AC;
+  /* Darkened from #8B93AC, which measured 3.05:1 on white — under AA for the
+     small text it is used on everywhere (captions, form hints, footer
+     headings, the legal pages). Set against --stone rather than white: this
+     colour lands on both, and the first attempt cleared white at 4.76:1 while
+     still failing the privacy page's stone footer at 4.36. 5.03 / 4.62 now. */
+  --faint: #666E8C;
   --logo-rule: #3A93D7;   /* the hairlines in the company's own logo — not a theme colour */
   --brand: #26326B;
   --brand-deep: #1A2450;
   --brand-ink: #131B3D;
   --brand-tint: #E9ECF7;
   --accent: #B8862B;
+  /* The same gold taken dark enough to be read, for the rare place it carries
+     small text on white rather than an icon or a rule. --accent itself is
+     3.24:1 there, which is under AA for anything at label size. */
+  --accent-ink: #8A6414;
   --accent-tint: #F7F0DF;
   --highlight: #D9A441;
   --highlight-soft: #F7F0DF;
@@ -60,7 +69,7 @@
   --map-ground: linear-gradient(140deg, rgba(26, 36, 80, 0.74), rgba(19, 27, 61, 0.92));
   /* what reads on a solid --highlight fill, and on a solid --brand fill */
   --on-highlight: var(--brand-ink);
-  --on-highlight-dim: rgba(19, 27, 61, 0.70);
+  --on-highlight-dim: rgba(19, 27, 61, 0.78);
   --on-brand: #FFFFFF;
   /* the outline button that only ever appears on a panel */
   --ghost-bg: rgba(255, 255, 255, 0.1);
@@ -450,6 +459,23 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   padding: clamp(20px, 2.8vw, 32px);
 }
 
+/* …and the exact mirror of that rule, which is the trap. `.sec-photo` sets a
+   light body colour for the copy standing on the photograph, and a solid card
+   *inside* the band inherits it — so any text in that card which does not
+   declare its own colour renders white on white. It shipped that way: the
+   services description and every sector bullet were invisible, and looking at
+   the page did not catch it because the cards were plainly there and plainly
+   correct — only their words were gone. qa-site now measures the contrast of
+   every text node for this reason; a reading of the cascade is not evidence. */
+.sec-photo .svc,
+.sec-photo .plan,
+.sec-photo .rev,
+.sec-photo .certs,
+.sec-photo .book-form,
+.sec-photo .hero-card {
+  color: var(--body);
+}
+
 /* One crop point per band: every photograph the client sent is a portrait
    phone shot being read through a wide letterbox, so a centred cover crop
    loses the subject in about half of them. Kept together rather than filed
@@ -553,7 +579,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-ink);
   line-height: 1.5;
   text-shadow: none;
 }
@@ -1164,7 +1190,10 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   color: var(--brand);
   vertical-align: 0.08em;
 }
-.foot-addr { margin-top: 10px; font-size: 0.84rem; line-height: 1.7; color: var(--on-panel-faint); }
+/* --on-panel-faint is white at 52%, and this footer is white: the company's
+   address has been invisible here since the token was introduced. Caught by
+   measurement, never by reading — it looked like a spacing choice. */
+.foot-addr { margin-top: 10px; font-size: 0.84rem; line-height: 1.7; color: var(--faint); }
 
 /* ---------- LINE card ---------- */
 

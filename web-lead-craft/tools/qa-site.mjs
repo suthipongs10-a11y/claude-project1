@@ -264,6 +264,89 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       }
     }
 
+    // Text that cannot be read on whatever is behind it. This shipped on
+    // spm-live: a section with a photographic ground sets a light body colour
+    // for the copy standing on it, and a solid white card *inside* that
+    // section inherited the same colour — the services description and every
+    // sector bullet rendered white on white. The cards were plainly there and
+    // plainly correct; only their words were gone, which is exactly the kind
+    // of defect a screenshot review reads straight past. The same pass found
+    // a footer address that had been invisible for months.
+    //
+    // The ground is every ancestor background composited down, so a panel at
+    // 82% over a dark section resolves to what the eye actually gets. It
+    // cannot see a photograph behind a translucent veil — it stops at the
+    // section's own opaque colour, which is the value the design sets the
+    // veil to approach anyway.
+    const contrast = [];
+    {
+      const parse = c => {
+        const m = String(c).match(/[\d.]+/g);
+        return m ? { r: +m[0], g: +m[1], b: +m[2], a: m[3] === undefined ? 1 : +m[3] } : null;
+      };
+      const chan = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+      const lum = c => 0.2126 * chan(c.r) + 0.7152 * chan(c.g) + 0.0722 * chan(c.b);
+      const over = (fg, bg) => ({
+        r: fg.r * fg.a + bg.r * (1 - fg.a),
+        g: fg.g * fg.a + bg.g * (1 - fg.a),
+        b: fg.b * fg.a + bg.b * (1 - fg.a),
+        a: 1,
+      });
+      // null means "cannot know", and that is the important return value: a
+      // gradient or a photograph has no single colour to compare against, and
+      // walking past it to whatever is further up invents a ground that is not
+      // there. Guessing produced white-on-white reports for every button on a
+      // gradient across four other sites — a check that cries wolf gets turned
+      // off, which is worse than not having written it.
+      const groundOf = el => {
+        const layers = [];
+        for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
+          const s = getComputedStyle(n);
+          if (s.backgroundImage && s.backgroundImage !== 'none') return null;
+          const c = parse(s.backgroundColor);
+          if (c && c.a > 0) layers.push(c);
+          if (c && c.a === 1) break;
+        }
+        let acc = { r: 255, g: 255, b: 255, a: 1 };
+        for (let i = layers.length - 1; i >= 0; i--) acc = over(layers[i], acc);
+        return acc;
+      };
+      const ratio = (a, b) => {
+        const [hi, lo] = [lum(a), lum(b)].sort((p, q) => q - p);
+        return (hi + 0.05) / (lo + 0.05);
+      };
+      for (const el of document.querySelectorAll('main *, header *, footer *')) {
+        // A brand's own mandated pairing is not ours to correct — LINE's green
+        // with white on it, for one. Opting out is deliberate, declared in the
+        // markup with its reason, and rare enough to read at a glance.
+        if (el.closest('[data-contrast-exempt]')) continue;
+        if (![...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) continue;
+        if (!vis(el)) continue;
+        // parked off-canvas on purpose — the honeypot label is the one that
+        // matters, and it is *supposed* to be unreadable
+        const box = el.getBoundingClientRect();
+        if (box.right < 0 || box.left > document.documentElement.clientWidth) continue;
+        const cs = getComputedStyle(el);
+        const fg = parse(cs.color);
+        if (!fg || fg.a === 0) continue;
+        const ground = groundOf(el);
+        if (!ground) continue;
+        const cr = ratio(over(fg, ground), ground);
+        // The gate is "can this be read at all", not WCAG AA. AA is 4.5:1 for
+        // body text and 3:1 for large, and several of these sites sit just
+        // under it on captions and hints — a real shortfall, but a palette
+        // decision to take deliberately, not a build break. Below 2.5 nothing
+        // is a decision: it is text the cascade swallowed. The case that
+        // shipped measured 1.00, white on white.
+        if (cr < 2.5) {
+          const cls = (el.getAttribute('class') || '').trim().split(/\s+/)[0];
+          const what = cls ? '.' + cls : el.tagName.toLowerCase();
+          const g = `rgb(${Math.round(ground.r)},${Math.round(ground.g)},${Math.round(ground.b)})`;
+          contrast.push(`${what} is unreadable at ${cr.toFixed(2)}:1 — ${cs.color} on ${g} — "${(el.textContent || '').trim().slice(0, 30)}"`);
+        }
+      }
+    }
+
     return {
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       noAlt,
@@ -271,6 +354,7 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
       badImages: [...new Set(badImages)],
       spills: [...new Set(spills)],
       bleeds: [...new Set(bleeds)],
+      contrast: [...new Set(contrast)],
       stuck,
       deadAnchors: [...new Set(deadAnchors)],
       localLinks,
@@ -348,6 +432,9 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
   for (const b of found.badImages) note(label, b);
   for (const s of (found.spills ?? []).slice(0, 6)) note(label, s);
   for (const b of (found.bleeds ?? [])) note(label, b);
+  // every one, never a slice: text nobody can read is the failure this whole
+  // tool exists for, and a truncated list is how the last three get shipped
+  for (const c of (found.contrast ?? [])) note(label, c);
   if (found.deadAnchors.length) note(label, `anchor links point nowhere → ${found.deadAnchors.join(', ')}`);
   if (size === 'phone') {
     // list every one — a QA tool that truncates its findings hides work
