@@ -327,7 +327,16 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
         const box = el.getBoundingClientRect();
         if (box.right < 0 || box.left > document.documentElement.clientWidth) continue;
         const cs = getComputedStyle(el);
-        const fg = parse(cs.color);
+        // SVG <text>/<tspan> is painted by `fill`, not `color` — `color` still
+        // inherits down into them (a dark section's on-panel token, say) even
+        // though nothing on screen uses it. Reading `color` there reports
+        // whatever the ancestor's body-text colour happens to be instead of
+        // what is actually drawn, which is how a legible map label — real
+        // fill, real contrast, confirmed by screenshot — got flagged as
+        // unreadable across every route-map site's stop names and scale bar.
+        const isSvgText = el.namespaceURI === 'http://www.w3.org/2000/svg'
+          && (el.tagName === 'text' || el.tagName === 'tspan');
+        const fg = parse(isSvgText ? cs.fill : cs.color);
         if (!fg || fg.a === 0) continue;
         const ground = groundOf(el);
         if (!ground) continue;
