@@ -515,6 +515,20 @@ a { color: var(--gold-ink); }
 .pin-in { fill: var(--map-case); }
 .mk-tx-start { font-size: 17px; font-weight: 700; }
 
+/* checkpoints (CP0-CPn) — gold so they read as a distinct layer from the
+   plain stop dots above, drawn after them so a star stays visible even where
+   a checkpoint sits exactly on a stop's own coordinate. Never dimmed by the
+   stage picker (`.mk-cp` isn't `.mk`) — the checkpoint sequence spans every
+   stage, so it stays put as a constant reference while stages get focused. */
+.cp-star { fill: var(--gold-strong); stroke: var(--map-case); stroke-width: 1.6; }
+/* Gold-on-cream measures 1.93:1 for thin text — the star is a big enough
+   shape to carry it, a 12px numeral is not. `--map-ink` is the same dark
+   green already proven readable on this background for the stop labels. */
+.cp-tx {
+  font-family: var(--text); font-size: 12px; font-weight: 700; fill: var(--map-ink);
+  paint-order: stroke; stroke: var(--map-case); stroke-width: 3px; stroke-linejoin: round;
+}
+
 .map-scale { fill: none; stroke: var(--map-ink); stroke-width: 1.5; opacity: .65; }
 .map-scale text {
   stroke: none; fill: var(--map-ink); font-family: var(--text); font-size: 13px;
@@ -588,6 +602,10 @@ a { color: var(--gold-ink); }
   .mk:not(.mk-key) .mk-tx { display: none; }
   .mk-dot { r: 6.5; }
   .map-scale text { font-size: 15px; }
+  /* Sixteen numbers on top of sixteen town names has no room on a phone —
+     the stars alone still mark every checkpoint; the full CP list under the
+     map carries the numbers, names and km for anyone who wants them. */
+  .cp-tx { display: none; }
 }
 
 .map-note { margin: 14px 0 0; font-size: 0.8rem; color: var(--on-forest-dim); line-height: 1.7; }
