@@ -128,6 +128,21 @@ function smooth(points) {
   return d;
 }
 
+// A 5-point star, centred on its own origin so callers just translate it.
+// Same silhouette regardless of size — outer/inner radius stay in a fixed
+// ratio so a bigger star doesn't turn spiky or blunt.
+function starPath(outerR, innerR) {
+  let d = '';
+  for (let i = 0; i < 10; i++) {
+    const angle = (Math.PI / 5) * i - Math.PI / 2;
+    const r = i % 2 === 0 ? outerR : innerR;
+    const x = r2(r * Math.cos(angle));
+    const y = r2(r * Math.sin(angle));
+    d += (i === 0 ? 'M' : 'L') + x + ' ' + y;
+  }
+  return d + 'Z';
+}
+
 // --------------------------------------------------------------- deep links
 
 // Google Maps' URL API takes an origin, a destination and at most nine
@@ -212,12 +227,19 @@ const hits = (a, b) =>
 // Seed the obstacle list with every marker, so a label can never be printed
 // across another town's dot. It also makes the placement order stop mattering:
 // whoever goes first still has to dodge the neighbour that has not been
-// placed yet.
+// placed yet. Checkpoint stars go in from the start too — several sit on the
+// exact coordinate of a named stop (a checkpoint often *is* the town), so a
+// stop label placed before checkpoints existed would otherwise land right on
+// top of a star that hadn't been counted as an obstacle yet.
+const checkpoints = route.checkpoints ?? [];
 const keyBoxes = [];   // where the labels a phone still prints ended up
 const placed = stops.map(s => {
   const [x, y] = pt(s.lat, s.lon);
   return { x: x - 7, y: y - 7, w: 14, h: 14 };
-});
+}).concat(checkpoints.map(cp => {
+  const [x, y] = pt(cp.lat, cp.lon);
+  return { x: x - 7, y: y - 7, w: 14, h: 14 };
+}));
 
 const stopLayer = stops.map(p => {
   const [x, y] = pt(p.lat, p.lon);
@@ -251,6 +273,37 @@ const startLayer =
   + `<text class="mk-tx mk-tx-start" x="15" y="-18">${esc(route.start.name)}</text>`
   + `</g>`;
 
+// Optional numbered checkpoint overlay (CP0..CPn) — a race's own checkpoint
+// sequence, distinct from the named stop dots above and drawn after them so
+// a star is visible even where a checkpoint sits exactly on a stop's dot.
+// Absent route.checkpoints (every route.json before this) renders nothing,
+// so no existing map changes. Placed *after* stopLayer is computed, using
+// the same `placed` obstacle list stopLayer already grew, so CP numbers
+// dodge town names and vice versa; only the label competes for space — the
+// star itself was already seeded as an obstacle above, before either layer
+// placed a single label.
+const cpLayer = checkpoints.map(cp => {
+  const [x, y] = pt(cp.lat, cp.lon);
+  const label = String(cp.no);
+  const size = 13;
+  const w = labelWidth(label, size);
+  let spot = PLACES[0];
+  for (const c of PLACES) {
+    const box = {
+      x: x + (c.anchor === 'end' ? c.dx - w : c.dx),
+      y: y + c.dy - size,
+      w, h: size + 3,
+    };
+    if (!placed.some(q => hits(box, q))) { spot = c; placed.push(box); break; }
+    if (c === PLACES[PLACES.length - 1]) placed.push(box);
+  }
+  return `<g class="mk-cp" transform="translate(${x} ${y})">`
+    + `<path class="cp-star" d="${starPath(7, 2.8)}"/>`
+    + `<text class="cp-tx" x="${spot.dx}" y="${spot.dy}"`
+    + `${spot.anchor === 'end' ? ' text-anchor="end"' : ''}>${esc(label)}</text>`
+    + `</g>`;
+}).join('');
+
 // Portrait framing: same projection, a window cropped to phone proportions
 // around the route itself. The script swaps the viewBox below 700px.
 const rp = all.map(([la, lo]) => pt(la, lo));
@@ -270,14 +323,16 @@ const tallBox = [
   r2(tallW), r2(tallH),
 ].join(' ');
 
+const cpAria = checkpoints.length ? ` พร้อมจุดเช็คพอยต์ ${checkpoints.length} จุด` : '';
 const svg = `<svg class="map-svg" viewBox="0 0 ${W} ${H}"
         data-vb-wide="0 0 ${W} ${H}" data-vb-tall="${tallBox}" role="img"
-        aria-label="แผนที่เส้นทางปั่น 1,200 กิโลเมตร เริ่มและจบที่ข่วงเมืองปัว จังหวัดน่าน วนผ่านแพร่ อุตรดิตถ์ พิษณุโลก เพชรบูรณ์ และเลย ก่อนเลียบแม่น้ำโขงแล้ววนกลับ">
+        aria-label="แผนที่เส้นทางปั่น 1,200 กิโลเมตร เริ่มและจบที่ข่วงเมืองปัว จังหวัดน่าน วนผ่านแพร่ อุตรดิตถ์ พิษณุโลก เพชรบูรณ์ และเลย ก่อนเลียบแม่น้ำโขงแล้ววนกลับ${cpAria}">
         <g class="map-pan">
           <g class="lyr-land">${provinceLayer}</g>
           <g class="lyr-water">${riverLayer}</g>
           <g class="lyr-route">${stageLayer}</g>
           <g class="lyr-stops">${stopLayer}${startLayer}</g>
+          <g class="lyr-cps">${cpLayer}</g>
         </g>
         <g class="map-scale" transform="translate(24 ${H - 26})">
           <path d="M0 -7V0h${barUnits}v-7" />
@@ -329,5 +384,6 @@ writeFileSync(bodyPath, body.replace(re, block), 'utf8');
 const kb = n => `${Math.round(n / 1024)} KB`;
 console.log(`route map → ${bodyPath}`);
 console.log(`  ${shapes.length} provinces (${route.provinces.length} on route), `
-  + `${route.stages.length} stages, ${stops.length} stops, ${kb(block.length)} of markup`);
+  + `${route.stages.length} stages, ${stops.length} stops, ${checkpoints.length} checkpoints, `
+  + `${kb(block.length)} of markup`);
 console.log(`  scale bar ${barKm} km = ${barUnits} units`);

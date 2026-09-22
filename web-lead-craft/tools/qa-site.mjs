@@ -351,7 +351,10 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
           const cls = (el.getAttribute('class') || '').trim().split(/\s+/)[0];
           const what = cls ? '.' + cls : el.tagName.toLowerCase();
           const g = `rgb(${Math.round(ground.r)},${Math.round(ground.g)},${Math.round(ground.b)})`;
-          contrast.push(`${what} is unreadable at ${cr.toFixed(2)}:1 — ${cs.color} on ${g} — "${(el.textContent || '').trim().slice(0, 30)}"`);
+          // Report the colour the ratio was actually computed from — `cs.color`
+          // here would repeat the original bug in the message even though the
+          // math above is already reading `fill` for SVG text.
+          contrast.push(`${what} is unreadable at ${cr.toFixed(2)}:1 — ${isSvgText ? cs.fill : cs.color} on ${g} — "${(el.textContent || '').trim().slice(0, 30)}"`);
         }
       }
     }
