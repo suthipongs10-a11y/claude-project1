@@ -612,6 +612,32 @@ a { color: var(--gold-ink); }
 :lang(th) .stage b { font-weight: 500; }
 .stage p { margin: 5px 0 0; font-size: 0.95rem; }
 
+/* ---------- checkpoints (CP0-CP15) ----------
+ * One row per CP from the organiser's day-by-day plan — same real km markers
+ * and PTT branches as the route book, condensed for the public page. A
+ * sleeping CP gets the gold treatment so the four overnight stops read at a
+ * glance without counting rows. */
+.cps { display: grid; gap: 10px; margin-top: 20px; }
+.cp {
+  display: grid; grid-template-columns: 56px 84px minmax(0, 1fr); gap: 16px; align-items: center;
+  background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line-forest);
+  border-radius: var(--r); padding: 14px 20px;
+}
+.cp-sleep { background: rgba(201, 162, 39, 0.1); border-color: var(--line-gold); }
+.cp-start, .cp-end { border-color: var(--gold); background: rgba(201, 162, 39, 0.14); }
+.cp-no { font-family: var(--numeral); font-style: italic; font-weight: 600; font-size: 1.05rem; color: var(--gold); }
+.cp-km { font-family: var(--text); font-size: 0.83rem; color: var(--on-forest-dim); }
+.cp-name { display: grid; gap: 2px; min-width: 0; }
+.cp-name > b { font-family: var(--display); font-weight: 600; font-size: 0.95rem; color: var(--on-forest); line-height: 1.4; }
+:lang(th) .cp-name > b { font-weight: 500; }
+.cp-name > span { font-size: 0.82rem; color: var(--on-forest-dim); }
+.cp-name > span.cp-tag { color: var(--gold-light); font-weight: 600; }
+@media (max-width: 640px) {
+  .cp { grid-template-columns: 40px 62px minmax(0, 1fr); gap: 10px; padding: 12px 14px; }
+  .cp-no { font-size: 0.9rem; }
+  .cp-km { font-size: 0.74rem; }
+}
+
 /* ---------- riding advisories ---------- */
 .tips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
 @media (max-width: 860px) { .tips { grid-template-columns: minmax(0, 1fr); } }
