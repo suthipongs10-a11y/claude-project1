@@ -233,13 +233,23 @@ const hits = (a, b) =>
 // top of a star that hadn't been counted as an obstacle yet.
 const checkpoints = route.checkpoints ?? [];
 const keyBoxes = [];   // where the labels a phone still prints ended up
+// The start pin's own label sits at a fixed offset (never went through the
+// six-position search below, because it never had to dodge anything) — until
+// CP0/CP15 existed and landed on the same coordinate. Seed its box too, so a
+// checkpoint at the start/finish is pushed to a clear spot instead of
+// printing straight through "ข่วงเมืองปัว".
+const startLabelBox = {
+  x: pt(route.start.lat, route.start.lon)[0] + 15,
+  y: pt(route.start.lat, route.start.lon)[1] - 18 - 17,
+  w: labelWidth(route.start.name, 17), h: 17 + 3,
+};
 const placed = stops.map(s => {
   const [x, y] = pt(s.lat, s.lon);
   return { x: x - 7, y: y - 7, w: 14, h: 14 };
 }).concat(checkpoints.map(cp => {
   const [x, y] = pt(cp.lat, cp.lon);
   return { x: x - 7, y: y - 7, w: 14, h: 14 };
-}));
+})).concat([startLabelBox]);
 
 const stopLayer = stops.map(p => {
   const [x, y] = pt(p.lat, p.lon);
@@ -284,7 +294,7 @@ const startLayer =
 // placed a single label.
 const cpLayer = checkpoints.map(cp => {
   const [x, y] = pt(cp.lat, cp.lon);
-  const label = String(cp.no);
+  const label = cp.name ? `CP${cp.no} · ${cp.name}` : `CP${cp.no}`;
   const size = 13;
   const w = labelWidth(label, size);
   let spot = PLACES[0];
