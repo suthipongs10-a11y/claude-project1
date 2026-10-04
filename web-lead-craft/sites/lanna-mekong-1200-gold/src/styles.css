@@ -151,7 +151,7 @@ a { color: var(--gold-ink); }
 .burger {
   display: none; background: transparent; border: 1px solid var(--line-gold);
   color: var(--gold); width: 46px; height: 46px; border-radius: var(--r);
-  cursor: pointer; align-items: center; justify-content: center;
+  cursor: pointer; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .burger svg { width: 22px; height: 22px; }
 @media (max-width: 1080px) {
@@ -165,6 +165,28 @@ a { color: var(--gold-ink); }
   }
   .nav.open a { padding: 13px 4px; border-bottom: 1px solid var(--line-forest); }
 }
+
+/* language switcher — swaps the copy in place, no navigation */
+.lang {
+  display: inline-flex; align-items: stretch; flex-shrink: 0;
+  border: 1px solid var(--line-gold); border-radius: var(--r);
+  overflow: hidden; font-size: 0.82rem; font-weight: 600;
+}
+.lang button {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 34px; padding: 0 11px; border: 0;
+  background: transparent; color: var(--on-forest-body); font-family: inherit; cursor: pointer;
+}
+.lang button:hover { background: var(--forest-soft); color: var(--on-forest); }
+.lang button[aria-current='true'] { background: var(--gold); color: var(--forest-deep); }
+@media (max-width: 1080px) { .lang button { min-height: 44px; } }
+
+/* only the language the switch currently has selected may reach the
+   accessibility tree, so a screen reader never reads the page twice. */
+html[data-lang='th'] [data-t]:not([lang='th']),
+html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
+
+.legal-top-end { display: inline-flex; align-items: center; gap: 16px; }
 
 /* ---------- hero ---------- */
 .hero { position: relative; background: var(--forest-deep); overflow: hidden; }
@@ -406,7 +428,7 @@ a { color: var(--gold-ink); }
 .legal { padding-block: clamp(36px, 6vw, 64px) clamp(48px, 8vw, 80px); }
 .legal-in { max-width: 760px; }
 .legal-crumb { font-size: 0.86rem; color: var(--faint); margin-bottom: 14px; }
-.legal-crumb a { display: inline-block; padding-block: 12px; margin-block: -12px; }
+.legal-crumb a { display: inline-block; padding-block: 12px; margin-block: -12px; min-width: 44px; text-align: center; }
 .legal h1 { font-size: clamp(1.7rem, 4.4vw, 2.3rem); }
 .legal-date { margin-top: 10px; font-size: 0.92rem; color: var(--faint); }
 .legal-note { margin-top: 26px; border-left: 4px solid var(--gold); background: var(--cream-2); border-radius: 0 var(--r) var(--r) 0; padding: 16px 20px; font-size: 0.95rem; color: var(--ink); }

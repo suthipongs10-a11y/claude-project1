@@ -131,15 +131,16 @@
       </span>
     </a>
     <nav class="nav" id="nav">
-      <a class="on" href="#top">หน้าหลัก</a>
-      <a href="#about">เกี่ยวกับกิจกรรม</a>
-      <a href="#route">เส้นทาง</a>
-      <a href="#organise">การจัดงาน</a>
-      <a href="#perks">สิ่งที่จะได้รับ</a>
-      <a href="#info">ข้อมูลกิจกรรม</a>
-      <a href="#contact">ติดต่อเรา</a>
+      <a class="on" href="#top">{{t|หน้าหลัก|Home}}</a>
+      <a href="#about">{{t|เกี่ยวกับกิจกรรม|About}}</a>
+      <a href="#route">{{t|เส้นทาง|Route}}</a>
+      <a href="#organise">{{t|การจัดงาน|Support}}</a>
+      <a href="#perks">{{t|สิ่งที่จะได้รับ|What you get}}</a>
+      <a href="#info">{{t|ข้อมูลกิจกรรม|Event info}}</a>
+      <a href="#contact">{{t|ติดต่อเรา|Contact}}</a>
     </nav>
-    <button class="burger" id="burger" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="nav">
+    {{SWITCHER}}
+    <button class="burger" id="burger" aria-label="{{t|เปิดเมนู|Open menu}}" aria-expanded="false" aria-controls="nav">
       <svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg>
     </button>
   </div>
@@ -149,16 +150,16 @@
 
   <section class="hero">
     <div class="hero-scene">
-      <img {{img:hero-mekong-sunset:100vw}} width="1672" height="941" alt="นักปั่นจักรยานสี่คนบนถนนเลียบแม่น้ำโขงยามพระอาทิตย์ขึ้น มีภูเขาสลับชั้นอยู่เบื้องหลัง">
+      <img {{img:hero-mekong-sunset:100vw}} width="1672" height="941" alt="{{t|นักปั่นจักรยานสี่คนบนถนนเลียบแม่น้ำโขงยามพระอาทิตย์ขึ้น มีภูเขาสลับชั้นอยู่เบื้องหลัง|Four cyclists on a road along the Mekong at sunrise, layered mountains behind them}}">
     </div>
     <div class="wrap">
       <div class="hero-in">
-        <h1>การค้นพบ 1200<br>ล้านนาตะวันออก<br>สู่ลุ่มน้ำโขง</h1>
-        <p class="hero-en">Discovery 1200 — Lanna East to the Mekong · Inaugural Edition</p>
-        <p class="hero-lede">ปฐมบทของการค้นพบ 1200 ล้านนาตะวันออกสู่ลุ่มน้ำโขง — 1,200 กิโลเมตร ภายใน 90–100 ชั่วโมง จากข่วงเมืองปัว จังหวัดน่าน ผ่านภูเขาและเมืองเก่า 6 จังหวัด สู่ริมฝั่งโขงที่เชียงคาน แล้ววนกลับสู่จุดเริ่มต้น<br>ท้าทายตัวเอง สัมผัสธรรมชาติ วัฒนธรรม และมิตรภาพตลอดเส้นทาง</p>
+        <h1>{{t|การค้นพบ 1200<br>ล้านนาตะวันออก<br>สู่ลุ่มน้ำโขง|Discovery 1200<br>Lanna East<br>to the Mekong}}</h1>
+        <p class="hero-en">{{t|รุ่นปฐมฤกษ์|Inaugural Edition}}</p>
+        <p class="hero-lede">{{t|ปฐมบทของการค้นพบ 1200 ล้านนาตะวันออกสู่ลุ่มน้ำโขง — 1,200 กิโลเมตร ภายใน 90–100 ชั่วโมง จากข่วงเมืองปัว จังหวัดน่าน ผ่านภูเขาและเมืองเก่า 6 จังหวัด สู่ริมฝั่งโขงที่เชียงคาน แล้ววนกลับสู่จุดเริ่มต้น<br>ท้าทายตัวเอง สัมผัสธรรมชาติ วัฒนธรรม และมิตรภาพตลอดเส้นทาง|The first chapter of Discovery 1200 — 1,200km in 90–100 hours, from Pua in Nan province, through mountains and old towns across 6 provinces, down to the Mekong at Chiang Khan, then back to where you started.<br>Push your limits and soak up the nature, culture and friendships along the way.}}</p>
         <div class="hero-cta">
-          <a class="btn btn-gold btn-lg" href="#signup">สมัครเข้าร่วม <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-out btn-lg" href="#info">ข้อมูลกิจกรรม</a>
+          <a class="btn btn-gold btn-lg" href="#signup">{{t|สมัครเข้าร่วม|Sign up}} <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-out btn-lg" href="#info">{{t|ข้อมูลกิจกรรม|Event info}}</a>
         </div>
       </div>
     </div>
@@ -167,17 +168,17 @@
   <section class="sec sec-cream" id="about">
     <div class="wrap about">
       <div class="rv">
-        <p class="eyebrow">เกี่ยวกับกิจกรรม</p>
-        <h2>การปั่นทางไกลเพื่อประสบการณ์ที่ยิ่งใหญ่<br>จากล้านนาตะวันออก สู่ลุ่มน้ำโขง</h2>
-        <p>เราขอเชิญนักปั่นทุกท่านร่วมเป็นส่วนหนึ่งของการผจญภัยครั้งใหม่ บนเส้นทางที่เชื่อมโยงธรรมชาติ วัฒนธรรม และผู้คน จากขุนเขาแห่งล้านนา สู่สายน้ำแห่งโขง</p>
-        <p>นี่ไม่ใช่แค่การปั่น แต่คือการเดินทางที่คุณจะไม่มีวันลืม</p>
+        <p class="eyebrow">{{t|เกี่ยวกับกิจกรรม|About}}</p>
+        <h2>{{t|การปั่นทางไกลเพื่อประสบการณ์ที่ยิ่งใหญ่<br>จากล้านนาตะวันออก สู่ลุ่มน้ำโขง|A long ride for a big experience<br>from Lanna East to the Mekong}}</h2>
+        <p>{{t|เราขอเชิญนักปั่นทุกท่านร่วมเป็นส่วนหนึ่งของการผจญภัยครั้งใหม่ บนเส้นทางที่เชื่อมโยงธรรมชาติ วัฒนธรรม และผู้คน จากขุนเขาแห่งล้านนา สู่สายน้ำแห่งโขง|We're inviting every rider to join a brand-new adventure — a route that ties together nature, culture and people, from the mountains of Lanna to the waters of the Mekong.}}</p>
+        <p>{{t|นี่ไม่ใช่แค่การปั่น แต่คือการเดินทางที่คุณจะไม่มีวันลืม|This isn't just a ride. It's a journey you won't forget.}}</p>
       </div>
       <figure class="about-shot rv">
         <span class="about-media">
           <span class="about-frame"></span>
-          <img {{img:nan-province-sign:(max-width:940px) 92vw, 46vw}} width="1672" height="941" alt="ถนนยามเย็นในจังหวัดน่าน มีป้ายบอกทางอำเภอปัว อำเภอท่าวังผา และตัวเมืองน่าน กับทุ่งนาและภูเขาเบื้องหลัง">
+          <img {{img:nan-province-sign:(max-width:940px) 92vw, 46vw}} width="1672" height="941" alt="{{t|ถนนยามเย็นในจังหวัดน่าน มีป้ายบอกทางอำเภอปัว อำเภอท่าวังผา และตัวเมืองน่าน กับทุ่งนาและภูเขาเบื้องหลัง|An evening road in Nan province, with signs for Pua, Tha Wang Pha and Nan city, rice fields and mountains behind}}">
         </span>
-        <figcaption>ถนนสายน่าน มุ่งหน้าอำเภอปัว — ภาพจากผู้จัดงาน</figcaption>
+        <figcaption>{{t|ถนนสายน่าน มุ่งหน้าอำเภอปัว — ภาพจากผู้จัดงาน|The Nan road toward Pua — photo from the organiser}}</figcaption>
       </figure>
     </div>
 
@@ -185,18 +186,18 @@
       <div class="virtues rv">
         <div class="virtue">
           <svg aria-hidden="true"><use href="#i-nature"/></svg>
-          <h3>ธรรมชาติ</h3>
-          <p>สัมผัสความงดงามของภูเขา ป่าไม้ และสายน้ำตลอดเส้นทาง</p>
+          <h3>{{t|ธรรมชาติ|Nature}}</h3>
+          <p>{{t|สัมผัสความงดงามของภูเขา ป่าไม้ และสายน้ำตลอดเส้นทาง|Take in the mountains, forests and rivers all along the route}}</p>
         </div>
         <div class="virtue">
           <svg aria-hidden="true"><use href="#i-culture"/></svg>
-          <h3>วัฒนธรรม</h3>
-          <p>เรียนรู้วิถีชีวิตล้านนาและชุมชนท้องถิ่นในแต่ละพื้นที่</p>
+          <h3>{{t|วัฒนธรรม|Culture}}</h3>
+          <p>{{t|เรียนรู้วิถีชีวิตล้านนาและชุมชนท้องถิ่นในแต่ละพื้นที่|Get a feel for Lanna life and the local communities along the way}}</p>
         </div>
         <div class="virtue">
           <svg aria-hidden="true"><use href="#i-friends"/></svg>
-          <h3>มิตรภาพ</h3>
-          <p>พบเพื่อนนักปั่นที่มีใจรักเดียวกัน และความทรงจำที่ยิ่งใหญ่</p>
+          <h3>{{t|มิตรภาพ|Friendship}}</h3>
+          <p>{{t|พบเพื่อนนักปั่นที่มีใจรักเดียวกัน และความทรงจำที่ยิ่งใหญ่|Meet fellow riders who love this as much as you do, and make some big memories}}</p>
         </div>
       </div>
     </div>
@@ -210,28 +211,28 @@
     </svg>
     <div class="wrap">
       <div class="sec-head mid rv">
-        <span class="tag-gold">ไฮไลต์เส้นทาง / HIGHLIGHTS</span>
+        <span class="tag-gold">{{t|ไฮไลต์เส้นทาง|HIGHLIGHTS}}</span>
       </div>
       <div class="hl-grid rv">
         <figure class="hl">
-          <span class="hl-shot"><img {{img:mountain-pass-morning:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="ถนนโค้งบนสันเขา มองเห็นทิวเขาสลับชั้นไปถึงขอบฟ้า"></span>
-          <figcaption>เส้นทางภูเขา<span>สุดท้าทาย</span></figcaption>
+          <span class="hl-shot"><img {{img:mountain-pass-morning:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="{{t|ถนนโค้งบนสันเขา มองเห็นทิวเขาสลับชั้นไปถึงขอบฟ้า|A curving ridge-top road with layered mountains stretching to the horizon}}"></span>
+          <figcaption>{{t|เส้นทางภูเขา|Mountain roads}}<span>{{t|สุดท้าทาย|that push you}}</span></figcaption>
         </figure>
         <figure class="hl">
           <span class="hl-shot hl-mark"><svg aria-hidden="true"><use href="#i-culture"/></svg></span>
-          <figcaption>วัดภูมินทร์<span>และวัฒนธรรมล้านนา</span></figcaption>
+          <figcaption>{{t|วัดภูมินทร์|Wat Phumin}}<span>{{t|และวัฒนธรรมล้านนา|and Lanna culture}}</span></figcaption>
         </figure>
         <figure class="hl">
-          <span class="hl-shot"><img {{img:mekong-riverside-road:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="ถนนเลียบแม่น้ำโขงยามเย็น มีสายน้ำกว้างและทิวเขาฝั่งตรงข้าม"></span>
-          <figcaption>เลียบแม่น้ำโขง<span>ช่วงเชียงคาน–ปากชม</span></figcaption>
+          <span class="hl-shot"><img {{img:mekong-riverside-road:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="{{t|ถนนเลียบแม่น้ำโขงยามเย็น มีสายน้ำกว้างและทิวเขาฝั่งตรงข้าม|An evening road along the Mekong, wide water and mountains on the far bank}}"></span>
+          <figcaption>{{t|เลียบแม่น้ำโขง|Along the Mekong}}<span>{{t|ช่วงเชียงคาน–ปากชม|Chiang Khan to Pak Chom}}</span></figcaption>
         </figure>
         <figure class="hl">
-          <span class="hl-shot"><img {{img:pine-forest-mist:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="ถนนขึ้นเขาผ่านป่าสน มีสายหมอกลอยอยู่ตามหุบเขา"></span>
-          <figcaption>ป่าสนและสายหมอก<span>ช่วงภูเรือ จังหวัดเลย</span></figcaption>
+          <span class="hl-shot"><img {{img:pine-forest-mist:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="{{t|ถนนขึ้นเขาผ่านป่าสน มีสายหมอกลอยอยู่ตามหุบเขา|A mountain road through pine forest, mist drifting through the valley}}"></span>
+          <figcaption>{{t|ป่าสนและสายหมอก|Pine forest and mist}}<span>{{t|ช่วงภูเรือ จังหวัดเลย|Around Phu Ruea, Loei}}</span></figcaption>
         </figure>
         <figure class="hl">
-          <span class="hl-shot"><img {{img:road-ricefields-dawn:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="ถนนตัดผ่านทุ่งนาเขียวยามเช้า มีภูเขาและสายหมอกอยู่ไกลออกไป"></span>
-          <figcaption>ทุ่งนาและขุนเขา<span>รอบอำเภอปัว จังหวัดน่าน</span></figcaption>
+          <span class="hl-shot"><img {{img:road-ricefields-dawn:(max-width:640px) 46vw, (max-width:1020px) 30vw, 19vw}} width="1672" height="941" alt="{{t|ถนนตัดผ่านทุ่งนาเขียวยามเช้า มีภูเขาและสายหมอกอยู่ไกลออกไป|A road cutting through green morning rice fields, mountains and mist in the distance}}"></span>
+          <figcaption>{{t|ทุ่งนาและขุนเขา|Rice fields and mountains}}<span>{{t|รอบอำเภอปัว จังหวัดน่าน|Around Pua, Nan}}</span></figcaption>
         </figure>
       </div>
     </div>
@@ -240,39 +241,39 @@
   <section class="sec sec-cream" id="organise">
     <div class="wrap">
       <div class="sec-head rv">
-        <p class="eyebrow">การจัดงาน</p>
-        <h2>เราดูแลคุณตลอดเส้นทาง</h2>
+        <p class="eyebrow">{{t|การจัดงาน|Support}}</p>
+        <h2>{{t|เราดูแลคุณตลอดเส้นทาง|We've got you covered the whole way}}</h2>
       </div>
       <div class="sixes rv">
         <div class="six">
           <svg aria-hidden="true"><use href="#i-staff"/></svg>
-          <h3>ทีมงานมืออาชีพ</h3>
-          <p>ทีมงานมากประสบการณ์ดูแลอย่างใกล้ชิด</p>
+          <h3>{{t|ทีมงานมืออาชีพ|Professional crew}}</h3>
+          <p>{{t|ทีมงานมากประสบการณ์ดูแลอย่างใกล้ชิด|An experienced team keeping a close eye on you}}</p>
         </div>
         <div class="six">
           <svg aria-hidden="true"><use href="#i-form"/></svg>
-          <h3>ลงทะเบียน</h3>
-          <p>ขั้นตอนสะดวก รวดเร็ว พร้อมคำแนะนำ</p>
+          <h3>{{t|ลงทะเบียน|Registration}}</h3>
+          <p>{{t|ขั้นตอนสะดวก รวดเร็ว พร้อมคำแนะนำ|Quick, easy sign-up with guidance along the way}}</p>
         </div>
         <div class="six">
           <svg aria-hidden="true"><use href="#i-checkpoint"/></svg>
-          <h3>จุดเช็คพอยต์</h3>
-          <p>จุดพักและเช็คพอยต์มาตรฐานตลอดเส้นทาง</p>
+          <h3>{{t|จุดเช็คพอยต์|Checkpoints}}</h3>
+          <p>{{t|จุดพักและเช็คพอยต์มาตรฐานตลอดเส้นทาง|Proper rest stops and checkpoints the whole route}}</p>
         </div>
         <div class="six">
           <svg aria-hidden="true"><use href="#i-drink"/></svg>
-          <h3>อาหารและเครื่องดื่ม</h3>
-          <p>จัดเตรียมอาหาร น้ำดื่ม และผลไม้ให้เพียงพอ</p>
+          <h3>{{t|อาหารและเครื่องดื่ม|Food and drink}}</h3>
+          <p>{{t|จัดเตรียมอาหาร น้ำดื่ม และผลไม้ให้เพียงพอ|Plenty of food, water and fruit, all taken care of}}</p>
         </div>
         <div class="six">
           <svg aria-hidden="true"><use href="#i-van"/></svg>
-          <h3>รถซัพพอร์ต</h3>
-          <p>รถสนับสนุนและรถเคลื่อนย้ายตลอดเส้นทาง</p>
+          <h3>{{t|รถซัพพอร์ต|Support vehicles}}</h3>
+          <p>{{t|รถสนับสนุนและรถเคลื่อนย้ายตลอดเส้นทาง|Support and transfer vehicles with you the whole way}}</p>
         </div>
         <div class="six">
           <svg aria-hidden="true"><use href="#i-safety"/></svg>
-          <h3>ความปลอดภัย</h3>
-          <p>ทีมแพทย์และหน่วยปฐมพยาบาลพร้อมดูแลผู้ร่วมปั่น</p>
+          <h3>{{t|ความปลอดภัย|Safety}}</h3>
+          <p>{{t|ทีมแพทย์และหน่วยปฐมพยาบาลพร้อมดูแลผู้ร่วมปั่น|A medical team and first-aid on hand for every rider}}</p>
         </div>
       </div>
     </div>
@@ -286,9 +287,9 @@
     </svg>
     <div class="wrap">
       <div class="sec-head rv">
-        <p class="eyebrow">เส้นทาง</p>
-        <h2>1,200 กิโลเมตร ผ่าน 6 จังหวัด</h2>
-        <p>เริ่มและจบที่เดียวกัน ที่ข่วงเมืองปัว จังหวัดน่าน วนผ่านน่าน แพร่ อุตรดิตถ์ พิษณุโลก เพชรบูรณ์ และเลย ก่อนเลียบแม่น้ำโขงแล้ววนกลับ</p>
+        <p class="eyebrow">{{t|เส้นทาง|Route}}</p>
+        <h2>{{t|1,200 กิโลเมตร ผ่าน 6 จังหวัด|1,200 kilometres, 6 provinces}}</h2>
+        <p>{{t|เริ่มและจบที่เดียวกัน ที่ข่วงเมืองปัว จังหวัดน่าน วนผ่านน่าน แพร่ อุตรดิตถ์ พิษณุโลก เพชรบูรณ์ และเลย ก่อนเลียบแม่น้ำโขงแล้ววนกลับ|Same start and finish, at Khuang Mueang Pua in Nan. The loop runs through Nan, Phrae, Uttaradit, Phitsanulok, Phetchabun and Loei, hugs the Mekong, then circles back.}}</p>
       </div>
     <!-- route-map:start — generated by tools/route-map.mjs from route.json, do not edit by hand -->
     <div class="mapwrap rv">
@@ -327,169 +328,169 @@
       <div class="ends rv">
         <div class="end">
           <svg aria-hidden="true"><use href="#i-flag"/></svg>
-          <div><b>จุดเริ่มต้น</b><span>ข่วงเมืองปัว อำเภอปัว จังหวัดน่าน</span></div>
+          <div><b>{{t|จุดเริ่มต้น|Start}}</b><span>{{t|ข่วงเมืองปัว อำเภอปัว จังหวัดน่าน|Khuang Mueang Pua, Pua district, Nan}}</span></div>
         </div>
         <div class="end">
           <svg aria-hidden="true"><use href="#i-pin"/></svg>
-          <div><b>จุดสิ้นสุด</b><span>ข่วงเมืองปัว อำเภอปัว จังหวัดน่าน</span></div>
+          <div><b>{{t|จุดสิ้นสุด|Finish}}</b><span>{{t|ข่วงเมืองปัว อำเภอปัว จังหวัดน่าน|Khuang Mueang Pua, Pua district, Nan}}</span></div>
         </div>
       </div>
       <div class="stages rv">
         <div class="stage">
           <span class="stage-no">1</span>
           <div>
-            <b>น่าน · แพร่ · อุตรดิตถ์ · พิษณุโลก</b>
-            <p>จากปัวลงมาตัวเมืองน่าน ผ่านจังหวัดแพร่ เข้าอุตรดิตถ์ แล้วลงใต้ผ่านวังทอง จังหวัดพิษณุโลก</p>
+            <b>{{t|น่าน · แพร่ · อุตรดิตถ์ · พิษณุโลก|Nan · Phrae · Uttaradit · Phitsanulok}}</b>
+            <p>{{t|จากปัวลงมาตัวเมืองน่าน ผ่านจังหวัดแพร่ เข้าอุตรดิตถ์ แล้วลงใต้ผ่านวังทอง จังหวัดพิษณุโลก|Down from Pua to Nan city, through Phrae, into Uttaradit, then south through Wang Thong in Phitsanulok}}</p>
           </div>
         </div>
         <div class="stage">
           <span class="stage-no">2</span>
           <div>
-            <b>เพชรบูรณ์ · เลย · ริมแม่น้ำโขง</b>
-            <p>มุ่งหน้าสู่หล่มสัก จังหวัดเพชรบูรณ์ ขึ้นไปจังหวัดเลย ผ่านปากชม แล้วเลียบแม่น้ำโขงที่เชียงคาน</p>
+            <b>{{t|เพชรบูรณ์ · เลย · ริมแม่น้ำโขง|Phetchabun · Loei · the Mekong}}</b>
+            <p>{{t|มุ่งหน้าสู่หล่มสัก จังหวัดเพชรบูรณ์ ขึ้นไปจังหวัดเลย ผ่านปากชม แล้วเลียบแม่น้ำโขงที่เชียงคาน|Head for Lom Sak in Phetchabun, up into Loei, through Pak Chom, then along the Mekong at Chiang Khan}}</p>
           </div>
         </div>
         <div class="stage">
           <span class="stage-no">3</span>
           <div>
-            <b>ภูเรือ · พิษณุโลก · อุตรดิตถ์</b>
-            <p>วนกลับทางภูเรือ ด่านซ้าย จังหวัดเลย เข้าสู่รอยต่อนครไทย–ชาติตระการ จังหวัดพิษณุโลก ผ่านทองแสนขัน และสี่แยกน้ำอ่าง กลับสู่จังหวัดอุตรดิตถ์อีกครั้ง</p>
+            <b>{{t|ภูเรือ · พิษณุโลก · อุตรดิตถ์|Phu Ruea · Phitsanulok · Uttaradit}}</b>
+            <p>{{t|วนกลับทางภูเรือ ด่านซ้าย จังหวัดเลย เข้าสู่รอยต่อนครไทย–ชาติตระการ จังหวัดพิษณุโลก ผ่านทองแสนขัน และสี่แยกน้ำอ่าง กลับสู่จังหวัดอุตรดิตถ์อีกครั้ง|Loop back through Phu Ruea and Dan Sai in Loei, into the Nakhon Thai–Chat Trakan border country in Phitsanulok, past Thong Saen Khan and the Nam Ang junction, back into Uttaradit again}}</p>
           </div>
         </div>
         <div class="stage">
           <span class="stage-no">4</span>
           <div>
-            <b>แพร่ · เวียงสา · น่าน</b>
-            <p>ผ่านเด่นชัย เข้าจังหวัดแพร่ ร้องกวาง ข้ามเข้าเวียงสา และตัวเมืองน่าน ก่อนผ่านท่าวังผาและกลับสู่ข่วงเมืองปัว</p>
+            <b>{{t|แพร่ · เวียงสา · น่าน|Phrae · Wiang Sa · Nan}}</b>
+            <p>{{t|ผ่านเด่นชัย เข้าจังหวัดแพร่ ร้องกวาง ข้ามเข้าเวียงสา และตัวเมืองน่าน ก่อนผ่านท่าวังผาและกลับสู่ข่วงเมืองปัว|Through Den Chai into Phrae, Rong Kwang, across into Wiang Sa and Nan city, then through Tha Wang Pha and back to Khuang Mueang Pua}}</p>
           </div>
         </div>
       </div>
 
       <div class="sec-head rv" style="margin-top:44px">
-        <p class="eyebrow">จุดเช็คพอยต์</p>
-        <h3 style="font-family:var(--display);font-weight:600;color:var(--on-forest);font-size:1.4rem">18 จุดเช็คพอยต์ตลอดเส้นทาง 1,200 กม.</h3>
-        <p>อ้างอิงแผนปั่น 5 วัน เฉลี่ยวันละ ~240 กม. รวมจุดพักนอนทั้ง 4 คืน</p>
+        <p class="eyebrow">{{t|จุดเช็คพอยต์|Checkpoints}}</p>
+        <h3 style="font-family:var(--display);font-weight:600;color:var(--on-forest);font-size:1.4rem">{{t|18 จุดเช็คพอยต์ตลอดเส้นทาง 1,200 กม.|18 checkpoints along the 1,200km route}}</h3>
+        <p>{{t|อ้างอิงแผนปั่น 5 วัน เฉลี่ยวันละ ~240 กม. รวมจุดพักนอนทั้ง 4 คืน|Based on a 5-day plan, roughly 240km a day, with 4 overnight stops}}</p>
       </div>
       <div class="cps rv">
         <div class="cp cp-start">
           <span class="cp-no">CP0</span>
-          <span class="cp-km">กม. 0</span>
-          <span class="cp-name"><b>ข่วงเมืองปัว อ.ปัว จ.น่าน</b><span>จุดสตาร์ท</span></span>
+          <span class="cp-km">{{t|กม. 0|Km 0}}</span>
+          <span class="cp-name"><b>{{t|ข่วงเมืองปัว อ.ปัว จ.น่าน|Khuang Mueang Pua, Pua, Nan}}</b><span>{{t|จุดสตาร์ท|Start}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP1</span>
-          <span class="cp-km">กม. 16</span>
-          <span class="cp-name"><b>อ.ท่าวังผา</b><span>จ.น่าน</span></span>
+          <span class="cp-km">{{t|กม. 16|Km 16}}</span>
+          <span class="cp-name"><b>{{t|อ.ท่าวังผา|Tha Wang Pha}}</b><span>{{t|จ.น่าน|Nan}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP2</span>
-          <span class="cp-km">กม. 60</span>
-          <span class="cp-name"><b>ตัวเมืองน่าน</b><span>จ.น่าน</span></span>
+          <span class="cp-km">{{t|กม. 60|Km 60}}</span>
+          <span class="cp-name"><b>{{t|ตัวเมืองน่าน|Nan city}}</b><span>{{t|จ.น่าน|Nan}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP3</span>
-          <span class="cp-km">กม. 90</span>
-          <span class="cp-name"><b>ปั๊ม PTT สาขาเวียงสา</b><span>จ.น่าน</span></span>
+          <span class="cp-km">{{t|กม. 90|Km 90}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT สาขาเวียงสา|PTT station, Wiang Sa branch}}</b><span>{{t|จ.น่าน|Nan}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP4</span>
-          <span class="cp-km">กม. 150</span>
-          <span class="cp-name"><b>ปั๊ม PTT ร้องกวาง</b><span>จ.แพร่</span></span>
+          <span class="cp-km">{{t|กม. 150|Km 150}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT ร้องกวาง|PTT station, Rong Kwang}}</b><span>{{t|จ.แพร่|Phrae}}</span></span>
         </div>
         <div class="cp cp-sleep">
           <span class="cp-no">CP5</span>
-          <span class="cp-km">กม. 240</span>
-          <span class="cp-name"><b>ปั๊ม PTT แยกหนองผา อ.เมืองอุตรดิตถ์</b><span class="cp-tag">จุดพักนอน คืนที่ 1</span></span>
+          <span class="cp-km">{{t|กม. 240|Km 240}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT แยกหนองผา อ.เมืองอุตรดิตถ์|PTT station, Nong Pha junction, Mueang Uttaradit}}</b><span class="cp-tag">{{t|จุดพักนอน คืนที่ 1|Overnight stop · Night 1}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP6</span>
-          <span class="cp-km">กม. 330</span>
-          <span class="cp-name"><b>ปั๊ม PTT วังทอง</b><span>จ.พิษณุโลก</span></span>
+          <span class="cp-km">{{t|กม. 330|Km 330}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT วังทอง|PTT station, Wang Thong}}</b><span>{{t|จ.พิษณุโลก|Phitsanulok}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP7</span>
-          <span class="cp-km">กม. 420</span>
-          <span class="cp-name"><b>ปั๊ม PTT แคมป์สน (เขาค้อ)</b><span>หรือแยกพ่อขุนผาเมือง อ.หล่มสัก</span></span>
+          <span class="cp-km">{{t|กม. 420|Km 420}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT แคมป์สน (เขาค้อ)|PTT station, Kaeng Son (Khao Kho)}}</b><span>{{t|หรือแยกพ่อขุนผาเมือง อ.หล่มสัก|or the Pho Khun Pha Mueang junction, Lom Sak}}</span></span>
         </div>
         <div class="cp cp-sleep">
           <span class="cp-no">CP8</span>
-          <span class="cp-km">กม. 520</span>
-          <span class="cp-name"><b>ปั๊ม PTT อ.เมืองเลย</b><span class="cp-tag">จุดพักนอน คืนที่ 2</span></span>
+          <span class="cp-km">{{t|กม. 520|Km 520}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT อ.เมืองเลย|PTT station, Mueang Loei}}</b><span class="cp-tag">{{t|จุดพักนอน คืนที่ 2|Overnight stop · Night 2}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP9</span>
-          <span class="cp-km">กม. 610</span>
-          <span class="cp-name"><b>ตลาดหรือปั๊ม PT อ.ปากชม</b><span>จ.เลย</span></span>
+          <span class="cp-km">{{t|กม. 610|Km 610}}</span>
+          <span class="cp-name"><b>{{t|ตลาดหรือปั๊ม PT อ.ปากชม|The market or PT station, Pak Chom}}</b><span>{{t|จ.เลย|Loei}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP10</span>
-          <span class="cp-km">กม. 650</span>
-          <span class="cp-name"><b>ถนนคนเดินเชียงคาน</b><span>หรือปั๊ม PTT เชียงคาน</span></span>
+          <span class="cp-km">{{t|กม. 650|Km 650}}</span>
+          <span class="cp-name"><b>{{t|ถนนคนเดินเชียงคาน|Chiang Khan Walking Street}}</b><span>{{t|หรือปั๊ม PTT เชียงคาน|or the PTT station, Chiang Khan}}</span></span>
         </div>
         <div class="cp cp-sleep">
           <span class="cp-no">CP11</span>
-          <span class="cp-km">กม. 740</span>
-          <span class="cp-name"><b>ปั๊ม PTT อ.ภูเรือ</b><span class="cp-tag">จุดพักนอน คืนที่ 3</span></span>
+          <span class="cp-km">{{t|กม. 740|Km 740}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT อ.ภูเรือ|PTT station, Phu Ruea}}</b><span class="cp-tag">{{t|จุดพักนอน คืนที่ 3|Overnight stop · Night 3}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP12</span>
-          <span class="cp-km">กม. 790</span>
-          <span class="cp-name"><b>ปั๊ม PTT ด่านซ้าย</b><span>จ.เลย</span></span>
+          <span class="cp-km">{{t|กม. 790|Km 790}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT ด่านซ้าย|PTT station, Dan Sai}}</b><span>{{t|จ.เลย|Loei}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP13</span>
-          <span class="cp-km">กม. 860</span>
-          <span class="cp-name"><b>ปั๊ม PT หรือจุดบริการประชาชน อ.ชาติตระการ</b><span>จ.พิษณุโลก</span></span>
+          <span class="cp-km">{{t|กม. 860|Km 860}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PT หรือจุดบริการประชาชน อ.ชาติตระการ|PT station or the public service point, Chat Trakan}}</b><span>{{t|จ.พิษณุโลก|Phitsanulok}}</span></span>
         </div>
         <div class="cp cp-sleep">
           <span class="cp-no">CP14</span>
-          <span class="cp-km">กม. 960</span>
-          <span class="cp-name"><b>ปั๊ม PTT สี่แยกน้ำอ่าง</b><span class="cp-tag">จุดพักนอน คืนที่ 4 · หรือตัวเมืองอุตรดิตถ์</span></span>
+          <span class="cp-km">{{t|กม. 960|Km 960}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT สี่แยกน้ำอ่าง|PTT station, Nam Ang junction}}</b><span class="cp-tag">{{t|จุดพักนอน คืนที่ 4 · หรือตัวเมืองอุตรดิตถ์|Overnight stop · Night 4 · or Uttaradit city}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP15</span>
-          <span class="cp-km">กม. 1,010</span>
-          <span class="cp-name"><b>ปั๊ม PTT เด่นชัย</b><span>จ.แพร่</span></span>
+          <span class="cp-km">{{t|กม. 1,010|Km 1,010}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT เด่นชัย|PTT station, Den Chai}}</b><span>{{t|จ.แพร่|Phrae}}</span></span>
         </div>
         <div class="cp">
           <span class="cp-no">CP16</span>
-          <span class="cp-km">กม. 1,110</span>
-          <span class="cp-name"><b>ปั๊ม PTT สาขาเวียงสา</b><span>จ.น่าน</span></span>
+          <span class="cp-km">{{t|กม. 1,110|Km 1,110}}</span>
+          <span class="cp-name"><b>{{t|ปั๊ม PTT สาขาเวียงสา|PTT station, Wiang Sa branch}}</b><span>{{t|จ.น่าน|Nan}}</span></span>
         </div>
         <div class="cp cp-end">
           <span class="cp-no">CP17</span>
-          <span class="cp-km">กม. 1,200</span>
-          <span class="cp-name"><b>ข่วงเมืองปัว อ.ปัว จ.น่าน</b><span>เส้นชัย</span></span>
+          <span class="cp-km">{{t|กม. 1,200|Km 1,200}}</span>
+          <span class="cp-name"><b>{{t|ข่วงเมืองปัว อ.ปัว จ.น่าน|Khuang Mueang Pua, Pua, Nan}}</b><span>{{t|เส้นชัย|Finish}}</span></span>
         </div>
       </div>
-      <p class="route-note">ตำแหน่งจุดเช็คพอยต์เป็นข้อมูลเบื้องต้นสำหรับประกาศรับสมัคร จุดที่แน่นอนจะยืนยันอีกครั้งในหนังสือคู่มือเส้นทางก่อนงาน</p>
+      <p class="route-note">{{t|ตำแหน่งจุดเช็คพอยต์เป็นข้อมูลเบื้องต้นสำหรับประกาศรับสมัคร จุดที่แน่นอนจะยืนยันอีกครั้งในหนังสือคู่มือเส้นทางก่อนงาน|Checkpoint locations are preliminary, for the registration announcement. Exact spots will be confirmed in the route handbook before the event.}}</p>
 
-      <img class="route-banner route-banner-end rv" {{img:ridge-valley-overlook:(max-width:640px) 92vw, 90vw}} width="1672" height="941" alt="ถนนลัดเลาะสันเขาลงสู่หุบเขากว้าง มองเห็นทุ่งนาและหมู่บ้านอยู่เบื้องล่าง">
+      <img class="route-banner route-banner-end rv" {{img:ridge-valley-overlook:(max-width:640px) 92vw, 90vw}} width="1672" height="941" alt="{{t|ถนนลัดเลาะสันเขาลงสู่หุบเขากว้าง มองเห็นทุ่งนาและหมู่บ้านอยู่เบื้องล่าง|A road winding down a ridge into a wide valley, rice fields and a village visible below}}">
     </div>
   </section>
 
   <section class="sec sec-cream2" id="tips">
     <div class="wrap">
       <div class="sec-head rv">
-        <p class="eyebrow">ก่อนออกเดินทาง</p>
-        <h2>ข้อแนะนำสำหรับเส้นทางนี้</h2>
+        <p class="eyebrow">{{t|ก่อนออกเดินทาง|Before you go}}</p>
+        <h2>{{t|ข้อแนะนำสำหรับเส้นทางนี้|Tips for this route}}</h2>
       </div>
-      <img class="route-banner rv" {{img:highway-limestone-range:(max-width:640px) 92vw, 90vw}} width="1672" height="941" alt="ถนนสายยาวมุ่งตรงเข้าหาแนวเทือกเขาหินปูน มีหลักกิโลเมตรอยู่ริมทาง">
+      <img class="route-banner rv" {{img:highway-limestone-range:(max-width:640px) 92vw, 90vw}} width="1672" height="941" alt="{{t|ถนนสายยาวมุ่งตรงเข้าหาแนวเทือกเขาหินปูน มีหลักกิโลเมตรอยู่ริมทาง|A long straight road heading toward a limestone mountain range, kilometre markers along the roadside}}">
       <div class="tips rv">
         <div class="tip">
           <svg aria-hidden="true"><use href="#i-nature"/></svg>
-          <h3>ความชันและภูมิประเทศ</h3>
-          <p>เส้นทางส่วนใหญ่เป็นภูเขาสูงชันและทางโค้งสลับซับซ้อน โดยเฉพาะช่วงรอยต่ออุตรดิตถ์–พิษณุโลก–เพชรบูรณ์ และช่วงภูเรือ ควรเตรียมร่างกายและตรวจระบบเบรกให้พร้อม</p>
+          <h3>{{t|ความชันและภูมิประเทศ|Gradient and terrain}}</h3>
+          <p>{{t|เส้นทางส่วนใหญ่เป็นภูเขาสูงชันและทางโค้งสลับซับซ้อน โดยเฉพาะช่วงรอยต่ออุตรดิตถ์–พิษณุโลก–เพชรบูรณ์ และช่วงภูเรือ ควรเตรียมร่างกายและตรวจระบบเบรกให้พร้อม|Most of the route is steep mountains and tight switchbacks, especially around the Uttaradit–Phitsanulok–Phetchabun border country and Phu Ruea. Get your body ready, and check your brakes before you go.}}</p>
         </div>
         <div class="tip">
           <svg aria-hidden="true"><use href="#i-weather"/></svg>
-          <h3>สภาพอากาศ</h3>
-          <p>วางแผนหลีกเลี่ยงช่วงฤดูฝนจัดที่มีความเสี่ยงเรื่องดินสไลด์ และตรวจสอบสภาพอากาศล่วงหน้าก่อนออกเดินทางทุกครั้ง</p>
+          <h3>{{t|สภาพอากาศ|Weather}}</h3>
+          <p>{{t|วางแผนหลีกเลี่ยงช่วงฤดูฝนจัดที่มีความเสี่ยงเรื่องดินสไลด์ และตรวจสอบสภาพอากาศล่วงหน้าก่อนออกเดินทางทุกครั้ง|Plan around the heaviest rainy-season weeks, when landslides are a real risk, and check the forecast before you set off every time.}}</p>
         </div>
         <div class="tip">
           <svg aria-hidden="true"><use href="#i-drink"/></svg>
-          <h3>การเตรียมตัว</h3>
-          <p>ระยะทางรวม 1,200 กิโลเมตร ควรวางแผนจุดพักแรม อาหาร และน้ำดื่มในแต่ละอำเภอให้รอบคอบ เพราะบางช่วงทางขึ้นเขาค่อนข้างห่างไกลชุมชน</p>
+          <h3>{{t|การเตรียมตัว|Getting ready}}</h3>
+          <p>{{t|ระยะทางรวม 1,200 กิโลเมตร ควรวางแผนจุดพักแรม อาหาร และน้ำดื่มในแต่ละอำเภอให้รอบคอบ เพราะบางช่วงทางขึ้นเขาค่อนข้างห่างไกลชุมชน|It's 1,200km total, so plan your overnight stops, food and water carefully for each district — some of the climbs are a fair way from the nearest town.}}</p>
         </div>
       </div>
     </div>
@@ -498,16 +499,16 @@
   <section class="sec sec-cream" id="perks">
     <div class="wrap">
       <div class="sec-head rv">
-        <h2>ค่าสมัครรวมอะไรบ้าง</h2>
-        <p>95 ยูโร ถึง 31 สิงหาคม 2570 จากนั้นปรับเป็น 110 ยูโร</p>
+        <h2>{{t|ค่าสมัครรวมอะไรบ้าง|What's included}}</h2>
+        <p>{{t|95 ยูโร ถึง 31 สิงหาคม 2570 จากนั้นปรับเป็น 110 ยูโร|€95 through 31 August 2027, then €110}}</p>
       </div>
       <div class="perks rv">
-        <div class="perk"><svg aria-hidden="true"><use href="#i-map"/></svg><h3>GPS Tracker</h3><p>ติดตามตัวด้วยเครื่องติดตามระดับมืออาชีพตลอดเส้นทาง</p></div>
-        <div class="perk"><svg aria-hidden="true"><use href="#i-shirt"/></svg><h3>เสื้อสะท้อนแสง</h3><p>ชุดเสื้อสะท้อนแสงประจำรุ่นปฐมฤกษ์</p></div>
-        <div class="perk"><svg aria-hidden="true"><use href="#i-van"/></svg><h3>ฝากกระเป๋าสัมภาระ</h3><p>ฝากได้ที่ข่วงเมืองปัว จุดเริ่มต้น–สิ้นสุด</p></div>
-        <div class="perk"><svg aria-hidden="true"><use href="#i-care"/></svg><h3>ที่พักตลอดเส้นทาง</h3><p>จัดให้ตามจุดพักคืนแต่ละช่วง</p></div>
-        <div class="perk"><svg aria-hidden="true"><use href="#i-drink"/></svg><h3>ปาร์ตี้พาสต้า</h3><p>เมื่อเดินทางถึงข่วงเมืองปัว</p></div>
-        <div class="perk"><svg aria-hidden="true"><use href="#i-medal"/></svg><h3>เสื้อ Finisher</h3><p>สำหรับผู้ที่ปั่นครบภายในเวลาที่กำหนด</p></div>
+        <div class="perk"><svg aria-hidden="true"><use href="#i-map"/></svg><h3>GPS Tracker</h3><p>{{t|ติดตามตัวด้วยเครื่องติดตามระดับมืออาชีพตลอดเส้นทาง|Tracked the whole way with a professional-grade GPS tracker}}</p></div>
+        <div class="perk"><svg aria-hidden="true"><use href="#i-shirt"/></svg><h3>{{t|เสื้อสะท้อนแสง|Reflective jersey}}</h3><p>{{t|ชุดเสื้อสะท้อนแสงประจำรุ่นปฐมฤกษ์|Your own inaugural-edition reflective jersey}}</p></div>
+        <div class="perk"><svg aria-hidden="true"><use href="#i-van"/></svg><h3>{{t|ฝากกระเป๋าสัมภาระ|Baggage drop}}</h3><p>{{t|ฝากได้ที่ข่วงเมืองปัว จุดเริ่มต้น–สิ้นสุด|Drop your bags at Khuang Mueang Pua, the start/finish point}}</p></div>
+        <div class="perk"><svg aria-hidden="true"><use href="#i-care"/></svg><h3>{{t|ที่พักตลอดเส้นทาง|Accommodation along the way}}</h3><p>{{t|จัดให้ตามจุดพักคืนแต่ละช่วง|Arranged for you at every overnight stop}}</p></div>
+        <div class="perk"><svg aria-hidden="true"><use href="#i-drink"/></svg><h3>{{t|ปาร์ตี้พาสต้า|Pasta party}}</h3><p>{{t|เมื่อเดินทางถึงข่วงเมืองปัว|When you make it back to Khuang Mueang Pua}}</p></div>
+        <div class="perk"><svg aria-hidden="true"><use href="#i-medal"/></svg><h3>{{t|เสื้อ Finisher|Finisher jersey}}</h3><p>{{t|สำหรับผู้ที่ปั่นครบภายในเวลาที่กำหนด|For everyone who finishes within the time limit}}</p></div>
       </div>
     </div>
   </section>
@@ -515,16 +516,16 @@
   <section class="sec sec-dark" id="info">
     <div class="wrap">
       <div class="sec-head rv">
-        <h2>ข้อมูลกิจกรรม</h2>
-        <p>รุ่นปฐมฤกษ์ พฤศจิกายน 2570 — เปิดรับสมัครแล้ว</p>
+        <h2>{{t|ข้อมูลกิจกรรม|Event info}}</h2>
+        <p>{{t|รุ่นปฐมฤกษ์ พฤศจิกายน 2570 — เปิดรับสมัครแล้ว|Inaugural edition, November 2027 — registration's open}}</p>
       </div>
       <div class="tbas rv">
-        <div class="tba"><svg aria-hidden="true"><use href="#i-calendar"/></svg><b>วันจัดกิจกรรม</b><span>พฤศจิกายน 2570</span></div>
-        <div class="tba"><svg aria-hidden="true"><use href="#i-clock"/></svg><b>กรอบเวลา</b><span>90–100 ชั่วโมง</span></div>
-        <div class="tba"><svg aria-hidden="true"><use href="#i-pencil"/></svg><b>ค่าสมัคร</b><span>95 ยูโร ถึง 31 ส.ค. 70<br>จากนั้น 110 ยูโร</span></div>
-        <div class="tba"><svg aria-hidden="true"><use href="#i-mountain"/></svg><b>ไต่ระดับสะสม</b><span>9,000–10,000 ม.+</span></div>
-        <div class="tba"><svg aria-hidden="true"><use href="#i-map"/></svg><b>รายละเอียดเส้นทาง</b><span>1,200 กม. · 5 ช่วง · 6 จังหวัด</span></div>
-        <div class="tba"><svg aria-hidden="true"><use href="#i-pin"/></svg><b>เริ่มและจบ</b><span>ข่วงเมืองปัว จ.น่าน</span></div>
+        <div class="tba"><svg aria-hidden="true"><use href="#i-calendar"/></svg><b>{{t|วันจัดกิจกรรม|Event date}}</b><span>{{t|พฤศจิกายน 2570|November 2027}}</span></div>
+        <div class="tba"><svg aria-hidden="true"><use href="#i-clock"/></svg><b>{{t|กรอบเวลา|Time limit}}</b><span>90–100 {{t|ชั่วโมง|hours}}</span></div>
+        <div class="tba"><svg aria-hidden="true"><use href="#i-pencil"/></svg><b>{{t|ค่าสมัคร|Entry fee}}</b><span>{{t|95 ยูโร ถึง 31 ส.ค. 70|€95 through 31 Aug 27}}<br>{{t|จากนั้น 110 ยูโร|then €110}}</span></div>
+        <div class="tba"><svg aria-hidden="true"><use href="#i-mountain"/></svg><b>{{t|ไต่ระดับสะสม|Total elevation gain}}</b><span>9,000–10,000 {{t|ม.+|m+}}</span></div>
+        <div class="tba"><svg aria-hidden="true"><use href="#i-map"/></svg><b>{{t|รายละเอียดเส้นทาง|Route details}}</b><span>1,200 {{t|กม. · 5 ช่วง · 6 จังหวัด|km · 5 stages · 6 provinces}}</span></div>
+        <div class="tba"><svg aria-hidden="true"><use href="#i-pin"/></svg><b>{{t|เริ่มและจบ|Start/finish}}</b><span>{{t|ข่วงเมืองปัว จ.น่าน|Khuang Mueang Pua, Nan}}</span></div>
       </div>
     </div>
   </section>
@@ -534,65 +535,65 @@
       <div class="cta-bar rv">
         <svg class="env" aria-hidden="true"><use href="#i-env"/></svg>
         <div>
-          <b>เปิดรับสมัครแล้ว รุ่นปฐมฤกษ์</b>
-          <span>95 ยูโร ถึง 31 สิงหาคม 2570 — ที่นั่งมีจำนวนจำกัด</span>
+          <b>{{t|เปิดรับสมัครแล้ว รุ่นปฐมฤกษ์|Registration's open — inaugural edition}}</b>
+          <span>{{t|95 ยูโร ถึง 31 สิงหาคม 2570 — ที่นั่งมีจำนวนจำกัด|€95 through 31 August 2027 — limited spots}}</span>
         </div>
-        <a class="btn btn-dark" href="#signup">สมัครเข้าร่วม <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-dark" href="#signup">{{t|สมัครเข้าร่วม|Sign up}} <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
     </div>
   </section>
 
   <section class="sec sec-darker" id="signup">
     <div class="sec-bg">
-      <img {{img:forest-switchback:100vw}} width="1672" height="941" alt="ถนนคดเคี้ยวผ่านป่าเขียวชอุ่มบนไหล่เขา">
+      <img {{img:forest-switchback:100vw}} width="1672" height="941" alt="{{t|ถนนคดเคี้ยวผ่านป่าเขียวชอุ่มบนไหล่เขา|A winding road through lush green forest on a mountainside}}">
     </div>
     <div class="wrap">
       <div class="sec-head rv" style="text-align:center;margin-inline:auto">
-        <p class="eyebrow">ใบสมัคร</p>
-        <h2>สมัครเข้าร่วมรุ่นปฐมฤกษ์</h2>
-        <p>95 ยูโร ถึง 31 สิงหาคม 2570 จากนั้น 110 ยูโร — กรอกข้อมูลไว้ก่อน ทีมงานจะติดต่อกลับพร้อมรายละเอียดการชำระเงิน</p>
+        <p class="eyebrow">{{t|ใบสมัคร|Registration}}</p>
+        <h2>{{t|สมัครเข้าร่วมรุ่นปฐมฤกษ์|Join the inaugural edition}}</h2>
+        <p>{{t|95 ยูโร ถึง 31 สิงหาคม 2570 จากนั้น 110 ยูโร — กรอกข้อมูลไว้ก่อน ทีมงานจะติดต่อกลับพร้อมรายละเอียดการชำระเงิน|€95 through 31 August 2027, then €110 — fill in your details and the team will get back to you with payment info.}}</p>
       </div>
       <form class="form rv" id="regForm" novalidate>
         <div class="row2">
           <div class="field">
-            <label for="f-name">ชื่อ–นามสกุล <span class="req">*</span></label>
-            <input id="f-name" name="name" type="text" autocomplete="name" required placeholder="ชื่อของคุณ">
+            <label for="f-name">{{t|ชื่อ–นามสกุล|Full name}} <span class="req">*</span></label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required placeholder="{{t|ชื่อของคุณ|Your name}}">
           </div>
           <div class="field">
-            <label for="f-tel">เบอร์โทรศัพท์ <span class="req">*</span></label>
+            <label for="f-tel">{{t|เบอร์โทรศัพท์|Phone number}} <span class="req">*</span></label>
             <input id="f-tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" required placeholder="08x-xxx-xxxx">
           </div>
         </div>
         <div class="row2">
           <div class="field">
-            <label for="f-email">อีเมล <span class="req">*</span></label>
+            <label for="f-email">{{t|อีเมล|Email}} <span class="req">*</span></label>
             <input id="f-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
           </div>
           <div class="field">
             <label for="f-line">LINE ID</label>
-            <input id="f-line" name="line" type="text" placeholder="ถ้าสะดวกให้ติดต่อทาง LINE">
+            <input id="f-line" name="line" type="text" placeholder="{{t|ถ้าสะดวกให้ติดต่อทาง LINE|If LINE's easier for you}}">
           </div>
         </div>
         <div class="field">
-          <label for="f-interest">สถานะการสมัคร</label>
+          <label for="f-interest">{{t|สถานะการสมัคร|Your status}}</label>
           <select id="f-interest" name="interest">
-            <option value="">— เลือกสถานะของคุณ —</option>
-            <option>สมัครระยะเต็ม 1,200 กม.</option>
-            <option>ยังไม่แน่ใจ ขอสอบถามก่อน</option>
-            <option>สนใจร่วมเป็นทีมงานหรือผู้สนับสนุน</option>
+            <option value="">{{t|— เลือกสถานะของคุณ —|— Choose your status —}}</option>
+            <option>{{t|สมัครระยะเต็ม 1,200 กม.|Signing up for the full 1,200km}}</option>
+            <option>{{t|ยังไม่แน่ใจ ขอสอบถามก่อน|Not sure yet, just have some questions}}</option>
+            <option>{{t|สนใจร่วมเป็นทีมงานหรือผู้สนับสนุน|Interested in crewing or sponsoring}}</option>
           </select>
         </div>
         <div class="field">
-          <label for="f-note">ข้อความถึงทีมงาน</label>
-          <textarea id="f-note" name="note" placeholder="อยากรู้อะไรเป็นพิเศษ บอกไว้ได้เลย"></textarea>
+          <label for="f-note">{{t|ข้อความถึงทีมงาน|Message for the team}}</label>
+          <textarea id="f-note" name="note" placeholder="{{t|อยากรู้อะไรเป็นพิเศษ บอกไว้ได้เลย|Anything in particular you want to know? Ask away}}"></textarea>
         </div>
         <div class="hp" aria-hidden="true">
-          <label for="f-brevet-ref">อย่ากรอกช่องนี้</label>
+          <label for="f-brevet-ref">{{t|อย่ากรอกช่องนี้|Leave this field blank}}</label>
           <input id="f-brevet-ref" name="brevet_ref" type="text" tabindex="-1" autocomplete="off">
         </div>
-        <button class="btn btn-gold btn-lg" type="submit" id="regSubmit">ส่งใบสมัคร <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        <button class="btn btn-gold btn-lg" type="submit" id="regSubmit">{{t|ส่งใบสมัคร|Send application}} <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
         <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
-        <p class="form-fine">การกดส่งถือว่าคุณยอมรับกติกาของรายการ และยินยอมให้เก็บข้อมูลตาม <a href="privacy.html">นโยบายความเป็นส่วนตัว</a></p>
+        <p class="form-fine">{{t|การกดส่งถือว่าคุณยอมรับกติกาของรายการ และยินยอมให้เก็บข้อมูลตาม <a href="privacy.html">นโยบายความเป็นส่วนตัว</a>|By submitting, you agree to the event rules and consent to us storing your data per our <a href="privacy.html">privacy policy</a>.}}</p>
       </form>
     </div>
   </section>
@@ -619,15 +620,15 @@
         </a>
       </div>
       <div>
-        <h4>ติดต่อเรา</h4>
+        <h4>{{t|ติดต่อเรา|Contact}}</h4>
         <div class="ftr-links">
           <a href="mailto:info@lannaeast1200.com"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>info@lannaeast1200.com</a>
           <a href="tel:0812345678"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>081-234-5678</a>
-          <a href="privacy.html">นโยบายความเป็นส่วนตัว</a>
+          <a href="privacy.html">{{t|นโยบายความเป็นส่วนตัว|Privacy policy}}</a>
         </div>
       </div>
       <div>
-        <h4>ติดตามเรา</h4>
+        <h4>{{t|ติดตามเรา|Follow us}}</h4>
         <div class="socials">
           <a href="https://facebook.com/" aria-label="Facebook"><svg aria-hidden="true"><use href="#i-fb"/></svg></a>
           <a href="https://instagram.com/" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-ig"/></svg></a>
@@ -637,14 +638,14 @@
       </div>
     </div>
     <div class="ftr-bot">
-      <p class="demo-note"><b>เว็บไซต์ตัวอย่าง (เดโม่)</b> — ชื่อผู้จัด อีเมล ช่องทางโซเชียล และรายละเอียดกิจกรรมทั้งหมดเป็นข้อมูลสมมติเพื่อสาธิตงานออกแบบเท่านั้น ภาพถ่ายประกอบเป็นภาพที่ผู้จัดงานส่งมาให้ใช้</p>
+      <p class="demo-note">{{t|<b>เว็บไซต์ตัวอย่าง (เดโม่)</b> — ชื่อผู้จัด อีเมล ช่องทางโซเชียล และรายละเอียดกิจกรรมทั้งหมดเป็นข้อมูลสมมติเพื่อสาธิตงานออกแบบเท่านั้น ภาพถ่ายประกอบเป็นภาพที่ผู้จัดงานส่งมาให้ใช้|<b>Demo website</b> — the organiser's name, email, social links and every event detail here are fictional, for design purposes only. The photos are real, supplied by the organiser.}}</p>
       <p class="wlc">
-        <b>ออกแบบและพัฒนาโดย Web Lead Craft</b>
-        <span>รับทำเว็บไซต์ธุรกิจ เริ่มต้น 990 บาท</span>
+        <b>{{t|ออกแบบและพัฒนาโดย Web Lead Craft|Designed and built by Web Lead Craft}}</b>
+        <span>{{t|รับทำเว็บไซต์ธุรกิจ เริ่มต้น 990 บาท|Business websites from ฿990}}</span>
         <span>LINE: kitty4uu</span>
-        <span>โทร 099-151-4049</span>
+        <span>{{t|โทร 099-151-4049|Call 099-151-4049}}</span>
       </p>
-      <p>© 2569 ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200 — All rights reserved.</p>
+      <p>{{t|© 2569 ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200 — สงวนลิขสิทธิ์|© 2026 Lanna East to Mekong 1200 — All rights reserved.}}</p>
     </div>
   </div>
 </footer>
@@ -665,10 +666,12 @@
 
   var burger = document.getElementById('burger');
   var nav = document.getElementById('nav');
+  var MENU_LABEL = { th: { open: 'เปิดเมนู', close: 'ปิดเมนู' }, en: { open: 'Open menu', close: 'Close menu' } };
   burger.addEventListener('click', function () {
     var open = nav.classList.toggle('open');
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    burger.setAttribute('aria-label', open ? 'ปิดเมนู' : 'เปิดเมนู');
+    var L = MENU_LABEL[document.documentElement.getAttribute('data-lang')] || MENU_LABEL.th;
+    burger.setAttribute('aria-label', open ? L.close : L.open);
   });
   nav.addEventListener('click', function (e) {
     if (e.target.closest('a')) { nav.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); }
@@ -692,22 +695,44 @@
   var submit = document.getElementById('regSubmit');
   var TEL = /^[0-9+\-\s()]{9,}$/;
   var MAIL = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
-  function say(kind, text) { msg.className = 'form-msg show ' + kind; msg.textContent = text; }
+  var MSG = {
+    th: {
+      required: 'กรุณากรอกชื่อ เบอร์โทร และอีเมลให้ครบก่อนส่ง',
+      tel: 'เบอร์โทรศัพท์ดูไม่ถูกต้อง ลองตรวจอีกครั้ง',
+      mail: 'อีเมลดูไม่ถูกต้อง ลองตรวจอีกครั้ง',
+      sending: 'กำลังส่ง…',
+      sent: 'รับใบสมัครแล้ว ทีมงานจะติดต่อกลับพร้อมรายละเอียดการชำระเงิน',
+      fail: 'ส่งไม่สำเร็จ กรุณาลองใหม่ หรือติดต่อ info@lannaeast1200.com'
+    },
+    en: {
+      required: 'Please fill in your name, phone and email before sending',
+      tel: 'That phone number doesn’t look right — check it again',
+      mail: 'That email doesn’t look right — check it again',
+      sending: 'Sending…',
+      sent: 'Got your application — the team will be in touch with payment details',
+      fail: 'Couldn’t send that. Try again, or email info@lannaeast1200.com'
+    }
+  };
+  function say(kind, key) {
+    var lang = document.documentElement.getAttribute('data-lang') || 'th';
+    msg.className = 'form-msg show ' + kind;
+    msg.textContent = (MSG[lang] || MSG.th)[key];
+  }
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var name = form.name.value.trim(), tel = form.tel.value.trim(), email = form.email.value.trim();
-    if (!name || !tel || !email) { say('err', 'กรุณากรอกชื่อ เบอร์โทร และอีเมลให้ครบก่อนส่ง'); return; }
-    if (!TEL.test(tel)) { say('err', 'เบอร์โทรศัพท์ดูไม่ถูกต้อง ลองตรวจอีกครั้ง'); return; }
-    if (!MAIL.test(email)) { say('err', 'อีเมลดูไม่ถูกต้อง ลองตรวจอีกครั้ง'); return; }
+    if (!name || !tel || !email) { say('err', 'required'); return; }
+    if (!TEL.test(tel)) { say('err', 'tel'); return; }
+    if (!MAIL.test(email)) { say('err', 'mail'); return; }
     submit.disabled = true;
-    say('ok', 'กำลังส่ง…');
+    say('ok', 'sending');
     // The success panel appears only once delivery is confirmed. A form that
     // says "sent" and delivered nothing is the worst thing this page can do.
     window.wlcSend(form).then(function (ok) {
       submit.disabled = false;
-      if (ok) { form.reset(); say('ok', 'รับใบสมัครแล้ว ทีมงานจะติดต่อกลับพร้อมรายละเอียดการชำระเงิน'); }
-      else { say('err', 'ส่งไม่สำเร็จ กรุณาลองใหม่ หรือติดต่อ info@lannaeast1200.com'); }
+      if (ok) { form.reset(); say('ok', 'sent'); }
+      else { say('err', 'fail'); }
     });
   });
 
