@@ -1,0 +1,11 @@
+# id|who|spoken text|caption
+b_roll|B|Zoo. / Let's roll.|Zoo. Let's roll.
+b_sharp|B|Eyes up. / Stay sharp.|Eyes up. Stay sharp.
+d_feed|D|No feeding, folks!|No feeding, folks!
+b_back|B|Give. / It. / Back.|Give. It. Back.
+b_easy|B|Easy, / big guy.|Easy, big guy.
+b_family|B|She's family.|She's family.
+b_respect|B|Respect.|Respect.
+b_time|B|I've got time.|I've got time.
+b_wait|B|Worth the wait.|Worth the wait.
+b_partners|B|Partners.|Partners.
