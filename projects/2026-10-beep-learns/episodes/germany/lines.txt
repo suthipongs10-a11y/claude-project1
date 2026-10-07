@@ -1,0 +1,9 @@
+# id|who|spoken text|caption
+b_trash|B|Trash!|Trash!
+k_pfand|K|Pfand!|Pfand!
+b_pfand|B|Pfand?|Pfand?
+j_prost|J|Prost!|Prost!
+b_eyes|B|Eyes!|Eyes!
+b_prost|B|Prost!|PROST!
+c_rot|C|Rot!|Rot!
+b_wait|B|Wait!|Wait!

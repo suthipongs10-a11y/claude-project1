@@ -1,0 +1,4 @@
+{ "B": {"speaker": 552, "length": 0.95, "pitch": 1.25, "robot": 0.22},
+  "K": {"speaker": 529, "length": 1.0, "pitch": 0.95},
+  "J": {"speaker": 368, "length": 0.95, "pitch": 1.0},
+  "C": {"speaker": 23, "length": 0.95, "pitch": 1.3} }
