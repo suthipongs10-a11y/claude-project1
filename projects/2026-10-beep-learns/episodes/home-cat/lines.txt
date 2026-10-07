@@ -1,0 +1,6 @@
+# id|who|spoken text|caption
+b_good|B|Be good!|Be good!
+b_no|B|No, / no, / no!|No, no, no!
+b_why|B|Why?!|Why?!
+b_zoom|B|Zoom-ees?!|Zoomies?!
+b_love|B|I / love you.|I love you.
