@@ -1,0 +1,48 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>BEEP Learns</title>
+<style>
+@font-face{font-family:FR;font-weight:500;src:url(node_modules/@fontsource/fredoka/files/fredoka-latin-500-normal.woff2)}
+@font-face{font-family:FR;font-weight:600;src:url(node_modules/@fontsource/fredoka/files/fredoka-latin-600-normal.woff2)}
+@font-face{font-family:FR;font-weight:700;src:url(node_modules/@fontsource/fredoka/files/fredoka-latin-700-normal.woff2)}
+@font-face{font-family:PA;src:url(node_modules/@fontsource/pacifico/files/pacifico-latin-400-normal.woff2)}
+html,body{margin:0;background:#000;overflow:hidden}
+svg{position:absolute;left:0;top:0}
+text{font-family:FR,sans-serif;font-weight:700}
+</style></head>
+<body><svg id="svg"></svg>
+<!-- KIT (locked) -->
+<script src="kit/engine.js"></script><script src="kit/beep.js"></script><script src="kit/cat.js"></script><script src="kit/person.js"></script><script src="kit/overlays.js"></script>
+<!-- EPISODE (per clip) -->
+<script src="lipsync.js"></script><script src="story.js"></script><script src="episode.js"></script>
+<script>
+// Boot: layers, overlays, seek(t). Episode code lives in episode.js as window.EP = {build(L), update(t, L), camera(t)}
+const { S, W, H } = MS, svg = document.getElementById('svg');
+svg.setAttribute('width', W); svg.setAttribute('height', H); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+S('defs', {}, svg);
+const world = S('g', {}, svg);
+const L = { svg, world, sky: S('g', {}, world), set: S('g', {}, world), back: S('g', {}, world), mid: S('g', {}, world), front: S('g', {}, world), fxl: S('g', {}, world) };
+L.fx = MS.makeFX(L.fxl);
+L.ui = S('g', {}, svg);
+// lip-sync helper: mouth openness for a speaker at time t
+MS.mouth = (who, t) => { for (const [id, a] of STORY.VO) { const Lp = window.LIPS[id]; if (Lp && Lp.who === who && t >= a && t < a + Lp.dur) return Lp.env[Math.floor((t - a) * 30)] || 0; } return 0; };
+MS.speaking = (who, t) => STORY.VO.some(([id, a]) => window.LIPS[id] && window.LIPS[id].who === who && t >= a && t < a + window.LIPS[id].dur);
+MS.seg = (id, i) => STORY.VO.find(v => v[0] === id)[1] + (window.LIPS[id].segs[i] || 0);
+EP.build(L);
+const subs = MS.makeSubs(L.ui);
+const lines = STORY.VO.filter(([id]) => window.LIPS[id]).map(([id, a]) => [id, a, window.LIPS[id].who, window.LIPS[id].text, window.LIPS[id].dur]);
+const title = STORY.TITLE ? MS.makeTitle(L.ui, STORY.TITLE.text, STORY.TITLE.sub, STORY.TITLE.bg) : null;
+const endc = STORY.END ? MS.makeEndCard(L.ui, STORY.END.words, STORY.END.cta) : null;
+const iris = MS.makeIris(L.ui);
+const fade = S('rect', { x: 0, y: 0, width: W, height: H, fill: '#000', opacity: 0 }, L.ui);
+window.seek = function (t) {
+  const c = EP.camera(t), sh = MS.shake(STORY.SHAKE || [], t);
+  world.setAttribute('transform', `translate(${W / 2},${H / 2}) scale(${c.z}) translate(${-c.x + sh[0]},${-c.y + sh[1]})`);
+  L.cam = c; EP.update(t, L); L.fx.draw(t);
+  subs.draw(t, lines, STORY.NAMES);
+  if (title) title.draw(t, 0, STORY.TITLE.end);
+  if (endc) endc.draw(t, STORY.END.a, STORY.DURATION + 1);
+  const ir = EP.iris ? EP.iris(t) : null; iris.draw(ir ? ir.r : null, ir && ir.x, ir && ir.y);
+  fade.setAttribute('opacity', MS.clamp((t - (STORY.DURATION - .6)) / .6));
+};
+window.ready = Promise.all(['700 40px FR', '600 40px FR', '40px PA'].map(f => document.fonts.load(f))).then(() => { seek(0); return true; });
+</script></body></html>

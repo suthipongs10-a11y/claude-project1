@@ -1,0 +1,3 @@
+# id|who|spoken text (use / for comic pause, phonetic spelling ok)|caption
+a_hello|A|Kon-nee-chee-wah!|Konnichiwa!
+b_hello|B|Ko... / kon-nee-chee-wah?|Ko... konnichiwa?
