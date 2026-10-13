@@ -596,6 +596,9 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .assure-item .ic { width: 1.5em; height: 1.5em; color: var(--highlight); margin-top: 0.15em; }
 .assure-item b { display: block; color: var(--on-panel); font-weight: 600; font-size: 0.9575rem; line-height: 1.5; }
 .assure-item > div > span { font-size: 0.84rem; line-height: 1.6; color: var(--on-panel-dim); }
+/* Safari breaks Thai inside a word ("เพื่อลดผลก|ระทบ"). Only for a short phrase:
+   a long translated phrase must never get this (see the nowrap rule in CLAUDE.md). */
+.nb { white-space: nowrap; }
 
 /* ---------- services ---------- */
 
@@ -791,7 +794,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
 /* ---------- letters ---------- */
 
-.rev-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 26px); align-items: stretch; }
+.rev-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 26px); align-items: stretch; }
 .rev {
   margin: 0;
   display: flex;
@@ -815,7 +818,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .cover .sec-head h2 { color: var(--on-panel); }
 .cover .sec-head .label { color: var(--highlight); }
 .cover .sec-head .label::before, .cover .sec-head .label::after { background: var(--rule-on-panel); }
-.cover-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.cover-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .cover-item {
   border: 1px solid var(--read-panel-line);
   border-radius: 14px;
@@ -835,8 +838,8 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
 /* ---------- process ---------- */
 
-.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(22px, 3vw, 34px); }
-.step { display: grid; gap: 12px; }
+.steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(22px, 3vw, 34px); }
+.step { display: grid; gap: 12px; align-content: start; }
 .step-n {
   font-family: var(--font-display);
   font-weight: 700;
@@ -1028,7 +1031,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 /* ---------- responsive ---------- */
 
 @media (max-width: 1180px) {
-  .cover-grid { grid-template-columns: repeat(3, 1fr); }
+  .steps { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 1080px) {
