@@ -449,7 +449,6 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .sec-photo .gear-copy,
 .sec-photo .std-copy,
 .sec-photo .book-copy,
-.sec-photo .faq,
 .sec-photo .step,
 .sec-photo .plan-note,
 .sec-photo .cl-note {
@@ -491,7 +490,6 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 #standard   { --band-pos: 50% 44%; }  /* the ladder, mid-kitchen */
 #coverage   { --band-pos: 55% 22%; }  /* the building's own sign, which a centred crop cuts */
 #process    { --band-pos: 50% 50%; }  /* under the stainless line */
-#faq        { --band-pos: 50% 40%; }  /* the drill at the ceiling edge */
 #contact    { --band-pos: 50% 55%; }  /* the truck bed and its kit */
 
 /* the mark, blown up and cropped — pattern, not illustration.
@@ -794,7 +792,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
 /* ---------- letters ---------- */
 
-.rev-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 26px); align-items: stretch; }
+.rev-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 26px); align-items: stretch; }
 .rev {
   margin: 0;
   display: flex;
@@ -851,44 +849,6 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 }
 .step h3 { font-size: 1.14rem; padding-top: 14px; border-top: 1px solid var(--panel-line); color: var(--on-panel); }
 .step p { font-size: 0.9125rem; line-height: 1.78; }
-
-/* ---------- faq ---------- */
-
-/* Rules between the rows, not around them: the accordion sits inside a
-   --read-panel now, so a border on the outer edges would double the panel's
-   own and a trailing one would float above its bottom padding. */
-.faq { max-width: 820px; margin-inline: auto; }
-.faq details + details { border-top: 1px solid var(--panel-line); }
-.faq summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 21px 0;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.08rem;
-  line-height: 1.55;
-  color: var(--on-panel);
-  cursor: pointer;
-  list-style: none;
-}
-.faq summary::-webkit-details-marker { display: none; }
-.faq summary:hover { color: var(--highlight); }
-.faq .mark {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1px solid var(--panel-line);
-  color: var(--highlight);
-  display: grid;
-  place-items: center;
-  flex: none;
-  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-}
-.faq .mark svg { width: 14px; height: 14px; }
-.faq details[open] summary .mark { transform: rotate(45deg); background: var(--mark-open); border-color: var(--mark-open); }
-.faq-a { padding-bottom: 22px; font-size: 0.9375rem; line-height: 1.85; max-width: 62em; }
 
 /* ---------- survey request ---------- */
 
@@ -1074,7 +1034,6 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   .doc-stamp { position: static; transform: rotate(-6deg); margin: 16px auto 0; }
   .form-grid { grid-template-columns: 1fr; }
   .foot-grid { grid-template-columns: 1fr; gap: 30px; }
-  .faq-a { padding-right: 0; }
   .mcta { display: grid; }
   /* lift the cookie bar clear of the mobile action bar it would otherwise sit on */
   .mcta ~ .cookie { bottom: calc(80px + env(safe-area-inset-bottom)); }
