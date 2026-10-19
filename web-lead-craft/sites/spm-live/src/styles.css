@@ -597,6 +597,8 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 /* Safari breaks Thai inside a word ("เพื่อลดผลก|ระทบ"). Only for a short phrase:
    a long translated phrase must never get this (see the nowrap rule in CLAUDE.md). */
 .nb { white-space: nowrap; }
+/* one emphasised word inside running copy; line-height 1 keeps the row spacing even */
+.big { font-size: 1.25em; font-weight: 700; line-height: 1; color: var(--on-panel); }
 
 /* ---------- services ---------- */
 
@@ -1099,8 +1101,6 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .legal-top { border-bottom: 1px solid var(--line); background: #fff; }
 .legal-top-in { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-block: 12px; }
 .legal-top-end { display: flex; align-items: center; gap: 14px; }
-.legal-home { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; letter-spacing: 0.03em; color: var(--ink); text-decoration: none; }
-.legal-home svg { width: 32px; height: 32px; border-radius: 8px; flex: none; }
 .legal-tel { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: 0.95rem; color: var(--brand); text-decoration: none; }
 .legal-tel:hover { color: var(--brand-deep); }
 
