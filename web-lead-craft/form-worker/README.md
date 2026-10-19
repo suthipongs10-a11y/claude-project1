@@ -109,6 +109,46 @@ w.FORM_ENDPOINT = 'https://wlc-form.<subdomain>.workers.dev/';
 **4. ทดสอบก่อนส่งมอบ** กรอกฟอร์มจริงบนเว็บที่ deploy แล้ว แล้วดูว่าเข้าปลายทางจริง
 ถ้าไม่เข้า เปิด `npx wrangler tail` ดู log สด ๆ ได้เลย
 
+## เว็บที่มีหลายฟอร์ม — แยกปลายทางตามฟอร์ม
+
+เว็บหนึ่งมีได้หลายฟอร์ม (เช่น SPM: ขอสำรวจ → ฝ่ายการตลาด, สมัครงาน / แฟรนไชส์ → HR)
+หน้าเว็บส่ง `<input type="hidden" name="form" value="job">` มา แล้ว Worker หา
+`forms.job` ใน entry ของเว็บนั้น **ฟอร์มบอกได้แค่ชื่อ ปลายทางยังมาจาก SITES เสมอ**
+
+```json
+"https://spm.com": {
+  "name": "Scientific Pest Management",
+  "emailTo": ["bangkok@spm.com", "wattanathamm@spm.com"],
+  "forms": {
+    "job":       { "label": "ใบสมัครงาน",   "emailTo": ["hr.th@spm.com"], "attachPdf": true },
+    "franchise": { "label": "สนใจแฟรนไชส์", "emailTo": ["hr.th@spm.com"] }
+  }
+}
+```
+
+- ค่าใน `forms.<ชื่อ>` **ทับ** ค่าของเว็บ ที่ไม่ได้เขียนก็ใช้ของเว็บ (เช่น `emailFrom`)
+- `label` ขึ้นเป็นหัวเรื่องอีเมลแทน "ลูกค้าใหม่" — HR แยกใบสมัครออกจากลูกค้าได้ก่อนเปิด
+- ชื่อฟอร์มที่ไม่รู้จัก (หรือไม่ส่งมา) **ตกไปที่ปลายทางหลักของเว็บ** ไม่ทิ้ง
+- entry ของเว็บเอง**ต้องมีช่องทางส่งที่ครบ** — `forms` แค่เปลี่ยนปลายทาง
+
+### แนบ CV (PDF) — `attachPdf: true`
+
+ฟอร์มที่ตั้ง `attachPdf` รับไฟล์ช่อง `file` ได้หนึ่งไฟล์ ส่งเป็น multipart
+แล้ว Worker แนบไปกับอีเมล — **ฟอร์มอื่นของเว็บเดียวกันส่งไฟล์มาก็ถูกทิ้ง**
+
+| เช็ก | ถ้าไม่ผ่าน |
+|---|---|
+| ไม่เกิน 4MB | `413 file_too_large` |
+| เป็น PDF จริง (ดูจากไบต์ `%PDF-` ไม่ใช่ชื่อไฟล์) | `415 file_not_pdf` |
+| ปลายทางมีอีเมล (LINE แนบ PDF ไม่ได้) | `500 server_misconfigured` |
+
+ชื่อไฟล์ถูกล้างเหลือแค่ตัวอักษร (ไทยได้) ตัวเลข ช่องว่าง `._()-` แล้วบังคับลงท้าย `.pdf`
+
+**เรื่อง CPU ของแพ็กเกจฟรี** — วัดบน workerd แล้ว ไฟล์ 4MB ใช้ CPU ราว 10ms
+ซึ่งเท่ากับเพดานต่อ request ของ Workers ฟรีพอดี CV ทั่วไป (≤ 1–2MB) ใช้แค่ส่วนเดียว
+ถ้า log ขึ้น `Exceeded CPU` บ่อย ๆ คืออัปเกรด Workers Paid (5 USD/เดือน, เพดาน 30 วินาที)
+— ไม่ต้องแก้โค้ด ระหว่างนี้คนสมัครจะเห็นกล่องแดงพร้อมอีเมล HR ไม่ใช่หายเงียบ
+
 ## Reply-To — เหตุผลที่มีช่องอีเมลในฟอร์ม
 
 ถ้าคนกรอกใส่อีเมลมาด้วย Worker จะตั้งเป็น `Reply-To` ของอีเมลที่ส่งถึงลูกค้า
@@ -129,7 +169,8 @@ w.FORM_ENDPOINT = 'https://wlc-form.<subdomain>.workers.dev/';
 | field allowlist | รับเฉพาะช่องที่เรารู้จัก ที่เหลือทิ้ง — ฟอร์มนี้ส่งต่ออะไรก็ได้ไม่ได้ |
 
 ช่องที่ Worker รับ (นอกจากนี้ทิ้งทั้งหมด):
-`name` `company` `tel` `email` `type` `pest` `size` `date` `slot` `note`
+`position` `name` `company` `tel` `email` `province` `type` `pest` `size` `date` `slot` `note`
+(+ `form` เลือกปลายทาง, `file` ไฟล์แนบ บนฟอร์มที่เปิด `attachPdf`)
 — ถ้าฟอร์มของเว็บใหม่ต้องใช้ชื่อช่องที่ไม่มีในลิสต์นี้ ต้องเพิ่มใน `LIMITS`
 และ `LABELS` ใน `src/worker.mjs` ก่อน ไม่งั้นข้อมูลจะหายเงียบ ๆ
 
@@ -145,7 +186,7 @@ w.FORM_ENDPOINT = 'https://wlc-form.<subdomain>.workers.dev/';
 ## เทสต์
 
 ```bash
-node --test form-worker/test/worker.test.mjs      # กฎทั้งหมดของ Worker (34 เคส)
+node --test form-worker/test/worker.test.mjs      # กฎทั้งหมดของ Worker (47 เคส)
 ```
 
 เทสต์ยิงเข้า handler ตัวจริงที่ deploy ไม่ใช่โค้ดจำลอง มีแต่ขา request ออก

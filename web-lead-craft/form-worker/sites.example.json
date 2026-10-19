@@ -15,9 +15,13 @@
   },
 
   "https://spm.example.com": {
-    "_comment": "Email only — an office that works in Outlook, and two people on the marketing desk. No LINE keys, and that is a complete configuration.",
+    "_comment": "Email only — an office that works in Outlook, and two people on the marketing desk. No LINE keys, and that is a complete configuration. `forms` sends the job and franchise forms to HR instead; the page names the form, never the inbox.",
     "name": "Scientific Pest Management",
-    "emailTo": ["bangkok@spm.example.com", "marketing@spm.example.com"]
+    "emailTo": ["bangkok@spm.example.com", "marketing@spm.example.com"],
+    "forms": {
+      "job": { "label": "ใบสมัครงาน", "emailTo": ["hr@spm.example.com"], "attachPdf": true },
+      "franchise": { "label": "สนใจแฟรนไชส์", "emailTo": ["hr@spm.example.com"] }
+    }
   },
 
   "https://altahome.example.com": {

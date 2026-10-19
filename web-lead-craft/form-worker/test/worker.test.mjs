@@ -443,3 +443,187 @@ test('a note cannot inject markup into the HTML part of the email', async () => 
     assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/);
   } finally { net.restore(); }
 });
+
+
+// --- several forms on one site ----------------------------------------------
+//
+// SPM has three: the survey request goes to marketing, job applications and
+// franchise enquiries to HR. The page names the form; SITES names the inbox.
+
+const FORMS_SITE = {
+  name: 'SPM',
+  emailTo: ['bangkok@spm.example'],
+  forms: {
+    job: { label: 'ใบสมัครงาน', emailTo: ['hr@spm.example'], attachPdf: true },
+    franchise: { label: 'สนใจแฟรนไชส์', emailTo: ['hr@spm.example'] },
+  },
+};
+
+test('a named form reaches its own inbox, and the survey keeps the old one', async () => {
+  const net = stubNet();
+  try {
+    const env = envFor(FORMS_SITE, EMAIL_ENV);
+    assert.equal((await call(post({ ...valid, form: 'franchise', province: 'เชียงใหม่' }), env)).status, 200);
+    assert.equal((await call(post(valid), env)).status, 200);
+    assert.deepEqual(net.calls.email[0].body.to, ['hr@spm.example']);
+    assert.deepEqual(net.calls.email[1].body.to, ['bangkok@spm.example']);
+    assert.match(net.calls.email[0].body.text, /จังหวัดที่สนใจ: เชียงใหม่/);
+  } finally { net.restore(); }
+});
+
+test('an unknown form name still reaches somebody rather than nobody', async () => {
+  const net = stubNet();
+  try {
+    for (const form of ['careers', '__proto__', 'toString', 'constructor']) {
+      const res = await call(post({ ...valid, form }), envFor(FORMS_SITE, EMAIL_ENV));
+      assert.equal(res.status, 200, form);
+    }
+    for (const sent of net.calls.email) assert.deepEqual(sent.body.to, ['bangkok@spm.example']);
+  } finally { net.restore(); }
+});
+
+test('HR can tell an application from a customer before opening it', async () => {
+  const net = stubNet();
+  try {
+    await call(post({ ...valid, form: 'job', position: 'Technician / ช่างบริการกำจัดแมลง' }),
+      envFor(FORMS_SITE, EMAIL_ENV));
+    const { subject, text } = net.calls.email[0].body;
+    assert.match(subject, /ใบสมัครงาน Technician/);
+    assert.doesNotMatch(subject, /ลูกค้าใหม่/);
+    assert.match(text, /^📩 ใบสมัครงานจากเว็บไซต์ SPM/);
+    assert.match(text, /ตำแหน่งที่สมัคร: Technician/);
+  } finally { net.restore(); }
+});
+
+test('a form entry that names no working channel is a loud fault', async () => {
+  const site = { ...FORMS_SITE, forms: { job: { emailTo: 'not-an-address' } } };
+  const net = stubNet();
+  try {
+    const res = await call(post({ ...valid, form: 'job' }), envFor(site, EMAIL_ENV));
+    assert.equal(res.status, 500);
+    assert.equal(net.calls.email.length, 0);
+  } finally { net.restore(); }
+});
+
+// --- a CV on the job form ----------------------------------------------------
+
+const pdfBytes = (size = 2048) => {
+  const b = new Uint8Array(size).fill(0x20);
+  b.set(new TextEncoder().encode('%PDF-1.7\n'));
+  return b;
+};
+
+/** A real multipart post: the browser's own FormData, boundary and all. */
+const postForm = (fields, file, { headers = {} } = {}) => {
+  const fd = new FormData();
+  for (const [k, v] of Object.entries(fields)) fd.append(k, String(v));
+  if (file) fd.append('file', file);
+  return new Request('https://form.example/', { method: 'POST', headers: { origin: ORIGIN, ...headers }, body: fd });
+};
+
+const job = { ...valid, form: 'job', position: 'Inspector / เจ้าหน้าที่ตรวจสอบอาวุโส' };
+
+test('a PDF reaches HR as an attachment, byte for byte', async () => {
+  const net = stubNet();
+  try {
+    const bytes = pdfBytes(5000);
+    const res = await call(postForm(job, new File([bytes], 'สมชาย ใจดี CV.pdf', { type: 'application/pdf' })),
+      envFor(FORMS_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    const sent = net.calls.email[0].body;
+    assert.deepEqual(sent.to, ['hr@spm.example']);
+    assert.equal(sent.attachments.length, 1);
+    assert.equal(sent.attachments[0].filename, 'สมชาย ใจดี CV.pdf');
+    assert.deepEqual(new Uint8Array(Buffer.from(sent.attachments[0].content, 'base64')), bytes);
+    assert.match(sent.text, /ไฟล์แนบ: สมชาย ใจดี CV\.pdf \(5 KB\)/);
+  } finally { net.restore(); }
+});
+
+test('something that is not a PDF is refused, whatever it is called', async () => {
+  const net = stubNet();
+  try {
+    const exe = new File([new TextEncoder().encode('MZ\x90\x00 not a pdf')], 'cv.pdf', { type: 'application/pdf' });
+    const res = await call(postForm(job, exe), envFor(FORMS_SITE, EMAIL_ENV));
+    assert.equal(res.status, 415);
+    assert.deepEqual(await res.json(), { ok: false, error: 'file_not_pdf' });
+    assert.equal(net.calls.email.length, 0);
+  } finally { net.restore(); }
+});
+
+test('a PDF over 4MB is refused, and so is a body claiming to be one', async () => {
+  const net = stubNet();
+  try {
+    const big = new File([pdfBytes(4 * 1024 * 1024 + 1)], 'cv.pdf');
+    const res = await call(postForm(job, big), envFor(FORMS_SITE, EMAIL_ENV));
+    assert.equal(res.status, 413);
+    assert.deepEqual(await res.json(), { ok: false, error: 'file_too_large' });
+
+    const claimed = postForm(job, new File([pdfBytes()], 'cv.pdf'),
+      { headers: { 'content-length': String(5 * 1024 * 1024) } });
+    assert.equal((await call(claimed, envFor(FORMS_SITE, EMAIL_ENV))).status, 413);
+    assert.equal(net.calls.email.length, 0);
+  } finally { net.restore(); }
+});
+
+test('a site with no file-taking form keeps the small cap', async () => {
+  const res = await call(postForm(valid, null, { headers: { 'content-length': String(9 * 1024) } }),
+    envFor(EMAIL_SITE, EMAIL_ENV));
+  assert.equal(res.status, 413);
+});
+
+test('a file sent to a form that takes none is dropped, the enquiry is not', async () => {
+  const net = stubNet();
+  try {
+    const res = await call(postForm({ ...valid, form: 'franchise' }, new File([pdfBytes()], 'cv.pdf')),
+      envFor(FORMS_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    assert.equal(net.calls.email[0].body.attachments, undefined);
+  } finally { net.restore(); }
+});
+
+test('an application without a file still arrives', async () => {
+  // An empty file input posts a nameless zero-byte file. That is "no CV",
+  // and HR would rather have the phone number than nothing.
+  const net = stubNet();
+  try {
+    const res = await call(postForm(job, new File([], '')), envFor(FORMS_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    assert.equal(net.calls.email[0].body.attachments, undefined);
+  } finally { net.restore(); }
+});
+
+test('the attachment name cannot carry a path or a second extension', async () => {
+  const net = stubNet();
+  try {
+    await call(postForm(job, new File([pdfBytes()], '../../evil<script>.exe.pdf')), envFor(FORMS_SITE, EMAIL_ENV));
+    const name = net.calls.email[0].body.attachments[0].filename;
+    assert.doesNotMatch(name, /[\/<>]/);
+    assert.match(name, /\.pdf$/);
+    assert.equal(name.match(/\.pdf/g).length, 1);
+  } finally { net.restore(); }
+});
+
+test('a CV with only LINE to go to is a loud fault, not a lost file', async () => {
+  const site = { ...SITES[ORIGIN], forms: { job: { attachPdf: true } } };
+  const net = stubNet();
+  try {
+    const res = await call(postForm(job, new File([pdfBytes()], 'cv.pdf')), envFor(site));
+    assert.equal(res.status, 500);
+    assert.equal(net.calls.line.length, 0);
+  } finally { net.restore(); }
+});
+
+test('the webhook mirror gets the application, not the CV', async () => {
+  const site = { ...FORMS_SITE, webhook: 'https://mirror.example/hook' };
+  const net = stubNet();
+  const pending = [];
+  try {
+    await worker.fetch(postForm(job, new File([pdfBytes()], 'cv.pdf')), envFor(site, EMAIL_ENV),
+      { waitUntil: p => pending.push(p) });
+    await Promise.all(pending);
+    const mirror = net.calls.email.find(c => c.url.includes('mirror'));
+    assert.ok(mirror, 'the mirror was called');
+    assert.equal(mirror.body.form, 'job');
+    assert.doesNotMatch(JSON.stringify(mirror.body), /content/);
+  } finally { net.restore(); }
+});
