@@ -138,6 +138,11 @@ resolves to `../` one level down; forgetting it is how article images 404'd.
 
 Every page needs exactly one `<h1>` and its own `<title>`. Both are checked.
 
+A one-page design that grows pages (spm-live did) keeps its section menu as
+`{{HOME}}#section`: empty on the home page, so the jump stays in-page, and
+`index.html` elsewhere. A literal `index.html#section` on the home page is a
+different URL from `/` and reloads the whole page on every menu tap.
+
 ## Where the Premium tier's cost actually sits
 
 The demo's back-office panel is illustrative and labelled as such — the

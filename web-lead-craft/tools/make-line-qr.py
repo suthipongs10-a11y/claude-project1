@@ -13,7 +13,7 @@ encodes and redraw it.
 
     python3 tools/make-line-qr.py sites/spm-live "https://lin.ee/xxxxxx"
 
-Writes <site>/src/line-qr.svg, which body.html includes. Re-run whenever
+Writes <site>/src/line-qr.svg, which the page holding the markers includes. Re-run whenever
 the LINE account changes.
 """
 import sys, pathlib
@@ -82,26 +82,32 @@ out = site / 'src' / 'line-qr.svg'
 out.write_text(svg)
 print(f'{out}  {n}x{n} modules, {len(svg)} bytes  <- {url}')
 
-# Drop it straight into body.html between the markers, so there is no build
-# step to remember and no second copy to fall out of date.
-body = site / 'src' / 'body.html'
+# Drop it straight into the page between the markers, so there is no build
+# step to remember and no second copy to fall out of date. A one-page site
+# keeps them in body.html; a multi-page one in whichever page shows the code,
+# with the LINE buttons spread across its pages and partials.
+src = site / 'src'
+files = [f for f in [src / 'body.html', *sorted((src / 'pages').glob('*.html')),
+                     *sorted((src / 'partials').glob('*.html'))] if f.exists()]
 START, END = '<!-- line-qr:start -->', '<!-- line-qr:end -->'
+body = next((f for f in files if START in f.read_text() and END in f.read_text()), None)
+if body is None:
+    sys.exit(f'no {START} … {END} markers in {src} — nothing to fill in')
 t = body.read_text()
-if START not in t or END not in t:
-    sys.exit(f'{body} has no {START} … {END} markers — nothing to fill in')
 a = t.index(START) + len(START)
 b = t.index(END)
 body.write_text(t[:a] + '\n          ' + svg.strip() + '\n          ' + t[b:])
 print(f'{body}  QR inlined between markers')
 
 # And the href everywhere it appears.
-t = body.read_text()
 import re
-before = t
-# Both the placeholder anchor and any previous LINE url, so the button works
-# whether this is the first run or a change of account.
-t = re.sub(r'href="#line"', f'href="{url}"', t)
-t = re.sub(r'href="https://(?:lin\.ee|line\.me|page\.line\.me)/[^"]*"', f'href="{url}"', t)
-if t != before:
-    body.write_text(t)
-    print(f'{body}  {before.count("lin.ee") - 0 and ""}LINE links pointed at {url}')
+for f in files:
+    t = f.read_text()
+    before = t
+    # Both the placeholder anchor and any previous LINE url, so the button works
+    # whether this is the first run or a change of account.
+    t = re.sub(r'href="#line"', f'href="{url}"', t)
+    t = re.sub(r'href="https://(?:lin\.ee|line\.me|page\.line\.me)/[^"]*"', f'href="{url}"', t)
+    if t != before:
+        f.write_text(t)
+        print(f'{f}  LINE links pointed at {url}')

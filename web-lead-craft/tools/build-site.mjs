@@ -16,7 +16,9 @@
 // them in the page, so a built site works with no server at all — assets and
 // links are relative, resolved through {{BASE}} for the extra depth of an
 // article. Flat .html output rather than folder/index.html is what makes that
-// true: a directory URL has no index to serve off disk.
+// true: a directory URL has no index to serve off disk. A one-page design
+// grown into several pages keeps its section menu by writing {{HOME}}#section:
+// empty on the home page, index.html (with its depth) everywhere else.
 //
 // Also written: 404.html, favicon.svg, robots.txt, _headers, and sitemap.xml
 // once site.json carries a real domain.
@@ -235,10 +237,14 @@ if (multi) {
       { label: '{{t|หน้าแรก|Home}}', href: 'index.html' },
       { label: page.nav ?? page.title },
     ];
+    // {{HOME}}#section stays an in-page jump on the home page itself. Written
+    // as index.html#section there, it would be a different URL from "/" and
+    // reload the whole page on every menu tap.
     const body = `${header}\n${page.body}\n${footer}`
       .replaceAll('{{NAV}}', renderNav(pages, page.slug, base))
       .replaceAll('{{BREADCRUMB}}', renderBreadcrumb(trail, base))
       .replace(/\{\{ARTICLES(?::(\d+))?\}\}/g, (_m, n) => renderArticleCards(articles, base, Number(n) || 0))
+      .replaceAll('{{HOME}}', page.slug === 'index' ? '' : `${base}index.html`)
       .replaceAll('{{BASE}}', base);
     written.push(emit(page, body, base));
     if (page.slug === 'index') previewSource = written[written.length - 1].expanded;
@@ -265,6 +271,7 @@ if (multi) {
       .replaceAll('{{ARTICLE_HERO}}', a.img)
       .replaceAll('{{ARTICLE_BODY}}', a.body)
       .replaceAll('{{RELATED}}', renderArticleCards(related, base, 3))
+      .replaceAll('{{HOME}}', `${base}index.html`)
       .replaceAll('{{BASE}}', base);
     written.push(emit(a, body, base));
   }
