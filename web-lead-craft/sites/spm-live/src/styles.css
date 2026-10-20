@@ -947,12 +947,9 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .form-ok h4 { font-family: var(--font-display); font-weight: 600; font-size: 1.28rem; color: var(--ink); }
 .form-ok p { font-size: 0.9375rem; max-width: 27em; }
 
-/* ---------- credit + footer ---------- */
-
-.wlc { background: var(--stone); border-top: 1px solid var(--line); }
-.wlc-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 20px; padding-block: 20px; text-align: center; font-size: 0.9rem; }
-.wlc-in .ic { width: 1.15em; height: 1.15em; color: var(--accent); }
-.wlc-in b { color: var(--ink); }
+/* ---------- footer ----------
+   No builder's credit strip: this is the client's own site, and they asked
+   for nothing of ours on it. */
 
 .footer { background: #fff; border-top: 1px solid var(--line); }
 .foot-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 36px; padding-block: clamp(44px, 6vw, 62px); }
