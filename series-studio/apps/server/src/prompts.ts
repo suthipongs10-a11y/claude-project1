@@ -34,4 +34,31 @@ export function registerPrompts(server: McpServer, ctx: StudioContext): void {
       return { messages: [{ role: 'user', content: { type: 'text', text } }] };
     },
   );
+
+  server.registerPrompt(
+    'breakdown_episode',
+    {
+      title: 'แตกตอนเป็นบท/ช็อต/prompt (Stage C–E)',
+      description: 'Guide Claude through script -> shot list -> prompts for one episode of an approved series.',
+      argsSchema: {
+        series_id: z.string().min(1).describe('series id'),
+        episode: z.string().min(1).describe('episode number'),
+      },
+    },
+    ({ series_id, episode }) => {
+      const text = [
+        `แตกตอนที่ ${episode} ของซีรีส์ ${series_id} ตาม Look Bible ของ preset (อ่าน resource series://${series_id}/bible และ series://${series_id}/ep/${episode}/outline ก่อน)`,
+        '',
+        '1. write_script: บทพูดไทยแบบภาษาพูด ใช้สรรพนาม/คำลงท้ายตาม character.speech ทุกบรรทัดสั้น (≤ 6 วิ) ดูคำเตือนเรื่องเวลา',
+        '2. write_shots: แตกช็อตให้ครบทุกจังหวะของ outline — ช็อตแรก beat hook ช็อตสุดท้าย beat cliffhanger, ทุกช็อตมี purpose, ใช้เลนส์/การเคลื่อนกล้องจาก camera ของ preset, ' +
+          'ความยาวช็อตเฉลี่ยตาม pacing.avg_shot_sec, ห้ามเกิน maxClipSec ของ engine, เปลี่ยนฝั่งแกน 180° ต้องมี INSERT คั่นหรือใส่ axis_cross_reason, ' +
+          'ใส่ dialogue พร้อม t_start/t_end ภายในช็อต, เวลารวมเท่าความยาวตอน ±5%',
+        '3. ถ้า validator รายงาน error ให้แก้แล้วส่งใหม่ทั้งชุด (tool ไม่บันทึกถ้ามี error)',
+        '4. compile_prompts แล้ว generate (draft) → ถ้า engine เป็น manual ให้ export_prompt_sheet แล้วบอกผู้ใช้ว่าต้องเจนอะไรใน Flow บ้าง',
+        '5. เมื่อผู้ใช้เอาคลิปมาแล้ว import_clips → run_qc → รายงานช็อตที่พัง → regen_shot ที่จำเป็น → ขอ G3',
+      ].join('\n');
+      return { messages: [{ role: 'user', content: { type: 'text', text } }] };
+    },
+  );
 }
+

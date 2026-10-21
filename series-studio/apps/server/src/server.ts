@@ -5,6 +5,7 @@ import { registerSeriesTools } from './tools/series.js';
 import { registerBibleTools } from './tools/bible.js';
 import { registerOutlineTools } from './tools/outline.js';
 import { registerGateTools } from './tools/gates.js';
+import { registerEpisodeTools } from './tools/episode.js';
 import { registerResources } from './resources.js';
 import { registerPrompts } from './prompts.js';
 
@@ -26,6 +27,7 @@ export function buildServer(ctx: StudioContext): McpServer {
   registerBibleTools(server, ctx);
   registerOutlineTools(server, ctx);
   registerGateTools(server, ctx);
+  registerEpisodeTools(server, ctx);
   registerResources(server, ctx);
   registerPrompts(server, ctx);
   return server;

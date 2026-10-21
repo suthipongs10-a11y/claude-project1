@@ -4,7 +4,7 @@
 
 ## สถานะปัจจุบัน
 
-- Milestone: **M2** กำลังทำ (M0–M1 โค้ดเสร็จ เทสต์ผ่าน รอผู้ใช้ยืนยันบน Claude Desktop)
+- Milestone: **M3** กำลังทำ (M0–M2 โค้ดเสร็จ เทสต์ผ่าน รอผู้ใช้ยืนยันบน Claude Desktop)
 - Engine ที่ใช้: `manual` (flow_ext เริ่ม M6)
 - อัปเดตล่าสุด: 2026-10-21
 
@@ -14,8 +14,8 @@
 |---|---|---|---|
 | M0 | Monorepo, zod schemas, file store, MCP server เปล่า | Claude Desktop เห็นและเรียก `list_styles` ได้ | ✅ โค้ด+เทสต์ผ่าน (stdio) · รอยืนยันบน Claude Desktop |
 | M1 | Series/Bible/Outline tools + 11 style presets + validator | สร้างซีรีส์ทดลอง 3 ตอนจากแชท ได้ไฟล์ครบตาม §6 | ✅ โค้ด+เทสต์ผ่าน (เทสต์ e2e ผ่าน MCP client) · รอผู้ใช้ลองจากแชทจริง |
-| M2 | Script + Shot breakdown + Prompt compiler + export prompt sheet + import_clips | เจนใน Flow เองแล้ว import กลับ map ถูกช็อต | 🔧 กำลังทำ |
-| M3 | QC workers + get_keyframes + regen loop | จับช็อตพังที่ใส่ไว้ทดสอบได้ ≥ 80% | ยังไม่เริ่ม |
+| M2 | Script + Shot breakdown + Prompt compiler + export prompt sheet + import_clips | เจนใน Flow เองแล้ว import กลับ map ถูกช็อต | ✅ โค้ด+เทสต์ผ่าน (e2e: script→shots→prompts→sheet→import) · รอผู้ใช้ลองกับ Flow จริง |
+| M3 | QC workers + get_keyframes + regen loop | จับช็อตพังที่ใส่ไว้ทดสอบได้ ≥ 80% | 🔧 กำลังทำ |
 | M4 | Assembly: loudnorm, SRT, Remotion cards, export 9:16/16:9 | ไฟล์ final 1 ตอน เสียงเท่ากัน ซับตรง ±0.2s | ยังไม่เริ่ม |
 | M5 | Dashboard PWA + approve gates | อนุมัติ G1–G4 จากมือถือได้ | ยังไม่เริ่ม |
 | M6 | Chrome Extension flow_ext + Flow Characters | เจน 1 ตอนโดยไม่แตะ Flow เอง | ยังไม่เริ่ม |
@@ -46,6 +46,13 @@
 - MCP tools: `list_series`, `create_series`, `get_series`, `write_bible`, `gen_reference`, `import_refs`, `lock_asset`, `unlock_asset`, `write_outline`, `check_gate`, `approve_gate` · resources `series://<id>/series|bible`, `series://<id>/ep/<n>/outline|script|shots` · prompt `plan_series`
 - เทสต์ 57 ข้อผ่าน รวม e2e สร้างซีรีส์ 3 ตอน → bible → outline → G1 → refs → lock → G2 แล้วเช็กโครงไฟล์ตาม §6
 - หมายเหตุ: `import_refs` ยังไม่ตรวจคนในภาพฉาก (person detector มาใน M3) — tool เตือนให้ดูด้วยตาก่อน lock
+
+### 2026-10-21 — M2 เสร็จ
+- core: ตัวนับพยางค์ไทยแบบประมาณ (state machine ไม่ใช้ dictionary, เทสต์กับคำตัวอย่าง 30+ คำ), `validateScript` (ตัวละคร/ฉากต้องมีใน bible, ประมาณเวลาพูดจากพยางค์ เตือนเมื่อเกิน), `validateShots` (purpose, hook แรก/cliffhanger ท้าย, แกน 180° ต้องมี INSERT คั่นหรือ `axis_cross_reason`, ตัวละคร/ฉาก/time ตรง bible, wardrobe ตรง continuity ตอนแรกที่เห็น, บทพูดไม่ซ้อน/ไม่ล้นช็อต/ไม่เร็วเกิน, ช็อตไม่เกิน maxClipSec, เวลารวม ±5%), `planBatches` (รวมช็อตฉากเดียวกันไม่เกิน maxClipSec), `compileBatchPrompt` แบบ deterministic ตาม template §8.5 รองรับ native/dub/narration/sfx_only, wardrobe variant, continuity carry-over, style_override, [FIX] notes + snapshot test
+- server: `ManualEngine` adapter + registry, `EpisodeService` (write_script, write_shots, compile_prompts (ต้องผ่าน G2), export_prompt_sheet .md/.csv, generate → jobs + cost.json, import_clips จับคู่ไฟล์ด้วย job id / batch id / shot id / ลำดับ → `gen/<batch>/vN.mp4` + pointer `gen/<shot>/vN.json`), state ตอนเดินตาม state machine
+- MCP tools ใหม่: `write_script`, `write_shots`, `compile_prompts`, `export_prompt_sheet`, `generate`, `job_status`, `import_clips` · prompt `breakdown_episode`
+- เทสต์ 92 ข้อผ่าน
+- หมายเหตุ: คลิป 1 ไฟล์ = 1 batch (หลายช็อต) — QC ใน M3 ใช้ scdet ตรวจจุดตัดเทียบ shot list และตัดช็อตย่อยตาม offset ที่วางไว้
 
 ## ปัญหาค้าง / ข้อสังเกต
 
