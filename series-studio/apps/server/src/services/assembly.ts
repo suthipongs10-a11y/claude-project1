@@ -69,6 +69,9 @@ export class AssemblyService {
     const tools = this.ctx.config.tools;
     const state = this.series.loadEpisodeState(seriesId, n);
     if (opts.quality === 'final' && !state.gates.G3.approved) throw new Error(`ตอนที่ ${n} ยังไม่ผ่าน G3 (อนุมัติดราฟต์) ใช้ quality "draft" เพื่อดูตัวอย่าง หรือ approve_gate G3 ก่อน`);
+    // dub/narration presets: use the dub track from dub_episode when present and no explicit track was given
+    const autoTrack = this.store.episodePath(seriesId, n, 'edit', 'dub', 'voice_track.wav');
+    if (!opts.voice_track && (preset.dialogue_mode === 'dub' || preset.dialogue_mode === 'narration') && existsSync(autoTrack)) opts = { ...opts, voice_track: autoTrack };
     const list = this.episodes.loadShots(seriesId, n);
     const batches = this.episodes.loadBatches(seriesId, n).sort((a, b) => a.id.localeCompare(b.id));
     if (batches.length === 0) throw new Error(`ตอนที่ ${n} ยังไม่มี batch (compile_prompts ก่อน)`);
@@ -228,6 +231,7 @@ export class AssemblyService {
     let aLabel = 'acat';
     const audioSource: TimelineT['audio']['source'] = opts.voice_track ? 'voice_track' : 'clips';
     const resolveMedia = (p: string) => (isAbsolute(p) ? p : existsSync(this.store.abs(seriesId, p)) ? this.store.abs(seriesId, p) : resolve(process.cwd(), p));
+    if (!opts.voice_track && (preset.dialogue_mode === 'dub' || preset.dialogue_mode === 'narration')) warnings.push(`preset ใช้โหมด ${preset.dialogue_mode} แต่ยังไม่มี voice track (ใช้ dub_episode ก่อน) — ใช้เสียงจากคลิปแทน`);
     if (opts.voice_track) {
       const vt = resolveMedia(opts.voice_track);
       if (!existsSync(vt)) throw new Error(`ไม่พบ voice track: ${opts.voice_track}`);

@@ -9,7 +9,7 @@ export interface Settings {
   qc: Partial<Pick<StudioContext['config']['qc'], 'duration_tolerance' | 'cut_tolerance' | 'cer_max' | 'identity_similarity_min' | 'max_regen_attempts' | 'black_min_sec' | 'freeze_min_sec'>>;
   assembly: Partial<Pick<StudioContext['config']['assembly'], 'loudness_lufs' | 'subtitle_font' | 'card_font' | 'music_volume'>>;
   tools: Partial<StudioContext['config']['tools']>;
-  voice?: Record<string, unknown>;
+  voice: Partial<Pick<StudioContext['config']['voice'], 'provider' | 'max_speedup' | 'fit_tolerance_sec'>>;
 }
 
 export class SettingsService {
@@ -38,6 +38,7 @@ export class SettingsService {
         qc: { duration_tolerance: c.qc.duration_tolerance, cut_tolerance: c.qc.cut_tolerance, cer_max: c.qc.cer_max, identity_similarity_min: c.qc.identity_similarity_min, max_regen_attempts: c.qc.max_regen_attempts, black_min_sec: c.qc.black_min_sec, freeze_min_sec: c.qc.freeze_min_sec },
         assembly: { loudness_lufs: c.assembly.loudness_lufs, subtitle_font: c.assembly.subtitle_font, card_font: c.assembly.card_font, music_volume: c.assembly.music_volume },
         tools: c.tools,
+        voice: { provider: c.voice.provider, max_speedup: c.voice.max_speedup, fit_tolerance_sec: c.voice.fit_tolerance_sec },
       },
       local: this.readLocal(),
       engines: Object.keys(c.engines),
@@ -52,7 +53,7 @@ export class SettingsService {
     this.ctx.store.writeJson(this.localFile, merged);
     // live-apply numeric thresholds and simple strings; tools/engine changes need a restart
     const c = this.ctx.config as unknown as Record<string, Record<string, unknown> | string>;
-    for (const k of ['qc', 'assembly'] as const) {
+    for (const k of ['qc', 'assembly', 'voice'] as const) {
       const p = patch[k];
       if (p) Object.assign(c[k] as Record<string, unknown>, p);
     }

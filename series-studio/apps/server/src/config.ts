@@ -63,6 +63,12 @@ export const StudioConfigSchema = z.strictObject({
     draft_scale: z.number().min(0.1).max(1),
     ai_label_position: z.enum(['bottom_right', 'bottom_left', 'top_right', 'top_left']),
   }),
+  voice: z.strictObject({
+    provider: z.string().min(1),
+    max_speedup: z.number().min(1).max(2),
+    fit_tolerance_sec: z.number().min(0),
+    cartesia: z.strictObject({ api_url: z.string().url(), version: z.string().min(1), model: z.string().min(1), sample_rate: z.int().min(8000) }),
+  }),
 });
 export type StudioConfig = z.infer<typeof StudioConfigSchema>;
 

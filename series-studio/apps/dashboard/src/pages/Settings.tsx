@@ -3,7 +3,7 @@ import { api, getToken, setToken } from '../api';
 import { ActionButton, ErrorBox, Section, Spinner, useFetch } from '../components/ui';
 
 interface SettingsResp {
-  effective: { default_engine: string; export_dir: string; qc: Record<string, number>; assembly: Record<string, number | string>; tools: Record<string, string> };
+  effective: { default_engine: string; export_dir: string; qc: Record<string, number>; assembly: Record<string, number | string>; tools: Record<string, string>; voice: { provider: string; max_speedup: number; fit_tolerance_sec: number } };
   local: Record<string, unknown>;
   engines: string[];
   token_hint: string;
@@ -55,6 +55,21 @@ export function Settings() {
           <div>
             <label className="label">card_font</label>
             <input className="input" value={String(form.assembly['card_font'] ?? '')} onChange={(e) => setForm({ ...form, assembly: { ...form.assembly, card_font: e.target.value } })} />
+          </div>
+        </div>
+      </Section>
+      <Section title="เสียงพากย์ (TTS)">
+        <div className="card grid grid-cols-2 gap-2">
+          <div>
+            <label className="label">provider</label>
+            <select className="input" value={form.voice.provider} onChange={(e) => setForm({ ...form, voice: { ...form.voice, provider: e.target.value } })}>
+              <option value="mock">mock (ออฟไลน์/ทดสอบ)</option>
+              <option value="cartesia">cartesia (ต้องตั้ง CARTESIA_API_KEY)</option>
+            </select>
+          </div>
+          <div>
+            <label className="label">max_speedup</label>
+            <input className="input" type="number" step="0.05" value={form.voice.max_speedup} onChange={(e) => setForm({ ...form, voice: { ...form.voice, max_speedup: Number(e.target.value) } })} />
           </div>
         </div>
       </Section>

@@ -4,7 +4,7 @@
 
 ## สถานะปัจจุบัน
 
-- Milestone: **M7** กำลังทำ (M0–M6 โค้ดเสร็จ เทสต์ผ่าน · M6 ต้องให้ผู้ใช้ทดสอบกับ Flow จริงและปรับ selectors) · **ใช้ผลิตงานจริงได้แล้วในโหมด manual**
+- Milestone: **M8** กำลังทำ (M0–M7 โค้ดเสร็จ เทสต์ผ่าน · M6 ต้องให้ผู้ใช้ทดสอบกับ Flow จริงและปรับ selectors) · **ใช้ผลิตงานจริงได้แล้วในโหมด manual**
 - Engine ที่ใช้: `manual` (flow_ext เริ่ม M6)
 - อัปเดตล่าสุด: 2026-10-21
 
@@ -19,8 +19,8 @@
 | M4 | Assembly: loudnorm, SRT, Remotion cards, export 9:16/16:9 | ไฟล์ final 1 ตอน เสียงเท่ากัน ซับตรง ±0.2s | ✅ โค้ด+เทสต์ผ่าน (−14 LUFS ±1.5, ซับตรงเวลา timeline, 1080×1920 H.264) · การ์ดใช้ ffmpeg drawtext แทน Remotion (ดูหมายเหตุ) |
 | M5 | Dashboard PWA + approve gates | อนุมัติ G1–G4 จากมือถือได้ | ✅ โค้ด+เทสต์ผ่าน (Playwright viewport มือถือ กด G1→G4 ครบ) · รอผู้ใช้ลองบนมือถือจริงผ่าน tunnel |
 | M6 | Chrome Extension flow_ext + Flow Characters | เจน 1 ตอนโดยไม่แตะ Flow เอง | 🟡 โค้ด+เทสต์โปรโตคอลผ่าน (extension จำลอง) · **ต้องทดสอบกับ Flow จริง + ปรับ `config/flow-selectors.json`** |
-| M7 | Voice modes (dub/narration) + voice adapter | เสียงตัวละครเดิมทุกคลิป | 🔧 กำลังทำ |
-| M8 | Product mode + continuity ข้ามตอน + cost report | ซีรีส์ 10 ตอนจบ ไม่พลาดชุด/แผลข้ามตอน | ยังไม่เริ่ม |
+| M7 | Voice modes (dub/narration) + voice adapter | เสียงตัวละครเดิมทุกคลิป | ✅ โค้ด+เทสต์ผ่าน (1 voice_id ต่อตัวละครทั้งตอน, วางตามเวลาบท ±0.25s, Cartesia ไทยทดสอบจริงแล้ว) |
+| M8 | Product mode + continuity ข้ามตอน + cost report | ซีรีส์ 10 ตอนจบ ไม่พลาดชุด/แผลข้ามตอน | 🔧 กำลังทำ |
 
 > ใช้ผลิตงานจริงได้ตั้งแต่ M4 (โหมด manual)
 
@@ -83,6 +83,13 @@
 - dashboard: หน้า Queue แสดงสถานะ extension + ปุ่ม resume
 - เทสต์: driver 5 ข้อ (happy path, blocked, failed, character, helpers) + bridge 5 ข้อ (คิวเมื่อไม่มี extension, dispatch ทีละงาน + อัปโหลด 3 batch → qc, blocked→resume→failed, sync characters, timeout/requeue) · รวม 119 ข้อผ่าน
 - **ข้อจำกัดสำคัญ**: ไม่สามารถทดสอบกับ UI จริงของ Google Flow จากที่นี่ — selectors ใน `config/flow-selectors.json` เป็นค่าตั้งต้นที่ต้องปรับตามหน้าจริง (extension จะหยุดแบบปลอดภัยและบอกว่า selector ไหนไม่พบ) · ToS ของ Flow เป็นความรับผิดชอบของผู้ใช้ (SPEC §14)
+
+### 2026-10-21 — M7 เสร็จ
+- core: `VoiceAdapter` interface, `planDubCues` (deterministic: วางทุกบทพูดบน content timeline, dub = เสียงประจำตัวละคร, narration = เสียง NARRATOR อ่านทั้งหมด, รายงานตัวละครที่ยังไม่มีเสียง)
+- server: adapter `mock` (โทนเสียงความยาวตามพยางค์ ใช้ทดสอบ/ออฟไลน์) และ `cartesia` (TTS ไทย sonic-3, key จาก env `CARTESIA_API_KEY` เท่านั้น), `VoiceService.dub` (synth ต่อประโยคด้วย setting เดิมของตัวละคร, แคชตาม voice+text+speed, ประโยคยาวเกินช่อง → เร่ง ≤ `voice.max_speedup` แล้วเตือนถ้ายังล้น, รวมเป็น `edit/dub/voice_track.wav` ยาวเท่าเนื้อหา), `assemble` ใช้ voice track อัตโนมัติสำหรับ preset dub/narration (เตือนถ้ายังไม่มี)
+- MCP tools: `list_voices`, `assign_voice`, `dub_episode` · settings/dashboard เลือก voice provider ได้
+- เทสต์: planner 3 ข้อ + e2e mock (assign → dub → ตำแหน่งเสียงตรง ±0.25s → แคช → เร่ง/เตือน → assemble ใช้ track → narration ต้องมี NARRATOR) + live Cartesia (list เสียงไทย + synth "สวัสดีค่ะ" ผ่าน; ข้ามอัตโนมัติเมื่อไม่มี key/เน็ต) · รวม 128 ข้อผ่าน
+- หมายเหตุ: voice-change จากเสียงไกด์ยังไม่ทำ (SPEC เขียน "TTS หรือ voice-change") — เพิ่มเป็น adapter ได้ภายหลัง
 
 ## ปัญหาค้าง / ข้อสังเกต
 

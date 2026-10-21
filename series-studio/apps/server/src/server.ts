@@ -10,6 +10,7 @@ import { registerQcTools } from './tools/qc.js';
 import { registerAssemblyTools } from './tools/assembly.js';
 import { registerDashboardTools } from './tools/dashboard.js';
 import { registerExtensionTools } from './tools/extension.js';
+import { registerVoiceTools } from './tools/voice.js';
 import { registerResources } from './resources.js';
 import { registerPrompts } from './prompts.js';
 
@@ -36,6 +37,7 @@ export function buildServer(ctx: StudioContext): McpServer {
   registerAssemblyTools(server, ctx);
   registerDashboardTools(server, ctx);
   registerExtensionTools(server, ctx);
+  registerVoiceTools(server, ctx);
   registerResources(server, ctx);
   registerPrompts(server, ctx);
   return server;

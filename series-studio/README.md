@@ -24,6 +24,8 @@ pip install open_clip_torch torch pillow             # หน้าตัวล�
 
 ตั้ง path ของ python/ffmpeg ได้ใน `config/local.json` → `tools` (เช่นชี้ไป `.venv/bin/python`)
 
+เสียงพากย์/บรรยาย (M7): ตั้ง `voice.provider` เป็น `cartesia` ใน `config/local.json` และตั้ง env `CARTESIA_API_KEY` ตอนรัน server (ห้ามใส่ key ในไฟล์ repo) · `mock` ใช้ทดสอบจังหวะแบบออฟไลน์ · `list_voices` → `assign_voice` ต่อตัวละคร (หรือ NARRATOR) → `dub_episode` → `assemble` จะใช้ voice track อัตโนมัติ
+
 `claude_desktop_config.json` (แก้ path ให้เป็นของเครื่องคุณ):
 
 ```json
@@ -55,4 +57,4 @@ projects/          ข้อมูลซีรีส์ (gitignore) · logs/ JSO
 
 1. `plan_series` (MCP prompt) หรือสั่งเอง: `list_styles` → `create_series` → `write_bible` → `write_outline` ทุกตอน → ผู้ใช้อนุมัติ → `approve_gate G1`
 2. `gen_reference` ต่อ asset → เอา prompt ไปเจนใน Flow → `import_refs` → ดูภาพ → `lock_asset` → `approve_gate G2`
-3. ต่อตอน: `write_script` → `write_shots` → `compile_prompts` → `generate` → `export_prompt_sheet` → เจนใน Flow → `import_clips` → `run_qc` → `get_keyframes`/`review_shot`/`regen_shot` → `approve_gate G3` → `assemble` (M4) → `approve_gate G4`
+3. ต่อตอน: `write_script` → `write_shots` → `compile_prompts` → `generate` → `export_prompt_sheet` → เจนใน Flow → `import_clips` → `run_qc` → `get_keyframes`/`review_shot`/`regen_shot` → `approve_gate G3` → (`dub_episode` สำหรับ preset dub/narration) → `assemble` → `approve_gate G4`
