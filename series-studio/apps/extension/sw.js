@@ -68,19 +68,11 @@ async function findFlowTab(selectors) {
   const hit = tabs.find((t) => t.url && selectors.flow_url_prefixes.some((p) => t.url.startsWith(p)));
   if (hit) return hit;
   const created = await chrome.tabs.create({ url: selectors.flow_home_url, active: false });
-  await new Promise((resolve) => {
-    const onUpdated = (tabId, info) => {
-      if (tabId === created.id && info.status === 'complete') {
-        chrome.tabs.onUpdated.removeListener(onUpdated);
-        resolve();
-      }
-    };
-    chrome.tabs.onUpdated.addListener(onUpdated);
-    setTimeout(() => {
-      chrome.tabs.onUpdated.removeListener(onUpdated);
-      resolve();
-    }, 30000);
-  });
+  for (let i = 0; i < 120; i++) {
+    const t = await chrome.tabs.get(created.id);
+    if (t.status === 'complete') return t;
+    await new Promise((r) => setTimeout(r, 250));
+  }
   return created;
 }
 
@@ -92,6 +84,8 @@ async function handleJob(job) {
   }
   await chrome.storage.session.set({ busy: true, cancel: null });
   await setStatus({ active_job: job.id, step: 'start', error: null });
+  // the final status is sent only after `busy` is cleared, so the server never dispatches into a busy extension
+  let outcome = { kind: 'job_status', job_id: job.id, status: 'done' };
   try {
     const selRes = await fetch(job.selectors_url);
     if (!selRes.ok) throw new Error(`โหลด selectors ไม่ได้ (${selRes.status})`);
@@ -103,27 +97,26 @@ async function handleJob(job) {
     if (!res) throw new Error('content script ไม่ตอบกลับ');
     if (!res.ok) {
       if (res.blocked) {
-        send({ kind: 'job_status', job_id: job.id, status: 'blocked', selector: res.selector, message: res.error, url: res.url });
+        outcome = { kind: 'job_status', job_id: job.id, status: 'blocked', selector: res.selector, message: res.error, url: res.url };
         await setStatus({ error: `หยุด: ${res.error}` });
-        return;
-      }
-      throw new Error(res.error);
-    }
-    if (res.flow_character_id) {
-      send({ kind: 'character_created', job_id: job.id, entity_id: job.entity_id, flow_character_id: res.flow_character_id });
+      } else throw new Error(res.error);
+    } else if (res.flow_character_id) {
+      outcome = { kind: 'character_created', job_id: job.id, entity_id: job.entity_id, flow_character_id: res.flow_character_id };
+      await setStatus({ last_job: job.id, error: null });
     } else {
       send({ kind: 'job_status', job_id: job.id, status: 'running', step: 'upload' });
       const bytes = Uint8Array.from(atob(res.base64), (c) => c.charCodeAt(0));
       const up = await fetch(job.result_url, { method: 'POST', headers: { 'content-type': res.contentType || 'video/mp4' }, body: bytes });
       if (!up.ok) throw new Error(`อัปโหลดผลลัพธ์ไม่สำเร็จ (${up.status}): ${(await up.text()).slice(0, 200)}`);
+      await setStatus({ last_job: job.id, error: null });
     }
-    await setStatus({ last_job: job.id, error: null });
   } catch (e) {
-    send({ kind: 'job_status', job_id: job.id, status: 'failed', message: e.message || String(e) });
+    outcome = { kind: 'job_status', job_id: job.id, status: 'failed', message: e.message || String(e) };
     await setStatus({ error: e.message || String(e) });
   } finally {
     await chrome.storage.session.set({ busy: false });
     await setStatus({ active_job: null, step: null });
+    send(outcome);
   }
 }
 

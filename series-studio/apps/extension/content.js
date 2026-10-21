@@ -6,6 +6,8 @@
   if (globalThis.__seriesStudioContentLoaded) return;
   globalThis.__seriesStudioContentLoaded = true;
   const D = globalThis.SeriesStudioDriver;
+  const videoIds = new WeakMap();
+  let videoSeq = 0;
 
   const page = {
     root: () => document,
@@ -53,7 +55,16 @@
       const bytes = Uint8Array.from(atob(res.base64), (c) => c.charCodeAt(0));
       return new File([bytes], res.name || 'ref.png', { type: res.contentType || 'image/png' });
     },
-    resultSignature: (video) => (video ? video.currentSrc || video.src || '' : ''),
+    // identity + src: a freshly inserted <video> counts as a new result even when the src repeats
+    resultSignature: (video) => {
+      if (!video) return '';
+      let id = videoIds.get(video);
+      if (!id) {
+        id = ++videoSeq;
+        videoIds.set(video, id);
+      }
+      return `${id}:${video.currentSrc || video.src || ''}`;
+    },
     async downloadResult(video) {
       const src = video.currentSrc || video.src;
       const res = await fetch(src);

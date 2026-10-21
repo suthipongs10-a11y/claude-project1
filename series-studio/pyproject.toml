@@ -7,10 +7,10 @@ dependencies = []
 
 [project.optional-dependencies]
 # install only what you need; every check degrades to "skipped" when its library is missing
-whisper = ["faster-whisper>=1.1"]
+whisper = ["faster-whisper>=1.1", "av>=11,<16"]
 clip = ["open_clip_torch>=2.24", "torch", "pillow"]
-face = ["insightface>=0.7", "onnxruntime", "opencv-python-headless", "numpy"]
-people = ["opencv-python-headless", "numpy"]
+face = ["insightface>=0.7", "onnxruntime", "opencv-python-headless>=4.8,<5", "numpy"]
+people = ["opencv-python-headless>=4.8,<5", "numpy"]
 ocr = ["pytesseract", "pillow"]
 dev = ["pytest>=8"]
 

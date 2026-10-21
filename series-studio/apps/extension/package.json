@@ -1,0 +1,9 @@
+{
+  "name": "@series-studio/extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Series Studio Flow Driver (Chrome MV3). No build step: load this folder unpacked.",
+  "devDependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}

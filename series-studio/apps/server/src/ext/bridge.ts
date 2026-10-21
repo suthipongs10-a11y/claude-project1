@@ -162,8 +162,16 @@ export class ExtensionBridge {
     }
     const updated = this.ctx.jobs.get(jobId)!;
     this.ctx.log.info('ext_result_attached', { job_id: jobId, kind: job.kind, stored });
-    if (this.activeJobId === jobId) this.clearActive();
-    this.pump();
+    // The extension reports `done` once it has reset its busy flag; only then is the next job sent.
+    // Fallback: if that message never comes (old extension, crash), move on after a short settle.
+    if (this.activeJobId === jobId) {
+      setTimeout(() => {
+        if (this.activeJobId === jobId) {
+          this.clearActive();
+          this.pump();
+        }
+      }, 5000).unref?.();
+    }
     return { stored, job: updated };
   }
 

@@ -239,7 +239,10 @@ export class BibleService {
     }
     const next = { ...entity, locked: true } as Entity;
     this.series.saveEntity(seriesId, type, next);
-    this.ctx.log.info('asset_locked', { series_id: seriesId, type, entity_id: entityId, version: next.ref_version });
+    const now = this.ctx.now();
+    const stale = this.jobs.list({ series_id: seriesId, kind: 'ref', entity_id: entityId, status: ['awaiting_import', 'queued'] });
+    for (const j of stale) this.jobs.update(j.id, { status: 'cancelled', error: 'asset ถูก lock แล้ว ไม่ต้องใช้ ref เพิ่ม', updated_at: now });
+    this.ctx.log.info('asset_locked', { series_id: seriesId, type, entity_id: entityId, version: next.ref_version, cancelled_ref_jobs: stale.length });
     this.ctx.emit({ type: 'bible', series_id: seriesId, entity_id: entityId });
     return next;
   }

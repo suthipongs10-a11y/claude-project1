@@ -17,8 +17,8 @@ QC worker (Python ≥ 3.11 + ffmpeg ในเครื่อง) — ติด�
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install pytest                                   # รันเทสต์: python -m pytest -q workers
-pip install faster-whisper                           # เช็กบทพูด (native mode)
-pip install insightface onnxruntime opencv-python-headless numpy   # หน้าตัวละคร (live action) + นับคน
+pip install 'faster-whisper' 'av<16'                 # เช็กบทพูด (native mode) — ทดสอบแล้วกับ model small ภาษาไทย
+pip install insightface onnxruntime 'opencv-python-headless<5' numpy   # หน้าตัวละคร (live action) + นับคน (OpenCV 4 มี HOGDescriptor)
 pip install open_clip_torch torch pillow             # หน้าตัวละคร (การ์ตูน/อนิเมะ)
 ```
 
@@ -53,8 +53,11 @@ config/studio.json ทุกค่าที่ห้าม hardcode (maxClipSec,
 projects/          ข้อมูลซีรีส์ (gitignore) · logs/ JSON lines · data/ SQLite
 ```
 
+## ลองเล่นทันที
+`pnpm demo` สร้างซีรีส์ตัวอย่างภาษาไทย 3 ตอนผ่าน MCP server ตัวจริง จากนั้น `pnpm --filter @series-studio/server exec tsx scripts/seed-episode1.ts` ทำตอนที่ 1 จนถึงไฟล์จบ (คลิปสังเคราะห์แทน Flow, `DEMO_TTS=cartesia` ถ้ามี key) และ `pnpm --filter @series-studio/dashboard exec tsx scripts/screenshots.ts` ถ่ายหน้าจอ dashboard ทุกหน้า
+
 ## สถานะ
-M0–M8 โค้ดครบและเทสต์ผ่าน (`pnpm test` 134 ข้อ, `pnpm test:py` 9 ข้อ) · สิ่งที่ต้องทดสอบบนเครื่องจริง: Claude Desktop เห็น tools, มือถือเปิด dashboard ผ่าน tunnel, Chrome Extension กับหน้า Flow จริง (ปรับ `config/flow-selectors.json`), QC ที่ติดตั้ง whisper/insightface, TTS Cartesia ด้วย key ของคุณ — ดูรายละเอียดใน `PROGRESS.md`
+M0–M8 โค้ดครบและเทสต์ผ่าน (`pnpm test` 137 ข้อ รวม e2e ของ extension จริงใน Chromium, `pnpm test:py` 9 ข้อ) · สิ่งที่ต้องทดสอบบนเครื่องจริง: Claude Desktop เห็น tools, มือถือเปิด dashboard ผ่าน tunnel, Chrome Extension กับหน้า Flow จริง (ปรับ `config/flow-selectors.json`), QC ที่ติดตั้ง whisper/insightface, TTS Cartesia ด้วย key ของคุณ — ดูรายละเอียดใน `PROGRESS.md`
 
 ## Flow การใช้งานจากแชท
 

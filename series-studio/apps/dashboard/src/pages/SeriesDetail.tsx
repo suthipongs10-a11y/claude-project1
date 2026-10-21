@@ -101,11 +101,11 @@ export function SeriesDetail({ id, tab }: { id: string; tab?: string }) {
                         <Badge tone={e.has_outline ? 'ok' : 'muted'}>outline</Badge>
                         <Badge tone={e.has_script ? 'ok' : 'muted'}>บท</Badge>
                         <Badge tone={e.shots ? 'ok' : 'muted'}>{e.shots} ช็อต</Badge>
-                        {(e.qc.pass || e.qc.fail) && (
+                        {e.qc.pass + e.qc.fail > 0 ? (
                           <Badge tone={e.qc.fail ? 'bad' : 'ok'}>
                             QC ✓{e.qc.pass} ✗{e.qc.fail}
                           </Badge>
-                        )}
+                        ) : null}
                         {e.gates.G3.approved && <Badge tone="ok">G3</Badge>}
                         {e.gates.G4.approved && <Badge tone="ok">G4</Badge>}
                       </div>
