@@ -15,7 +15,12 @@ projects/
     assets/                  # กราฟิกการ์ด PNG + สคริปต์ gen
     capcut-shotlist.json     # ไฟล์ build timeline
     capcut-captions.json     # caption คำเด็ด
+series-studio/               # โปรเจกต์แยก: Series Studio (ละครสั้น/ซีรีส์ด้วย AI) — มี SPEC.md, CLAUDE.md, PROGRESS.md ของตัวเอง
 ```
+
+## Series Studio (โปรเจกต์แยก)
+
+เครื่องมือสร้างละครสั้น/ซีรีส์ด้วย AI อยู่ใน `series-studio/` แยกจาก pipeline ด้านบนทั้งหมด เริ่มงานโดยอ่าน `series-studio/CLAUDE.md` → `series-studio/SPEC.md` → `series-studio/PROGRESS.md` (ทำทีละ milestone ตาม SPEC §13)
 
 ## แบ่งงาน: มือถือ (Claude Code cloud) vs PC
 
