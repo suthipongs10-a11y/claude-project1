@@ -16,7 +16,8 @@
     "test": "pnpm build && vitest run",
     "test:watch": "vitest",
     "test:py": "python3 -m pytest -q workers",
-    "build:server": "tsc -b packages/core apps/server"
+    "build:server": "tsc -b packages/core apps/server",
+    "demo": "pnpm build:server && pnpm --filter @series-studio/server exec tsx scripts/seed-demo.ts"
   },
   "devDependencies": {
     "@types/node": "^22.19.0",

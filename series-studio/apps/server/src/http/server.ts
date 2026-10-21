@@ -213,14 +213,27 @@ export function createHttpServer(ctx: StudioContext, opts: HttpServerOptions = {
   });
   app.post('/api/series/:id/episodes/:n/qc', async (req) => {
     const { id, n } = req.params as { id: string; n: string };
-    const body = z.object({ shot_ids: z.array(Slug).optional(), auto_regen: z.boolean().optional() }).parse(req.body ?? {});
-    return await qc.runQc(id, Number(n), body);
+    const body = z.object({ shot_ids: z.array(Slug).optional(), auto_regen: z.boolean().optional(), wait_sec: z.int().min(0).max(120).default(30) }).parse(req.body ?? {});
+    const task = ctx.tasks.start({ kind: 'run_qc', label: `QC ตอนที่ ${n}`, series_id: id, episode: Number(n) }, () => qc.runQc(id, Number(n), body));
+    return (await ctx.tasks.waitFor(task.id, body.wait_sec * 1000)) ?? task;
   });
   app.post('/api/series/:id/episodes/:n/assemble', async (req) => {
     const { id, n } = req.params as { id: string; n: string };
-    const body = z.object({ quality: z.enum(['draft', 'final']).default('draft'), aspect: Aspect.optional() }).parse(req.body ?? {});
-    const res = await assembly.assemble(id, Number(n), body);
-    return { timeline: res.timeline, warnings: res.warnings };
+    const body = z.object({ quality: z.enum(['draft', 'final']).default('draft'), aspect: Aspect.optional(), wait_sec: z.int().min(0).max(120).default(20) }).parse(req.body ?? {});
+    const task = ctx.tasks.start({ kind: 'assemble', label: `ประกอบตอนที่ ${n} (${body.quality})`, series_id: id, episode: Number(n) }, async () => {
+      const res = await assembly.assemble(id, Number(n), body);
+      return { timeline: res.timeline, warnings: res.warnings };
+    });
+    return (await ctx.tasks.waitFor(task.id, body.wait_sec * 1000)) ?? task;
+  });
+  app.get('/api/tasks', async (req) => {
+    const q = req.query as { series_id?: string; episode?: string; status?: string };
+    return { tasks: ctx.tasks.list({ series_id: q.series_id, episode: q.episode ? Number(q.episode) : undefined, status: q.status as 'running' | 'done' | 'failed' | undefined }) };
+  });
+  app.get('/api/tasks/:id', async (req, reply) => {
+    const t = ctx.tasks.get((req.params as { id: string }).id);
+    if (!t) return reply.code(404).send({ error: 'ไม่พบ task' });
+    return t;
   });
   app.post('/api/series/:id/episodes/:n/comments', async (req) => {
     const { id, n } = req.params as { id: string; n: string };

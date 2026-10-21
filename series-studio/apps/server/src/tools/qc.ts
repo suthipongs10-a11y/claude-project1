@@ -6,6 +6,8 @@ import { EpisodeNumber, Slug } from '@series-studio/core';
 import type { StudioContext } from '../context.js';
 import { QcService } from '../services/qc.js';
 import { guarded, ok } from './_helpers.js';
+import { runAsTask } from './_tasks.js';
+import { renderers } from './_renderers.js';
 
 export function registerQcTools(server: McpServer, ctx: StudioContext): void {
   const svc = new QcService(ctx);
@@ -18,18 +20,16 @@ export function registerQcTools(server: McpServer, ctx: StudioContext): void {
         'Run the QC worker on imported clips of an episode (default: all shots with a clip): clip duration, scene cuts vs shot list, black/frozen frames, ' +
         'dialogue CER (native mode, needs faster-whisper), identity similarity vs refs (needs insightface/open_clip), people count (needs opencv). ' +
         'Missing libraries make a check "skipped", never a failure. Writes qc/<shot>.json. auto_regen queues fixes for failed shots up to qc.max_regen_attempts.',
-      inputSchema: z.object({ series_id: Slug, episode: EpisodeNumber, shot_ids: z.array(Slug).optional(), auto_regen: z.boolean().default(false) }),
+      inputSchema: z.object({ series_id: Slug, episode: EpisodeNumber, shot_ids: z.array(Slug).optional(), auto_regen: z.boolean().default(false), wait_sec: z.int().min(0).max(55).default(40).describe('Seconds to wait before returning a task_id (whisper/identity checks can take minutes)') }),
     },
-    guarded(ctx.log, 'run_qc', async ({ series_id, episode, shot_ids, auto_regen }) => {
-      const res = await svc.runQc(series_id, episode, { shot_ids, auto_regen });
-      const lines = res.results.map((r) => `- ${r.shot_id} v${r.version}: ${r.pass ? '✅ ผ่าน' : `❌ ${r.reasons.join('; ')}`}${r.review ? ` (review: ${r.review.pass ? 'ผ่าน' : 'ไม่ผ่าน'} โดย ${r.review.by})` : ''}`);
-      const text =
-        `QC ตอนที่ ${episode}: ผ่าน ${res.summary.pass}/${res.summary.shots} ช็อต\n${lines.join('\n')}` +
-        (res.skipped_checks.length ? `\nเช็กที่ข้าม (ไม่ได้ติดตั้ง/ไม่เกี่ยว): ${res.skipped_checks.join(', ')}` : '') +
-        (res.errors.length ? `\nปัญหา: ${res.errors.join('; ')}` : '') +
-        (res.regen?.length ? `\nเจนซ่อม: ${res.regen.map((g) => `${g.shot_id}→${g.job_id ?? `ข้าม (${g.skipped_reason})`}`).join(', ')}` : '') +
-        (res.summary.fail ? '\nใช้ get_keyframes ดูภาพช็อตที่พัง แล้ว review_shot / regen_shot' : '\nทุกช็อตผ่าน → ขอผู้ใช้อนุมัติ G3');
-      return ok({ summary: res.summary, results: res.results, skipped_checks: res.skipped_checks, errors: res.errors, regen: res.regen ?? [] }, text);
+    guarded(ctx.log, 'run_qc', async ({ series_id, episode, shot_ids, auto_regen, wait_sec }) => {
+      return runAsTask(
+        ctx,
+        { kind: 'run_qc', label: `QC ตอนที่ ${episode}`, series_id, episode },
+        wait_sec,
+        async () => ({ ...(await svc.runQc(series_id, episode, { shot_ids, auto_regen })), episode }),
+        renderers['run_qc']!,
+      );
     }),
   );
 

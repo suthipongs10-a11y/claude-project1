@@ -99,7 +99,11 @@ describe('HTTP/WS API', () => {
 
     const qc = await app.inject({ method: 'POST', url: `/api/series/${SID}/episodes/1/qc`, headers: H, payload: {} });
     expect(qc.statusCode, qc.body).toBe(200);
-    expect(qc.json().summary.shots).toBe(6);
+    expect(qc.json().status).toBe('done'); // finished within the wait budget -> task record with result
+    expect(qc.json().result.summary.shots).toBe(6);
+    const tasks = await app.inject({ method: 'GET', url: `/api/tasks?series_id=${SID}`, headers: H });
+    expect(tasks.json().tasks.length).toBeGreaterThan(0);
+    expect((await app.inject({ method: 'GET', url: `/api/tasks/${qc.json().id}`, headers: H })).json().kind).toBe('run_qc');
 
     const ep = await app.inject({ method: 'GET', url: `/api/series/${SID}/episodes/1`, headers: H });
     expect(ep.statusCode).toBe(200);

@@ -3,7 +3,9 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { Aspect, EpisodeNumber, Quality, Slug } from '@series-studio/core';
 import type { StudioContext } from '../context.js';
 import { AssemblyService } from '../services/assembly.js';
-import { guarded, ok } from './_helpers.js';
+import { guarded } from './_helpers.js';
+import { runAsTask } from './_tasks.js';
+import { renderers } from './_renderers.js';
 
 export function registerAssemblyTools(server: McpServer, ctx: StudioContext): void {
   const svc = new AssemblyService(ctx);
@@ -27,20 +29,17 @@ export function registerAssemblyTools(server: McpServer, ctx: StudioContext): vo
         burn_subtitles: z.boolean().optional(),
         cards: z.boolean().optional(),
         ai_label: z.boolean().optional(),
+        wait_sec: z.int().min(0).max(55).default(25).describe('Seconds to wait for completion before returning a task_id (encoding a 1080p episode often takes minutes)'),
       }),
     },
-    guarded(ctx.log, 'assemble', async ({ series_id, episode, ...opts }) => {
-      const res = await svc.assemble(series_id, episode, opts);
-      const tl = res.timeline;
-      const text =
-        `ประกอบตอนที่ ${episode} (${opts.quality}, ${tl.aspect} ${tl.width}x${tl.height}, ${tl.total_sec}s, ${tl.subtitles.length} ซับ) แล้ว\n` +
-        `- วิดีโอ: ${tl.outputs.video}\n` +
-        (tl.outputs.srt ? `- ซับ: ${tl.outputs.srt}\n` : '') +
-        (tl.outputs.cover ? `- ปก: ${tl.outputs.cover}\n` : '') +
-        `- ความดังก่อนปรับ ${tl.audio.measured?.['input_i']?.toFixed(1)} LUFS → เป้า ${tl.audio.loudness_lufs} LUFS\n` +
-        (res.warnings.length ? `คำเตือน:\n- ${res.warnings.join('\n- ')}\n` : '') +
-        (opts.quality === 'final' ? 'ขั้นต่อไป: ให้ผู้ใช้ดูไฟล์แล้ว approve_gate G4' : 'ดูตัวอย่างแล้วถ้าโอเค approve_gate G3 → assemble quality final');
-      return ok({ timeline: tl, video: res.video, srt: res.srt ?? null, cover: res.cover ?? null, warnings: res.warnings }, text);
+    guarded(ctx.log, 'assemble', async ({ series_id, episode, wait_sec, ...opts }) => {
+      return runAsTask(
+        ctx,
+        { kind: 'assemble', label: `ประกอบตอนที่ ${episode} (${opts.quality})`, series_id, episode },
+        wait_sec,
+        async () => ({ ...(await svc.assemble(series_id, episode, opts)), episode, quality: opts.quality }),
+        renderers['assemble']!,
+      );
     }),
   );
 }

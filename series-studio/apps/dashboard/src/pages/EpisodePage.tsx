@@ -7,6 +7,7 @@ import { ActionButton, Badge, ErrorBox, Modal, Section, Spinner, statusLabel, us
 export function EpisodePage({ id, n, tab }: { id: string; n: number; tab?: string }) {
   const v = useLiveVersion();
   const { data, error, reload } = useFetch(() => api.get<EpisodeDetail>(`/api/series/${id}/episodes/${n}`), [id, n, v]);
+  const tasks = useFetch(() => api.get<{ tasks: Array<{ id: string; label: string; status: string; progress?: string; error?: string }> }>(`/api/tasks?series_id=${id}&episode=${n}`), [id, n, v]);
   const [view, setView] = useState<'shots' | 'review'>(tab === 'review' ? 'review' : 'shots');
   if (error) return <ErrorBox error={error} onRetry={reload} />;
   if (!data) return <Spinner />;
@@ -27,6 +28,16 @@ export function EpisodePage({ id, n, tab }: { id: string; n: number; tab?: strin
           <Badge tone={data.state.gates.G4.approved ? 'ok' : 'muted'}>G4</Badge>
         </div>
       </div>
+      {tasks.data?.tasks.filter((t) => t.status === 'running').map((t) => (
+        <div key={t.id} className="card mb-3 border-amber-700 text-sm text-amber-200">
+          ⏳ {t.label} กำลังทำอยู่{t.progress ? ` (${t.progress})` : ''} — หน้านี้จะอัปเดตเองเมื่อเสร็จ
+        </div>
+      ))}
+      {tasks.data?.tasks.filter((t) => t.status === 'failed').slice(-1).map((t) => (
+        <div key={t.id} className="card mb-3 border-rose-800 text-sm text-rose-200">
+          ✗ {t.label} ล้มเหลว: {t.error}
+        </div>
+      ))}
       <div className="mb-3 flex gap-2">
         <button className={view === 'shots' ? 'btn-primary' : 'btn-ghost'} onClick={() => setView('shots')}>
           ช็อต ({data.shots?.shots.length ?? 0})

@@ -5,6 +5,7 @@ import { FileStore } from './store/fileStore.js';
 import { createLogger, silentLogger, type Logger } from './util/log.js';
 import { JobStore } from './store/db.js';
 import type { ExtensionBridge } from './ext/bridge.js';
+import { TaskService } from './services/tasks.js';
 import { join } from 'node:path';
 import { EventEmitter } from 'node:events';
 
@@ -19,6 +20,8 @@ export interface StudioContext {
   emit(event: StudioEvent): void;
   /** Set when the HTTP server is running: bridge to the Chrome extension (flow_ext). */
   ext?: ExtensionBridge;
+  /** Background tasks for long operations (assemble, run_qc, dub_episode). */
+  tasks: TaskService;
   /** Loaded presets by id. Reloaded with reloadPresets(). */
   presets: Map<string, StylePreset>;
   /** Presets that failed to load (file -> Thai error message). */
@@ -92,7 +95,9 @@ export function createContext(opts: ContextOptions = {}): StudioContext {
       log.info('presets_loaded', { count: presets.size, dir: config.presets_dir });
     },
     now: opts.now ?? (() => new Date().toISOString()),
+    tasks: undefined as unknown as TaskService,
   };
+  (ctx as { tasks: TaskService }).tasks = new TaskService(ctx);
   ctx.reloadPresets();
   return ctx;
 }

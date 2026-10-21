@@ -7,6 +7,8 @@ import { VoiceService } from '../services/voice.js';
 import { getVoiceAdapter } from '../voice/index.js';
 import { fail, guarded, ok } from './_helpers.js';
 import { reportText } from './_report.js';
+import { runAsTask } from './_tasks.js';
+import { renderers } from './_renderers.js';
 
 export function registerVoiceTools(server: McpServer, ctx: StudioContext): void {
   const series = new SeriesService(ctx);
@@ -17,13 +19,14 @@ export function registerVoiceTools(server: McpServer, ctx: StudioContext): void 
     {
       title: 'รายการเสียง',
       description: 'List voices of a TTS provider (default: config voice.provider; "mock" works offline, "cartesia" needs CARTESIA_API_KEY). Filter by language code (default th).',
-      inputSchema: z.object({ provider: z.string().min(1).optional(), lang: z.string().min(2).max(8).default('th') }),
+      inputSchema: z.object({ provider: z.string().min(1).optional(), lang: z.string().max(8).default('th').describe('Language code, or "all" for every language') }),
       annotations: { readOnlyHint: true },
     },
     guarded(ctx.log, 'list_voices', async ({ provider, lang }) => {
       const adapter = getVoiceAdapter(ctx, provider);
-      const voices = await adapter.listVoices(lang);
-      return ok({ provider: adapter.id, voices }, voices.length ? `เสียง (${adapter.id}, ${lang}) ${voices.length} เสียง:\n${voices.map((v) => `- ${v.id}: ${v.name}${v.gender ? ` (${v.gender})` : ''}`).join('\n')}` : `ไม่พบเสียงภาษา ${lang} ใน ${adapter.id}`);
+      const langFilter = lang === 'all' || lang === '' ? '' : lang;
+      const voices = await adapter.listVoices(langFilter);
+      return ok({ provider: adapter.id, voices }, voices.length ? `เสียง (${adapter.id}, ${langFilter || 'ทุกภาษา'}) ${voices.length} เสียง:\n${voices.map((v) => `- ${v.id}: ${v.name}${v.gender ? ` (${v.gender})` : ''}`).join('\n')}` : `ไม่พบเสียงภาษา ${langFilter || 'ใดๆ'} ใน ${adapter.id}`);
     }),
   );
 
@@ -52,18 +55,19 @@ export function registerVoiceTools(server: McpServer, ctx: StudioContext): void 
       description:
         'Synthesize every dialogue cue of an episode with each character\'s assigned voice (narration mode: the NARRATOR voice reads all lines), fit cues to their time slots (bounded speed-up), ' +
         'and build edit/dub/voice_track.wav aligned to the first clip. `assemble` then uses the track automatically for dub/narration presets. Cached per (voice, text, speed); force=true re-synthesizes.',
-      inputSchema: z.object({ series_id: Slug, episode: EpisodeNumber, provider: z.string().min(1).optional(), force: z.boolean().optional() }),
+      inputSchema: z.object({ series_id: Slug, episode: EpisodeNumber, provider: z.string().min(1).optional(), force: z.boolean().optional(), wait_sec: z.int().min(0).max(55).default(40) }),
     },
-    guarded(ctx.log, 'dub_episode', async ({ series_id, episode, provider, force }) => {
-      const res = await voice.dub(series_id, episode, { provider, force });
-      if (!res.report.ok) return fail(`dub_episode ตอนที่ ${episode} ทำไม่ได้:\n${reportText(res.report)}`, { report: res.report });
-      const speakers = [...new Set(res.cues.map((c) => c.speaker))];
-      const text =
-        `พากย์ตอนที่ ${episode} แล้ว (${res.provider}): ${res.cues.length} ประโยค จาก ${speakers.length} เสียง (${speakers.join(', ')}) ใช้แคช ${res.reused}\n` +
-        `voice track: ${res.track} (${res.content_sec}s)\n` +
-        (res.warnings.length ? `คำเตือน:\n- ${res.warnings.join('\n- ')}\n` : '') +
-        'ขั้นต่อไป: assemble (จะใช้ voice track อัตโนมัติ)';
-      return ok({ track: res.track, content_sec: res.content_sec, cues: res.cues, warnings: res.warnings, provider: res.provider }, text);
+    guarded(ctx.log, 'dub_episode', async ({ series_id, episode, provider, force, wait_sec }) => {
+      // plan first (fast) so missing voices come back as a normal error, then synthesize in the background
+      const plan = voice.plan(series_id, episode);
+      if (!plan.report.ok) return fail(`dub_episode ตอนที่ ${episode} ทำไม่ได้:\n${reportText(plan.report)}`, { report: plan.report });
+      return runAsTask(
+        ctx,
+        { kind: 'dub_episode', label: `พากย์ตอนที่ ${episode}`, series_id, episode },
+        wait_sec,
+        async () => ({ ...(await voice.dub(series_id, episode, { provider, force })), episode }),
+        renderers['dub_episode']!,
+      );
     }),
   );
 }
