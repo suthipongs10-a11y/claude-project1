@@ -8,6 +8,7 @@ import { registerGateTools } from './tools/gates.js';
 import { registerEpisodeTools } from './tools/episode.js';
 import { registerQcTools } from './tools/qc.js';
 import { registerAssemblyTools } from './tools/assembly.js';
+import { registerDashboardTools } from './tools/dashboard.js';
 import { registerResources } from './resources.js';
 import { registerPrompts } from './prompts.js';
 
@@ -32,6 +33,7 @@ export function buildServer(ctx: StudioContext): McpServer {
   registerEpisodeTools(server, ctx);
   registerQcTools(server, ctx);
   registerAssemblyTools(server, ctx);
+  registerDashboardTools(server, ctx);
   registerResources(server, ctx);
   registerPrompts(server, ctx);
   return server;

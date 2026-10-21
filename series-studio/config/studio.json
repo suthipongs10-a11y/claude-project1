@@ -4,12 +4,14 @@
   "presets_dir": "presets/styles",
   "logs_dir": "logs",
   "data_dir": "data",
+  "export_dir": "exports",
   "tools": {
     "python": "python3",
     "ffmpeg": "ffmpeg",
     "ffprobe": "ffprobe"
   },
   "http": {
+    "enabled": true,
     "host": "127.0.0.1",
     "port": 8787
   },

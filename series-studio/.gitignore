@@ -8,6 +8,7 @@ dist/
 projects/
 logs/
 data/
+exports/
 _trash/
 .env
 .env.*

@@ -102,6 +102,7 @@ export class BibleService {
     const kept = [...merged.characters.kept, ...merged.locations.kept, ...merged.props.kept];
     if (kept.length) report.warnings.push({ level: 'warning', code: 'bible.kept_entities', message: `ไม่ได้ส่งมาแต่ยังเก็บไว้ (ย้ายไป _trash เองถ้าไม่ใช้แล้ว): ${kept.join(', ')}` });
     this.ctx.log.info('bible_written', { series_id: seriesId, files: written.length, kept: kept.length });
+    this.ctx.emit({ type: 'bible', series_id: seriesId });
     return { report, written, kept };
   }
 
@@ -219,6 +220,7 @@ export class BibleService {
       pending.slice(0, added.length).forEach((j, i) => this.jobs.update(j.id, { status: 'done', output: added[i], updated_at: now }));
     }
     this.ctx.log.info('import_refs', { series_id: seriesId, type, entity_id: entityId, added: added.length });
+    this.ctx.emit({ type: 'bible', series_id: seriesId, entity_id: entityId });
     return { entity: next, added, warnings };
   }
 
@@ -237,6 +239,7 @@ export class BibleService {
     const next = { ...entity, locked: true } as Entity;
     this.series.saveEntity(seriesId, type, next);
     this.ctx.log.info('asset_locked', { series_id: seriesId, type, entity_id: entityId, version: next.ref_version });
+    this.ctx.emit({ type: 'bible', series_id: seriesId, entity_id: entityId });
     return next;
   }
 
@@ -248,6 +251,7 @@ export class BibleService {
     const next = { ...entity, locked: false, ref_version: entity.ref_version + 1 } as Entity;
     this.series.saveEntity(seriesId, type, next);
     this.ctx.log.info('asset_unlocked', { series_id: seriesId, type, entity_id: entityId, new_version: next.ref_version });
+    this.ctx.emit({ type: 'bible', series_id: seriesId, entity_id: entityId });
     return next;
   }
 }

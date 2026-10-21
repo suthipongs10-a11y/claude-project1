@@ -4,7 +4,7 @@
 
 ## สถานะปัจจุบัน
 
-- Milestone: **M5** กำลังทำ (M0–M4 โค้ดเสร็จ เทสต์ผ่าน รอผู้ใช้ยืนยันบน Claude Desktop) · **ใช้ผลิตงานจริงได้แล้วในโหมด manual**
+- Milestone: **M6** กำลังทำ (M0–M5 โค้ดเสร็จ เทสต์ผ่าน รอผู้ใช้ยืนยันบน Claude Desktop/มือถือจริง) · **ใช้ผลิตงานจริงได้แล้วในโหมด manual**
 - Engine ที่ใช้: `manual` (flow_ext เริ่ม M6)
 - อัปเดตล่าสุด: 2026-10-21
 
@@ -17,8 +17,8 @@
 | M2 | Script + Shot breakdown + Prompt compiler + export prompt sheet + import_clips | เจนใน Flow เองแล้ว import กลับ map ถูกช็อต | ✅ โค้ด+เทสต์ผ่าน (e2e: script→shots→prompts→sheet→import) · รอผู้ใช้ลองกับ Flow จริง |
 | M3 | QC workers + get_keyframes + regen loop | จับช็อตพังที่ใส่ไว้ทดสอบได้ ≥ 80% | ✅ โค้ด+เทสต์ผ่าน (คลิปพังสังเคราะห์ 4 แบบ จับได้ 100%) · whisper/insightface ต้องติดตั้งเองบน PC |
 | M4 | Assembly: loudnorm, SRT, Remotion cards, export 9:16/16:9 | ไฟล์ final 1 ตอน เสียงเท่ากัน ซับตรง ±0.2s | ✅ โค้ด+เทสต์ผ่าน (−14 LUFS ±1.5, ซับตรงเวลา timeline, 1080×1920 H.264) · การ์ดใช้ ffmpeg drawtext แทน Remotion (ดูหมายเหตุ) |
-| M5 | Dashboard PWA + approve gates | อนุมัติ G1–G4 จากมือถือได้ | 🔧 กำลังทำ |
-| M6 | Chrome Extension flow_ext + Flow Characters | เจน 1 ตอนโดยไม่แตะ Flow เอง | ยังไม่เริ่ม |
+| M5 | Dashboard PWA + approve gates | อนุมัติ G1–G4 จากมือถือได้ | ✅ โค้ด+เทสต์ผ่าน (Playwright viewport มือถือ กด G1→G4 ครบ) · รอผู้ใช้ลองบนมือถือจริงผ่าน tunnel |
+| M6 | Chrome Extension flow_ext + Flow Characters | เจน 1 ตอนโดยไม่แตะ Flow เอง | 🔧 กำลังทำ |
 | M7 | Voice modes (dub/narration) + voice adapter | เสียงตัวละครเดิมทุกคลิป | ยังไม่เริ่ม |
 | M8 | Product mode + continuity ข้ามตอน + cost report | ซีรีส์ 10 ตอนจบ ไม่พลาดชุด/แผลข้ามตอน | ยังไม่เริ่ม |
 
@@ -68,6 +68,12 @@
 - config `assembly.*` เพิ่ม fps/crf/preset/font/ความยาวการ์ด/ระดับเพลง — ฟอนต์ไทยตั้งได้ (`subtitle_font`, `card_font`; default "Noto Sans Thai")
 - เทสต์ e2e M4: ประกอบจริงด้วย ffmpeg → วัดได้ −14 LUFS ±1.5, ซับตรงเวลาที่คาด ±0.2s, ความยาว 25s, H.264 1080×1920, และ 16:9 + เพลง + voice track · รวม 101 ข้อผ่าน
 - **หมายเหตุ/ขอตัดสินใจ**: SPEC ระบุ Remotion สำหรับการ์ด แต่ Remotion เป็น dependency ใหญ่ (React + Chromium render) จึงทำการ์ดด้วย ffmpeg drawtext ไว้ก่อน (ใช้งานได้จริง) ถ้าต้องการการ์ดสวยแบบ Remotion ค่อยเพิ่มเป็น adapter ใน `apps/assembler` ภายหลัง
+
+### 2026-10-21 — M5 เสร็จ
+- server: Fastify HTTP + WS บน `127.0.0.1:8787` (รันคู่กับ MCP ใน process เดียว, ปิดได้/ถ้า port ชน MCP ยังทำงาน), token จับคู่ใน `data/token.txt` (Bearer/X-Studio-Token/?token=), REST: styles, series (list/create/summary/bible), lock/unlock, gates check/approve (via=dashboard), episode detail (shots+qc+gen pointers+frames+jobs+previews+finals+comments+timeline), review/regen/qc/assemble/comments/export, jobs, settings (เขียน `config/local.json` + live-apply threshold), `/files/<series>/...` เสิร์ฟสื่อในโปรเจกต์ (กัน path traversal), WS `/ws` ส่ง change events จาก event bus ใน context · tool `dashboard_info`
+- dashboard: Vite + React 19 + Tailwind 4 PWA (manifest + service worker เขียนเอง ไม่เพิ่ม dep), hash router, mobile-first bottom nav, หน้าจอครบ 7: Series list, wizard (ไอเดีย→สไตล์→อัตราส่วน→ตอน), Bible board (ภาพ ref + ล็อก/ปลดล็อก), Episode kanban, Shot grid (keyframe + QC badge เขียว/แดง + เจนใหม่ + ผ่าน/ไม่ผ่าน), Review player (วิดีโอ preview/final, อนุมัติ G3/G4, ประกอบไฟล์จบ, export, คอมเมนต์ตามเวลา → เจนซ่อม), Queue & Cost, Settings (engine, QC threshold, เสียง/ประกอบ, export dir, tools, token)
+- เทสต์: HTTP API 6 ข้อ (auth, wizard, gate จาก dashboard, episode/review/regen/comments/G3/G4/export, settings, WS) + Playwright smoke บน viewport มือถือ (390×844) กดอนุมัติ G1→G2 (ล็อก asset จากหน้า Bible) และ G3→ประกอบไฟล์จบ→G4 จริงผ่าน UI · รวม 109 ข้อผ่าน
+- ข้อจำกัด: server bind 127.0.0.1 ตามกฎ → มือถือต้องผ่าน tunnel (Tailscale/ssh) · การตั้งค่า engine/tools ต้องรีสตาร์ท
 
 ## ปัญหาค้าง / ข้อสังเกต
 

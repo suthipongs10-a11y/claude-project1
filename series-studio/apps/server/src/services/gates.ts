@@ -129,6 +129,7 @@ export class GateService {
       if (series.status === 'assets_locked') series = this.series.save({ ...series, status: 'production' });
     }
     this.ctx.log.info('gate_approved', { series_id: seriesId, gate, episode: opts.episode ?? null, via: opts.via ?? 'chat' });
+    this.ctx.emit({ type: 'gate', series_id: seriesId, ...(opts.episode !== undefined ? { episode: opts.episode } : {}), gate });
     return { series, check };
   }
 }

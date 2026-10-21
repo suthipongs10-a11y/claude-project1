@@ -94,6 +94,7 @@ export class EpisodeService {
       this.series.saveEpisodeState(seriesId, { ...state, status: via });
     }
     this.ctx.log.info('shots_written', { series_id: seriesId, episode: list.episode, shots: parsed.shots.length });
+    this.ctx.emit({ type: 'shots', series_id: seriesId, episode: list.episode });
     return { report, batches_preview: planBatches(parsed.shots, maxClipSec) };
   }
 
@@ -127,6 +128,7 @@ export class EpisodeService {
     const state = this.series.loadEpisodeState(seriesId, n);
     if (state.status === 'shots_ready' || state.status === 'prompts_ready') this.series.saveEpisodeState(seriesId, { ...state, status: transitionEpisode(state.status, 'prompts_ready') });
     this.ctx.log.info('prompts_compiled', { series_id: seriesId, episode: n, batches: batches.length });
+    this.ctx.emit({ type: 'shots', series_id: seriesId, episode: n });
     return batches;
   }
 
@@ -212,6 +214,7 @@ export class EpisodeService {
     const state = this.series.loadEpisodeState(seriesId, n);
     if (state.status === 'prompts_ready' || state.status === 'qc' || state.status === 'generating') this.series.saveEpisodeState(seriesId, { ...state, status: transitionEpisode(state.status, 'generating') });
     this.ctx.log.info('generate', { series_id: seriesId, episode: n, jobs: jobs.length, quality: opts.quality, engine: series.engine_id });
+    this.ctx.emit({ type: 'jobs', series_id: seriesId, episode: n });
     return jobs;
   }
 
@@ -274,6 +277,7 @@ export class EpisodeService {
       if (state.status === 'generating') this.series.saveEpisodeState(seriesId, { ...state, status: transitionEpisode(state.status, 'qc') });
     }
     this.ctx.log.info('import_clips', { series_id: seriesId, episode: n, mapped: mapped.length, unmatched: unmatched.length });
+    this.ctx.emit({ type: 'jobs', series_id: seriesId, episode: n });
     return { mapped, unmatched, warnings };
   }
 

@@ -88,6 +88,7 @@ export class SeriesService {
       this.saveEpisodeState(id, EpisodeState.parse({ episode: n }));
     }
     this.ctx.log.info('series_created', { series_id: id, style_id: series.style_id, episodes: series.episodes });
+    this.ctx.emit({ type: 'series_created', series_id: id });
     return series;
   }
 
@@ -160,6 +161,7 @@ export class SeriesService {
   saveEpisodeState(id: string, state: EpisodeStateT): EpisodeStateT {
     const next = parseOrThrow(EpisodeState, { ...state, updated_at: this.ctx.now() }, 'state.json');
     this.store.writeJson(this.episodeStateFile(id, state.episode), next);
+    this.ctx.emit({ type: 'episode_state', series_id: id, episode: state.episode, status: next.status });
     return next;
   }
 

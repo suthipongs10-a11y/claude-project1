@@ -32,11 +32,18 @@ pip install open_clip_torch torch pillow             # หน้าตัวล�
 
 เปิด Claude Desktop ใหม่ แล้วลองพิมพ์ "list styles" — ควรเห็น tool `list_styles` ตอบกลับ 11 สไตล์
 
+## Dashboard (มือถือ/เว็บ)
+
+server เปิด HTTP+WS ที่ `127.0.0.1:8787` พร้อม MCP อัตโนมัติ (ปิดได้ด้วย `http.enabled=false`) — ขอลิงก์พร้อม token จาก Claude ด้วย tool `dashboard_info`
+หน้าจอ: รายการซีรีส์ + wizard, Bible board (ล็อก/ปลดล็อก), kanban ตอน, shot grid (QC badge, เจนใหม่, ผ่าน/ไม่ผ่าน), review player (อนุมัติ G3/G4, คอมเมนต์ตามเวลา → fix notes), คิว/เครดิต, ตั้งค่า
+ใช้บนมือถือ: ทำ tunnel ไปที่ 127.0.0.1:8787 (เช่น `tailscale serve 8787` หรือ `ssh -L 8787:127.0.0.1:8787 user@pc`) แล้วเปิดลิงก์เดียวกัน · dev: `pnpm dev:dashboard` (Vite proxy ไป server)
+
 ## โครง
 
 ```
 packages/core/     zod schemas (source of truth), validator, prompt compiler, state machine
-apps/server/       MCP (stdio) + file store + SQLite job queue (+ HTTP/WS ใน M5)
+apps/server/       MCP (stdio) + file store + SQLite job queue + HTTP/WS API (127.0.0.1 + token)
+apps/dashboard/    PWA (Vite + React + Tailwind) เสิร์ฟจาก server ที่ /
 presets/styles/    style presets (*.json) เพิ่มได้โดยไม่แก้โค้ด
 config/studio.json ทุกค่าที่ห้าม hardcode (maxClipSec, QC threshold, port) · override ด้วย config/local.json
 projects/          ข้อมูลซีรีส์ (gitignore) · logs/ JSON lines · data/ SQLite

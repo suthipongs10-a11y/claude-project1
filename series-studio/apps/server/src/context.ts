@@ -5,6 +5,7 @@ import { FileStore } from './store/fileStore.js';
 import { createLogger, silentLogger, type Logger } from './util/log.js';
 import { JobStore } from './store/db.js';
 import { join } from 'node:path';
+import { EventEmitter } from 'node:events';
 
 /** Everything a tool needs. Built once per server process (or per test). */
 export interface StudioContext {
@@ -12,12 +13,22 @@ export interface StudioContext {
   store: FileStore;
   jobs: JobStore;
   log: Logger;
+  /** In-process change feed: services emit { type, series_id, episode?, ... }; HTTP/WS fan out to clients. */
+  events: EventEmitter;
+  emit(event: StudioEvent): void;
   /** Loaded presets by id. Reloaded with reloadPresets(). */
   presets: Map<string, StylePreset>;
   /** Presets that failed to load (file -> Thai error message). */
   presetErrors: Map<string, string>;
   reloadPresets(): void;
   now(): string;
+}
+
+export interface StudioEvent {
+  type: string;
+  series_id?: string;
+  episode?: number;
+  [k: string]: unknown;
 }
 
 export interface ContextOptions extends LoadConfigOptions {
@@ -57,11 +68,17 @@ export function createContext(opts: ContextOptions = {}): StudioContext {
         : opts.logger;
   const store = new FileStore(config.projects_dir);
   const jobs = new JobStore(opts.jobsDb ?? join(config.data_dir, 'studio.sqlite'));
+  const events = new EventEmitter();
+  events.setMaxListeners(100);
   const ctx: StudioContext = {
     config,
     store,
     jobs,
     log,
+    events,
+    emit(event) {
+      events.emit('change', { ...event, at: ctx.now() });
+    },
     presets: new Map(),
     presetErrors: new Map(),
     reloadPresets() {

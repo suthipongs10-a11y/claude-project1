@@ -295,6 +295,7 @@ export class AssemblyService {
       if (st.status === 'draft_approved') this.series.saveEpisodeState(seriesId, { ...st, status: transitionEpisode(st.status, 'assembling') });
     }
     this.ctx.log.info('assembled', { series_id: seriesId, episode: n, quality: opts.quality, aspect, total_sec: total, ms: Date.now() - started, warnings: warnings.length });
+    this.ctx.emit({ type: 'assembled', series_id: seriesId, episode: n, quality: opts.quality });
     return { timeline, video: outFile, ...(srtPath ? { srt: srtPath } : {}), ...(cover ? { cover } : {}), warnings };
   }
 

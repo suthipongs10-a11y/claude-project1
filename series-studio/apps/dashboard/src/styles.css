@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+html, body, #root { min-height: 100%; }
+body { -webkit-tap-highlight-color: transparent; }
+
+@layer components {
+  .btn-primary, .btn-ghost, .btn-danger {
+    @apply inline-flex items-center justify-center gap-1 rounded-xl px-3 py-2 text-sm font-medium transition active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
+  }
+  .btn-primary { @apply bg-amber-400 text-zinc-950 hover:bg-amber-300; }
+  .btn-ghost { @apply bg-zinc-800 text-zinc-100 hover:bg-zinc-700; }
+  .btn-danger { @apply bg-rose-600 text-white hover:bg-rose-500; }
+  .card { @apply rounded-2xl bg-zinc-900 border border-zinc-800 p-3; }
+  .input { @apply w-full rounded-xl bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-amber-400; }
+  .label { @apply block text-xs text-zinc-400 mb-1; }
+  .badge { @apply inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium; }
+}

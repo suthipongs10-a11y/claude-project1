@@ -6,14 +6,27 @@
  */
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { createStudio } from './server.js';
+import { startHttpServer } from './http/server.js';
 
 async function main(): Promise<void> {
   const { ctx, server } = createStudio();
   const transport = new StdioServerTransport();
   await server.connect(transport);
   ctx.log.info('mcp_started', { presets: ctx.presets.size, projects_dir: ctx.config.projects_dir });
+  let http: Awaited<ReturnType<typeof startHttpServer>> | undefined;
+  if (ctx.config.http.enabled && process.env['SERIES_STUDIO_NO_HTTP'] !== '1') {
+    try {
+      http = await startHttpServer(ctx);
+      process.stderr.write(`series-studio dashboard: ${http.url}\n`);
+    } catch (e) {
+      // another server instance may already own the port; MCP keeps working without the dashboard
+      ctx.log.warn('http_start_failed', { error: (e as Error).message });
+      process.stderr.write(`series-studio: เปิด HTTP server ไม่ได้ (${(e as Error).message}) — MCP ยังใช้งานได้\n`);
+    }
+  }
   const shutdown = async () => {
     ctx.log.info('mcp_stopping');
+    await http?.app.close().catch(() => undefined);
     await server.close().catch(() => undefined);
     process.exit(0);
   };

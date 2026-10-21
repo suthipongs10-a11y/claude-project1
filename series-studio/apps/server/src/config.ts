@@ -20,7 +20,8 @@ export const StudioConfigSchema = z.strictObject({
   logs_dir: z.string().min(1),
   data_dir: z.string().min(1),
   tools: z.strictObject({ python: z.string().min(1), ffmpeg: z.string().min(1), ffprobe: z.string().min(1) }),
-  http: z.strictObject({ host: z.literal('127.0.0.1'), port: z.int().min(1).max(65535) }),
+  export_dir: z.string().min(1),
+  http: z.strictObject({ enabled: z.boolean().default(true), host: z.literal('127.0.0.1'), port: z.int().min(1).max(65535) }),
   default_engine: z.string().min(1),
   engines: z.record(z.string(), EngineConfigSchema),
   qc: z.strictObject({
@@ -70,6 +71,7 @@ export interface ResolvedConfig extends StudioConfig {
   presets_dir: string;
   logs_dir: string;
   data_dir: string;
+  export_dir: string;
 }
 
 /** The checked-out series-studio code folder (contains apps/, packages/, workers/). */
@@ -126,6 +128,7 @@ export function loadConfig(opts: LoadConfigOptions = {}): ResolvedConfig {
     presets_dir: abs(cfg.presets_dir),
     logs_dir: abs(cfg.logs_dir),
     data_dir: abs(cfg.data_dir),
+    export_dir: abs(cfg.export_dir),
   };
 }
 

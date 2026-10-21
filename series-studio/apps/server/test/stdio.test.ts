@@ -19,7 +19,7 @@ describe('MCP over stdio (built server)', () => {
       const transport = new StdioClientTransport({
         command: process.execPath,
         args: [entry],
-        env: { ...process.env, SERIES_STUDIO_HOME: t.root },
+        env: { ...process.env, SERIES_STUDIO_HOME: t.root, SERIES_STUDIO_NO_HTTP: '1' },
         stderr: 'pipe',
       });
       const client = new Client({ name: 'stdio-test', version: '0.0.0' });

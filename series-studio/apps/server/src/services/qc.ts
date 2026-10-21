@@ -194,6 +194,7 @@ export class QcService {
     }
     const state = this.series.loadEpisodeState(seriesId, n);
     if (state.status === 'generating') this.series.saveEpisodeState(seriesId, { ...state, status: transitionEpisode(state.status, 'qc') });
+    this.ctx.emit({ type: 'qc', series_id: seriesId, episode: n });
     const out: QcRunSummary = { results, summary: report.summary, skipped_checks: report.skipped_checks, errors: [...report.errors, ...missing.map((id) => `ช็อต ${id} ไม่มีคลิป`)] };
     if (opts.auto_regen) out.regen = await this.autoRegen(seriesId, n, results);
     return out;
@@ -271,6 +272,7 @@ export class QcService {
     const next = QcResult.parse({ ...base, review: verdict, at: this.ctx.now() });
     this.store.writeJson(this.qcFile(seriesId, n, shotId), next);
     this.ctx.log.info('review_shot', { series_id: seriesId, episode: n, shot_id: shotId, pass: verdict.pass, by: verdict.by });
+    this.ctx.emit({ type: 'qc', series_id: seriesId, episode: n, shot_id: shotId });
     return next;
   }
 }
