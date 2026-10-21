@@ -60,6 +60,17 @@
     "loudness_lufs": -14,
     "subtitle_offset_tolerance_sec": 0.2,
     "ai_label_text": "เนื้อหานี้สร้างด้วย AI",
-    "ad_label_text": "โฆษณา"
+    "ad_label_text": "โฆษณา",
+    "fps": 24,
+    "crf": 18,
+    "x264_preset": "medium",
+    "subtitle_font": "Noto Sans Thai",
+    "card_font": "Noto Sans Thai",
+    "title_card_sec": 2.0,
+    "end_card_sec": 3.0,
+    "product_card_sec": 4.0,
+    "music_volume": 0.25,
+    "draft_scale": 0.5,
+    "ai_label_position": "bottom_right"
   }
 }

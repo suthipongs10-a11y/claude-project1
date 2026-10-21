@@ -51,3 +51,40 @@ export async function extractKeyframes(ffmpeg: string, file: string, start: numb
   for (const [i, f] of fracs.entries()) out.push(await extractFrame(ffmpeg, file, start + duration * f, `${destDir}/${stem}_${i + 1}.jpg`));
   return out;
 }
+
+export async function hasAudio(ffprobe: string, file: string): Promise<boolean> {
+  const r = await run(ffprobe, ['-v', 'error', '-select_streams', 'a', '-show_entries', 'stream=codec_type', '-of', 'json', file]);
+  if (r.code !== 0) return false;
+  return ((JSON.parse(r.stdout || '{}') as { streams?: unknown[] }).streams?.length ?? 0) > 0;
+}
+
+export interface LoudnessStats {
+  input_i: number;
+  input_tp: number;
+  input_lra: number;
+  input_thresh: number;
+  target_offset: number;
+}
+
+/** First pass of two-pass loudnorm: measure integrated loudness etc. */
+export async function measureLoudness(ffmpeg: string, file: string, targetI: number, tp = -1.5, lra = 11): Promise<LoudnessStats> {
+  const r = await run(ffmpeg, ['-hide_banner', '-nostats', '-i', file, '-af', `loudnorm=I=${targetI}:TP=${tp}:LRA=${lra}:print_format=json`, '-vn', '-f', 'null', '-']);
+  const m = /\{[\s\S]*\}\s*$/.exec(r.stderr);
+  if (!m) throw new Error(`วัดความดังไม่ได้: ${r.stderr.slice(-400)}`);
+  const j = JSON.parse(m[0]) as Record<string, string>;
+  const num = (k: string) => {
+    const v = Number(j[k]);
+    return Number.isFinite(v) ? v : -70;
+  };
+  return { input_i: num('input_i'), input_tp: num('input_tp'), input_lra: num('input_lra'), input_thresh: num('input_thresh'), target_offset: num('target_offset') };
+}
+
+/** Integrated loudness (LUFS) of a finished file, via ebur128. */
+export async function integratedLoudness(ffmpeg: string, file: string): Promise<number> {
+  const r = await run(ffmpeg, ['-hide_banner', '-nostats', '-i', file, '-af', 'ebur128=framelog=quiet', '-vn', '-f', 'null', '-']);
+  const m = /I:\s*(-?[0-9.]+)\s*LUFS/g;
+  let last: number | undefined;
+  for (const hit of r.stderr.matchAll(m)) last = Number(hit[1]);
+  if (last === undefined) throw new Error(`อ่านค่า LUFS ไม่ได้: ${r.stderr.slice(-300)}`);
+  return last;
+}

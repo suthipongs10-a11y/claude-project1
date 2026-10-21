@@ -4,7 +4,7 @@
 
 ## สถานะปัจจุบัน
 
-- Milestone: **M4** กำลังทำ (M0–M3 โค้ดเสร็จ เทสต์ผ่าน รอผู้ใช้ยืนยันบน Claude Desktop)
+- Milestone: **M5** กำลังทำ (M0–M4 โค้ดเสร็จ เทสต์ผ่าน รอผู้ใช้ยืนยันบน Claude Desktop) · **ใช้ผลิตงานจริงได้แล้วในโหมด manual**
 - Engine ที่ใช้: `manual` (flow_ext เริ่ม M6)
 - อัปเดตล่าสุด: 2026-10-21
 
@@ -16,8 +16,8 @@
 | M1 | Series/Bible/Outline tools + 11 style presets + validator | สร้างซีรีส์ทดลอง 3 ตอนจากแชท ได้ไฟล์ครบตาม §6 | ✅ โค้ด+เทสต์ผ่าน (เทสต์ e2e ผ่าน MCP client) · รอผู้ใช้ลองจากแชทจริง |
 | M2 | Script + Shot breakdown + Prompt compiler + export prompt sheet + import_clips | เจนใน Flow เองแล้ว import กลับ map ถูกช็อต | ✅ โค้ด+เทสต์ผ่าน (e2e: script→shots→prompts→sheet→import) · รอผู้ใช้ลองกับ Flow จริง |
 | M3 | QC workers + get_keyframes + regen loop | จับช็อตพังที่ใส่ไว้ทดสอบได้ ≥ 80% | ✅ โค้ด+เทสต์ผ่าน (คลิปพังสังเคราะห์ 4 แบบ จับได้ 100%) · whisper/insightface ต้องติดตั้งเองบน PC |
-| M4 | Assembly: loudnorm, SRT, Remotion cards, export 9:16/16:9 | ไฟล์ final 1 ตอน เสียงเท่ากัน ซับตรง ±0.2s | 🔧 กำลังทำ |
-| M5 | Dashboard PWA + approve gates | อนุมัติ G1–G4 จากมือถือได้ | ยังไม่เริ่ม |
+| M4 | Assembly: loudnorm, SRT, Remotion cards, export 9:16/16:9 | ไฟล์ final 1 ตอน เสียงเท่ากัน ซับตรง ±0.2s | ✅ โค้ด+เทสต์ผ่าน (−14 LUFS ±1.5, ซับตรงเวลา timeline, 1080×1920 H.264) · การ์ดใช้ ffmpeg drawtext แทน Remotion (ดูหมายเหตุ) |
+| M5 | Dashboard PWA + approve gates | อนุมัติ G1–G4 จากมือถือได้ | 🔧 กำลังทำ |
 | M6 | Chrome Extension flow_ext + Flow Characters | เจน 1 ตอนโดยไม่แตะ Flow เอง | ยังไม่เริ่ม |
 | M7 | Voice modes (dub/narration) + voice adapter | เสียงตัวละครเดิมทุกคลิป | ยังไม่เริ่ม |
 | M8 | Product mode + continuity ข้ามตอน + cost report | ซีรีส์ 10 ตอนจบ ไม่พลาดชุด/แผลข้ามตอน | ยังไม่เริ่ม |
@@ -61,6 +61,13 @@
 - MCP tools: `run_qc` (+auto_regen), `get_keyframes` (ส่งภาพ JPEG ให้ Claude ดู), `review_shot` (pass/fail override สำหรับ G3), `regen_shot` · prompt `fix_failed_shots`
 - เทสต์: pytest 9 ข้อ (คลิปสังเคราะห์: สั้น/ดำ/ค้าง/ตัดเกิน จับได้ 4/4) + vitest e2e M3 (QC → keyframes → review → regen → import take 2 → QC ผ่าน → G3) รวม 97 ข้อผ่าน
 - หมายเหตุ: `tools.python` ใน config ตั้งเป็น `python3` ถ้าใช้ venv ให้ชี้ `config/local.json` ไป `.venv/bin/python`
+
+### 2026-10-21 — M4 เสร็จ
+- `AssemblyService` (ffmpeg อย่างเดียว): ต่อคลิปตาม batch บน timeline (trim ตามที่วาง, pad/scale เป็น 1080×1920 หรือ 1920×1080, คลิปไม่มีเสียงเติม silence), การ์ดชื่อเรื่อง/ตอน, การ์ด "ตอนต่อไป" (ดึงชื่อตอนถัดไปจาก outline), การ์ดสินค้าในตอนที่มี bridge, ป้าย "เนื้อหานี้สร้างด้วย AI" ทั้งคลิป, ป้าย "โฆษณา" ใน product mode, SRT จากเวลาบทพูดบน timeline + เบิร์นด้วย libass ตาม `subtitle_style` ของ preset (map เป็น ASS force_style), เสียง: clip audio หรือ voice_track (dub/narration) + เพลงประกอบแบบ ducking (sidechaincompress), loudnorm 2 pass เป้า −14 LUFS, ปกจากกลางช็อต cliffhanger, `edit/timeline_<quality>.json` (schema `Timeline` ใน core)
+- MCP tool `assemble` (draft = preview ครึ่งขนาดใน edit/ ไม่ต้องผ่าน G3, final = ต้องผ่าน G3 → `final/epNN_9x16.mp4` + `.srt` + `_cover.jpg`) · G4 ตรวจว่ามีไฟล์ final แล้ว
+- config `assembly.*` เพิ่ม fps/crf/preset/font/ความยาวการ์ด/ระดับเพลง — ฟอนต์ไทยตั้งได้ (`subtitle_font`, `card_font`; default "Noto Sans Thai")
+- เทสต์ e2e M4: ประกอบจริงด้วย ffmpeg → วัดได้ −14 LUFS ±1.5, ซับตรงเวลาที่คาด ±0.2s, ความยาว 25s, H.264 1080×1920, และ 16:9 + เพลง + voice track · รวม 101 ข้อผ่าน
+- **หมายเหตุ/ขอตัดสินใจ**: SPEC ระบุ Remotion สำหรับการ์ด แต่ Remotion เป็น dependency ใหญ่ (React + Chromium render) จึงทำการ์ดด้วย ffmpeg drawtext ไว้ก่อน (ใช้งานได้จริง) ถ้าต้องการการ์ดสวยแบบ Remotion ค่อยเพิ่มเป็น adapter ใน `apps/assembler` ภายหลัง
 
 ## ปัญหาค้าง / ข้อสังเกต
 

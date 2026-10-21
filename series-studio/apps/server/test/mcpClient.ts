@@ -10,8 +10,8 @@ export interface CallResult<T = Record<string, unknown>> {
 }
 
 /** In-memory MCP client against a fresh temp studio; `call` returns text + structuredContent. */
-export async function studioClient() {
-  const t = makeTempStudio();
+export async function studioClient(localConfig?: Record<string, unknown>) {
+  const t = makeTempStudio(localConfig);
   const server = buildServer(t.ctx);
   const [clientT, serverT] = InMemoryTransport.createLinkedPair();
   await server.connect(serverT);

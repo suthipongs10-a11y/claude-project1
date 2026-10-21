@@ -48,6 +48,17 @@ export const StudioConfigSchema = z.strictObject({
     subtitle_offset_tolerance_sec: z.number().positive(),
     ai_label_text: z.string().min(1),
     ad_label_text: z.string().min(1),
+    fps: z.int().min(1).max(120),
+    crf: z.int().min(0).max(51),
+    x264_preset: z.string().min(1),
+    subtitle_font: z.string().min(1),
+    card_font: z.string().min(1),
+    title_card_sec: z.number().min(0),
+    end_card_sec: z.number().min(0),
+    product_card_sec: z.number().min(0),
+    music_volume: z.number().min(0).max(1),
+    draft_scale: z.number().min(0.1).max(1),
+    ai_label_position: z.enum(['bottom_right', 'bottom_left', 'top_right', 'top_left']),
   }),
 });
 export type StudioConfig = z.infer<typeof StudioConfigSchema>;

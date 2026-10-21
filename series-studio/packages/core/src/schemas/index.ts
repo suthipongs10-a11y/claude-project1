@@ -5,3 +5,4 @@ export * from './bible.js';
 export * from './episode.js';
 export * from './continuity.js';
 export * from './jobs.js';
+export * from './timeline.js';
