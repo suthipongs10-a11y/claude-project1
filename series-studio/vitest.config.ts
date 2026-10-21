@@ -12,6 +12,7 @@ export default defineConfig({
   },
   test: {
     include: ['packages/*/test/**/*.test.ts', 'apps/*/test/**/*.test.ts'],
+    server: { deps: { inline: [] } },
     environment: 'node',
     testTimeout: 20_000,
   },

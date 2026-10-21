@@ -11,6 +11,10 @@ export interface EngineConfig {
   /** Minimum delay between submissions (ms); flow_ext adds random jitter on top. */
   minDelayMs?: number | undefined;
   maxDelayMs?: number | undefined;
+  /** Seconds before a dispatched extension job is considered lost. */
+  jobTimeoutSec?: number | undefined;
+  /** Selector config file (relative to the studio root) for the flow_ext driver. */
+  selectorsFile?: string | undefined;
 }
 
 export interface JobHandle {

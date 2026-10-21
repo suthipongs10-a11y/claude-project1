@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { EpisodeNumber, IsoDateTime, Quality, RelPath, Slug } from './common.js';
 
-export const JobStatus = z.enum(['queued', 'running', 'awaiting_import', 'done', 'failed', 'cancelled']);
+export const JobStatus = z.enum(['queued', 'running', 'awaiting_import', 'blocked', 'done', 'failed', 'cancelled']);
 export type JobStatus = z.infer<typeof JobStatus>;
 
-export const JobKind = z.enum(['ref', 'clip']);
+export const JobKind = z.enum(['ref', 'clip', 'character']);
 export type JobKind = z.infer<typeof JobKind>;
 
 export const EntityType = z.enum(['character', 'location', 'prop']);

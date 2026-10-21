@@ -4,6 +4,7 @@ import { loadConfig, type LoadConfigOptions, type ResolvedConfig } from './confi
 import { FileStore } from './store/fileStore.js';
 import { createLogger, silentLogger, type Logger } from './util/log.js';
 import { JobStore } from './store/db.js';
+import type { ExtensionBridge } from './ext/bridge.js';
 import { join } from 'node:path';
 import { EventEmitter } from 'node:events';
 
@@ -16,6 +17,8 @@ export interface StudioContext {
   /** In-process change feed: services emit { type, series_id, episode?, ... }; HTTP/WS fan out to clients. */
   events: EventEmitter;
   emit(event: StudioEvent): void;
+  /** Set when the HTTP server is running: bridge to the Chrome extension (flow_ext). */
+  ext?: ExtensionBridge;
   /** Loaded presets by id. Reloaded with reloadPresets(). */
   presets: Map<string, StylePreset>;
   /** Presets that failed to load (file -> Thai error message). */

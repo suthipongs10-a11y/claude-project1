@@ -16,6 +16,9 @@ import { AssemblyService } from '../services/assembly.js';
 import { SettingsService } from '../services/settings.js';
 import { summarizeSeries } from '../tools/_summary.js';
 import { loadOrCreateToken, tokenMatches } from './token.js';
+import { ExtensionBridge } from '../ext/bridge.js';
+import { writeFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 
 export interface HttpServerOptions {
   token?: string;
@@ -41,6 +44,15 @@ export function createHttpServer(ctx: StudioContext, opts: HttpServerOptions = {
   const assembly = new AssemblyService(ctx);
   const settings = new SettingsService(ctx);
   const dashboardDir = opts.dashboardDir ?? join(codeRoot(), 'apps', 'dashboard', 'dist');
+  let publicBase = `http://${ctx.config.http.host}:${ctx.config.http.port}`;
+  const bridge = new ExtensionBridge(ctx, () => publicBase, () => token);
+  ctx.ext = bridge;
+  app.addHook('onListen', async () => {
+    const addr = app.server.address();
+    if (addr && typeof addr === 'object') publicBase = `http://${ctx.config.http.host}:${addr.port}`;
+  });
+  // raw bodies for result uploads (video/image bytes)
+  app.addContentTypeParser(['video/mp4', 'video/webm', 'video/quicktime', 'image/png', 'image/jpeg', 'image/webp', 'application/octet-stream'], { parseAs: 'buffer', bodyLimit: 2 * 1024 * 1024 * 1024 }, (_req, body, done) => done(null, body));
 
   const givenToken = (req: FastifyRequest): string | undefined => {
     const h = req.headers['authorization'];
@@ -83,6 +95,8 @@ export function createHttpServer(ctx: StudioContext, opts: HttpServerOptions = {
       ctx.events.on('change', onChange);
       ctx.log.info('ws_connected', { role });
       socket.send(JSON.stringify({ kind: 'hello', role, server: 'series-studio', at: ctx.now() }));
+      const extSocket = { send: (text: string) => socket.send(text), close: () => socket.close() };
+      if (role === 'extension') bridge.attach(extSocket);
       socket.on('message', (raw: Buffer) => {
         let msg: Record<string, unknown>;
         try {
@@ -91,10 +105,12 @@ export function createHttpServer(ctx: StudioContext, opts: HttpServerOptions = {
           return;
         }
         if (msg['kind'] === 'ping') socket.send(JSON.stringify({ kind: 'pong', at: ctx.now() }));
-        else ctx.events.emit('ws_message', { role, ...msg });
+        if (role === 'extension') bridge.handleMessage(msg);
+        else if (msg['kind'] !== 'ping') ctx.events.emit('ws_message', { role, ...msg });
       });
       socket.on('close', () => {
         ctx.events.off('change', onChange);
+        if (role === 'extension') bridge.detach(extSocket);
         ctx.log.info('ws_closed', { role });
       });
     });
@@ -244,6 +260,34 @@ export function createHttpServer(ctx: StudioContext, opts: HttpServerOptions = {
   });
   app.get('/api/settings', async () => ({ ...settings.current(), token_hint: token.slice(0, 4) + '…' }));
   app.put('/api/settings', async (req) => settings.update((req.body ?? {}) as Record<string, unknown>));
+
+  // ------------------------------------------------------------ chrome extension (flow_ext)
+  app.get('/api/ext/status', async () => ({ ...bridge.status(), engine: ctx.config.engines['flow_ext'] ?? null }));
+  app.get('/api/ext/selectors', async () => bridge.loadSelectors());
+  app.post('/api/ext/resume', async () => {
+    bridge.resume();
+    return { ok: true, ...bridge.status() };
+  });
+  app.post('/api/ext/jobs/:id/cancel', async (req) => {
+    bridge.cancel((req.params as { id: string }).id);
+    return { ok: true };
+  });
+  app.post('/api/ext/jobs/:id/result', async (req) => {
+    const id = (req.params as { id: string }).id;
+    const body = req.body;
+    if (!Buffer.isBuffer(body) || body.length === 0) throw new Error('ต้องส่งไฟล์เป็น body (video/mp4 หรือ image/png)');
+    const ct = String(req.headers['content-type'] ?? 'application/octet-stream');
+    const ext = ct.includes('webm') ? '.webm' : ct.includes('quicktime') ? '.mov' : ct.includes('png') ? '.png' : ct.includes('jpeg') ? '.jpg' : ct.includes('webp') ? '.webp' : '.mp4';
+    const dir = mkdtempSync(join(tmpdir(), 'series-studio-upload-'));
+    const tmp = join(dir, `${id}${ext}`);
+    writeFileSync(tmp, body);
+    try {
+      const res = bridge.attachResult(id, tmp);
+      return { ok: true, stored: res.stored, status: res.job.status };
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
 
   // ------------------------------------------------------------ media files inside projects/<series>/
   app.get('/files/:id/*', async (req, reply) => {

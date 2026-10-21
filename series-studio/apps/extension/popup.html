@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <title>Series Studio</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>Series Studio · Flow Driver</h1>
+    <div id="status" class="status">กำลังตรวจสอบ…</div>
+    <label>Port ของ studio-server <input id="port" type="number" value="8787" /></label>
+    <label>Token (จาก dashboard_info) <input id="token" type="password" placeholder="วาง token ที่นี่" /></label>
+    <div class="row">
+      <button id="pair">จับคู่และเชื่อมต่อ</button>
+      <button id="disconnect" class="ghost">ตัดการเชื่อมต่อ</button>
+    </div>
+    <p class="hint">extension ทำงานทีละงาน หน่วงเวลาแบบคน และหยุดทันทีเมื่อเจอหน้า Flow ที่ไม่รู้จัก (แก้ <code>config/flow-selectors.json</code> แล้วสั่ง resume จาก Claude/Dashboard) · ไม่เก็บรหัสผ่าน ใช้ session ที่คุณล็อกอินใน Chrome</p>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -44,6 +44,8 @@ server เปิด HTTP+WS ที่ `127.0.0.1:8787` พร้อม MCP อ�
 packages/core/     zod schemas (source of truth), validator, prompt compiler, state machine
 apps/server/       MCP (stdio) + file store + SQLite job queue + HTTP/WS API (127.0.0.1 + token)
 apps/dashboard/    PWA (Vite + React + Tailwind) เสิร์ฟจาก server ที่ /
+apps/extension/    Chrome MV3 ขับ Google Flow (engine flow_ext) — ดู apps/extension/README.md
+config/flow-selectors.json  selector ของ Flow แก้ได้ไม่ต้อง build
 presets/styles/    style presets (*.json) เพิ่มได้โดยไม่แก้โค้ด
 config/studio.json ทุกค่าที่ห้าม hardcode (maxClipSec, QC threshold, port) · override ด้วย config/local.json
 projects/          ข้อมูลซีรีส์ (gitignore) · logs/ JSON lines · data/ SQLite

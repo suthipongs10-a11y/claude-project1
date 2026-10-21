@@ -11,6 +11,8 @@ const EngineConfigSchema = z.strictObject({
   creditsPerClip: z.strictObject({ draft: z.number().nonnegative(), final: z.number().nonnegative() }),
   minDelayMs: z.int().nonnegative().optional(),
   maxDelayMs: z.int().nonnegative().optional(),
+  jobTimeoutSec: z.int().min(10).optional(),
+  selectorsFile: z.string().min(1).optional(),
 });
 
 export const StudioConfigSchema = z.strictObject({

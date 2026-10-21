@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "flow_url_prefixes": ["https://labs.google/fx/tools/flow", "https://labs.google/fx/th/tools/flow"],
+  "flow_home_url": "https://labs.google/fx/tools/flow",
+  "wait_sec": 30,
+  "notes": "CSS selectors for Google Flow's UI. Flow changes often: edit this file (no rebuild) and reload the extension's job. Keys are referenced by name from the extension driver; a missing/unmatched key makes the driver stop safely and report `blocked`.",
+  "selectors": {
+    "prompt_textarea": "textarea[placeholder], div[contenteditable='true'][role='textbox']",
+    "generate_button": "button[aria-label*='Generate' i], button[type='submit']",
+    "settings_button": "button[aria-label*='Settings' i], button[aria-label*='ตั้งค่า']",
+    "aspect_9_16": "[role='option'][aria-label*='9:16'], [role='menuitem']:has-text('9:16'), button:has-text('9:16')",
+    "aspect_16_9": "[role='option'][aria-label*='16:9'], [role='menuitem']:has-text('16:9'), button:has-text('16:9')",
+    "quality_draft": "[role='option']:has-text('Fast'), [role='menuitem']:has-text('Fast')",
+    "quality_final": "[role='option']:has-text('Quality'), [role='menuitem']:has-text('Quality')",
+    "add_ingredient_button": "button[aria-label*='Add' i][aria-label*='image' i], button:has-text('Ingredients')",
+    "file_input": "input[type='file']",
+    "result_video": "video[src]",
+    "result_download_button": "button[aria-label*='Download' i], a[download]",
+    "progress_indicator": "[role='progressbar'], [aria-busy='true']",
+    "error_banner": "[role='alert']",
+    "characters_tab": "button:has-text('Characters'), a[href*='characters']",
+    "character_new_button": "button:has-text('New character'), button[aria-label*='character' i]",
+    "character_name_input": "input[name='name'], input[placeholder*='name' i]",
+    "character_save_button": "button:has-text('Save'), button:has-text('Create')",
+    "character_card_link": "a[href*='character/']"
+  }
+}

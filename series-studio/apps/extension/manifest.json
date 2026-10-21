@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Series Studio Flow Driver",
+  "version": "0.1.0",
+  "description": "ขับ Google Flow ให้ Series Studio: รับงานจาก studio-server บนเครื่องนี้ (127.0.0.1) ทำทีละงาน แล้วส่งคลิปกลับ",
+  "minimum_chrome_version": "116",
+  "permissions": ["storage", "tabs", "scripting", "alarms"],
+  "host_permissions": ["https://labs.google/*", "http://127.0.0.1/*"],
+  "background": { "service_worker": "sw.js", "type": "module" },
+  "action": { "default_popup": "popup.html", "default_title": "Series Studio" }
+}

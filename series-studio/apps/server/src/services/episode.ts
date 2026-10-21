@@ -208,7 +208,7 @@ export class EpisodeService {
       });
       await engine.submit(job);
       const polled = await engine.poll({ jobId: job.id });
-      jobs.push(this.ctx.jobs.update(job.id, { status: polled.status, updated_at: now }));
+      jobs.push(polled.status === job.status ? this.ctx.jobs.get(job.id)! : this.ctx.jobs.update(job.id, { status: polled.status, updated_at: now }));
     }
     this.addCost(seriesId, n, credits * jobs.length, jobs.length);
     const state = this.series.loadEpisodeState(seriesId, n);
@@ -271,18 +271,20 @@ export class EpisodeService {
       warnings.push(`${basename(file)} ไม่มี batch id ในชื่อไฟล์ จับคู่ตามลำดับให้ ${job.batch_id} — ตรวจว่าถูกต้อง`);
       mapped.push(this.storeClip(seriesId, n, file, job, 'order'));
     }
-    const stillWaiting = this.ctx.jobs.list({ series_id: seriesId, episode: n, kind: 'clip', status: ['awaiting_import', 'queued'] });
-    if (mapped.length && stillWaiting.length === 0) {
-      const state = this.series.loadEpisodeState(seriesId, n);
-      if (state.status === 'generating') this.series.saveEpisodeState(seriesId, { ...state, status: transitionEpisode(state.status, 'qc') });
-    }
+    this.maybeEnterQc(seriesId, n, mapped.length > 0);
     this.ctx.log.info('import_clips', { series_id: seriesId, episode: n, mapped: mapped.length, unmatched: unmatched.length });
     this.ctx.emit({ type: 'jobs', series_id: seriesId, episode: n });
     return { mapped, unmatched, warnings };
   }
 
+  /** Store a finished clip for a job (manual import or extension upload) and write per-shot pointers. */
+  attachClip(seriesId: string, n: number, job: GenJob, file: string): string {
+    return this.storeClip(seriesId, n, file, job, 'order').stored;
+  }
+
   private storeClip(seriesId: string, n: number, file: string, job: GenJob, how: ImportMapping['how']): ImportMapping {
-    const dest = this.store.episodePath(seriesId, n, 'gen', job.batch_id!, `v${job.attempt}${extname(file).toLowerCase()}`);
+    const ext = extname(file).toLowerCase() || '.mp4';
+    const dest = this.store.episodePath(seriesId, n, 'gen', job.batch_id!, `v${job.attempt}${ext}`);
     if (existsSync(dest)) this.store.moveToTrash(seriesId, dest);
     this.store.writeText(dest + '.meta.json', JSON.stringify({ job_id: job.id, source: basename(file), imported_at: this.ctx.now() }, null, 2) + '\n');
     copyFileSync(file, dest);
@@ -298,6 +300,15 @@ export class EpisodeService {
       offset += dur;
     }
     return { file, batch_id: job.batch_id!, job_id: job.id, stored: rel, shot_ids: job.shot_ids, how };
+  }
+
+  /** When no clip job is outstanding any more, the episode moves from generating to qc. */
+  maybeEnterQc(seriesId: string, n: number, imported = true): void {
+    const stillWaiting = this.ctx.jobs.list({ series_id: seriesId, episode: n, kind: 'clip', status: ['awaiting_import', 'queued', 'running'] });
+    if (imported && stillWaiting.length === 0) {
+      const state = this.series.loadEpisodeState(seriesId, n);
+      if (state.status === 'generating') this.series.saveEpisodeState(seriesId, { ...state, status: transitionEpisode(state.status, 'qc') });
+    }
   }
 
   private collectFiles(opts: { folder?: string | undefined; files?: string[] | undefined }): string[] {

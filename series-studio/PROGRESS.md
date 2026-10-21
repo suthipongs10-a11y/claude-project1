@@ -4,7 +4,7 @@
 
 ## สถานะปัจจุบัน
 
-- Milestone: **M6** กำลังทำ (M0–M5 โค้ดเสร็จ เทสต์ผ่าน รอผู้ใช้ยืนยันบน Claude Desktop/มือถือจริง) · **ใช้ผลิตงานจริงได้แล้วในโหมด manual**
+- Milestone: **M7** กำลังทำ (M0–M6 โค้ดเสร็จ เทสต์ผ่าน · M6 ต้องให้ผู้ใช้ทดสอบกับ Flow จริงและปรับ selectors) · **ใช้ผลิตงานจริงได้แล้วในโหมด manual**
 - Engine ที่ใช้: `manual` (flow_ext เริ่ม M6)
 - อัปเดตล่าสุด: 2026-10-21
 
@@ -18,8 +18,8 @@
 | M3 | QC workers + get_keyframes + regen loop | จับช็อตพังที่ใส่ไว้ทดสอบได้ ≥ 80% | ✅ โค้ด+เทสต์ผ่าน (คลิปพังสังเคราะห์ 4 แบบ จับได้ 100%) · whisper/insightface ต้องติดตั้งเองบน PC |
 | M4 | Assembly: loudnorm, SRT, Remotion cards, export 9:16/16:9 | ไฟล์ final 1 ตอน เสียงเท่ากัน ซับตรง ±0.2s | ✅ โค้ด+เทสต์ผ่าน (−14 LUFS ±1.5, ซับตรงเวลา timeline, 1080×1920 H.264) · การ์ดใช้ ffmpeg drawtext แทน Remotion (ดูหมายเหตุ) |
 | M5 | Dashboard PWA + approve gates | อนุมัติ G1–G4 จากมือถือได้ | ✅ โค้ด+เทสต์ผ่าน (Playwright viewport มือถือ กด G1→G4 ครบ) · รอผู้ใช้ลองบนมือถือจริงผ่าน tunnel |
-| M6 | Chrome Extension flow_ext + Flow Characters | เจน 1 ตอนโดยไม่แตะ Flow เอง | 🔧 กำลังทำ |
-| M7 | Voice modes (dub/narration) + voice adapter | เสียงตัวละครเดิมทุกคลิป | ยังไม่เริ่ม |
+| M6 | Chrome Extension flow_ext + Flow Characters | เจน 1 ตอนโดยไม่แตะ Flow เอง | 🟡 โค้ด+เทสต์โปรโตคอลผ่าน (extension จำลอง) · **ต้องทดสอบกับ Flow จริง + ปรับ `config/flow-selectors.json`** |
+| M7 | Voice modes (dub/narration) + voice adapter | เสียงตัวละครเดิมทุกคลิป | 🔧 กำลังทำ |
 | M8 | Product mode + continuity ข้ามตอน + cost report | ซีรีส์ 10 ตอนจบ ไม่พลาดชุด/แผลข้ามตอน | ยังไม่เริ่ม |
 
 > ใช้ผลิตงานจริงได้ตั้งแต่ M4 (โหมด manual)
@@ -74,6 +74,15 @@
 - dashboard: Vite + React 19 + Tailwind 4 PWA (manifest + service worker เขียนเอง ไม่เพิ่ม dep), hash router, mobile-first bottom nav, หน้าจอครบ 7: Series list, wizard (ไอเดีย→สไตล์→อัตราส่วน→ตอน), Bible board (ภาพ ref + ล็อก/ปลดล็อก), Episode kanban, Shot grid (keyframe + QC badge เขียว/แดง + เจนใหม่ + ผ่าน/ไม่ผ่าน), Review player (วิดีโอ preview/final, อนุมัติ G3/G4, ประกอบไฟล์จบ, export, คอมเมนต์ตามเวลา → เจนซ่อม), Queue & Cost, Settings (engine, QC threshold, เสียง/ประกอบ, export dir, tools, token)
 - เทสต์: HTTP API 6 ข้อ (auth, wizard, gate จาก dashboard, episode/review/regen/comments/G3/G4/export, settings, WS) + Playwright smoke บน viewport มือถือ (390×844) กดอนุมัติ G1→G2 (ล็อก asset จากหน้า Bible) และ G3→ประกอบไฟล์จบ→G4 จริงผ่าน UI · รวม 109 ข้อผ่าน
 - ข้อจำกัด: server bind 127.0.0.1 ตามกฎ → มือถือต้องผ่าน tunnel (Tailscale/ssh) · การตั้งค่า engine/tools ต้องรีสตาร์ท
+
+### 2026-10-21 — M6 เสร็จ (รอทดสอบกับ Flow จริง)
+- core: schema โปรโตคอล extension (`ExtJobPayload`, `ExtClientMessage`, `FlowSelectors`), job kind `character`, status `blocked`
+- server: `ExtensionBridge` (extension 1 ตัว ทำทีละงาน, dispatch งาน `flow_ext` ตามลำดับ, timeout ต่องานจาก config, `blocked` = หยุดทั้งคิวจน resume, extension หลุดกลางงาน → requeue), `FlowExtEngine` adapter, endpoints `/api/ext/status|selectors|resume|jobs/:id/cancel|jobs/:id/result` (อัปโหลดไฟล์ดิบ → เก็บเป็น gen/<batch>/vN.mp4 หรือ ref ของ asset), WS role=extension, MCP tools `extension_status` (+resume) และ `sync_flow_characters` (สร้าง Character ใน Flow แล้วเก็บ `flow_character_id`)
+- `config/flow-selectors.json`: selector ของ Flow แยกจากโค้ด (รองรับ `:has-text('…')`) server เสิร์ฟให้ extension โหลดทุกงาน
+- `apps/extension/` (MV3, ไม่มี build step): `sw.js` (WS ไป 127.0.0.1 + alarms keepalive, งานทีละงาน, หา/เปิดแท็บ Flow, inject, อัปโหลดผล), `driver.js` (ลอจิกขับ UI แบบทดสอบได้: ตรวจหน้า→ตั้ง aspect/quality→แนบ ref→วาง prompt→เจน→รอผล→ดาวน์โหลด; หน่วงสุ่มก่อนทุกแอ็กชัน; ไม่พบ selector → BlockedError ไม่เดา), `content.js` (DOM adapter), popup จับคู่ token/port, README
+- dashboard: หน้า Queue แสดงสถานะ extension + ปุ่ม resume
+- เทสต์: driver 5 ข้อ (happy path, blocked, failed, character, helpers) + bridge 5 ข้อ (คิวเมื่อไม่มี extension, dispatch ทีละงาน + อัปโหลด 3 batch → qc, blocked→resume→failed, sync characters, timeout/requeue) · รวม 119 ข้อผ่าน
+- **ข้อจำกัดสำคัญ**: ไม่สามารถทดสอบกับ UI จริงของ Google Flow จากที่นี่ — selectors ใน `config/flow-selectors.json` เป็นค่าตั้งต้นที่ต้องปรับตามหน้าจริง (extension จะหยุดแบบปลอดภัยและบอกว่า selector ไหนไม่พบ) · ToS ของ Flow เป็นความรับผิดชอบของผู้ใช้ (SPEC §14)
 
 ## ปัญหาค้าง / ข้อสังเกต
 

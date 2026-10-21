@@ -35,7 +35,9 @@
         "final": 100
       },
       "minDelayMs": 8000,
-      "maxDelayMs": 25000
+      "maxDelayMs": 25000,
+      "jobTimeoutSec": 900,
+      "selectorsFile": "config/flow-selectors.json"
     }
   },
   "qc": {
