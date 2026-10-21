@@ -14,7 +14,8 @@
     "dev:server": "pnpm --filter @series-studio/core build && pnpm --filter @series-studio/server dev",
     "dev:dashboard": "pnpm --filter @series-studio/dashboard dev",
     "test": "pnpm build && vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:py": "python3 -m pytest -q workers"
   },
   "devDependencies": {
     "@types/node": "^22.19.0",

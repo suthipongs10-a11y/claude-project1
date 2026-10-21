@@ -19,6 +19,7 @@ export const StudioConfigSchema = z.strictObject({
   presets_dir: z.string().min(1),
   logs_dir: z.string().min(1),
   data_dir: z.string().min(1),
+  tools: z.strictObject({ python: z.string().min(1), ffmpeg: z.string().min(1), ffprobe: z.string().min(1) }),
   http: z.strictObject({ host: z.literal('127.0.0.1'), port: z.int().min(1).max(65535) }),
   default_engine: z.string().min(1),
   engines: z.record(z.string(), EngineConfigSchema),
@@ -31,6 +32,12 @@ export const StudioConfigSchema = z.strictObject({
     freeze_min_sec: z.number().positive(),
     max_regen_attempts: z.int().min(0),
     keyframes_per_shot: z.int().min(1),
+    scdet_threshold: z.number().min(0).max(100),
+    worker_timeout_sec: z.int().min(1),
+    whisper_model: z.string().min(1),
+    whisper_device: z.string().min(1),
+    whisper_compute_type: z.string().min(1),
+    ocr: z.boolean(),
   }),
   script: z.strictObject({
     syllables_per_sec: z.number().positive(),
@@ -54,13 +61,18 @@ export interface ResolvedConfig extends StudioConfig {
   data_dir: string;
 }
 
-/** The series-studio folder: SERIES_STUDIO_HOME or the folder two levels above apps/server. */
-export function studioRoot(): string {
-  const env = process.env['SERIES_STUDIO_HOME'];
-  if (env) return resolve(env);
+/** The checked-out series-studio code folder (contains apps/, packages/, workers/). */
+export function codeRoot(): string {
   // <root>/apps/server/{src|dist}/config.ts -> <root>
   const here = dirname(fileURLToPath(import.meta.url));
   return resolve(here, '..', '..', '..');
+}
+
+/** The data/config root: SERIES_STUDIO_HOME or the code folder. */
+export function studioRoot(): string {
+  const env = process.env['SERIES_STUDIO_HOME'];
+  if (env) return resolve(env);
+  return codeRoot();
 }
 
 function deepMerge(base: Record<string, unknown>, over: Record<string, unknown>): Record<string, unknown> {

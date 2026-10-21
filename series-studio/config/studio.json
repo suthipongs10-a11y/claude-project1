@@ -4,6 +4,11 @@
   "presets_dir": "presets/styles",
   "logs_dir": "logs",
   "data_dir": "data",
+  "tools": {
+    "python": "python3",
+    "ffmpeg": "ffmpeg",
+    "ffprobe": "ffprobe"
+  },
   "http": {
     "host": "127.0.0.1",
     "port": 8787
@@ -39,7 +44,13 @@
     "black_min_sec": 0.3,
     "freeze_min_sec": 1.0,
     "max_regen_attempts": 2,
-    "keyframes_per_shot": 3
+    "keyframes_per_shot": 3,
+    "scdet_threshold": 10,
+    "worker_timeout_sec": 1800,
+    "whisper_model": "large-v3",
+    "whisper_device": "auto",
+    "whisper_compute_type": "auto",
+    "ocr": false
   },
   "script": {
     "syllables_per_sec": 5.5,

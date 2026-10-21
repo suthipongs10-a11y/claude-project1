@@ -60,5 +60,25 @@ export function registerPrompts(server: McpServer, ctx: StudioContext): void {
       return { messages: [{ role: 'user', content: { type: 'text', text } }] };
     },
   );
+
+  server.registerPrompt(
+    'fix_failed_shots',
+    {
+      title: 'ซ่อมช็อตที่ไม่ผ่าน QC (Stage G)',
+      description: 'Guide Claude through reviewing failed shots with keyframes and deciding regen vs accept.',
+      argsSchema: { series_id: z.string().min(1), episode: z.string().min(1) },
+    },
+    ({ series_id, episode }) => {
+      const text = [
+        `ตรวจและซ่อมช็อตของตอนที่ ${episode} ซีรีส์ ${series_id}:`,
+        '1. run_qc (ถ้ายังไม่ได้รัน) แล้วดูช็อตที่ไม่ผ่านพร้อมเหตุผล',
+        '2. ทุกช็อตที่ไม่ผ่าน: get_keyframes ดูภาพ 3 เฟรม เทียบกับ bible (หน้าตา ชุด ฉาก แกนกล้อง จำนวนคน ตัวหนังสือ/ลายน้ำ) แล้ว review_shot pass/fail พร้อมเหตุผลสั้นๆ',
+        '3. ช็อตที่ยืนยันว่าพัง: regen_shot พร้อม fix_notes ที่เจาะจง (เช่น "keep the mole under the left eye", "no second person in background") — ไม่เกินโควตาเจนซ่อมต่อ batch',
+        '4. ถ้าเกินโควตา ให้สรุปทางเลือกให้ผู้ใช้: ยอมรับช็อต, แก้ shot list แล้วเจนใหม่, หรือตัดช็อตทิ้ง',
+        '5. เมื่อทุกช็อตผ่าน (อัตโนมัติหรือรีวิว) → check_gate G3 แล้วขอผู้ใช้อนุมัติ',
+      ].join('\n');
+      return { messages: [{ role: 'user', content: { type: 'text', text } }] };
+    },
+  );
 }
 

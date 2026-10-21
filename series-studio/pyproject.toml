@@ -1,0 +1,21 @@
+[project]
+name = "series-studio-workers"
+version = "0.1.0"
+description = "Series Studio QC workers: ffmpeg scene/black/freeze checks, Whisper CER, identity similarity"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+# install only what you need; every check degrades to "skipped" when its library is missing
+whisper = ["faster-whisper>=1.1"]
+clip = ["open_clip_torch>=2.24", "torch", "pillow"]
+face = ["insightface>=0.7", "onnxruntime", "opencv-python-headless", "numpy"]
+people = ["opencv-python-headless", "numpy"]
+ocr = ["pytesseract", "pillow"]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+include = ["workers*"]
+
+[tool.pytest.ini_options]
+testpaths = ["workers"]

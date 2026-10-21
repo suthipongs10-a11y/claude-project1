@@ -12,6 +12,18 @@ pnpm build          # ต้อง build ก่อนให้ Claude Desktop �
 pnpm test           # build + vitest
 ```
 
+QC worker (Python ≥ 3.11 + ffmpeg ในเครื่อง) — ติดตั้งเฉพาะที่ต้องใช้ เช็กที่ไม่มีไลบรารีจะถูก "ข้าม" ไม่ใช่ล้มเหลว:
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install pytest                                   # รันเทสต์: python -m pytest -q workers
+pip install faster-whisper                           # เช็กบทพูด (native mode)
+pip install insightface onnxruntime opencv-python-headless numpy   # หน้าตัวละคร (live action) + นับคน
+pip install open_clip_torch torch pillow             # หน้าตัวละคร (การ์ตูน/อนิเมะ)
+```
+
+ตั้ง path ของ python/ffmpeg ได้ใน `config/local.json` → `tools` (เช่นชี้ไป `.venv/bin/python`)
+
 `claude_desktop_config.json` (แก้ path ให้เป็นของเครื่องคุณ):
 
 ```json
@@ -34,4 +46,4 @@ projects/          ข้อมูลซีรีส์ (gitignore) · logs/ JSO
 
 1. `plan_series` (MCP prompt) หรือสั่งเอง: `list_styles` → `create_series` → `write_bible` → `write_outline` ทุกตอน → ผู้ใช้อนุมัติ → `approve_gate G1`
 2. `gen_reference` ต่อ asset → เอา prompt ไปเจนใน Flow → `import_refs` → ดูภาพ → `lock_asset` → `approve_gate G2`
-3. ต่อตอน (M2+): `write_script` → `write_shots` → `compile_prompts` → `export_prompt_sheet` → เจน → `import_clips` → `run_qc` → `approve_gate G3` → `assemble` → `approve_gate G4`
+3. ต่อตอน: `write_script` → `write_shots` → `compile_prompts` → `generate` → `export_prompt_sheet` → เจนใน Flow → `import_clips` → `run_qc` → `get_keyframes`/`review_shot`/`regen_shot` → `approve_gate G3` → `assemble` (M4) → `approve_gate G4`
