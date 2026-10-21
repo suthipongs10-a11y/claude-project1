@@ -94,6 +94,8 @@ export const Shot = z.strictObject({
   /** Required when the axis flips without a neutral/INSERT shot in between. */
   axis_cross_reason: z.string().min(1).optional(),
   characters: z.array(ShotCharacter).default([]),
+  /** Props (bible/props ids) visible in the shot; the product prop must appear in a bridge shot. */
+  props: z.array(Slug).default([]),
   location: Slug,
   time: z.string().min(1),
   light_motivation: z.string().min(1),

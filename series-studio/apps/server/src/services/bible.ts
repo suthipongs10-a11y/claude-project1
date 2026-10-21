@@ -66,11 +66,12 @@ export class BibleService {
       locations: this.mergeList(seriesId, 'location', input.locations),
       props: this.mergeList(seriesId, 'prop', input.props),
     };
+    const productId = series.product?.prop_id;
     const bible: BibleT = Bible.parse({
       story_md: input.story_md,
       characters: merged.characters.entities,
       locations: merged.locations.entities,
-      props: merged.props.entities,
+      props: merged.props.entities.map((p) => (productId && p.id === productId ? { ...p, is_product: true } : p)),
       voices: input.voices ?? this.series.loadVoices(seriesId),
     });
     const extra = input.extra_forbidden ?? [];

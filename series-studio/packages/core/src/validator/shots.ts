@@ -4,8 +4,8 @@ import { countSyllables } from '../text/thai.js';
 import { error, makeReport, warning, type Issue, type ValidationReport } from '../util/result.js';
 
 export interface ShotValidationContext {
-  series: Pick<Series, 'ep_length_sec' | 'episodes'>;
-  bible: Pick<Bible, 'characters' | 'locations'>;
+  series: Pick<Series, 'ep_length_sec' | 'episodes'> & Partial<Pick<Series, 'product'>>;
+  bible: Pick<Bible, 'characters' | 'locations'> & Partial<Pick<Bible, 'props'>>;
   /** continuity.json; the entry for `after_episode = episode - 1` drives wardrobe checks. */
   continuity?: Continuity | undefined;
   outline?: Outline | undefined;
@@ -30,6 +30,7 @@ export function validateShots(list: ShotList, ctx: ShotValidationContext): Valid
   const shots = list.shots;
   const chars = new Map(ctx.bible.characters.map((c) => [c.id, c]));
   const locs = new Map(ctx.bible.locations.map((l) => [l.id, l]));
+  const props = new Map((ctx.bible.props ?? []).map((p) => [p.id, p]));
   const prevEntry = ctx.continuity?.entries.find((e) => e.after_episode === list.episode - 1);
   const tol = ctx.lengthTolerance ?? 0.05;
   const maxRate = ctx.maxSyllablesPerSec ?? 8;
@@ -64,6 +65,25 @@ export function validateShots(list: ShotList, ctx: ShotValidationContext): Valid
     const outlineTypes = new Set(ctx.outline.beats.map((b) => b.type));
     const shotTypes = new Set(shots.map((s) => s.beat));
     for (const t of outlineTypes) if (!shotTypes.has(t)) issues.push(warning('shots.beat_missing', `outline มีจังหวะ "${t}" แต่ไม่มีช็อตที่ติด beat นี้`, `ep${list.episode}`));
+  }
+
+  // props + product mode (SPEC §12): bridge shots only in designated episodes, and they must show the product
+  for (const s of shots) {
+    for (const pid of s.props) if (!props.has(pid)) issues.push(error('shots.unknown_prop', `prop "${pid}" ไม่มีใน bible`, s.id));
+  }
+  const product = ctx.series.product ?? null;
+  const bridgeShots = shots.filter((s) => s.beat === 'bridge');
+  if (product) {
+    const designated = product.bridge_episodes.includes(list.episode);
+    if (designated) {
+      if (bridgeShots.length === 0) issues.push(error('shots.bridge_required', `ตอนที่ ${list.episode} เป็นตอนสินค้า ต้องมีช็อต beat "bridge" (สะพานสู่สินค้า)`, `ep${list.episode}`));
+      else if (!bridgeShots.some((s) => s.props.includes(product.prop_id)))
+        issues.push(error('shots.bridge_without_product', `ช็อต bridge ต้องมีสินค้า "${product.prop_id}" ใน props อย่างน้อย 1 ช็อต`, bridgeShots[0]!.id));
+    } else if (bridgeShots.length) {
+      issues.push(error('shots.bridge_not_allowed', `ตอนที่ ${list.episode} ไม่ใช่ตอนสินค้า แต่มีช็อต bridge`, bridgeShots[0]!.id));
+    }
+  } else if (bridgeShots.length) {
+    issues.push(error('shots.bridge_without_product_mode', 'ซีรีส์ไม่ได้เปิด product mode แต่มีช็อต bridge', bridgeShots[0]!.id));
   }
 
   // 180° axis per scene

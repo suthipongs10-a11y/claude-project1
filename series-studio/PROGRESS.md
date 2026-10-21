@@ -4,7 +4,7 @@
 
 ## สถานะปัจจุบัน
 
-- Milestone: **M8** กำลังทำ (M0–M7 โค้ดเสร็จ เทสต์ผ่าน · M6 ต้องให้ผู้ใช้ทดสอบกับ Flow จริงและปรับ selectors) · **ใช้ผลิตงานจริงได้แล้วในโหมด manual**
+- Milestone: **M0–M8 โค้ดครบ เทสต์ผ่านทั้งหมด** (vitest 134 ข้อ + pytest 9 ข้อ) · รอผู้ใช้ตรวจบนเครื่องจริงตามรายการด้านล่าง · **ใช้ผลิตงานจริงได้แล้วในโหมด manual**
 - Engine ที่ใช้: `manual` (flow_ext เริ่ม M6)
 - อัปเดตล่าสุด: 2026-10-21
 
@@ -20,7 +20,7 @@
 | M5 | Dashboard PWA + approve gates | อนุมัติ G1–G4 จากมือถือได้ | ✅ โค้ด+เทสต์ผ่าน (Playwright viewport มือถือ กด G1→G4 ครบ) · รอผู้ใช้ลองบนมือถือจริงผ่าน tunnel |
 | M6 | Chrome Extension flow_ext + Flow Characters | เจน 1 ตอนโดยไม่แตะ Flow เอง | 🟡 โค้ด+เทสต์โปรโตคอลผ่าน (extension จำลอง) · **ต้องทดสอบกับ Flow จริง + ปรับ `config/flow-selectors.json`** |
 | M7 | Voice modes (dub/narration) + voice adapter | เสียงตัวละครเดิมทุกคลิป | ✅ โค้ด+เทสต์ผ่าน (1 voice_id ต่อตัวละครทั้งตอน, วางตามเวลาบท ±0.25s, Cartesia ไทยทดสอบจริงแล้ว) |
-| M8 | Product mode + continuity ข้ามตอน + cost report | ซีรีส์ 10 ตอนจบ ไม่พลาดชุด/แผลข้ามตอน | 🔧 กำลังทำ |
+| M8 | Product mode + continuity ข้ามตอน + cost report | ซีรีส์ 10 ตอนจบ ไม่พลาดชุด/แผลข้ามตอน | ✅ โค้ด+เทสต์ผ่าน (e2e 10 ตอน product mode: validator จับชุดผิด/bridge ผิดทุกจุดที่ปลูกไว้, สถานะแผลส่งต่อเข้า prompt และหายเมื่อสั่งเคลียร์) |
 
 > ใช้ผลิตงานจริงได้ตั้งแต่ M4 (โหมด manual)
 
@@ -90,6 +90,25 @@
 - MCP tools: `list_voices`, `assign_voice`, `dub_episode` · settings/dashboard เลือก voice provider ได้
 - เทสต์: planner 3 ข้อ + e2e mock (assign → dub → ตำแหน่งเสียงตรง ±0.25s → แคช → เร่ง/เตือน → assemble ใช้ track → narration ต้องมี NARRATOR) + live Cartesia (list เสียงไทย + synth "สวัสดีค่ะ" ผ่าน; ข้ามอัตโนมัติเมื่อไม่มี key/เน็ต) · รวม 128 ข้อผ่าน
 - หมายเหตุ: voice-change จากเสียงไกด์ยังไม่ทำ (SPEC เขียน "TTS หรือ voice-change") — เพิ่มเป็น adapter ได้ภายหลัง
+
+### 2026-10-21 — M8 เสร็จ (ครบทุก milestone)
+- core: `Shot.props` (ของที่เห็นในช็อต), validator product mode (ตอนสินค้าต้องมีช็อต `bridge` ที่มีสินค้าใน props, ตอนอื่นห้ามมี bridge, props ต้องอยู่ใน bible), compiler เพิ่ม `[PROPS]` และส่งต่อ continuity ลงบรรทัดตัวละคร (ชุด/แผล/ของที่ถือ/ลักษณะ), `deriveContinuity` (ชุดจากช็อตสุดท้าย + ส่งต่อสถานะเดิม + override/เคลียร์ด้วย "") และ `validateContinuity`
+- server: `ContinuityService.update` (auto หรือระบุเอง), `CostService.report` (เครดิตต่อตอนจาก cost.json + ตารางงาน เทียบ baseline เจน final ทุก batch ครั้งเดียว → % ประหยัด), `write_bible` ตั้ง `is_product` ให้ prop สินค้าอัตโนมัติ, resource `series://<id>/continuity`
+- MCP tools: `update_continuity`, `cost_report` → ครบตามตาราง SPEC §9 ทั้ง 22 tools (+ tools เสริม: list_series, import_refs, check_gate, review_shot, dashboard_info, extension_status, sync_flow_characters, list_voices, assign_voice, dub_episode)
+- เทสต์: core 3 ข้อ + e2e ซีรีส์ 10 ตอน (outline bridge ถูก/ผิดทุกตอน, G1/G2, ชุดเปลี่ยนตอน 2 → ตอน 3 ใส่ default ถูกบล็อก, bridge ไม่มีสินค้าถูกบล็อก, แผลส่งต่อเข้า prompt ตอน 3–4 แล้วหายหลังเคลียร์, ช็อต bridge นอกตอนสินค้าถูกบล็อก, continuity 10 entries, cost_report ประหยัด 80% ✅, ประกอบตอนสินค้าได้การ์ดสินค้า+ป้ายโฆษณา)
+
+## สิ่งที่ผู้ใช้ควรตรวจบนเครื่องจริง (เรียงตามลำดับ)
+1. `cd series-studio && pnpm i && pnpm build` แล้วใส่ `apps/server/dist/mcp.js` ใน `claude_desktop_config.json` → เปิด Claude Desktop ลอง `list_styles` (เกณฑ์ M0) และลองสร้างซีรีส์ 3 ตอนจากแชทด้วย prompt `plan_series` (M1)
+2. ขอลิงก์ `dashboard_info` เปิดบนเครื่อง แล้วลองจากมือถือผ่าน tunnel (M5)
+3. โหมด manual จริง: `export_prompt_sheet` → เจนใน Flow → `import_clips` → `run_qc` (ติดตั้ง whisper/insightface ตาม README ถ้าต้องการเช็กเสียง/หน้า) → `assemble` (M2–M4)
+4. Chrome Extension: โหลด `apps/extension` → จับคู่ → ตั้ง engine `flow_ext` → `generate` แล้วดูว่า extension หยุดที่ selector ไหน → แก้ `config/flow-selectors.json` ตามหน้าจริง (M6) — คาดว่าต้องปรับหลายรอบ
+5. TTS: ตั้ง `CARTESIA_API_KEY` + `voice.provider: cartesia` แล้ว `list_voices` → `assign_voice` → `dub_episode` (M7)
+
+## ข้อที่ตัดสินใจแทนระหว่างผู้ใช้หลับ (ย้อนกลับได้)
+- การ์ด/ป้ายใช้ ffmpeg drawtext แทน Remotion (ลด dependency ใหญ่) — เพิ่ม Remotion adapter ภายหลังได้
+- ใช้ `better-sqlite3` ตาม SPEC สำหรับคิวงาน (prebuilt binary โหลดได้) · dashboard ใช้ manifest/service worker เขียนเอง แทน vite-plugin-pwa
+- Python worker ใช้ stdlib + ffmpeg เป็นหลัก ไลบรารีหนัก (whisper/CLIP/insightface/opencv) เป็น optional → เช็กที่ไม่มีไลบรารีจะ "ข้าม" ไม่ใช่ล้มเหลว
+- เพิ่ม tools นอกตาราง SPEC ที่จำเป็นต่อการใช้งานจริง (import_refs, check_gate, review_shot, dashboard_info, extension_status, sync_flow_characters, list_voices, assign_voice, dub_episode, list_series)
 
 ## ปัญหาค้าง / ข้อสังเกต
 

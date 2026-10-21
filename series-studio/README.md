@@ -53,8 +53,12 @@ config/studio.json ทุกค่าที่ห้าม hardcode (maxClipSec,
 projects/          ข้อมูลซีรีส์ (gitignore) · logs/ JSON lines · data/ SQLite
 ```
 
+## สถานะ
+M0–M8 โค้ดครบและเทสต์ผ่าน (`pnpm test` 134 ข้อ, `pnpm test:py` 9 ข้อ) · สิ่งที่ต้องทดสอบบนเครื่องจริง: Claude Desktop เห็น tools, มือถือเปิด dashboard ผ่าน tunnel, Chrome Extension กับหน้า Flow จริง (ปรับ `config/flow-selectors.json`), QC ที่ติดตั้ง whisper/insightface, TTS Cartesia ด้วย key ของคุณ — ดูรายละเอียดใน `PROGRESS.md`
+
 ## Flow การใช้งานจากแชท
 
 1. `plan_series` (MCP prompt) หรือสั่งเอง: `list_styles` → `create_series` → `write_bible` → `write_outline` ทุกตอน → ผู้ใช้อนุมัติ → `approve_gate G1`
 2. `gen_reference` ต่อ asset → เอา prompt ไปเจนใน Flow → `import_refs` → ดูภาพ → `lock_asset` → `approve_gate G2`
-3. ต่อตอน: `write_script` → `write_shots` → `compile_prompts` → `generate` → `export_prompt_sheet` → เจนใน Flow → `import_clips` → `run_qc` → `get_keyframes`/`review_shot`/`regen_shot` → `approve_gate G3` → (`dub_episode` สำหรับ preset dub/narration) → `assemble` → `approve_gate G4`
+3. ต่อตอน: `write_script` → `write_shots` → `compile_prompts` → `generate` → `export_prompt_sheet` → เจนใน Flow → `import_clips` → `run_qc` → `get_keyframes`/`review_shot`/`regen_shot` → `approve_gate G3` → (`dub_episode` สำหรับ preset dub/narration) → `assemble` → `approve_gate G4` → `update_continuity` ก่อนเริ่มตอนถัดไป
+4. โหมด flow_ext: ติดตั้ง `apps/extension` จับคู่ token แล้ว `generate` จะส่งงานให้ extension เอง (`extension_status`, `sync_flow_characters`) · product mode: ใส่ `product` ตอน `create_series`, ตอนที่กำหนดต้องมี outline beat และช็อต `bridge` ที่มีสินค้าใน `props` การ์ดสินค้า+ป้ายโฆษณาใส่อัตโนมัติ · `cost_report` ดูเครดิตเทียบ baseline

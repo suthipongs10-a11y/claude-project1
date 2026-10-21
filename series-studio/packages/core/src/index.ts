@@ -4,6 +4,7 @@ export * from './state/machine.js';
 export * from './validator/index.js';
 export * from './compiler/index.js';
 export * from './pipeline/batching.js';
+export * from './pipeline/continuity.js';
 export * from './voice/index.js';
 export * from './util/slug.js';
 export * from './text/thai.js';

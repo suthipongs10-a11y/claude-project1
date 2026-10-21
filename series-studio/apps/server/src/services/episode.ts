@@ -115,9 +115,10 @@ export class EpisodeService {
     const maxClipSec = engineConfig(this.ctx.config, series.engine_id).maxClipSec;
     const plan = planBatches(list.shots, maxClipSec);
     const wardrobeOverrides = this.wardrobeCarryOver(seriesId, n);
+    const carryOver = this.loadContinuity(seriesId).entries.find((e) => e.after_episode === n - 1)?.states ?? {};
     const batches: BatchT[] = plan.map((b) => {
       const shots = b.shot_ids.map((id) => list.shots.find((s) => s.id === id)!);
-      const compiled = compileBatchPrompt(shots, preset, series, bible, { presets: this.ctx.presets, fixNotes: opts.fix_notes, wardrobeOverrides });
+      const compiled = compileBatchPrompt(shots, preset, series, bible, { presets: this.ctx.presets, fixNotes: opts.fix_notes, wardrobeOverrides, carryOver });
       return Batch.parse({ id: b.id, episode: n, scene: b.scene, shot_ids: b.shot_ids, total_sec: b.total_sec, engine_id: series.engine_id, prompt: compiled.prompt, ref_images: compiled.ref_images });
     });
     const batchDir = this.store.episodePath(seriesId, n, 'batches');

@@ -1,4 +1,4 @@
-import type { Bible, Character, Location, Series, Shot, StylePreset } from '../schemas/index.js';
+import type { Bible, Character, CharacterState, Location, Series, Shot, StylePreset } from '../schemas/index.js';
 import { NARRATOR_ID } from '../schemas/bible.js';
 
 /**
@@ -14,6 +14,8 @@ export interface CompileOptions {
   fixNotes?: string | undefined;
   /** Override wardrobe per character id for this episode (continuity carry-over). */
   wardrobeOverrides?: Readonly<Record<string, string>> | undefined;
+  /** Full continuity state carried from the previous episode (injury, appearance, holding). */
+  carryOver?: Readonly<Record<string, CharacterState>> | undefined;
 }
 
 export interface CompiledBatch {
@@ -67,7 +69,7 @@ export function compileShotBlock(
   offset: number,
   preset: StylePreset,
   series: Pick<Series, 'aspect'>,
-  bible: Pick<Bible, 'characters' | 'locations'>,
+  bible: Pick<Bible, 'characters' | 'locations'> & Partial<Pick<Bible, 'props'>>,
   opts: CompileOptions = {},
 ): string {
   const chars = new Map(bible.characters.map((c) => [c.id, c]));
@@ -85,7 +87,16 @@ export function compileShotBlock(
     const c = chars.get(sc.id);
     const look = c ? c.look : `(unknown character ${sc.id})`;
     const wardrobe = c ? resolveWardrobe(c, sc.wardrobe, opts.wardrobeOverrides) : sc.wardrobe;
-    lines.push(`[CHARACTERS] ${sc.id}: ${look}, wearing ${wardrobe}, at ${sc.screen_pos}, ${sc.emotion}`);
+    const carry = opts.carryOver?.[sc.id];
+    const extras: string[] = [];
+    if (carry?.appearance) extras.push(carry.appearance);
+    if (carry?.injury) extras.push(`visible ${carry.injury}`);
+    if (carry?.holding) extras.push(`holding ${carry.holding}`);
+    lines.push(`[CHARACTERS] ${sc.id}: ${look}, wearing ${wardrobe}${extras.length ? `, ${extras.join(', ')}` : ''}, at ${sc.screen_pos}, ${sc.emotion}`);
+  }
+  if (shot.props.length) {
+    const propsById = new Map((bible as Pick<Bible, 'props'>).props?.map((p) => [p.id, p]) ?? []);
+    lines.push(`[PROPS] ${shot.props.map((id) => (propsById.get(id) ? `${id}: ${propsById.get(id)!.look}` : id)).join('; ')}`);
   }
   lines.push(`[ACTION] ${t(offset)}–${t(offset + shot.duration_sec)}s: ${shot.action}`);
   lines.push(...dialogueLines(shot, preset, chars, offset));
@@ -127,9 +138,9 @@ export function compileBatchPrompt(
   for (const id of charIds) push(bible.characters.find((c) => c.id === id)?.refs ?? []);
   const locIds = [...new Set(shots.map((s) => s.location))];
   for (const id of locIds) push(bible.locations.find((l) => l.id === id)?.refs ?? []);
-  // props mentioned by id in action text or sfx
+  // props listed on the shot, or mentioned by id/name in the action text
   for (const p of bible.props) {
-    if (shots.some((s) => s.action.includes(p.id) || s.action.includes(p.name))) push(p.refs);
+    if (shots.some((s) => s.props.includes(p.id) || s.action.includes(p.id) || s.action.includes(p.name))) push(p.refs);
   }
   return { prompt: lines.join('\n'), ref_images: refs, shot_ids: shots.map((s) => s.id), total_sec: Math.round(total * 10) / 10 };
 }

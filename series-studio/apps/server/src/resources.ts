@@ -1,5 +1,6 @@
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { ShotList, Script } from '@series-studio/core';
+import { Continuity, ShotList, Script } from '@series-studio/core';
+import { join } from 'node:path';
 import type { StudioContext } from './context.js';
 import { SeriesService } from './services/series.js';
 
@@ -34,6 +35,16 @@ export function registerResources(server: McpServer, ctx: StudioContext): void {
       const bible = svc.loadBible(String(id));
       if (!bible) throw new Error(`ซีรีส์ "${String(id)}" ยังไม่มี bible`);
       return json(uri, bible);
+    },
+  );
+
+  server.registerResource(
+    'continuity',
+    new ResourceTemplate('series://{id}/continuity', { list: undefined }),
+    { title: 'Continuity', description: 'character state after each episode' },
+    (uri, { id }) => {
+      svc.load(String(id));
+      return json(uri, ctx.store.readJsonIfExists(join(ctx.store.seriesDir(String(id)), 'continuity.json'), Continuity, 'continuity.json') ?? Continuity.parse({}));
     },
   );
 
