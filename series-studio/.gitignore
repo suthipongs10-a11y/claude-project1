@@ -1,0 +1,22 @@
+# dependencies / build
+node_modules/
+dist/
+*.tsbuildinfo
+.vite/
+
+# runtime data (never commit series data, logs or secrets)
+projects/
+logs/
+_trash/
+.env
+.env.*
+config/local.json
+config/token.txt
+
+# python
+__pycache__/
+.venv/
+*.pyc
+
+# os
+.DS_Store

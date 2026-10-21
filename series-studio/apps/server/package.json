@@ -1,0 +1,19 @@
+{
+  "name": "@series-studio/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Series Studio server: MCP (stdio) + local HTTP/WS + job queue",
+  "main": "./dist/mcp.js",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsx watch src/mcp.ts",
+    "start": "node dist/mcp.js",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@series-studio/core": "workspace:*",
+    "zod": "^4.6.7"
+  }
+}

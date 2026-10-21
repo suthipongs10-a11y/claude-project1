@@ -1,0 +1,25 @@
+{
+  "name": "series-studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Series Studio - AI short-drama / series production tool (Claude as director via MCP)",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -b packages/core apps/server",
+    "typecheck": "tsc -b packages/core apps/server",
+    "dev:server": "pnpm --filter @series-studio/core build && pnpm --filter @series-studio/server dev",
+    "dev:dashboard": "pnpm --filter @series-studio/dashboard dev",
+    "test": "pnpm build && vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "vitest": "^4.1.12"
+  }
+}

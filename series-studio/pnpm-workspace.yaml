@@ -1,0 +1,6 @@
+packages:
+  - 'packages/*'
+  - 'apps/*'
+# native addon that needs a build step (job queue, M2+)
+onlyBuiltDependencies:
+  - better-sqlite3

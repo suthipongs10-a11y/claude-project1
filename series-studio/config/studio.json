@@ -1,0 +1,44 @@
+{
+  "$comment": "Series Studio configuration. Paths are relative to the series-studio folder. Override locally with config/local.json (gitignored). Never hardcode these values in code.",
+  "projects_dir": "projects",
+  "presets_dir": "presets/styles",
+  "logs_dir": "logs",
+  "http": { "host": "127.0.0.1", "port": 8787 },
+  "default_engine": "manual",
+  "engines": {
+    "manual": {
+      "maxClipSec": 8,
+      "supportsRefImages": true,
+      "supportsNativeDialogue": true,
+      "creditsPerClip": { "draft": 0, "final": 0 }
+    },
+    "flow_ext": {
+      "maxClipSec": 8,
+      "supportsRefImages": true,
+      "supportsNativeDialogue": true,
+      "creditsPerClip": { "draft": 20, "final": 100 },
+      "minDelayMs": 8000,
+      "maxDelayMs": 25000
+    }
+  },
+  "qc": {
+    "duration_tolerance": 0.1,
+    "cut_tolerance": 1,
+    "cer_max": 0.25,
+    "identity_similarity_min": 0.5,
+    "black_min_sec": 0.3,
+    "freeze_min_sec": 1.0,
+    "max_regen_attempts": 2,
+    "keyframes_per_shot": 3
+  },
+  "script": {
+    "syllables_per_sec": 5.5,
+    "episode_length_tolerance": 0.05
+  },
+  "assembly": {
+    "loudness_lufs": -14,
+    "subtitle_offset_tolerance_sec": 0.2,
+    "ai_label_text": "เนื้อหานี้สร้างด้วย AI",
+    "ad_label_text": "โฆษณา"
+  }
+}
