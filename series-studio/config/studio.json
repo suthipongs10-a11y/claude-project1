@@ -3,20 +3,30 @@
   "projects_dir": "projects",
   "presets_dir": "presets/styles",
   "logs_dir": "logs",
-  "http": { "host": "127.0.0.1", "port": 8787 },
+  "data_dir": "data",
+  "http": {
+    "host": "127.0.0.1",
+    "port": 8787
+  },
   "default_engine": "manual",
   "engines": {
     "manual": {
       "maxClipSec": 8,
       "supportsRefImages": true,
       "supportsNativeDialogue": true,
-      "creditsPerClip": { "draft": 0, "final": 0 }
+      "creditsPerClip": {
+        "draft": 0,
+        "final": 0
+      }
     },
     "flow_ext": {
       "maxClipSec": 8,
       "supportsRefImages": true,
       "supportsNativeDialogue": true,
-      "creditsPerClip": { "draft": 20, "final": 100 },
+      "creditsPerClip": {
+        "draft": 20,
+        "final": 100
+      },
       "minDelayMs": 8000,
       "maxDelayMs": 25000
     }

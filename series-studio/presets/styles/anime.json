@@ -1,0 +1,25 @@
+{
+  "id": "anime",
+  "label": "อนิเมะ 2D",
+  "medium": "2d",
+  "render_tokens": ["2D anime", "crisp clean line art", "cel shading", "detailed painted backgrounds", "limited animation feel"],
+  "camera": {
+    "lens_default": "virtual 50mm",
+    "lens_closeup": "virtual 85mm",
+    "aspect_modes": ["16:9", "9:16"],
+    "movement_vocab": ["static", "slow push-in", "pan across background", "speed lines rush", "dramatic tilt"]
+  },
+  "lighting": "flat key with hard-edged cel shadows, rim light accents",
+  "grade": "vivid saturated colors, clean gradients, bright highlights",
+  "acting": "expressive eyes, exaggerated reactions, held poses",
+  "pacing": { "avg_shot_sec": 2.6, "cuts_per_30s": 10 },
+  "dialogue_mode": "dub",
+  "dialogue_lang_in_model": "ja",
+  "subtitle_style": "white_bold_bottom",
+  "negative": ["text overlays", "watermark", "extra people in background", "logo", "photorealistic", "3D render", "subtitles burned in"],
+  "character_sheet": "front, 3/4, side, full body, 3 expressions, flat color turnaround",
+  "location_sheet": "wide empty painted background, no people",
+  "cliffhanger_style": "freeze frame with speed lines + impact sfx",
+  "notes": "เส้นคม เงาแบบ cel พากย์ไทยหรือใช้บรรยายได้",
+  "qc": { "identity_similarity_min": 0.75, "cer_max": 0.3 }
+}

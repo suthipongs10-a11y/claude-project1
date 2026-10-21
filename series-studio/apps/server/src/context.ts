@@ -1,14 +1,16 @@
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
 import { parsePreset, type StylePreset } from '@series-studio/core';
 import { loadConfig, type LoadConfigOptions, type ResolvedConfig } from './config.js';
 import { FileStore } from './store/fileStore.js';
 import { createLogger, silentLogger, type Logger } from './util/log.js';
+import { JobStore } from './store/db.js';
+import { join } from 'node:path';
 
 /** Everything a tool needs. Built once per server process (or per test). */
 export interface StudioContext {
   config: ResolvedConfig;
   store: FileStore;
+  jobs: JobStore;
   log: Logger;
   /** Loaded presets by id. Reloaded with reloadPresets(). */
   presets: Map<string, StylePreset>;
@@ -21,6 +23,8 @@ export interface StudioContext {
 export interface ContextOptions extends LoadConfigOptions {
   logger?: Logger | 'file' | 'silent';
   now?: () => string;
+  /** SQLite file for the job queue; defaults to <data_dir>/studio.sqlite. Use ':memory:' in tests. */
+  jobsDb?: string;
 }
 
 export function loadPresetsFrom(dir: string): { presets: Map<string, StylePreset>; errors: Map<string, string> } {
@@ -52,9 +56,11 @@ export function createContext(opts: ContextOptions = {}): StudioContext {
         ? silentLogger
         : opts.logger;
   const store = new FileStore(config.projects_dir);
+  const jobs = new JobStore(opts.jobsDb ?? join(config.data_dir, 'studio.sqlite'));
   const ctx: StudioContext = {
     config,
     store,
+    jobs,
     log,
     presets: new Map(),
     presetErrors: new Map(),

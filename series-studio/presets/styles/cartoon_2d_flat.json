@@ -1,0 +1,25 @@
+{
+  "id": "cartoon_2d_flat",
+  "label": "การ์ตูน 2D แบน",
+  "medium": "2d",
+  "render_tokens": ["flat 2D cartoon", "bold simple shapes", "thick outlines", "bright primary colors", "minimal texture"],
+  "camera": {
+    "lens_default": "virtual 35mm",
+    "lens_closeup": "virtual 70mm",
+    "aspect_modes": ["16:9", "9:16"],
+    "movement_vocab": ["static", "simple pan", "zoom in", "bounce in", "slide transition"]
+  },
+  "lighting": "flat ambient, no cast shadows, simple highlight shapes",
+  "grade": "high saturation, flat fills, clean white balance",
+  "acting": "big clear gestures, squash and stretch, friendly faces",
+  "pacing": { "avg_shot_sec": 3.0, "cuts_per_30s": 8 },
+  "dialogue_mode": "narration",
+  "dialogue_lang_in_model": "th",
+  "subtitle_style": "rounded_bold_bottom",
+  "negative": ["text overlays", "watermark", "extra people in background", "logo", "realistic shading", "scary imagery", "subtitles burned in"],
+  "character_sheet": "front, 3/4, side, full body, 3 expressions, flat color",
+  "location_sheet": "wide empty flat background, no people",
+  "cliffhanger_style": "question-mark pose + playful sting",
+  "notes": "สีสด เหมาะช่องเด็ก ใช้เสียงบรรยายคนเดียว",
+  "qc": { "identity_similarity_min": 0.8, "cer_max": 0.3 }
+}

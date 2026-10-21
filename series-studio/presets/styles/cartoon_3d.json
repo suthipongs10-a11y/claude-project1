@@ -1,0 +1,25 @@
+{
+  "id": "cartoon_3d",
+  "label": "การ์ตูน 3D แบบหนังโรง",
+  "medium": "3d",
+  "render_tokens": ["3D animated feature film look", "stylized characters with big expressive eyes", "subsurface skin", "soft global illumination", "high-end render"],
+  "camera": {
+    "lens_default": "virtual 40mm",
+    "lens_closeup": "virtual 80mm",
+    "aspect_modes": ["16:9", "9:16"],
+    "movement_vocab": ["slow push-in", "static", "gentle dolly", "sweeping crane", "over-the-shoulder"]
+  },
+  "lighting": "soft key with bounce, warm rim, volumetric atmosphere",
+  "grade": "rich saturated palette, soft contrast, glossy highlights",
+  "acting": "broad appealing expressions, clear silhouettes, snappy timing",
+  "pacing": { "avg_shot_sec": 3.0, "cuts_per_30s": 8 },
+  "dialogue_mode": "dub",
+  "dialogue_lang_in_model": "en",
+  "subtitle_style": "rounded_bold_bottom",
+  "negative": ["text overlays", "watermark", "extra people in background", "logo", "photoreal humans", "uncanny faces", "subtitles burned in"],
+  "character_sheet": "front, 3/4, side, full body, 3 expressions, neutral gray studio",
+  "location_sheet": "wide empty establishing render, no people",
+  "cliffhanger_style": "dramatic low-angle hold + orchestral hit",
+  "notes": "ห้ามอ้างชื่อสตูดิโอจริงใน prompt ใช้คำบรรยายลักษณะแทน",
+  "qc": { "identity_similarity_min": 0.7, "cer_max": 0.3 }
+}

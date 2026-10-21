@@ -12,6 +12,6 @@ export function makeTempStudio(): { root: string; ctx: StudioContext; cleanup: (
   cpSync(join(REPO_STUDIO_ROOT, 'config'), join(root, 'config'), { recursive: true });
   cpSync(join(REPO_STUDIO_ROOT, 'presets'), join(root, 'presets'), { recursive: true });
   mkdirSync(join(root, 'projects'));
-  const ctx = createContext({ root, logger: 'silent', now: () => '2026-10-21T00:00:00.000Z' });
+  const ctx = createContext({ root, logger: 'silent', now: () => '2026-10-21T00:00:00.000Z', jobsDb: ':memory:' });
   return { root, ctx, cleanup: () => rmSync(root, { recursive: true, force: true }) };
 }

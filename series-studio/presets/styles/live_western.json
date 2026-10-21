@@ -1,0 +1,25 @@
+{
+  "id": "live_western",
+  "label": "หนังฝรั่ง",
+  "medium": "live_action",
+  "render_tokens": ["cinematic western feature film", "photoreal", "anamorphic lens flares", "high contrast", "film grain"],
+  "camera": {
+    "lens_default": "40mm anamorphic",
+    "lens_closeup": "75mm anamorphic",
+    "aspect_modes": ["16:9", "9:16"],
+    "movement_vocab": ["static", "slow dolly in", "steadicam follow", "crane down", "whip pan"]
+  },
+  "lighting": "hard key with deep shadows, cool ambient fill, practical neon or window light",
+  "grade": "teal and orange, crushed blacks, high contrast",
+  "acting": "naturalistic, underplayed, overlapping movement, less eye contact with camera",
+  "pacing": { "avg_shot_sec": 2.8, "cuts_per_30s": 10 },
+  "dialogue_mode": "dub",
+  "dialogue_lang_in_model": "en",
+  "subtitle_style": "white_bold_bottom",
+  "negative": ["text overlays", "watermark", "extra people in background", "logo", "subtitles burned in"],
+  "character_sheet": "front, 3/4, side, full body, 3 expressions",
+  "location_sheet": "wide empty establishing, no people",
+  "cliffhanger_style": "hard cut to black on the line + low drone",
+  "notes": "พากย์ไทยทับ หรือใช้เสียงอังกฤษจากโมเดลแล้วใส่ซับไทย (ตั้ง dialogue_mode เป็น native ต่อซีรีส์ได้)",
+  "qc": { "identity_similarity_min": 0.45, "cer_max": 0.3 }
+}

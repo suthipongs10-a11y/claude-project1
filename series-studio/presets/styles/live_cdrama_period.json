@@ -1,0 +1,25 @@
+{
+  "id": "live_cdrama_period",
+  "label": "จีนย้อนยุค",
+  "medium": "live_action",
+  "render_tokens": ["Chinese historical costume drama", "photoreal", "imperial palace architecture", "flowing silk robes", "soft diffused daylight"],
+  "camera": {
+    "lens_default": "50mm",
+    "lens_closeup": "100mm",
+    "aspect_modes": ["16:9", "9:16"],
+    "movement_vocab": ["slow push-in", "static", "gentle crane", "slow orbit", "over-the-shoulder"]
+  },
+  "lighting": "soft top light with silk diffusion, candle practicals at night, light haze",
+  "grade": "desaturated greens and golds, soft highlights, pale skin",
+  "acting": "formal posture, slow deliberate gestures, long held gazes",
+  "pacing": { "avg_shot_sec": 3.8, "cuts_per_30s": 6 },
+  "dialogue_mode": "dub",
+  "dialogue_lang_in_model": "zh",
+  "subtitle_style": "white_serif_bottom",
+  "negative": ["text overlays", "watermark", "extra people in background", "logo", "modern objects", "subtitles burned in"],
+  "character_sheet": "front, 3/4, side, full body, 3 expressions",
+  "location_sheet": "wide empty establishing, no people",
+  "cliffhanger_style": "slow zoom on object of fate + guzheng sting",
+  "notes": "ชุดโบราณ ฉากวัง พากย์ไทยทับ",
+  "qc": { "identity_similarity_min": 0.45, "cer_max": 0.3 }
+}

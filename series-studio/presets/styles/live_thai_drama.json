@@ -1,0 +1,25 @@
+{
+  "id": "live_thai_drama",
+  "label": "ละครไทย คนแสดงจริง",
+  "medium": "live_action",
+  "render_tokens": ["Thai primetime television drama", "photoreal", "warm tungsten evening light", "glossy clean look", "Southeast Asian faces and settings"],
+  "camera": {
+    "lens_default": "35mm",
+    "lens_closeup": "85mm",
+    "aspect_modes": ["9:16", "16:9"],
+    "movement_vocab": ["static", "slow push-in", "handheld subtle", "two-shot pan", "over-the-shoulder"]
+  },
+  "lighting": "warm key from practical lamps, soft fill, slight haze in night interiors",
+  "grade": "warm highlights, saturated reds and golds, clean skin",
+  "acting": "expressive, clear emotional beats, held reaction before the cut, slightly theatrical",
+  "pacing": { "avg_shot_sec": 3.5, "cuts_per_30s": 7 },
+  "dialogue_mode": "native",
+  "dialogue_lang_in_model": "th",
+  "subtitle_style": "white_outline_bottom",
+  "negative": ["text overlays", "watermark", "extra people in background", "logo", "subtitles burned in", "deformed hands"],
+  "character_sheet": "front, 3/4, side, full body, 3 expressions",
+  "location_sheet": "wide empty establishing, no people",
+  "cliffhanger_style": "slow push-in on shocked face + dramatic sting",
+  "notes": "แสงอุ่น โทนละครหลังข่าว/ละครเย็น พูดไทยในโมเดลโดยตรง",
+  "qc": { "identity_similarity_min": 0.45, "cer_max": 0.25 }
+}

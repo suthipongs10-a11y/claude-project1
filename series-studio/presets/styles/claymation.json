@@ -1,0 +1,25 @@
+{
+  "id": "claymation",
+  "label": "ดินปั้น",
+  "medium": "3d",
+  "render_tokens": ["stop-motion claymation", "hand-sculpted clay characters with visible fingerprints", "miniature handmade sets", "12 fps stop-motion feel", "shallow depth of field macro"],
+  "camera": {
+    "lens_default": "macro 35mm",
+    "lens_closeup": "macro 60mm",
+    "aspect_modes": ["16:9", "9:16"],
+    "movement_vocab": ["static", "slow push-in", "stepped pan", "rack focus", "over-the-shoulder"]
+  },
+  "lighting": "small soft key like a tabletop studio, warm practical bulbs, gentle shadows",
+  "grade": "warm filmic, slightly muted, tactile textures",
+  "acting": "chunky stepped motion, exaggerated mouth shapes, head tilts",
+  "pacing": { "avg_shot_sec": 3.2, "cuts_per_30s": 8 },
+  "dialogue_mode": "dub",
+  "dialogue_lang_in_model": "en",
+  "subtitle_style": "rounded_bold_bottom",
+  "negative": ["text overlays", "watermark", "extra people in background", "logo", "smooth 60fps motion", "photoreal humans", "subtitles burned in"],
+  "character_sheet": "front, 3/4, side, full body, 3 expressions, on neutral tabletop",
+  "location_sheet": "wide empty miniature set, no people",
+  "cliffhanger_style": "stepped slow zoom on face + quirky sting",
+  "notes": "ให้ความรู้สึก stop-motion frame rate ต่ำ พากย์ไทยทับ",
+  "qc": { "identity_similarity_min": 0.6, "cer_max": 0.3 }
+}

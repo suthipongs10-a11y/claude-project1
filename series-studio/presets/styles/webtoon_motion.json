@@ -1,0 +1,25 @@
+{
+  "id": "webtoon_motion",
+  "label": "เว็บตูน/มังฮวาเคลื่อนไหว",
+  "medium": "2d",
+  "render_tokens": ["vertical webtoon illustration", "clean digital line art", "soft cel shading with gradients", "panel-like framing", "subtle parallax motion"],
+  "camera": {
+    "lens_default": "virtual 50mm",
+    "lens_closeup": "virtual 85mm",
+    "aspect_modes": ["9:16", "16:9"],
+    "movement_vocab": ["static", "slow vertical scroll", "slow push-in", "parallax drift", "panel slide"]
+  },
+  "lighting": "soft diffuse key, screen-tone shadows, glow accents",
+  "grade": "pastel palette, soft blacks, clean whites",
+  "acting": "held expressive poses, close-up reaction faces, sparse motion",
+  "pacing": { "avg_shot_sec": 3.4, "cuts_per_30s": 7 },
+  "dialogue_mode": "narration",
+  "dialogue_lang_in_model": "th",
+  "subtitle_style": "speech_bubble_style_bottom",
+  "negative": ["text overlays", "watermark", "extra people in background", "logo", "speech bubbles with text", "photorealistic", "subtitles burned in"],
+  "character_sheet": "front, 3/4, side, full body, 3 expressions, clean line turnaround",
+  "location_sheet": "wide empty illustrated background, no people",
+  "cliffhanger_style": "dramatic close-up panel + dark vignette + sting",
+  "notes": "ใช้เสียงบรรยายเป็นหลัก เพิ่มพากย์ตัวละครได้ที่ M7",
+  "qc": { "identity_similarity_min": 0.75, "cer_max": 0.3 }
+}

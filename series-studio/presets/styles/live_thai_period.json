@@ -1,0 +1,25 @@
+{
+  "id": "live_thai_period",
+  "label": "ไทยย้อนยุค",
+  "medium": "live_action",
+  "render_tokens": ["Thai historical period drama", "photoreal", "traditional Thai wooden houses and temples", "natural daylight", "handwoven textiles"],
+  "camera": {
+    "lens_default": "35mm",
+    "lens_closeup": "85mm",
+    "aspect_modes": ["16:9", "9:16"],
+    "movement_vocab": ["static", "slow push-in", "slow lateral track", "two-shot pan", "over-the-shoulder"]
+  },
+  "lighting": "soft natural daylight through wooden slats, oil lamp practicals at night",
+  "grade": "warm earth tones, gentle contrast, natural skin",
+  "acting": "composed, respectful gestures, measured speech rhythm",
+  "pacing": { "avg_shot_sec": 3.6, "cuts_per_30s": 7 },
+  "dialogue_mode": "native",
+  "dialogue_lang_in_model": "th",
+  "subtitle_style": "white_outline_bottom",
+  "negative": ["text overlays", "watermark", "extra people in background", "logo", "modern clothing", "modern objects", "subtitles burned in"],
+  "character_sheet": "front, 3/4, side, full body, 3 expressions",
+  "location_sheet": "wide empty establishing, no people",
+  "cliffhanger_style": "hold on reaction + traditional percussion sting",
+  "notes": "ระวังความถูกต้องของชุด/สถานที่ตามยุค ตรวจที่ G2",
+  "qc": { "identity_similarity_min": 0.45, "cer_max": 0.25 }
+}

@@ -24,7 +24,7 @@ export const FORBIDDEN_TERMS: readonly string[] = [
   'ufotable',
   'laika',
   'aardman',
-  'illumination',
+  'illumination entertainment',
   'blue sky studios',
   'sony pictures animation',
   'gmm',

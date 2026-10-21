@@ -18,6 +18,7 @@ export const StudioConfigSchema = z.strictObject({
   projects_dir: z.string().min(1),
   presets_dir: z.string().min(1),
   logs_dir: z.string().min(1),
+  data_dir: z.string().min(1),
   http: z.strictObject({ host: z.literal('127.0.0.1'), port: z.int().min(1).max(65535) }),
   default_engine: z.string().min(1),
   engines: z.record(z.string(), EngineConfigSchema),
@@ -50,6 +51,7 @@ export interface ResolvedConfig extends StudioConfig {
   projects_dir: string;
   presets_dir: string;
   logs_dir: string;
+  data_dir: string;
 }
 
 /** The series-studio folder: SERIES_STUDIO_HOME or the folder two levels above apps/server. */
@@ -100,6 +102,7 @@ export function loadConfig(opts: LoadConfigOptions = {}): ResolvedConfig {
     projects_dir: abs(cfg.projects_dir),
     presets_dir: abs(cfg.presets_dir),
     logs_dir: abs(cfg.logs_dir),
+    data_dir: abs(cfg.data_dir),
   };
 }
 

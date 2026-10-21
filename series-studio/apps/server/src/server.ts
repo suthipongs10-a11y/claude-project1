@@ -1,6 +1,12 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { createContext, type ContextOptions, type StudioContext } from './context.js';
 import { registerStyleTools } from './tools/styles.js';
+import { registerSeriesTools } from './tools/series.js';
+import { registerBibleTools } from './tools/bible.js';
+import { registerOutlineTools } from './tools/outline.js';
+import { registerGateTools } from './tools/gates.js';
+import { registerResources } from './resources.js';
+import { registerPrompts } from './prompts.js';
 
 export const SERVER_NAME = 'series-studio';
 export const SERVER_VERSION = '0.1.0';
@@ -16,6 +22,12 @@ export function buildServer(ctx: StudioContext): McpServer {
     },
   );
   registerStyleTools(server, ctx);
+  registerSeriesTools(server, ctx);
+  registerBibleTools(server, ctx);
+  registerOutlineTools(server, ctx);
+  registerGateTools(server, ctx);
+  registerResources(server, ctx);
+  registerPrompts(server, ctx);
   return server;
 }
 

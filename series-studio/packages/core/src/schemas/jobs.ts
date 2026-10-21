@@ -4,13 +4,26 @@ import { EpisodeNumber, IsoDateTime, Quality, RelPath, Slug } from './common.js'
 export const JobStatus = z.enum(['queued', 'running', 'awaiting_import', 'done', 'failed', 'cancelled']);
 export type JobStatus = z.infer<typeof JobStatus>;
 
-/** A generation job for one batch (one clip). */
+export const JobKind = z.enum(['ref', 'clip']);
+export type JobKind = z.infer<typeof JobKind>;
+
+export const EntityType = z.enum(['character', 'location', 'prop']);
+export type EntityType = z.infer<typeof EntityType>;
+
+/** A generation job: one clip for a batch of shots (`clip`) or reference images for an asset (`ref`). */
 export const GenJob = z.strictObject({
   id: z.string().min(1),
+  kind: JobKind,
   series_id: Slug,
-  episode: EpisodeNumber,
-  batch_id: Slug,
-  shot_ids: z.array(Slug).min(1),
+  /** clip jobs */
+  episode: EpisodeNumber.optional(),
+  batch_id: Slug.optional(),
+  shot_ids: z.array(Slug).default([]),
+  /** ref jobs */
+  entity_type: EntityType.optional(),
+  entity_id: Slug.optional(),
+  /** ref jobs: which view this job produces (e.g. "front", "expression: anger"). */
+  view: z.string().min(1).optional(),
   quality: Quality,
   engine_id: z.string().min(1),
   status: JobStatus,

@@ -1,0 +1,25 @@
+{
+  "id": "ink_stick",
+  "label": "ตัวเส้นหมึก ขาวดำ",
+  "medium": "2d",
+  "render_tokens": ["black ink stick-figure characters", "hand-drawn rough lines", "white paper background", "minimal props drawn in ink", "sketchbook animation feel"],
+  "camera": {
+    "lens_default": "virtual 35mm",
+    "lens_closeup": "virtual 70mm",
+    "aspect_modes": ["9:16", "16:9"],
+    "movement_vocab": ["static", "simple pan", "zoom in", "shake on impact", "cut to split screen"]
+  },
+  "lighting": "none, flat paper white with ink only",
+  "grade": "pure black and white, paper texture, no color",
+  "acting": "simple exaggerated body language, big head gestures, comic timing",
+  "pacing": { "avg_shot_sec": 2.5, "cuts_per_30s": 11 },
+  "dialogue_mode": "narration",
+  "dialogue_lang_in_model": "th",
+  "subtitle_style": "handwritten_black_bottom",
+  "negative": ["text overlays", "watermark", "extra people in background", "logo", "color", "photorealistic", "shading", "subtitles burned in"],
+  "character_sheet": "front, side, full body, 3 expressions, one accessory that identifies the character",
+  "location_sheet": "wide empty ink sketch background, no people",
+  "cliffhanger_style": "freeze on wide-eyed face + comic sting",
+  "notes": "ต่อยอดงานตัวเส้นที่มีอยู่ ใช้เสียงบรรยาย/พากย์ไทย + sfx",
+  "qc": { "identity_similarity_min": 0.8, "cer_max": 0.3 }
+}
