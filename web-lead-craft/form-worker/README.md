@@ -169,7 +169,7 @@ w.FORM_ENDPOINT = 'https://wlc-form.<subdomain>.workers.dev/';
 | field allowlist | รับเฉพาะช่องที่เรารู้จัก ที่เหลือทิ้ง — ฟอร์มนี้ส่งต่ออะไรก็ได้ไม่ได้ |
 
 ช่องที่ Worker รับ (นอกจากนี้ทิ้งทั้งหมด):
-`position` `name` `company` `tel` `email` `province` `type` `pest` `size` `date` `slot` `note`
+`position` `name` `company` `tel` `email` `education` `province` `type` `pest` `size` `date` `slot` `note`
 (+ `form` เลือกปลายทาง, `file` ไฟล์แนบ บนฟอร์มที่เปิด `attachPdf`)
 — ถ้าฟอร์มของเว็บใหม่ต้องใช้ชื่อช่องที่ไม่มีในลิสต์นี้ ต้องเพิ่มใน `LIMITS`
 และ `LABELS` ใน `src/worker.mjs` ก่อน ไม่งั้นข้อมูลจะหายเงียบ ๆ
@@ -186,7 +186,7 @@ w.FORM_ENDPOINT = 'https://wlc-form.<subdomain>.workers.dev/';
 ## เทสต์
 
 ```bash
-node --test form-worker/test/worker.test.mjs      # กฎทั้งหมดของ Worker (47 เคส)
+node --test form-worker/test/worker.test.mjs      # กฎทั้งหมดของ Worker (48 เคส)
 ```
 
 เทสต์ยิงเข้า handler ตัวจริงที่ deploy ไม่ใช่โค้ดจำลอง มีแต่ขา request ออก

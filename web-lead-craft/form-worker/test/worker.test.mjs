@@ -495,6 +495,17 @@ test('HR can tell an application from a customer before opening it', async () =>
   } finally { net.restore(); }
 });
 
+test('an application carries the applicant\'s education and email to HR', async () => {
+  const net = stubNet();
+  try {
+    await call(post({ ...valid, form: 'job', email: 'applicant@example.com',
+      education: "Bachelor's degree / ปริญญาตรี", position: 'IT / งานสารสนเทศ' }), envFor(FORMS_SITE, EMAIL_ENV));
+    const { text, reply_to } = net.calls.email[0].body;
+    assert.match(text, /ระดับการศึกษา: Bachelor's degree \/ ปริญญาตรี/);
+    assert.equal(reply_to, 'applicant@example.com', 'HR answers the applicant with one click');
+  } finally { net.restore(); }
+});
+
 test('a form entry that names no working channel is a loud fault', async () => {
   const site = { ...FORMS_SITE, forms: { job: { emailTo: 'not-an-address' } } };
   const net = stubNet();

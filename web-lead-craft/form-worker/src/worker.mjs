@@ -39,7 +39,7 @@ const MAX_UPLOAD = MAX_FILE + 64 * 1024;
 /** Per-field caps. Thai runs longer than the Latin equivalent, so these are
  *  generous — the point is to stop a novel, not to police a message. */
 const LIMITS = {
-  position: 120, name: 120, company: 160, tel: 40, email: 160, province: 80,
+  position: 120, name: 120, company: 160, tel: 40, email: 160, education: 80, province: 80,
   type: 80, pest: 80, size: 40, date: 40, slot: 80, note: 2000,
 };
 
@@ -51,7 +51,7 @@ const FIELDS = Object.keys(LIMITS);
 /** Labels for the LINE message, so the shop owner reads Thai and not JSON. */
 const LABELS = {
   position: 'ตำแหน่งที่สมัคร', name: 'ชื่อ', company: 'สถานประกอบการ', tel: 'เบอร์โทร',
-  email: 'อีเมล', province: 'จังหวัดที่สนใจ', type: 'ประเภท', pest: 'ปัญหาที่พบ',
+  email: 'อีเมล', education: 'ระดับการศึกษา', province: 'จังหวัดที่สนใจ', type: 'ประเภท', pest: 'ปัญหาที่พบ',
   size: 'ขนาดพื้นที่', date: 'วันที่สะดวก', slot: 'ช่วงเวลา', note: 'รายละเอียด',
 };
 

@@ -21,7 +21,7 @@
             </div>
             <div class="book-row">
               <svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>
-              <div><a href="tel:029413990,462">02-941-3990&nbsp;{{t|ต่อ 462|ext. 462}}</a><small>{{t|จันทร์–ศุกร์ เวลาทำการ|Monday to Friday, office hours}}</small></div>
+              <div><a href="tel:029413990,462">02-941-3990&nbsp;{{t|ต่อ 462|ext. 462}}</a><small>{{t|จันทร์–ศุกร์ 08.30–17.30<br>เสาร์ 08.30–12.30|Monday – Friday 08.30 – 17.30<br>Saturday 08.30 – 12.30}}</small></div>
             </div>
             <div class="book-row">
               <svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>
@@ -34,20 +34,6 @@
           <h3>{{t|ส่งใบสมัคร|Apply now}}</h3>
           <p class="form-sub">{{t|ใบสมัครและ CV ของคุณส่งตรงถึงฝ่ายบุคคล|Your application and CV go straight to HR.}}</p>
           <div class="form-grid">
-            <div class="field field-full">
-              <label for="f-position">{{t|ตำแหน่งที่สนใจ|Position}} <em>*</em></label>
-              <select id="f-position" name="position" required>
-                <option value="" disabled selected>{{t|เลือกตำแหน่ง|Choose a position}}</option>
-                <option value="Entomologist / นักกีฏวิทยา">{{t|นักกีฏวิทยา|Entomologist}}</option>
-                <option value="Customer Service / ลูกค้าสัมพันธ์">{{t|ลูกค้าสัมพันธ์|Customer Service}}</option>
-                <option value="Marketing Executive / เจ้าหน้าที่ฝ่ายขาย">{{t|เจ้าหน้าที่ฝ่ายขาย|Marketing Executive}}</option>
-                <option value="Administrative Officer / เจ้าหน้าที่ธุรการ">{{t|เจ้าหน้าที่ธุรการ|Administrative Officer}}</option>
-                <option value="Data Analyst / นักวิเคราะห์ข้อมูล">{{t|นักวิเคราะห์ข้อมูล|Data Analyst}}</option>
-                <option value="Inspector / เจ้าหน้าที่ตรวจสอบอาวุโส">{{t|เจ้าหน้าที่ตรวจสอบอาวุโส|Inspector}}</option>
-                <option value="Technician / ช่างบริการกำจัดแมลง">{{t|ช่างบริการกำจัดแมลง|Technician}}</option>
-                <option value="Supervisor / หัวหน้าช่างบริการกำจัดแมลง">{{t|หัวหน้าช่างบริการกำจัดแมลง|Supervisor}}</option>
-              </select>
-            </div>
             <div class="field">
               <label for="f-name">{{t|ชื่อ–นามสกุล|Name}} <em>*</em></label>
               <input id="f-name" name="name" type="text" autocomplete="name" required>
@@ -55,6 +41,33 @@
             <div class="field">
               <label for="f-tel">{{t|เบอร์โทร|Contact number}} <em>*</em></label>
               <input id="f-tel" name="tel" type="tel" inputmode="tel" required pattern="0[0-9]{8,9}" title="{{t|กรอกเบอร์ 9–10 หลัก เช่น 0812345678|Enter a 9–10 digit Thai number, e.g. 0812345678}}" placeholder="0812345678" autocomplete="tel">
+            </div>
+            <div class="field">
+              <label for="f-email">{{t|อีเมล|Email}} <em>*</em></label>
+              <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" required placeholder="name@example.com">
+            </div>
+            <div class="field">
+              <label for="f-education">{{t|ระดับการศึกษา|Level of Education}} <em>*</em></label>
+              <select id="f-education" name="education" required>
+                <option value="" disabled selected>{{t|เลือกระดับการศึกษา|Choose a level}}</option>
+                <option value="Master's degree / ปริญญาโท">{{t|ปริญญาโท|Master's degree}}</option>
+                <option value="Bachelor's degree / ปริญญาตรี">{{t|ปริญญาตรี|Bachelor's degree}}</option>
+                <option value="Bachelor – Entomology / ปริญญาตรี – กีฏวิทยา">{{t|ปริญญาตรี – กีฏวิทยา|Bachelor – Entomology}}</option>
+                <option value="Higher Vocational Certificate / ปวส.">{{t|ปวส.|Higher Vocational Certificate}}</option>
+                <option value="Vocational Certificate / ปวช.">{{t|ปวช.|Vocational Certificate}}</option>
+              </select>
+            </div>
+            <div class="field field-full">
+              <label for="f-position">{{t|ตำแหน่งที่สมัคร|Position applying for}} <em>*</em></label>
+              <select id="f-position" name="position" required>
+                <option value="" disabled selected>{{t|เลือกตำแหน่ง|Choose a position}}</option>
+                <option value="Customer Service / งานลูกค้าสัมพันธ์">{{t|งานลูกค้าสัมพันธ์|Customer Service}}</option>
+                <option value="Marketing / Sales / การตลาด / งานขาย">{{t|การตลาด / งานขาย|Marketing / Sales}}</option>
+                <option value="Administration / งานธุรการ">{{t|งานธุรการ|Administration}}</option>
+                <option value="IT / งานสารสนเทศ">{{t|งานสารสนเทศ|IT}}</option>
+                <option value="Human Resources / งานทรัพยากรบุคคล">{{t|งานทรัพยากรบุคคล|Human Resources}}</option>
+                <option value="Technical – all levels / งานช่าง - ทุกระดับ">{{t|งานช่าง - ทุกระดับ|Technical – all levels}}</option>
+              </select>
             </div>
             <div class="field field-full">
               <label for="f-file">{{t|แนบ CV / เรซูเม่|Attach your CV / résumé}} <em>*</em> <span class="opt">{{t|ไฟล์ PDF ไม่เกิน 4MB|PDF only, max 4MB}}</span></label>
