@@ -68,14 +68,16 @@
     "fps": 24,
     "crf": 20,
     "x264_preset": "veryfast",
-    "subtitle_font": "Noto Sans Thai",
-    "card_font": "Noto Sans Thai",
+    "subtitle_font": "Sarabun",
+    "card_font": "Sarabun",
     "title_card_sec": 2.0,
     "end_card_sec": 3.0,
     "product_card_sec": 4.0,
     "music_volume": 0.25,
     "draft_scale": 0.5,
-    "ai_label_position": "bottom_right"
+    "ai_label_position": "bottom_right",
+    "font_file": "fonts/Sarabun-Regular.ttf",
+    "fonts_dir": "fonts"
   },
   "voice": {
     "provider": "mock",

@@ -65,7 +65,7 @@
 ### 2026-10-21 — M4 เสร็จ
 - `AssemblyService` (ffmpeg อย่างเดียว): ต่อคลิปตาม batch บน timeline (trim ตามที่วาง, pad/scale เป็น 1080×1920 หรือ 1920×1080, คลิปไม่มีเสียงเติม silence), การ์ดชื่อเรื่อง/ตอน, การ์ด "ตอนต่อไป" (ดึงชื่อตอนถัดไปจาก outline), การ์ดสินค้าในตอนที่มี bridge, ป้าย "เนื้อหานี้สร้างด้วย AI" ทั้งคลิป, ป้าย "โฆษณา" ใน product mode, SRT จากเวลาบทพูดบน timeline + เบิร์นด้วย libass ตาม `subtitle_style` ของ preset (map เป็น ASS force_style), เสียง: clip audio หรือ voice_track (dub/narration) + เพลงประกอบแบบ ducking (sidechaincompress), loudnorm 2 pass เป้า −14 LUFS, ปกจากกลางช็อต cliffhanger, `edit/timeline_<quality>.json` (schema `Timeline` ใน core)
 - MCP tool `assemble` (draft = preview ครึ่งขนาดใน edit/ ไม่ต้องผ่าน G3, final = ต้องผ่าน G3 → `final/epNN_9x16.mp4` + `.srt` + `_cover.jpg`) · G4 ตรวจว่ามีไฟล์ final แล้ว
-- config `assembly.*` เพิ่ม fps/crf/preset/font/ความยาวการ์ด/ระดับเพลง — ฟอนต์ไทยตั้งได้ (`subtitle_font`, `card_font`; default "Noto Sans Thai")
+- config `assembly.*` เพิ่ม fps/crf/preset/font/ความยาวการ์ด/ระดับเพลง — ฟอนต์ไทยแนบมาใน `fonts/` (Sarabun, OFL) ใช้ผ่าน fontfile/fontsdir ไม่พึ่ง fontconfig
 - เทสต์ e2e M4: ประกอบจริงด้วย ffmpeg → วัดได้ −14 LUFS ±1.5, ซับตรงเวลาที่คาด ±0.2s, ความยาว 25s, H.264 1080×1920, และ 16:9 + เพลง + voice track · รวม 101 ข้อผ่าน
 - **หมายเหตุ/ขอตัดสินใจ**: SPEC ระบุ Remotion สำหรับการ์ด แต่ Remotion เป็น dependency ใหญ่ (React + Chromium render) จึงทำการ์ดด้วย ffmpeg drawtext ไว้ก่อน (ใช้งานได้จริง) ถ้าต้องการการ์ดสวยแบบ Remotion ค่อยเพิ่มเป็น adapter ใน `apps/assembler` ภายหลัง
 

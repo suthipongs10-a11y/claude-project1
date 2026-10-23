@@ -22,7 +22,7 @@ pip install insightface onnxruntime 'opencv-python-headless<5' numpy   # หน�
 pip install open_clip_torch torch pillow             # หน้าตัวละคร (การ์ตูน/อนิเมะ)
 ```
 
-ตั้ง path ของ python/ffmpeg ได้ใน `config/local.json` → `tools` (เช่นชี้ไป `.venv/bin/python`)
+ตั้ง path ของ python/ffmpeg ได้ใน `config/local.json` → `tools` (เช่น `.venv/bin/python` หรือบน Windows `.venv\\Scripts\\python.exe`) · ค่าเริ่มต้น `python3` จะถูกแปลงเป็น `py`/`python` ให้เองบน Windows · ฟอนต์ไทยสำหรับการ์ด/ซับแนบมาใน `fonts/` (Sarabun, OFL) ไม่ต้องติดตั้งเพิ่ม
 
 เสียงพากย์/บรรยาย (M7): ตั้ง `voice.provider` เป็น `cartesia` ใน `config/local.json` และตั้ง env `CARTESIA_API_KEY` ตอนรัน server (ห้ามใส่ key ในไฟล์ repo) · `mock` ใช้ทดสอบจังหวะแบบออฟไลน์ · `list_voices` → `assign_voice` ต่อตัวละคร (หรือ NARRATOR) → `dub_episode` → `assemble` จะใช้ voice track อัตโนมัติ
 

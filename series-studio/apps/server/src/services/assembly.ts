@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync } from 'node:fs';
 import { isAbsolute, join, resolve } from 'node:path';
+import { codeRoot } from '../config.js';
 import {
   Timeline,
   transitionEpisode,
@@ -43,6 +44,21 @@ const RES: Record<Aspect, { w: number; h: number }> = { '9:16': { w: 1080, h: 19
 /** Escape a value for use inside an ffmpeg filtergraph option. */
 export function ffEscape(v: string): string {
   return v.replace(/\\/g, '\\\\').replace(/:/g, '\\:').replace(/'/g, "\\'").replace(/,/g, '\\,').replace(/\[/g, '\\[').replace(/\]/g, '\\]');
+}
+
+/** Escape a file path for a filtergraph option: forward slashes (Windows-safe) plus the special characters. */
+export function ffPath(p: string): string {
+  return p.replace(/\\/g, '/').replace(/:/g, '\\:').replace(/'/g, "\\'").replace(/,/g, '\\,').replace(/;/g, '\\;').replace(/\[/g, '\\[').replace(/\]/g, '\\]');
+}
+
+/** Resolve a config path against the studio root, then the code root (fonts ship with the code). */
+export function resolveStudioFile(root: string, rel: string): string | undefined {
+  if (isAbsolute(rel)) return existsSync(rel) ? rel : undefined;
+  for (const base of [root, codeRoot()]) {
+    const abs = resolve(base, rel);
+    if (existsSync(abs)) return abs;
+  }
+  return undefined;
 }
 
 /** SPEC §8.8 assembly with ffmpeg: concat, cards, labels, subtitles, two-pass loudnorm, export. */
@@ -160,7 +176,11 @@ export class AssemblyService {
       this.store.writeText(file, lines.join('\n'));
       return file;
     };
-    const font = ffEscape(cfg.card_font);
+    const fontFile = resolveStudioFile(this.ctx.config.root, cfg.font_file);
+    const fontsDir = resolveStudioFile(this.ctx.config.root, cfg.fonts_dir);
+    // drawtext: a bundled TTF needs no fontconfig (which is missing on Windows builds of ffmpeg)
+    const fontSpec = fontFile ? `fontfile='${ffPath(fontFile)}'` : `font='${ffEscape(cfg.card_font)}'`;
+    if (!fontFile) warnings.push(`ไม่พบไฟล์ฟอนต์ ${cfg.font_file} ใช้ฟอนต์ของระบบ "${cfg.card_font}" แทน (บน Windows อาจเรนเดอร์ไม่ได้)`);
     const videoLabels: string[] = [];
     const audioLabels: string[] = [];
     for (const [i, seg] of segments.entries()) {
@@ -172,13 +192,13 @@ export class AssemblyService {
         const small = Math.round(H * 0.028);
         let text: string;
         if (seg.id === 'title') {
-          text = `[${vi}:v]drawtext=textfile='${ffEscape(cardText('title', [series.title]))}':font='${font}':fontsize=${big}:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2-${Math.round(H * 0.04)},drawtext=textfile='${ffEscape(cardText('title2', [epTitle]))}':font='${font}':fontsize=${small}:fontcolor=0xdddddd:x=(w-text_w)/2:y=(h-text_h)/2+${Math.round(H * 0.03)}`;
+          text = `[${vi}:v]drawtext=textfile='${ffPath(cardText('title', [series.title]))}':${fontSpec}:fontsize=${big}:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2-${Math.round(H * 0.04)},drawtext=textfile='${ffPath(cardText('title2', [epTitle]))}':${fontSpec}:fontsize=${small}:fontcolor=0xdddddd:x=(w-text_w)/2:y=(h-text_h)/2+${Math.round(H * 0.03)}`;
         } else if (seg.id === 'product' && series.product) {
           const p = series.product;
-          text = `[${vi}:v]drawtext=textfile='${ffEscape(cardText('product', [p.name]))}':font='${font}':fontsize=${big}:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2-${Math.round(H * 0.09)},drawtext=textfile='${ffEscape(cardText('product2', p.selling_points.map((s) => `• ${s}`)))}':font='${font}':fontsize=${small}:fontcolor=0xdddddd:x=(w-text_w)/2:y=(h-text_h)/2,drawtext=textfile='${ffEscape(cardText('product3', [p.cta]))}':font='${font}':fontsize=${small}:fontcolor=0xffd166:x=(w-text_w)/2:y=(h-text_h)/2+${Math.round(H * 0.1)}`;
+          text = `[${vi}:v]drawtext=textfile='${ffPath(cardText('product', [p.name]))}':${fontSpec}:fontsize=${big}:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2-${Math.round(H * 0.09)},drawtext=textfile='${ffPath(cardText('product2', p.selling_points.map((s) => `• ${s}`)))}':${fontSpec}:fontsize=${small}:fontcolor=0xdddddd:x=(w-text_w)/2:y=(h-text_h)/2,drawtext=textfile='${ffPath(cardText('product3', [p.cta]))}':${fontSpec}:fontsize=${small}:fontcolor=0xffd166:x=(w-text_w)/2:y=(h-text_h)/2+${Math.round(H * 0.1)}`;
         } else {
           const next = nextOutline ? `ตอนต่อไป: ${nextOutline.title}` : n < series.episodes ? 'ตอนต่อไป โปรดติดตาม' : 'จบบริบูรณ์ ขอบคุณที่รับชม';
-          text = `[${vi}:v]drawtext=textfile='${ffEscape(cardText('end', [next]))}':font='${font}':fontsize=${big}:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2`;
+          text = `[${vi}:v]drawtext=textfile='${ffPath(cardText('end', [next]))}':${fontSpec}:fontsize=${big}:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2`;
         }
         filters.push(`${text},fps=${fps},format=yuv420p[v${i}]`);
         filters.push(`[${ai}:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo[a${i}]`);
@@ -208,10 +228,10 @@ export class AssemblyService {
       const pos = cfg.ai_label_position;
       const x = pos.endsWith('right') ? 'w-text_w-24' : '24';
       const y = pos.startsWith('bottom') ? 'h-text_h-24' : '24';
-      overlays.push(`drawtext=textfile='${ffEscape(cardText('ai_label', [cfg.ai_label_text]))}':font='${font}':fontsize=${Math.round(H * 0.016)}:fontcolor=white@0.75:box=1:boxcolor=black@0.35:boxborderw=8:x=${x}:y=${y}`);
+      overlays.push(`drawtext=textfile='${ffPath(cardText('ai_label', [cfg.ai_label_text]))}':${fontSpec}:fontsize=${Math.round(H * 0.016)}:fontcolor=white@0.75:box=1:boxcolor=black@0.35:boxborderw=8:x=${x}:y=${y}`);
     }
     if (series.product) {
-      overlays.push(`drawtext=textfile='${ffEscape(cardText('ad_label', [cfg.ad_label_text]))}':font='${font}':fontsize=${Math.round(H * 0.018)}:fontcolor=white:box=1:boxcolor=black@0.5:boxborderw=8:x=24:y=24:enable='between(t,${contentStart},${contentEnd})'`);
+      overlays.push(`drawtext=textfile='${ffPath(cardText('ad_label', [cfg.ad_label_text]))}':${fontSpec}:fontsize=${Math.round(H * 0.018)}:fontcolor=white:box=1:boxcolor=black@0.5:boxborderw=8:x=24:y=24:enable='between(t,${contentStart},${contentEnd})'`);
     }
     // subtitles
     let srtPath: string | undefined;
@@ -219,7 +239,7 @@ export class AssemblyService {
       srtPath = join(outDir, `${epTag}.srt`);
       this.store.writeText(srtPath, toSrt(cues));
       if (opts.burn_subtitles ?? true) {
-        overlays.push(`subtitles='${ffEscape(srtPath)}':force_style='${assStyle(preset.subtitle_style, cfg.subtitle_font, aspect, scale)}'`);
+        overlays.push(`subtitles='${ffPath(srtPath)}'${fontsDir ? `:fontsdir='${ffPath(fontsDir)}'` : ''}:force_style='${assStyle(preset.subtitle_style, cfg.subtitle_font, aspect, scale)}'`);
       }
     }
     if (overlays.length) {

@@ -56,6 +56,10 @@ export const StudioConfigSchema = z.strictObject({
     x264_preset: z.string().min(1),
     subtitle_font: z.string().min(1),
     card_font: z.string().min(1),
+    /** TTF used by drawtext (cards/labels); relative to the studio or code root. Avoids fontconfig (missing on Windows). */
+    font_file: z.string().min(1),
+    /** Folder scanned by libass for subtitle fonts. */
+    fonts_dir: z.string().min(1),
     title_card_sec: z.number().min(0),
     end_card_sec: z.number().min(0),
     product_card_sec: z.number().min(0),

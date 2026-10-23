@@ -4,6 +4,7 @@ import { QcResult, type QcResult as QcResultT, type Shot, transitionEpisode } fr
 import type { StudioContext } from '../context.js';
 import { requirePreset } from '../context.js';
 import { codeRoot } from '../config.js';
+import { resolvePython } from '../util/python.js';
 import { run, extractKeyframes } from '../util/ffmpeg.js';
 import { EpisodeService } from './episode.js';
 import { SeriesService } from './series.js';
@@ -170,7 +171,8 @@ export class QcService {
     const reqFile = this.store.episodePath(seriesId, n, 'qc', '_request.json');
     this.store.writeJson(reqFile, request);
     const started = Date.now();
-    const r = await run(this.ctx.config.tools.python, ['-m', 'workers.qc.run', '--request', reqFile], {
+    const python = resolvePython(this.ctx.config.tools.python, this.ctx.config.root);
+    const r = await run(python, ['-m', 'workers.qc.run', '--request', reqFile], {
       cwd: codeRoot(),
       env: { ...process.env, PYTHONPATH: codeRoot(), PYTHONIOENCODING: 'utf-8' },
       timeoutMs: this.ctx.config.qc.worker_timeout_sec * 1000,
