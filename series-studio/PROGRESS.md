@@ -105,6 +105,11 @@
 - **QC whisper ของจริง**: ติดตั้ง faster-whisper (ต้อง `av<16`) + OpenCV 4 → คลิปที่มีเสียง Cartesia 3 ประโยค: บทตรง CER 0.046 ✅ ผ่าน, บทผิด CER 1.27 ❌ ไม่ผ่าน, people detector ทำงาน (0 คน) — pin เวอร์ชันใน pyproject/README แล้ว
 - ยังทดสอบไม่ได้จากที่นี่: UI ของ Google Flow จริง (selectors), Claude Desktop UI, มือถือจริงผ่าน tunnel
 
+### 2026-10-26 — ทดสอบบนเครื่องผู้ใช้ (Windows 11, Node 22.19, ffmpeg 7.1, Python 3.13)
+- `pnpm i && pnpm build && pnpm test` ผ่าน 132 ข้อ ข้าม 6 ข้อที่ต้องใช้ Chromium (ตั้ง `CHROME_PATH` เพื่อรันได้)
+- บั๊กเฉพาะ Windows ที่พบและแก้: `python3` ไม่มี (ใช้ resolver หา py/python), ffmpeg ไม่มี fontconfig (แนบฟอนต์ Sarabun ใช้ fontfile/fontsdir), ffmpeg 7.x พิมพ์บรรทัดสรุปหลัง JSON ของ loudnorm (parser ใหม่), path แบบ `C:\` ใน filtergraph
+- ขั้นถัดไปของผู้ใช้: ต่อ Claude Desktop แล้วทดสอบ `list_styles` และ `plan_series`
+
 ## สิ่งที่ผู้ใช้ควรตรวจบนเครื่องจริง (เรียงตามลำดับ)
 1. `cd series-studio && pnpm i && pnpm build` แล้วใส่ `apps/server/dist/mcp.js` ใน `claude_desktop_config.json` → เปิด Claude Desktop ลอง `list_styles` (เกณฑ์ M0) และลองสร้างซีรีส์ 3 ตอนจากแชทด้วย prompt `plan_series` (M1)
 2. ขอลิงก์ `dashboard_info` เปิดบนเครื่อง แล้วลองจากมือถือผ่าน tunnel (M5)
