@@ -69,7 +69,9 @@ export interface LoudnessStats {
 /** First pass of two-pass loudnorm: measure integrated loudness etc. */
 export async function measureLoudness(ffmpeg: string, file: string, targetI: number, tp = -1.5, lra = 11): Promise<LoudnessStats> {
   const r = await run(ffmpeg, ['-hide_banner', '-nostats', '-i', file, '-af', `loudnorm=I=${targetI}:TP=${tp}:LRA=${lra}:print_format=json`, '-vn', '-f', 'null', '-']);
-  const m = /\{[\s\S]*\}\s*$/.exec(r.stderr);
+  // ffmpeg prints the loudnorm JSON block somewhere in stderr; newer builds (7.x) append summary
+  // lines after it, so pick the object that contains "input_i" instead of the last braces.
+  const m = /\{[^{}]*"input_i"[^{}]*\}/.exec(r.stderr);
   if (!m) throw new Error(`วัดความดังไม่ได้: ${r.stderr.slice(-400)}`);
   const j = JSON.parse(m[0]) as Record<string, string>;
   const num = (k: string) => {
