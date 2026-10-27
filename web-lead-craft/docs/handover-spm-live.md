@@ -23,6 +23,26 @@
 ย้าย NS ไป Cloudflare เมื่อไหร่ MX หายทันที = `bangkok@spm.com` และ
 `wattanathamm@spm.com` ดับ ซึ่งเป็นอีเมลที่ฝ่ายการตลาดใช้รับงานอยู่
 
+### ตัดสินแล้ว (27 ต.ค. 2569): www.spm.com บน Cloudflare Pages, spm.com เปล่า redirect มา
+
+ตรวจโฮสเดิม (ActionWeb, แผง ServerTools) แล้ว: Apache 2.2.29 / PHP 5.2.17 / OpenSSL 1.0.2d
+**ไม่มี HTTPS** (พอร์ต 443 ไม่ตอบ TLS, ไม่เคยมีใบรับรองใน CT log) — ฟอร์มใช้ไม่ได้บน http
+เพราะ SITES รับเฉพาะ https และหน้าสมัครงานส่ง CV หน้าแรกเดิมเป็นเว็บ SPM International
+(FrontPage ~2000) เจ้าของบริษัทอยู่ไทยและอนุญาตให้ทับแล้ว
+
+| ที่ | ทำอะไร | ใครทำ |
+|---|---|---|
+| Cloudflare Pages `spm2` → Custom domains | เพิ่ม `www.spm.com` **ก่อน**แก้ DNS | เรา |
+| Google Cloud DNS | `www.spm.com` CNAME `spm.com.` → **`spm2.pages.dev.`** (record เดียว, TTL 300) ห้ามแตะ MX/NS/A | IT บริษัท |
+| โฮส ActionWeb (web root) | อัปโหลด `apex-redirect/.htaccess` + `apex-redirect/index.html` (สำรองของเดิมก่อน) | IT บริษัท |
+
+`site.json` domain → `www.spm.com` แล้ว canonical / sitemap / og:url ชี้ www ทั้งหมด
+SITES มี `https://www.spm.com` อยู่แล้ว ไม่ต้องแก้ ไม่มี CAA record — Cloudflare ออกใบรับรองได้
+
+ข้อจำกัดที่ยังเหลือ: คนพิมพ์ `https://spm.com` ตรง ๆ (มี https) จะเจอ error เพราะโฮสเดิมไม่มี SSL
+พิมพ์ `spm.com` เฉย ๆ ไม่เป็นไร — เบราว์เซอร์ลอง https ไม่ได้แล้วถอยมา http แล้ว redirect ไป www
+ถ้า ActionWeb ติด SSL ให้ได้วันไหน ปัญหานี้หายเอง
+
 ข้อจำกัดที่ตามมา: Google Cloud DNS ไม่รองรับ ALIAS/ANAME ที่ apex ดังนั้น
 `spm.com` เปล่า ๆ ชี้ตรงมา Cloudflare Pages ไม่ได้ ทางที่ปลอดภัยที่สุดคือ
 ใช้ `www.spm.com` เป็น CNAME ไป `<project>.pages.dev` แล้วให้ apex redirect

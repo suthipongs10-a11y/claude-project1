@@ -1,0 +1,14 @@
+# spm.com (no www) stays on the company's old host (ActionWeb, Apache 2.2)
+# only to send people to the real site, which is https://www.spm.com on
+# Cloudflare Pages. Google Cloud DNS cannot point a bare domain at Pages,
+# so this file is how the bare domain keeps working.
+#
+# mod_alias only: it is available almost everywhere, needs no RewriteEngine,
+# and the first matching RedirectMatch wins.
+#
+# The new site's own pages keep their path; everything else, including the
+# old /html/*.html pages Google still lists, lands on the new home page.
+# /member/ is left alone — it is a password-protected area of the old site
+# and is nobody's call but the company's.
+RedirectMatch 301 ^/(franchise|careers|privacy)\.html$ https://www.spm.com/$1.html
+RedirectMatch 301 ^/(?!member/).*$ https://www.spm.com/
