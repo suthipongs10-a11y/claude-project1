@@ -1,0 +1,42 @@
+# For the whole site served from the company's own host (ActionWeb, Apache
+# 2.2) instead of Cloudflare Pages. Use it ONLY once https://www.spm.com
+# answers with a valid certificate on that host: the forms are refused from
+# any http origin, and the redirect below would otherwise send everyone to a
+# page that does not load. Upload it next to the contents of dist/, and leave
+# dist/_headers behind — that file is Cloudflare's and Apache ignores it.
+
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# One address for everything: https and www, matching the canonical tags.
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^spm\.com$ [NC]
+RewriteRule ^(.*)$ https://www.spm.com/$1 [R=301,L]
+
+# The old FrontPage pages Google still lists land on the new home page.
+# /member/ (password-protected, old site) is deliberately not touched.
+RewriteRule ^html/ https://www.spm.com/ [R=301,L]
+</IfModule>
+
+# The same headers Cloudflare sends from dist/_headers.
+<IfModule mod_headers.c>
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+</IfModule>
+
+# Photos carry their width in the filename and change name when they change,
+# so they can be cached for a year. The pages themselves must not be.
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType image/webp "access plus 1 year"
+ExpiresByType image/svg+xml "access plus 7 days"
+ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# Apache 2.2 does not know .webp on its own.
+AddType image/webp .webp
