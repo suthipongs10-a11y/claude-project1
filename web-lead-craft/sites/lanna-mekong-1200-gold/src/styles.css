@@ -134,6 +134,10 @@ a { color: var(--gold-ink); }
 .hdr-in { display: flex; align-items: center; gap: 20px; min-height: 74px; }
 .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; }
 .brand svg { width: 38px; height: 46px; flex: none; color: var(--gold); }
+/* The organiser's own emblem (navy and gold, cut to a circle with a clear
+   background) replaces the drawn chedi wherever the brand appears. */
+.brand-logo { width: 52px; height: auto; flex: none; }
+.brand-logo-lg { width: 84px; }
 .brand-tx { display: flex; flex-direction: column; line-height: 1.25; }
 .brand-tx b { font-family: var(--display); font-weight: 600; font-size: 0.98rem; color: var(--on-forest); }
 .brand-tx b i { font-family: var(--numeral); font-style: italic; font-size: 1.24em; color: var(--gold-light); }
@@ -201,6 +205,9 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
     linear-gradient(180deg, rgba(11, 28, 18, 0.45) 0%, transparent 22%, transparent 74%, rgba(11, 28, 18, 0.5) 100%);
 }
 .hero-in { position: relative; z-index: 2; padding: 92px 0 96px; max-width: 640px; }
+/* Above the title rather than beside it: the right half of the hero is the
+   riders in the photograph, and an emblem there would cover them. */
+.hero-logo { display: block; width: 168px; height: auto; margin: 0 0 24px; filter: drop-shadow(0 10px 26px rgba(0, 0, 0, 0.45)); }
 .hero h1 {
   color: var(--on-forest); font-size: clamp(2.1rem, 4.6vw, 3.35rem);
   line-height: 1.22; margin: 0;
@@ -216,6 +223,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
 @media (max-width: 900px) {
   .hero-in { padding: 62px 0 70px; max-width: none; }
+  .hero-logo { width: 120px; margin-bottom: 18px; }
   .hero::after { background: linear-gradient(180deg, rgba(11, 28, 18, 0.9) 40%, rgba(11, 28, 18, 0.72) 100%); }
 }
 
