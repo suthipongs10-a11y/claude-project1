@@ -11,6 +11,12 @@ ErrorDocument 404 /404.html
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
+# Let's Encrypt renews this host's certificate over plain http by fetching a
+# file under /.well-known/acme-challenge/. Leave that path exactly where the
+# renewal expects it: a redirect there is the one way this file could break
+# the certificate it depends on.
+RewriteRule ^\.well-known/ - [L]
+
 # One address for everything: https and www, matching the canonical tags.
 RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} ^spm\.com$ [NC]
