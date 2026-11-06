@@ -5,6 +5,29 @@
 # page that does not load. Upload it next to the contents of dist/, and leave
 # dist/_headers behind — that file is Cloudflare's and Apache ignores it.
 
+# --- Kept from the host's existing file (FrontPage Server Extensions) ---
+# The old site was published with FrontPage, and its extensions still read
+# these lines. They also refuse PUT and DELETE to everyone, which is worth
+# keeping whatever happens to FrontPage. Copied verbatim from /www/.htaccess
+# as it stood on 2026-11-06; remove only if the company retires FrontPage.
+# -FrontPage-
+
+IndexIgnore .htaccess */.??* *~ *# */HEADER* */README* */_vti*
+
+<Limit GET POST>
+order deny,allow
+deny from all
+allow from all
+</Limit>
+<Limit PUT DELETE>
+order deny,allow
+deny from all
+</Limit>
+AuthName spm.com
+AuthUserFile /home/spm/www/_vti_pvt/service.pwd
+AuthGroupFile /home/spm/www/_vti_pvt/service.grp
+# --- End of the host's existing lines ---
+
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
 
