@@ -80,6 +80,28 @@
     document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
   }
 
+  // Welcome screen: one button in, Enter or Escape too. Focus starts on the
+  // button so a keyboard user is never stranded behind the dialog.
+  var root = document.documentElement;
+  var intro = document.getElementById('intro');
+  if (root.classList.contains('intro-on')) {
+    if (!intro) {
+      root.classList.remove('intro-on');
+    } else {
+      var go = document.getElementById('introGo');
+      var enter = function () {
+        try { sessionStorage.setItem('spm-intro', '1'); } catch (e) {}
+        root.classList.add('intro-out');
+        window.setTimeout(function () { root.classList.remove('intro-on', 'intro-out'); }, 450);
+      };
+      go.addEventListener('click', enter);
+      document.addEventListener('keydown', function (ev) {
+        if (root.classList.contains('intro-on') && (ev.key === 'Escape' || (ev.key === 'Enter' && ev.target === document.body))) enter();
+      });
+      go.focus({ preventScroll: true });
+    }
+  }
+
   // cookie notice — asked once, and the answer is what decides whether the
   // analytics in <head> ever loads. setConsent() lives there.
   var bar = document.getElementById('cookie');

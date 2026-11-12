@@ -91,6 +91,28 @@ try {
   process.exit(1);
 }
 
+// A welcome screen (spm-live's butterfly) covers the page until the visitor
+// steps in. Step in the way a visitor does, with its own button, and say so if
+// the button does not actually let them through: a splash nobody can leave is
+// a site nobody can use. Marked in the markup with data-intro and
+// data-intro-enter, so any site can have one.
+async function passIntro(page, label) {
+  const intro = await page.$('[data-intro]');
+  if (!intro || !(await intro.isVisible())) return;
+  const go = await page.$('[data-intro-enter]');
+  if (!go || !(await go.isVisible())) {
+    note(label, 'a welcome screen covers the page and shows no way in');
+  } else {
+    await go.click();
+    await page.waitForTimeout(700);
+    if (!(await intro.isVisible())) return;
+    note(label, 'the welcome screen still covers the page after its button was pressed');
+  }
+  // Reported; now take it away so the rest of the page is still checked
+  // instead of every later click timing out against the screen.
+  await page.evaluate(() => document.querySelector('[data-intro]')?.remove());
+}
+
 const slugOf = url => url.replace(/^\//, '').replace(/\.html$/, '').replace(/\//g, '-') || 'index';
 for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
   const many = URLS.length > 1;
@@ -103,6 +125,8 @@ for (const pg of PAGES) for (const [size, viewport] of VIEWPORTS) {
   page.on('requestfailed', r => errors.push(`request failed: ${r.url().slice(0, 90)}`));
 
   await page.goto(origin + pg.url, { waitUntil: 'load' });
+  await page.waitForTimeout(300);
+  await passIntro(page, label);
   if (pg.code !== DEFAULT_LANG) {
     const btn = await page.$(`[data-set-lang="${pg.code}"]`);
     if (!btn) {
@@ -535,6 +559,7 @@ if (cookiePages.length) {
     const hits = [];
     page.on('request', r => TRACKER.test(r.url()) && hits.push(r.url()));
     await page.goto(origin + cookiePages[0], { waitUntil: 'load' });
+    await passIntro(page, 'consent');
     await page.waitForTimeout(1500);
     const shown = await page.isVisible('#cookie.show');
     if (seed) await page.click(seed === 'yes' ? '#cookieOk' : '#cookieNo');

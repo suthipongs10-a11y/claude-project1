@@ -9,6 +9,19 @@
 <meta property="og:url" content="{{SITE_URL}}">
 <link rel="canonical" href="{{SITE_URL}}">
 <meta name="theme-color" content="#1A2450">
+<script>
+// The welcome screen (pages/10-index.html) belongs to the home page only, once
+// per visit, and never to someone arriving at a section link such as
+// #contact: they asked for that section, not for a greeting.
+(function () {
+  try {
+    if (/(^|\/)(index\.html)?$/.test(location.pathname) && !location.hash &&
+        !sessionStorage.getItem('spm-intro')) {
+      document.documentElement.classList.add('intro-on');
+    }
+  } catch (e) {}
+})();
+</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
 <!-- Google Search Console: paste the verification tag the client is given.
