@@ -90,14 +90,27 @@ src = site / 'src'
 files = [f for f in [src / 'body.html', *sorted((src / 'pages').glob('*.html')),
                      *sorted((src / 'partials').glob('*.html'))] if f.exists()]
 START, END = '<!-- line-qr:start -->', '<!-- line-qr:end -->'
-body = next((f for f in files if START in f.read_text() and END in f.read_text()), None)
-if body is None:
+# Every marker pair in every file: a site can show the code twice (spm-live has
+# it on the contact card and again in the footer of every page), and filling
+# only the first would leave the other pointing at the old account.
+filled = 0
+for f in files:
+    t = f.read_text()
+    out, pos = [], 0
+    while (i := t.find(START, pos)) != -1:
+        j = t.find(END, i)
+        if j == -1:
+            sys.exit(f'{f}: {START} without a matching {END}')
+        # keep the marker's own indentation for the closing line
+        indent = t[t.rfind('\n', 0, j) + 1:j]
+        out.append(t[pos:i + len(START)] + '\n' + indent + svg.strip() + '\n' + indent)
+        pos = j
+        filled += 1
+    if out:
+        f.write_text(''.join(out) + t[pos:])
+        print(f'{f}  QR inlined between markers')
+if filled == 0:
     sys.exit(f'no {START} … {END} markers in {src} — nothing to fill in')
-t = body.read_text()
-a = t.index(START) + len(START)
-b = t.index(END)
-body.write_text(t[:a] + '\n          ' + svg.strip() + '\n          ' + t[b:])
-print(f'{body}  QR inlined between markers')
 
 # And the href everywhere it appears.
 import re
