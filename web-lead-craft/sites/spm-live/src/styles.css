@@ -233,7 +233,7 @@ img, svg { display: block; max-width: 100%; height: auto; }
 .nav.scrolled { border-bottom-color: var(--line); }
 .nav-in { display: flex; align-items: center; gap: 22px; height: 76px; }
 
-.logo { display: inline-flex; align-items: center; gap: 14px; margin-right: auto; padding-block: 7px; }
+.logo { display: inline-flex; flex: none; align-items: center; gap: 14px; margin-right: auto; padding-block: 7px; }
 /* the company's own photographic butterfly — height:auto so the width/height
    attributes cannot beat the sizing here (see CLAUDE.md rule 4) */
 .logo-mark { width: 76px; height: auto; flex: none; }
@@ -280,9 +280,19 @@ img, svg { display: block; max-width: 100%; height: auto; }
   width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
 }
 
-.nav-links { display: flex; gap: 22px; font-size: 0.9375rem; font-weight: 500; }
-.nav-links a { color: var(--body); transition: color 0.15s ease; }
+/* Every destination is in the bar on a computer — the home link, the sections,
+   the franchise and careers pages. Until round 7 the bar held four sections
+   only, and Home, Franchise and Careers lived in the phone menu, whose button
+   is hidden on a wide screen: on a computer they could not be reached at all.
+   All eight need about 1100px with the phone number taken out of the bar (it
+   is in the hero, the contact section, the footer and the menu), so the bar
+   shows from 1200px and the menu button takes over below that. Links do not
+   wrap: a two-line link reads as two links. */
+.nav-links { display: flex; gap: 15px; font-size: 0.9rem; font-weight: 500; }
+.nav-links a { color: var(--body); white-space: nowrap; transition: color 0.15s ease; }
 .nav-links a:hover { color: var(--ink); }
+.nav-links a[aria-current='page'] { color: var(--brand); box-shadow: inset 0 -2px 0 var(--accent); }
+.mnav-panel a[aria-current='page'] { color: var(--brand); background: var(--brand-tint); }
 
 /* language switcher — swaps the copy in place, no navigation */
 .lang {
@@ -335,8 +345,8 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 /* ---------- mobile menu ----------
    A <details> rather than a scripted drawer: it opens, closes and takes
    keyboard focus with no JavaScript, so the only way to reach the sections on
-   a phone does not depend on a script having loaded. Hidden above 960px,
-   which is exactly where .nav-links comes back. */
+   a phone does not depend on a script having loaded. Hidden from 1200px,
+   which is exactly where .nav-links comes back (see .nav-links). */
 
 .mnav { display: none; position: relative; flex: none; }
 .mnav-btn {
@@ -1017,14 +1027,17 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   .foot-grid { grid-template-columns: 1fr 1fr; }
 }
 
+@media (max-width: 1199px) {
+  .nav-links { display: none; }
+  .mnav { display: block; }
+}
+
 @media (max-width: 960px) {
   .hero-grid { grid-template-columns: 1fr; }
   .hero-mark { display: none; }
   .std { grid-template-columns: 1fr; }
   .book-grid { grid-template-columns: 1fr; }
   .assure-in { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  .nav-links, .nav-tel { display: none; }
-  .mnav { display: block; }
   .steps { grid-template-columns: repeat(2, 1fr); }
   /* The hero stacks to one column here, so its copy spans the full band
      instead of just the darker left side — and a directional fade stops
@@ -1220,31 +1233,34 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   text-transform: uppercase; color: var(--accent-ink);
 }
 :lang(th) .intro-hello { letter-spacing: 0.04em; font-size: 0.95rem; }
-/* Round 6: the company's own lettering — the copperplate script and the green
-   book serif from their printed material, sent as samples. Both faces are
-   subset to the glyphs of their one line (fonts.css), so retyping either line
-   means re-fetching it. The two colours are sampled from those samples and
+/* The company's own lettering, after their printed material. Round 6 matched
+   the copperplate script of their sample (Pinyon Script); round 7 sent it back
+   as too flourished to read, so the name is now Cormorant Garamond Italic — the
+   same calligraphic slant without the swash tails, and the same Garamond
+   family as the green line under it. Both faces are subset to the glyphs of
+   their one line (fonts.css), so retyping either line means re-fetching it. The two colours are sampled from those samples and
    darkened just enough to read on white. They are the company's print colours,
    not theme tokens, so a colour variant of this site leaves them alone. */
 .intro-title {
-  margin-top: 6px; font-family: 'Pinyon Script', var(--font-display); font-weight: 400;
-  font-size: clamp(1.5rem, 5.4vw, 2.15rem); line-height: 1.35; color: #24719F;
+  margin-top: 6px; font-family: 'Cormorant Garamond', var(--font-display); font-style: italic; font-weight: 600;
+  font-size: clamp(1.45rem, 5.6vw, 2.2rem); line-height: 1.3; color: #24719F;
 }
 /* The name is Latin in both languages; the Thai page's taller line box is for
    stacked vowels it does not have, and opened a gap between its two lines. */
-:lang(th) .intro-title { line-height: 1.35; }
+:lang(th) .intro-title { line-height: 1.3; }
 .intro-tagline {
   margin-top: 6px; font-family: 'EB Garamond', 'Anuphan', Georgia, serif; font-weight: 600;
   font-size: clamp(1rem, 2.6vw, 1.22rem); line-height: 1.4; color: #17704F;
 }
 /* Thai has no spaces, so a narrow screen broke "สิ่ง|แวดล้อม" mid-word. Two
    chunks, split where the company's own draft splits it: one line on a wide
-   screen, two clean lines on a phone. */
+   screen, two clean lines on a phone. The English is chunked the same way so
+   a phone does not strand "Management" on a line of its own. */
 .intro-chunk { display: inline-block; }
 :lang(th) .intro-tagline { font-size: clamp(0.95rem, 2.4vw, 1.08rem); line-height: 1.6; }
 /* The company asked for the eye to rest on the name, so the way in sits well
    below it rather than in the same block. */
-.intro-go { min-width: 240px; margin-top: clamp(44px, 11vh, 110px); }
+.intro-go { min-width: 240px; margin-top: clamp(72px, 18vh, 170px); }
 .intro-foot { margin-top: 26px; font-size: 0.85rem; color: var(--faint); }
 .intro-foot a { color: var(--brand); font-weight: 600; text-decoration: none; }
 

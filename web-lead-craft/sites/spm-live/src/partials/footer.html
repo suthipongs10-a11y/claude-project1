@@ -119,6 +119,16 @@
     document.getElementById('cookieNo').addEventListener('click', answer('no'));
   }
 
+  // The franchise and careers pages are whole pages, so their menu entry says
+  // "you are here". Section links on the home page are not marked: every one
+  // of them is on the page you are on.
+  var here = location.pathname.split('/').pop();
+  if (here && here !== 'index.html') {
+    document.querySelectorAll('.nav-links a, .mnav-panel a').forEach(function (a) {
+      if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page');
+    });
+  }
+
   // The menu opens and closes on its own — this only handles the cases the
   // <details> element has no opinion about: tapping a link inside it (which
   // would otherwise leave the panel covering the section it jumped to),
