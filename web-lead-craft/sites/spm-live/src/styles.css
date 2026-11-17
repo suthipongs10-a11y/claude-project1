@@ -1235,15 +1235,15 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 :lang(th) .intro-hello { letter-spacing: 0.04em; font-size: 0.95rem; }
 /* The company's own lettering, after their printed material. Round 6 matched
    the copperplate script of their sample (Pinyon Script); round 7 sent it back
-   as too flourished to read, so the name is now Cormorant Garamond Italic — the
-   same calligraphic slant without the swash tails, and the same Garamond
-   family as the green line under it. Both faces are subset to the glyphs of
+   as too flourished to read (the S above all). Cormorant Garamond Italic was
+   tried next, and the company picked Playfair Display Italic from a sheet of
+   eleven: the slant kept, every capital plain. Both faces are subset to the glyphs of
    their one line (fonts.css), so retyping either line means re-fetching it. The two colours are sampled from those samples and
    darkened just enough to read on white. They are the company's print colours,
    not theme tokens, so a colour variant of this site leaves them alone. */
 .intro-title {
-  margin-top: 6px; font-family: 'Cormorant Garamond', var(--font-display); font-style: italic; font-weight: 600;
-  font-size: clamp(1.45rem, 5.6vw, 2.2rem); line-height: 1.3; color: #24719F;
+  margin-top: 6px; font-family: 'Playfair Display', var(--font-display); font-style: italic; font-weight: 500;
+  font-size: clamp(1.2rem, 5.2vw, 1.95rem); line-height: 1.3; color: #24719F;
 }
 /* The name is Latin in both languages; the Thai page's taller line box is for
    stacked vowels it does not have, and opened a gap between its two lines. */
