@@ -20,7 +20,7 @@
 // grown into several pages keeps its section menu by writing {{HOME}}#section:
 // empty on the home page, index.html (with its depth) everywhere else.
 //
-// Also written: 404.html, favicon.svg, robots.txt, _headers, and sitemap.xml
+// Also written: 404.html, favicon.svg (+ favicon.ico / apple-touch-icon.png if the site has them), robots.txt, _headers, and sitemap.xml
 // once site.json carries a real domain.
 //
 // Deploy dist/ and nothing else: src/ and preview.html must never be public.
@@ -106,9 +106,14 @@ if (tokenProblems.length) {
 }
 
 const dist = join(dir, 'dist');
+// Optional icon files a site may add next to favicon.svg. favicon.ico is what
+// Safari, older browsers and every bare /favicon.ico request get, and on a host
+// that served an older site it also replaces the icon that site left behind;
+// apple-touch-icon.png is the iOS home-screen icon. Copied only if present.
+const EXTRA_ICONS = ['favicon.ico', 'apple-touch-icon.png'];
 // dist/img is expensive to regenerate, so it survives the wipe and the
 // pipeline decides per-file what is stale
-for (const entry of ['404.html', 'favicon.svg', 'robots.txt', 'sitemap.xml', '_headers', 'articles', 'privacy.html']) {
+for (const entry of ['404.html', 'favicon.svg', ...EXTRA_ICONS, 'robots.txt', 'sitemap.xml', '_headers', 'articles', 'privacy.html']) {
   rmSync(join(dist, entry), { recursive: true, force: true });
 }
 for (const f of existsSync(dist) ? [] : []) rmSync(f, { force: true });
@@ -299,6 +304,8 @@ if (multi) {
 }
 
 copyFileSync(join(dir, 'src', 'favicon.svg'), join(dist, 'favicon.svg'));
+const extraIcons = EXTRA_ICONS.filter(f => existsSync(join(dir, 'src', f)));
+for (const f of extraIcons) copyFileSync(join(dir, 'src', f), join(dist, f));
 
 // 404 deliberately skips the embedded font payload — it would double the
 // deploy size for a page almost nobody reaches. System faces are fine.
@@ -313,7 +320,7 @@ writeFileSync(
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>${t404.title ?? 'ไม่พบหน้านี้'} — ${cfg.name}</title>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+${extraIcons.includes('favicon.ico') ? '<link rel="icon" href="/favicon.ico" sizes="32x32">\n' : ''}<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
 *{box-sizing:border-box;margin:0}
 body{min-height:100vh;display:grid;place-items:center;padding:32px;text-align:center;
@@ -391,7 +398,7 @@ console.log(`built ${dist}/  (${langs.map(l => l.code).join(' + ')})`);
 for (const w of written) console.log(`  ${w.out.padEnd(34)} ${kb(w.bytes)}`);
 console.log(`  img/${' '.repeat(30)} ${photos.count} photo(s) x ${WIDTHS.join('/')} = ${kb(photos.bytes)}`
   + (photos.pruned ? `  (pruned ${photos.pruned} orphan${photos.pruned > 1 ? 's' : ''})` : ''));
-console.log(`  + 404.html, favicon.svg, robots.txt, _headers${isReal ? ', sitemap.xml' : ''}`);
+console.log(`  + 404.html, favicon.svg${extraIcons.map(f => ', ' + f).join('')}, robots.txt, _headers${isReal ? ', sitemap.xml' : ''}`);
 if (!isReal) console.log(`  note: site.json has no real domain yet — sitemap/canonical skipped`);
 console.log(`preview.html ${kb(readFileSync(join(dir, 'preview.html')).length)} (site root, do not deploy)`);
 if (listImages(dir).length === 0) console.log(`  note: no masters in src/img/ — {{img:...}} placeholders would fail`);
