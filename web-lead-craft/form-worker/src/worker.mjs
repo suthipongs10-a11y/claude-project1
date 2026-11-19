@@ -25,9 +25,10 @@
  *  larger is someone probing, and we should not spend CPU on it. */
 const MAX_BODY = 8 * 1024;
 
-/** One attachment, on the forms that ask for one: a CV as a PDF. The cap is
- *  what the page promises applicants, and the body may be that plus the form
- *  around it — a note in Thai is a few KB, not sixty.
+/** One attachment, on the forms that ask for one: a CV as a PDF, a payment
+ *  slip as a photo. The cap is what the page promises, and the body may be
+ *  that plus the form around it — a long registration in Thai is tens of KB,
+ *  not sixty.
  *
  *  Measured on workerd: a 4MB file costs roughly 10ms of CPU end to end, most
  *  of it turning the base64 into the request to the email API. That is the
@@ -39,7 +40,7 @@ const MAX_UPLOAD = MAX_FILE + 64 * 1024;
 /** Per-field caps. Thai runs longer than the Latin equivalent, so these are
  *  generous — the point is to stop a novel, not to police a message. */
 const LIMITS = {
-  position: 120, name: 120, company: 160, tel: 40, email: 160, education: 80, province: 80,
+  position: 120, category: 80, name: 120, company: 160, tel: 40, email: 160, education: 80, province: 80,
   type: 80, pest: 80, size: 40, date: 40, slot: 80, note: 2000,
 };
 
@@ -50,10 +51,24 @@ const FIELDS = Object.keys(LIMITS);
 
 /** Labels for the LINE message, so the shop owner reads Thai and not JSON. */
 const LABELS = {
-  position: 'ตำแหน่งที่สมัคร', name: 'ชื่อ', company: 'สถานประกอบการ', tel: 'เบอร์โทร',
+  position: 'ตำแหน่งที่สมัคร', category: 'รุ่นที่สมัคร', name: 'ชื่อ', company: 'สถานประกอบการ', tel: 'เบอร์โทร',
   email: 'อีเมล', education: 'ระดับการศึกษา', province: 'จังหวัดที่สนใจ', type: 'ประเภท', pest: 'ปัญหาที่พบ',
   size: 'ขนาดพื้นที่', date: 'วันที่สะดวก', slot: 'ช่วงเวลา', note: 'รายละเอียด',
 };
+
+/** A long form — an event registration runs to forty-odd questions — cannot
+ *  live in a fixed field list, and its questions belong to the page, not here.
+ *  A form entry with `"entries": true` therefore accepts them as an ordered
+ *  list of section headings and question/answer pairs, which is also the
+ *  order the organiser reads them in.
+ *
+ *  That is a relay of text the visitor chose, so it is bounded the same way
+ *  `note` is: only into the inbox our config names, every line flattened,
+ *  multi-line answers indented under their question, and hard caps on count
+ *  and length. The standard fields still ride alongside for the subject,
+ *  Reply-To and the "can we reach them" check. */
+const ENTRY_MAX = 150;
+const ENTRY_LIMITS = { h: 120, q: 200, a: 2000 };
 
 /** Field names that no person should ever fill in. See the check below for
  *  why none of them looks like something a browser would autofill. */
@@ -154,37 +169,56 @@ function routeFor(site, raw) {
   return { ...site, ...forms[key] };
 }
 
-const takesFiles = site => Object.values(site.forms ?? {}).some(f => f?.attachPdf);
+/** What a route accepts as an attachment. `attachPdf` is the original spelling
+ *  and still means exactly what it did; `attach` lists kinds. */
+const ATTACH_KINDS = ['pdf', 'image'];
+function attachKinds(route) {
+  const kinds = new Set(route.attachPdf ? ['pdf'] : []);
+  for (const k of Array.isArray(route.attach) ? route.attach : []) if (ATTACH_KINDS.includes(k)) kinds.add(k);
+  return [...kinds];
+}
+
+/** Whether any form on the site may post a big body — a file, or a long
+ *  registration. Everywhere else the contact-form cap stands. */
+const takesFiles = site => Object.values(site.forms ?? {})
+  .some(f => f && (attachKinds(f).length || f.entries));
 
 class Rejected extends Error {
   constructor(status, code) { super(code); this.status = status; this.code = code; }
 }
 
-/** A PDF is what the page asks for, so a PDF is what reaches the inbox. The
- *  check is on the bytes, not the name or the browser's claimed type — both
- *  are whatever the sender says they are. The spec lets the header sit
- *  anywhere in the first kilobyte. */
+/** What the file actually is, read from its bytes — never the name or the
+ *  browser's claimed type, both of which are whatever the sender says. The
+ *  PDF spec lets its header sit anywhere in the first kilobyte; the image
+ *  formats are fixed signatures at the start. Returns the extension we will
+ *  give it, or null for anything else. */
 const PDF_MAGIC = [0x25, 0x50, 0x44, 0x46, 0x2d]; // %PDF-
-function isPdf(bytes) {
-  const end = Math.min(bytes.length, 1024) - PDF_MAGIC.length;
-  for (let i = 0; i <= end; i++) {
-    if (PDF_MAGIC.every((b, j) => bytes[i + j] === b)) return true;
+const startsWith = (bytes, sig, at = 0) => sig.every((b, j) => bytes[at + j] === b);
+function sniff(bytes) {
+  if (startsWith(bytes, [0xff, 0xd8, 0xff])) return { kind: 'image', ext: 'jpg' };
+  if (startsWith(bytes, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) return { kind: 'image', ext: 'png' };
+  if (startsWith(bytes, [0x52, 0x49, 0x46, 0x46]) && startsWith(bytes, [0x57, 0x45, 0x42, 0x50], 8)) {
+    return { kind: 'image', ext: 'webp' };
   }
-  return false;
+  const end = Math.min(bytes.length, 1024) - PDF_MAGIC.length;
+  for (let i = 0; i <= end; i++) if (startsWith(bytes, PDF_MAGIC, i)) return { kind: 'pdf', ext: 'pdf' };
+  return null;
 }
 
-/** The name HR sees on the attachment. Letters in any script survive — an
- *  applicant's Thai name is the useful part — and nothing else that could
- *  pretend to be a path or a second extension does. */
-function pdfName(name) {
+/** The name the recipient sees on the attachment. Letters in any script
+ *  survive — an applicant's Thai name is the useful part — and nothing else
+ *  that could pretend to be a path or a second extension does. The extension
+ *  is the one the bytes earned, whatever the name claimed. */
+function fileName(name, ext, fallback) {
   const base = String(name ?? '')
     .normalize('NFC')
-    .replace(/\.pdf$/i, '')
+    .replace(/\.(pdf|jpe?g|png|webp|heic)$/i, '')
     .replace(/[^\p{L}\p{M}\p{N} ._()-]/gu, '_')
     .replace(/\s+/g, ' ')
+    .replace(/\./g, '_')
     .trim()
     .slice(0, 80);
-  return `${base || 'cv'}.pdf`;
+  return `${base || fallback}.${ext}`;
 }
 
 /** Base64 for the email API. The native encoder where the runtime has one —
@@ -199,13 +233,45 @@ function toBase64(bytes) {
 }
 
 /** The one file a form may carry, or null when it carries none. An empty
- *  file input still arrives as a nameless zero-byte file, which is "none". */
-async function readAttachment(value) {
+ *  file input still arrives as a nameless zero-byte file, which is "none".
+ *  A PDF-only form keeps its original error code, which its page knows. */
+async function readAttachment(value, kinds) {
   if (!value || typeof value.arrayBuffer !== 'function' || value.size === 0) return null;
   if (value.size > MAX_FILE) throw new Rejected(413, 'file_too_large');
   const bytes = new Uint8Array(await value.arrayBuffer());
-  if (!isPdf(bytes)) throw new Rejected(415, 'file_not_pdf');
-  return { filename: pdfName(value.name), content: toBase64(bytes), size: bytes.length };
+  const found = sniff(bytes);
+  if (!found || !kinds.includes(found.kind)) {
+    throw new Rejected(415, kinds.length === 1 && kinds[0] === 'pdf' ? 'file_not_pdf' : 'file_type_not_allowed');
+  }
+  const fallback = found.kind === 'pdf' ? 'cv' : 'file';
+  return { filename: fileName(value.name, found.ext, fallback), content: toBase64(bytes), size: bytes.length };
+}
+
+/** A long form's questions, cleaned: see ENTRY_MAX. Anything that is not the
+ *  expected shape is dropped item by item rather than failing the form — a
+ *  registration reaching the organiser short one odd line beats not at all. */
+function readEntries(value) {
+  let list = value;
+  if (typeof list === 'string') {
+    try { list = JSON.parse(list); } catch { return []; }
+  }
+  if (!Array.isArray(list)) return [];
+  const one = (v, max) => (typeof v === 'string' ? v.replace(CTRL_ALL, ' ').replace(/^[\s■]+/, '').trim().slice(0, max) : '');
+  const out = [];
+  for (const item of list.slice(0, ENTRY_MAX)) {
+    if (!item || typeof item !== 'object') continue;
+    if (typeof item.h === 'string') {
+      const h = one(item.h, ENTRY_LIMITS.h);
+      if (h) out.push({ h });
+      continue;
+    }
+    const q = one(item.q, ENTRY_LIMITS.q);
+    const a = typeof item.a === 'string'
+      ? item.a.replace(CTRL_KEEP_NEWLINE, ' ').trim().slice(0, ENTRY_LIMITS.a) : '';
+    if (q && a) out.push({ q, a });
+  }
+  // A heading with nothing under it is noise in the organiser's inbox.
+  return out.filter((e, i) => !e.h || (out[i + 1] && !out[i + 1].h));
 }
 
 /** The message the shop owner actually reads on their phone.
@@ -216,6 +282,18 @@ async function readAttachment(value) {
  *  indented under a heading of their own, which no label line ever is. */
 function composeMessage(site, fields, meta) {
   const lines = [`📩 ${site.label ?? 'ลูกค้าใหม่'}จากเว็บไซต์ ${site.name ?? ''}`.trim(), ''];
+  if (meta.entries?.length) {
+    // The page's own questions, in its own order, replace the fixed list.
+    for (const e of meta.entries) {
+      if (e.h) { if (lines.at(-1) !== '') lines.push(''); lines.push(`■ ${e.h}`); continue; }
+      const [first, ...rest] = e.a.split('\n');
+      if (rest.length) lines.push(`${e.q}:`, ...e.a.split('\n').map(l => `  ${l}`));
+      else lines.push(`${e.q}: ${first}`);
+    }
+    if (meta.file) lines.push('', `ไฟล์แนบ: ${meta.file.filename} (${Math.ceil(meta.file.size / 1024)} KB)`);
+    if (meta.page) lines.push('', `หน้า: ${meta.page}`);
+    return lines.join('\n');
+  }
   for (const key of FIELDS) {
     if (!fields[key]) continue;
     if (key === 'note') {
@@ -226,10 +304,13 @@ function composeMessage(site, fields, meta) {
   }
   if (meta.file) lines.push(`ไฟล์แนบ: ${meta.file.filename} (${Math.ceil(meta.file.size / 1024)} KB)`);
   if (meta.page) lines.push('', `หน้า: ${meta.page}`);
-  // LINE rejects a text message over 5,000 characters outright, and losing the
-  // whole enquiry to a long note would be the worst possible failure here.
-  return lines.join('\n').slice(0, 4900);
+  return lines.join('\n');
 }
+
+/** LINE rejects a text message over 5,000 characters outright, and losing the
+ *  whole enquiry to a long note would be the worst possible failure here. Only
+ *  LINE is clamped: an email carries a forty-question registration whole. */
+const LINE_MAX = 4900;
 
 /** An address we are willing to put in a Reply-To header.
  *
@@ -257,7 +338,7 @@ const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ESCAPES[c]);
 function composeSubject(site, fields) {
   const who = fields.company || fields.name || 'ผู้ติดต่อใหม่';
   const how = fields.tel || fields.email;
-  const what = [site.label ?? 'ลูกค้าใหม่', fields.position].filter(Boolean).join(' ');
+  const what = [site.label ?? 'ลูกค้าใหม่', fields.position || fields.category].filter(Boolean).join(' ');
   return `[${site.name ?? 'เว็บไซต์'}] ${what}: ${who}${how ? ` · ${how}` : ''}`
     .replace(/\s+/g, ' ')
     .slice(0, 180);
@@ -265,10 +346,26 @@ function composeSubject(site, fields) {
 
 /** Same text, wrapped so a mail client renders the line breaks. `pre-wrap`
  *  rather than <br>: nothing to escape wrongly, and it still wraps on a phone. */
-const emailHtml = text =>
-  '<div style="font-family:system-ui,-apple-system,\'Segoe UI\',Roboto,sans-serif;' +
-  'font-size:15px;line-height:1.7;color:#10263F;white-space:pre-wrap">' +
-  escapeHtml(text) + '</div>';
+const FONT = 'font-family:system-ui,-apple-system,\'Segoe UI\',Roboto,sans-serif;';
+const emailHtml = (text, meta = {}) => {
+  if (!meta.entries?.length) {
+    return `<div style="${FONT}font-size:15px;line-height:1.7;color:#10263F;white-space:pre-wrap">` +
+      escapeHtml(text) + '</div>';
+  }
+  // A long registration reads far better as a table than as forty lines of
+  // "label: value" — the organiser scans the right-hand column.
+  const td = 'padding:6px 10px;border-bottom:1px solid #E3E8EF;vertical-align:top;';
+  const rows = meta.entries.map(e => e.h
+    ? `<tr><td colspan="2" style="padding:18px 10px 6px;font-weight:700;font-size:15px;color:#0B1C12;border-bottom:2px solid #C9A227">${escapeHtml(e.h)}</td></tr>`
+    : `<tr><td style="${td}color:#5A6472;width:42%">${escapeHtml(e.q)}</td>` +
+      `<td style="${td}color:#10263F;font-weight:600;white-space:pre-wrap">${escapeHtml(e.a)}</td></tr>`).join('');
+  const head = escapeHtml(text.split('\n')[0]);
+  const file = meta.file
+    ? `<p style="margin:16px 0 0">📎 ${escapeHtml(meta.file.filename)} (${Math.ceil(meta.file.size / 1024)} KB)</p>` : '';
+  return `<div style="${FONT}font-size:14px;line-height:1.55;color:#10263F">` +
+    `<p style="margin:0 0 8px;font-size:16px;font-weight:700">${head}</p>` +
+    `<table style="border-collapse:collapse;width:100%;max-width:720px">${rows}</table>${file}</div>`;
+};
 
 /** Send through Resend. Their REST API takes JSON, so no header of ours is
  *  built by string concatenation and there is nothing for a newline to break.
@@ -279,7 +376,7 @@ const emailHtml = text =>
  *  whole message over a malformed Reply-To, and losing an enquiry to somebody's
  *  typo would be a ridiculous way to lose it. What they typed still appears in
  *  the body either way. */
-async function sendEmail(channel, fields, text, subject, file) {
+async function sendEmail(channel, fields, text, subject, file, meta) {
   const replyTo = EMAIL_RE.test(fields.email) ? fields.email : undefined;
   const res = await fetch(`${channel.api}/emails`, {
     method: 'POST',
@@ -289,7 +386,7 @@ async function sendEmail(channel, fields, text, subject, file) {
       to: channel.to,
       subject,
       text,
-      html: emailHtml(text),
+      html: emailHtml(text, meta),
       ...(replyTo ? { reply_to: replyTo } : {}),
       ...(file ? { attachments: [{ filename: file.filename, content: file.content }] } : {}),
     }),
@@ -307,7 +404,7 @@ async function pushToLine(site, text) {
       'content-type': 'application/json',
       authorization: `Bearer ${site.lineToken}`,
     },
-    body: JSON.stringify({ to: site.lineTo, messages: [{ type: 'text', text }] }),
+    body: JSON.stringify({ to: site.lineTo, messages: [{ type: 'text', text: text.slice(0, LINE_MAX) }] }),
   });
   if (!res.ok) {
     const detail = await res.text().catch(() => '');
@@ -340,7 +437,7 @@ function channelsFor(site, env, skipped) {
       const channel = { api: site.emailApi ?? 'https://api.resend.com', key, from, to };
       channels.push({
         name: 'email',
-        send: (text, fields, subject, file) => sendEmail(channel, fields, text, subject, file),
+        send: (text, fields, subject, file, meta) => sendEmail(channel, fields, text, subject, file, meta),
       });
     } else {
       skipped.push(`email: missing ${[!key && 'API key', !from && 'from address',
@@ -361,9 +458,9 @@ function channelsFor(site, env, skipped) {
  *  The rule this exists to keep: the page may only show its success panel once
  *  something actually confirmed. Zero confirmations is a 502 and a phone
  *  number on screen, never a green tick. */
-async function deliver(channels, text, fields, subject, file) {
+async function deliver(channels, text, fields, subject, file, meta) {
   const results = await Promise.allSettled(
-    channels.map(c => c.send(text, fields, subject, file)));
+    channels.map(c => c.send(text, fields, subject, file, meta)));
 
   const failures = results
     .map((r, i) => r.status === 'rejected'
@@ -457,17 +554,19 @@ export default {
     }
 
     let file = null;
-    if (route.attachPdf) {
+    const kinds = attachKinds(route);
+    if (kinds.length) {
       try {
-        file = await readAttachment(raw.file);
+        file = await readAttachment(raw.file, kinds);
       } catch (err) {
         if (!(err instanceof Rejected)) throw err;
         return reply(err.status, { ok: false, error: err.code }, cors(origin, site));
       }
-      // LINE cannot carry a PDF. A CV with nowhere to go is a lost application
-      // that looks delivered, so a file needs an email channel or a loud 500.
+      // LINE cannot carry a file. A CV or a payment slip with nowhere to go is
+      // a lost application that looks delivered, so a file needs an email
+      // channel or a loud 500.
       if (file && !routeChannels.some(c => c.name === 'email')) {
-        console.error(`${origin} form "${raw.form}" takes a PDF but has no email channel`);
+        console.error(`${origin} form "${raw.form}" takes a file but has no email channel`);
         return reply(500, { ok: false, error: 'server_misconfigured' }, cors(origin, site));
       }
     }
@@ -481,11 +580,12 @@ export default {
       return reply(422, { ok: false, error: 'contact_required' }, cors(origin, site));
     }
 
-    const meta = { page: clean(raw.page ?? '', 'name'), file };
+    const entries = route.entries ? readEntries(raw.entries) : [];
+    const meta = { page: clean(raw.page ?? '', 'name'), file, entries };
     const text = composeMessage(route, fields, meta);
     const subject = composeSubject(route, fields);
 
-    const { delivered, failures } = await deliver(routeChannels, text, fields, subject, file);
+    const { delivered, failures } = await deliver(routeChannels, text, fields, subject, file, meta);
     if (failures.length) console.error(`delivery failed for ${origin} — ${failures.join(' | ')}`);
     if (!delivered) {
       // The enquiry is lost if we answer ok here, so say so plainly and let

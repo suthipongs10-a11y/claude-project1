@@ -638,3 +638,172 @@ test('the webhook mirror gets the application, not the CV', async () => {
     assert.doesNotMatch(JSON.stringify(mirror.body), /content/);
   } finally { net.restore(); }
 });
+
+// --- a long registration with a payment slip --------------------------------
+
+const EVENT_SITE = {
+  name: 'Lanna 1200',
+  emailTo: ['organiser@lanna.example'],
+  forms: {
+    register: { label: 'ใบสมัคร', attach: ['image', 'pdf'], entries: true },
+  },
+};
+
+const jpegBytes = (size = 3000) => {
+  const b = new Uint8Array(size).fill(0x11);
+  b.set([0xff, 0xd8, 0xff, 0xe0]);
+  return b;
+};
+const pngBytes = () => {
+  const b = new Uint8Array(1200).fill(0x22);
+  b.set([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  return b;
+};
+const webpBytes = () => {
+  const b = new Uint8Array(1200).fill(0x33);
+  b.set(new TextEncoder().encode('RIFF'));
+  b.set(new TextEncoder().encode('WEBP'), 8);
+  return b;
+};
+
+const entries = [
+  { h: 'ประเภทผู้สมัคร / Registration category' },
+  { q: 'รุ่น / Category', a: 'Challenge — 90 ชั่วโมง' },
+  { q: 'ประเภทนักปั่น', a: 'นักปั่นต่างประเทศ / International Rider' },
+  { h: 'ข้อมูลส่วนตัว' },
+  { q: 'Full Name in English', a: 'Jean Dupont' },
+  { q: 'ประสบการณ์อื่น', a: 'PBP 2023\nLEL 2025' },
+  { h: 'Empty section' },
+];
+const reg = {
+  form: 'register', name: 'Jean Dupont', tel: '+33612345678', email: 'jean@example.fr',
+  category: 'Challenge 90h', elapsed: 60000, entries: JSON.stringify(entries),
+};
+
+test('a registration reaches the organiser in the page\'s own order, slip attached', async () => {
+  const net = stubNet();
+  try {
+    const bytes = jpegBytes(5000);
+    const res = await call(postForm(reg, new File([bytes], 'slip.HEIC', { type: 'image/jpeg' })),
+      envFor(EVENT_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    const sent = net.calls.email[0].body;
+    assert.deepEqual(sent.to, ['organiser@lanna.example']);
+    assert.equal(sent.attachments[0].filename, 'slip.jpg', 'the bytes decide the extension, not the name');
+    assert.deepEqual(new Uint8Array(Buffer.from(sent.attachments[0].content, 'base64')), bytes);
+    assert.match(sent.subject, /ใบสมัคร Challenge 90h: Jean Dupont · \+33612345678/);
+    assert.equal(sent.reply_to, 'jean@example.fr');
+
+    const t = sent.text;
+    assert.ok(t.indexOf('■ ประเภทผู้สมัคร') < t.indexOf('รุ่น / Category: Challenge') &&
+      t.indexOf('รุ่น / Category') < t.indexOf('■ ข้อมูลส่วนตัว'), 'order is the page\'s');
+    assert.match(t, /ประสบการณ์อื่น:\n  PBP 2023\n  LEL 2025/);
+    assert.doesNotMatch(t, /Empty section/, 'a heading with nothing under it is dropped');
+    assert.match(t, /ไฟล์แนบ: slip\.jpg/);
+    assert.doesNotMatch(t, /^ชื่อ: /m, 'the fixed field list does not repeat what the page sent');
+    assert.match(sent.html, /<table/);
+  } finally { net.restore(); }
+});
+
+test('PNG and WebP slips are accepted, each with its own extension', async () => {
+  const net = stubNet();
+  try {
+    for (const [bytes, ext] of [[pngBytes(), 'png'], [webpBytes(), 'webp']]) {
+      const res = await call(postForm(reg, new File([bytes], 'โอนเงิน')), envFor(EVENT_SITE, EMAIL_ENV));
+      assert.equal(res.status, 200);
+      assert.equal(net.calls.email.at(-1).body.attachments[0].filename, `โอนเงิน.${ext}`);
+    }
+  } finally { net.restore(); }
+});
+
+test('a slip form refuses what is not an image or a PDF, with a code its page can explain', async () => {
+  const net = stubNet();
+  try {
+    const exe = new File([new TextEncoder().encode('MZ\x90\x00 not an image')], 'slip.jpg', { type: 'image/jpeg' });
+    const res = await call(postForm(reg, exe), envFor(EVENT_SITE, EMAIL_ENV));
+    assert.equal(res.status, 415);
+    assert.deepEqual(await res.json(), { ok: false, error: 'file_type_not_allowed' });
+    assert.equal(net.calls.email.length, 0);
+  } finally { net.restore(); }
+});
+
+test('a CV form still refuses a photo, with the error code its page already knows', async () => {
+  const net = stubNet();
+  try {
+    const res = await call(postForm(job, new File([jpegBytes()], 'cv.jpg')), envFor(FORMS_SITE, EMAIL_ENV));
+    assert.equal(res.status, 415);
+    assert.deepEqual(await res.json(), { ok: false, error: 'file_not_pdf' });
+  } finally { net.restore(); }
+});
+
+test('a cash registration without a slip still arrives', async () => {
+  const net = stubNet();
+  try {
+    const res = await call(postForm(reg, null), envFor(EVENT_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    assert.equal(net.calls.email[0].body.attachments, undefined);
+  } finally { net.restore(); }
+});
+
+test('a registration bigger than a contact form is not refused as one', async () => {
+  // Forty-odd questions in Thai, labels included, are well past the 8KB a
+  // contact form may send.
+  const net = stubNet();
+  try {
+    const many = Array.from({ length: 60 }, (_, i) => ({ q: `คำถามข้อที่ ${i + 1} ภาษาไทยยาวพอสมควร`, a: 'ก'.repeat(80) }));
+    const res = await call(postForm({ ...reg, entries: JSON.stringify(many) }, null), envFor(EVENT_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    assert.match(net.calls.email[0].body.text, /คำถามข้อที่ 60/);
+  } finally { net.restore(); }
+});
+
+test('entries are capped, flattened and escaped — a relay of text, kept on a leash', async () => {
+  const net = stubNet();
+  try {
+    const nasty = [
+      { q: 'ชื่อ\nเบอร์โทร: 0999999999', a: 'x' },
+      { q: '■ forged heading', a: 'y' },
+      { q: '<img src=x onerror=alert(1)>', a: '<b>bold</b>' },
+      { q: 'long', a: 'a'.repeat(5000) },
+      'not an object', { q: 'no answer', a: '' }, { h: 42 },
+      ...Array.from({ length: 300 }, (_, i) => ({ q: `extra ${i}`, a: 'z' })),
+    ];
+    await call(postForm({ ...reg, entries: JSON.stringify(nasty) }, null), envFor(EVENT_SITE, EMAIL_ENV));
+    const { text, html } = net.calls.email[0].body;
+    assert.doesNotMatch(text, /^เบอร์โทร: 0999999999/m, 'a label cannot start a line of its own');
+    assert.doesNotMatch(text, /^■ forged/m);
+    assert.doesNotMatch(html, /<img|<b>/);
+    assert.ok(!text.includes('a'.repeat(2001)));
+    assert.doesNotMatch(text, /no answer/);
+    assert.doesNotMatch(text, /extra 200/, 'no more than the cap of entries');
+  } finally { net.restore(); }
+});
+
+test('entries are ignored on a form that does not ask for them', async () => {
+  const net = stubNet();
+  try {
+    await call(postForm({ ...valid, form: 'franchise', entries: JSON.stringify(entries) }, null),
+      envFor(FORMS_SITE, EMAIL_ENV));
+    assert.doesNotMatch(net.calls.email[0].body.text, /Jean Dupont|Challenge/);
+  } finally { net.restore(); }
+});
+
+test('malformed entries cost the extra detail, never the registration', async () => {
+  const net = stubNet();
+  try {
+    const res = await call(postForm({ ...reg, entries: '{not json' }, null), envFor(EVENT_SITE, EMAIL_ENV));
+    assert.equal(res.status, 200);
+    assert.match(net.calls.email[0].body.text, /ชื่อ: Jean Dupont/, 'falls back to the fixed fields');
+  } finally { net.restore(); }
+});
+
+test('only LINE is clamped: email carries the whole registration', async () => {
+  const site = { ...EVENT_SITE, lineToken: 't', lineTo: 'U1', forms: { register: { ...EVENT_SITE.forms.register, lineToken: 't', lineTo: 'U1' } } };
+  const net = stubNet();
+  try {
+    const many = Array.from({ length: 120 }, (_, i) => ({ q: `ข้อ ${i + 1}`, a: 'ข'.repeat(60) }));
+    await call(postForm({ ...reg, entries: JSON.stringify(many) }, null), envFor(site, EMAIL_ENV));
+    assert.ok(net.calls.line[0].body.messages[0].text.length <= 4900);
+    assert.match(net.calls.email[0].body.text, /ข้อ 120:/);
+  } finally { net.restore(); }
+});

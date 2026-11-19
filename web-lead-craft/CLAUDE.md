@@ -69,6 +69,11 @@ the day-to-day workflow and Cloudflare Pages limits.
    - **A honeypot field must never be named `website`, `url` or `email2`**,
      because browser autofill would fill it for a real customer and drop every
      genuine lead in silence.
+   **A long form does not grow the field list.** An event registration
+   (lanna-mekong-1200-gold, 48 questions) sends its questions as ordered
+   `entries` on a form route with `"entries": true`, and a payment slip via
+   `"attach": ["image", "pdf"]`; the Worker emails them as a sectioned table.
+   The page owns its questions; the Worker only bounds them.
    **Never add a Meta/Facebook Pixel to a client site** — dropped 2026-08-06.
    The snippet is trivial; the support is not. Selling it invites Business
    Suite questions the operator cannot answer, and a feature we cannot support

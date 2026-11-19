@@ -144,6 +144,32 @@ w.FORM_ENDPOINT = 'https://wlc-form.<subdomain>.workers.dev/';
 
 ชื่อไฟล์ถูกล้างเหลือแค่ตัวอักษร (ไทยได้) ตัวเลข ช่องว่าง `._()-` แล้วบังคับลงท้าย `.pdf`
 
+### ใบสมัครยาว + สลิปโอนเงิน — `entries: true` และ `attach`
+
+ใบสมัครงานปั่น (Lanna 1200) มี 40 กว่าคำถาม ใส่ใน `LIMITS` ไม่ไหว และคำถามเป็นของหน้าเว็บ
+ไม่ใช่ของ Worker ฟอร์มที่ตั้ง `"entries": true` จึงรับช่อง `entries` เป็น JSON รายการเรียงลำดับ
+`[{ "h": "หัวข้อ" }, { "q": "คำถาม", "a": "คำตอบ" }, …]` แล้วอีเมลออกมาตามลำดับนั้น
+เป็นตารางแบ่งหัวข้อ (ช่องมาตรฐาน `name` `tel` `email` `category` ยังส่งมาด้วย ใช้ทำหัวเรื่อง
+Reply-To และเช็กว่าติดต่อกลับได้)
+
+```json
+"https://lanna1200.example": {
+  "name": "Lanna East to Mekong 1200",
+  "emailTo": ["kaewpuabike@gmail.com"],
+  "forms": { "register": { "label": "ใบสมัคร", "attach": ["image", "pdf"], "entries": true } }
+}
+```
+
+- `attach` บอกชนิดไฟล์ที่รับ: `"image"` (JPEG / PNG / WebP) และ/หรือ `"pdf"` — ตรวจจากไบต์ ไม่ใช่ชื่อไฟล์
+  ไม่ตรง = `415 file_type_not_allowed` นามสกุลไฟล์ที่แนบถูกตั้งตามชนิดจริง (`slip.HEIC` ที่เป็น JPEG → `slip.jpg`)
+  `attachPdf: true` เดิมยังใช้ได้และยังตอบ `file_not_pdf` เหมือนเดิม (หน้า SPM รู้จักรหัสนี้)
+- `entries` เป็นข้อความที่คนกรอกเลือกเอง จึงถูกจำกัด: ไม่เกิน 150 รายการ คำถาม ≤ 200 ตัวอักษร
+  คำตอบ ≤ 2,000 ตัวอักษร ทุกบรรทัดถูกทำให้เป็นบรรทัดเดียว คำตอบหลายบรรทัดถูกย่อหน้า และส่งได้แค่อีเมล
+  ที่เราตั้งใน SITES — หัวข้อที่ไม่มีคำตอบใต้มันถูกตัดทิ้ง JSON เสีย = ส่งแค่ช่องมาตรฐาน ไม่ทิ้งใบสมัคร
+- ฟอร์มแบบนี้ (และฟอร์มที่รับไฟล์) ได้เพดาน body ใหญ่ขึ้น (4MB + 64KB) เมื่อส่งแบบ multipart
+- **LINE ตัดที่ 4,900 ตัวอักษร** (ข้อจำกัดของ LINE) แต่**อีเมลได้ครบทั้งฉบับ**
+- หน้าเว็บย่อรูปสลิปจากกล้องมือถือให้เองก่อนส่ง (ด้านยาว 2,000px JPEG) ไฟล์ 10MB เหลือราว 1.5MB
+
 **เรื่อง CPU ของแพ็กเกจฟรี** — วัดบน workerd แล้ว ไฟล์ 4MB ใช้ CPU ราว 10ms
 ซึ่งเท่ากับเพดานต่อ request ของ Workers ฟรีพอดี CV ทั่วไป (≤ 1–2MB) ใช้แค่ส่วนเดียว
 ถ้า log ขึ้น `Exceeded CPU` บ่อย ๆ คืออัปเกรด Workers Paid (5 USD/เดือน, เพดาน 30 วินาที)
@@ -169,8 +195,9 @@ w.FORM_ENDPOINT = 'https://wlc-form.<subdomain>.workers.dev/';
 | field allowlist | รับเฉพาะช่องที่เรารู้จัก ที่เหลือทิ้ง — ฟอร์มนี้ส่งต่ออะไรก็ได้ไม่ได้ |
 
 ช่องที่ Worker รับ (นอกจากนี้ทิ้งทั้งหมด):
-`position` `name` `company` `tel` `email` `education` `province` `type` `pest` `size` `date` `slot` `note`
-(+ `form` เลือกปลายทาง, `file` ไฟล์แนบ บนฟอร์มที่เปิด `attachPdf`)
+`position` `category` `name` `company` `tel` `email` `education` `province` `type` `pest` `size` `date` `slot` `note`
+(+ `category` รุ่นที่สมัคร, `form` เลือกปลายทาง, `file` ไฟล์แนบบนฟอร์มที่เปิด `attachPdf`/`attach`,
+`entries` คำถาม–คำตอบบนฟอร์มที่เปิด `entries`)
 — ถ้าฟอร์มของเว็บใหม่ต้องใช้ชื่อช่องที่ไม่มีในลิสต์นี้ ต้องเพิ่มใน `LIMITS`
 และ `LABELS` ใน `src/worker.mjs` ก่อน ไม่งั้นข้อมูลจะหายเงียบ ๆ
 
@@ -186,7 +213,7 @@ w.FORM_ENDPOINT = 'https://wlc-form.<subdomain>.workers.dev/';
 ## เทสต์
 
 ```bash
-node --test form-worker/test/worker.test.mjs      # กฎทั้งหมดของ Worker (48 เคส)
+node --test form-worker/test/worker.test.mjs      # กฎทั้งหมดของ Worker (58 เคส)
 ```
 
 เทสต์ยิงเข้า handler ตัวจริงที่ deploy ไม่ใช่โค้ดจำลอง มีแต่ขา request ออก

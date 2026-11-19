@@ -241,6 +241,10 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   background: linear-gradient(180deg, var(--forest-deep) 0%, rgba(11, 28, 18, 0.62) 34%, rgba(11, 28, 18, 0.72) 66%, var(--forest-deep) 100%);
 }
 #signup .wrap { position: relative; z-index: 2; }
+/* The registration is several screens tall now. Stretched over all of it the
+   photo became one blurred patch of leaves, so it heads the section and fades
+   into the forest ground, the way the phone layout already had it. */
+@media (min-width: 761px) { #signup .sec-bg { bottom: auto; height: 820px; } }
 /* On a phone the sign-up band is tall and narrow, so a full-height cover crop
    left a 390x1149 sliver of the photo — nothing recognisable. Anchor it to the
    top instead and let it fade into the band. */
@@ -393,6 +397,106 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .form-msg.show { display: block; }
 .form-msg.ok { background: rgba(201, 162, 39, 0.16); border: 1px solid var(--line-gold); color: var(--gold-pale); }
 .form-msg.err { background: rgba(190, 60, 60, 0.18); border: 1px solid rgba(230, 120, 120, 0.45); color: #FFD4D4; }
+
+/* ---------- the full registration (organiser's spec, Nov 2026) ----------
+   Twelve sections on the dark band. Each section is a fieldset card so a
+   forty-question form reads as a sequence of short steps; conditional parts
+   are [hidden] AND disabled by the script, so they neither show nor send. */
+[hidden] { display: none !important; }
+.form-reg { max-width: 760px; gap: 18px; }
+.fs {
+  margin: 0; min-width: 0; border: 1px solid var(--line-forest); border-radius: var(--r);
+  background: rgba(11, 28, 18, 0.72); padding: 22px 22px 24px; display: grid; gap: 16px;
+}
+.fs legend {
+  float: left; width: 100%; padding: 0 0 12px; margin-bottom: 2px; border-bottom: 1px solid var(--line-gold);
+  font-family: var(--display); font-size: 1.12rem; font-weight: 500; color: var(--on-forest);
+  display: flex; align-items: center; gap: 12px;
+}
+.fs legend + * { clear: both; }
+.fs-no {
+  flex: none; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%;
+  border: 1px solid var(--gold); color: var(--gold); font-family: var(--numeral); font-size: 1.05rem;
+}
+.fs-intro, .fs-note { margin: 0; font-size: 0.9rem; color: var(--on-forest-body); }
+.fs-note { border-left: 2px solid var(--gold); padding-left: 12px; }
+.fs-note b { color: var(--gold-light); }
+.field .q { font-size: 0.92rem; font-weight: 500; color: var(--on-forest); }
+.hint { font-size: 0.82rem; line-height: 1.5; color: var(--on-forest-dim); }
+.field input[type=date] { color-scheme: dark; }
+.field input[type=file] { padding: 10px 12px; cursor: pointer; }
+.field input[type=file]::file-selector-button {
+  font: inherit; font-weight: 500; margin-right: 12px; padding: 8px 14px; border: 0; border-radius: var(--r-s);
+  background: var(--gold); color: var(--on-gold); cursor: pointer;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; display: inline-flex; cursor: pointer; }
+.chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+/* child combinator on purpose: a {{t|…}} phrase is itself a <span> inside
+   this one, and `.chip span` would draw a second box around the words */
+.chip > span {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 8px 16px; border-radius: var(--r);
+  border: 1px solid var(--line-forest); background: rgba(255, 255, 255, 0.06);
+  color: var(--on-forest-body); font-size: 0.95rem; line-height: 1.35; transition: background .15s, border-color .15s;
+}
+.chip:hover > span { border-color: var(--gold); }
+.chip input:checked + span { background: var(--gold); border-color: var(--gold); color: var(--on-gold); font-weight: 500; }
+.chip input:focus-visible + span { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+.checks { display: grid; gap: 10px; }
+.check { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; color: var(--on-forest-body); font-size: 0.95rem; line-height: 1.55; }
+.check input { flex: none; width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--gold); cursor: pointer; }
+.check-final { padding: 14px 16px; border: 1px solid var(--line-gold); border-radius: var(--r); background: rgba(201, 162, 39, 0.08); color: var(--on-forest); }
+.field.bad input, .field.bad select, .field.bad textarea, .field.bad .chip > span { border-color: #E07A7A; }
+.field.bad .q, .check.bad { color: #FFB4B4; }
+.check.bad input { outline: 2px solid #E07A7A; outline-offset: 2px; }
+.cond { display: grid; gap: 16px; }
+.fee { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.fee div { border: 1px solid var(--line-gold); border-radius: var(--r); padding: 12px 14px; display: grid; }
+.fee b { font-family: var(--numeral); font-size: 1.7rem; line-height: 1.1; color: var(--gold); font-weight: 600; }
+.fee div > span { font-size: 0.86rem; color: var(--on-forest-body); }
+.bank { border-radius: var(--r); background: var(--cream); color: var(--ink); padding: 18px 18px 16px; }
+.bank-h { margin: 0 0 8px; font-weight: 600; color: var(--forest); }
+.bank dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 16px; font-size: 0.95rem; }
+.bank dt { color: var(--body); }
+.bank dd { margin: 0; color: var(--ink); font-weight: 500; overflow-wrap: anywhere; }
+.bank .acct { font-size: 1.12rem; letter-spacing: 0.03em; }
+.copy {
+  font: inherit; font-size: 0.8rem; margin-left: 8px; padding: 4px 10px; min-height: 30px; cursor: pointer;
+  border: 1px solid var(--forest); border-radius: var(--r-s); background: transparent; color: var(--forest);
+}
+.copy.copied { background: var(--forest); color: var(--on-forest); }
+.bank-note { margin: 10px 0 0; font-size: 0.86rem; color: var(--body); }
+@media (max-width: 520px) {
+  .fs { padding: 18px 14px 20px; }
+  .fee { grid-template-columns: minmax(0, 1fr); }
+  .bank dl { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .bank dd { margin-bottom: 8px; }
+}
+.reg-intro {
+  max-width: 760px; margin: 0 auto 22px; padding: 20px 22px; border-radius: var(--r);
+  border: 1px solid var(--line-gold); background: rgba(11, 28, 18, 0.72); color: var(--on-forest-body); font-size: 0.97rem;
+}
+.reg-intro p { margin: 0 0 10px; }
+.reg-intro b { color: var(--gold-light); font-weight: 500; }
+.reg-uses summary { cursor: pointer; color: var(--gold-light); min-height: 44px; display: flex; align-items: center; }
+.reg-uses ul { margin: 0 0 10px; padding-left: 20px; columns: 2; column-gap: 28px; }
+@media (max-width: 520px) { .reg-uses ul { columns: 1; } }
+.reg-warn { margin: 0 !important; padding-top: 10px; border-top: 1px solid var(--line-forest); color: var(--on-forest); }
+.reg-done {
+  max-width: 640px; margin-inline: auto; text-align: center; padding: 34px 26px; border-radius: var(--r);
+  background: var(--cream); color: var(--body); box-shadow: var(--shadow-m); outline: none;
+}
+.reg-done-tag { margin: 0; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.22em; color: var(--gold-ink); }
+.reg-done h3 { margin: 8px 0 14px; font-family: var(--display); font-size: 1.45rem; color: var(--ink); display: grid; gap: 2px; }
+.reg-done h3 > span { font-size: 1rem; font-weight: 400; color: var(--body); }
+.reg-done p { margin: 0 0 10px; }
+.reg-status { display: inline-block; padding: 8px 14px; border-radius: var(--r); background: var(--cream-2); color: var(--ink); }
+.reg-status b { color: var(--gold-ink); }
+.reg-org { font-size: 0.9rem; padding-top: 12px; border-top: 1px solid var(--line-cream); }
+.reg-org a { display: inline-block; padding-block: 10px; margin-block: -10px; }
+.info-note { margin: 22px auto 0; max-width: 720px; text-align: center; color: var(--on-forest-body); font-size: 0.95rem; }
+.ftr-org { margin: 0; display: grid; gap: 2px; color: var(--on-forest-body); font-size: 0.92rem; }
+.ftr-org b { color: var(--on-forest); font-weight: 500; }
 
 /* ---------- footer ---------- */
 .ftr { background: var(--forest-deep); color: var(--on-forest-dim); padding: 56px 0 24px; font-size: 0.92rem; position: relative; overflow: hidden; }

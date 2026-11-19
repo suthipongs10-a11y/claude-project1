@@ -24,6 +24,15 @@
     }
   },
 
+  "https://lanna1200.example.com": {
+    "_comment": "An event registration: forty-odd questions sent as ordered `entries`, and a payment slip as a photo or PDF. Email only — a slip cannot travel over LINE.",
+    "name": "Lanna East to Mekong 1200",
+    "emailTo": ["organiser@lanna1200.example.com"],
+    "forms": {
+      "register": { "label": "ใบสมัคร", "attach": ["image", "pdf"], "entries": true }
+    }
+  },
+
   "https://altahome.example.com": {
     "_comment": "Both channels. Each is attempted; the enquiry counts as delivered if either confirms. emailFrom overrides the EMAIL_FROM secret for this one client.",
     "name": "ALTA Home Care",

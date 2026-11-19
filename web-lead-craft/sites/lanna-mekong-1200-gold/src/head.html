@@ -1,9 +1,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{t|การค้นพบ 1200 ล้านนาตะวันออกสู่ลุ่มน้ำโขง — รุ่นปฐมฤกษ์|Discovery 1200 — Lanna East to the Mekong, Inaugural Edition}}</title>
-<meta name="description" content="{{t|แรลลี่จักรยานทางไกล 1,200 กม. ภายใน 90–100 ชั่วโมง จากข่วงเมืองปัว จ.น่าน สู่ลุ่มน้ำโขงที่เชียงคาน รุ่นปฐมฤกษ์ พ.ย. 2570 เปิดรับสมัครแล้ว 95 ยูโร|A 1,200km ultra-distance cycling rally, 90–100 hours, from Pua (Nan) to the Mekong at Chiang Khan. Inaugural edition, Nov 2027 — registration is open, €95.}}">
+<meta name="description" content="{{t|จักรยานทางไกล 1,200 กม. รุ่น Challenge 90 ชม. และ Touring 120 ชม. 6–10 พ.ย. 2570 จากข่วงเมืองปัว จ.น่าน สู่ลุ่มน้ำโขงที่เชียงคาน เปิดรับสมัครแล้ว 120 ยูโร|A 1,200km long-distance ride, Challenge 90h or Touring 120h, 6–10 Nov 2027, from Pua (Nan) to the Mekong at Chiang Khan. Registration open, €120.}}">
 <meta property="og:title" content="{{t|การค้นพบ 1200 ล้านนาตะวันออกสู่ลุ่มน้ำโขง รุ่นปฐมฤกษ์|Discovery 1200 — Lanna East to the Mekong, Inaugural Edition}}">
-<meta property="og:description" content="{{t|1,200 กิโลเมตร 90–100 ชั่วโมง ปฐมบทของการค้นพบ 1200 ล้านนาตะวันออกสู่ลุ่มน้ำโขง — เปิดรับสมัครแล้ว|1,200km, 90–100 hours — the first chapter of Discovery 1200. Registration's open now.}}">
+<meta property="og:description" content="{{t|1,200 กิโลเมตร · Challenge 90 ชม. / Touring 120 ชม. · 6–10 พ.ย. 2570 — เปิดรับสมัครแล้ว|1,200km · Challenge 90h / Touring 120h · 6–10 Nov 2027 — registration is open.}}">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="{{t|th_TH|en_US}}">
 <meta property="og:url" content="{{SITE_URL}}">
@@ -11,44 +11,62 @@
 <meta name="theme-color" content="#0B1C12">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
-<!-- Contact form delivery. A static site has nowhere to POST to, so the form
-     goes to our Cloudflare Worker (form-worker/ in the repo), which delivers
-     the entry to the organiser by email, LINE, or both. Put that Worker's URL
-     in FORM_ENDPOINT; leave it empty and the form only pretends to send,
-     which is how a demo must behave. -->
+<!-- Registration delivery. A static site has nowhere to POST to, so the form
+     goes to our Cloudflare Worker (form-worker/ in the repo), which emails the
+     registration and the payment slip to the organiser. It stores nothing.
+     Empty FORM_ENDPOINT = demo mode: the form only pretends to send.
+     The Worker's SITES secret needs an entry for this site's exact origin
+     (scheme + host) with forms.register — see docs/handover-lanna-gold.md. -->
 <script>
 (function (w) {
-  w.FORM_ENDPOINT = '';
+  w.FORM_ENDPOINT = 'https://wlc-form.thanakorn10.workers.dev/';
   var opened = Date.now();
-  // A promise for "did it get through" — never rejects, so the page always
-  // has something to say.
-  w.wlcSend = function (form) {
-    var data = { page: location.pathname, elapsed: Date.now() - opened };
-    new FormData(form).forEach(function (v, k) { data[k] = v; });
-    if (!w.FORM_ENDPOINT) return Promise.resolve(true);
-    return fetch(w.FORM_ENDPOINT, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(data)
-    }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  // Resolves to { ok, error } and never rejects, so the page always has
+  // something true to say. Multipart, because a registration carries a slip.
+  w.wlcSend = function (fd) {
+    fd.append('page', location.pathname);
+    fd.append('elapsed', String(Date.now() - opened));
+    if (!w.FORM_ENDPOINT) return Promise.resolve({ ok: true });
+    return fetch(w.FORM_ENDPOINT, { method: 'POST', body: fd })
+      .then(function (r) {
+        return r.json().catch(function () { return {}; })
+          .then(function (j) { return { ok: r.ok && j.ok !== false, error: j.error || '' }; });
+      })
+      .catch(function () { return { ok: false, error: 'network' }; });
   };
 })(window);
 </script>
 
-<!-- Still deliberately NOT a schema.org/Event: the organiser gave a month
-     (November 2027) but no specific day, and startDate is required for that
-     type. Guessing a day to satisfy the schema would be the one lie this was
-     built to avoid — so the real facts we do have (distance, time limit,
-     price) go on Organization instead, and Event waits for an actual date. -->
+<!-- Now a schema.org/Event: the organiser has given the actual dates
+     (Sat 6 – Wed 10 November 2027). Until then this was an Organization,
+     because startDate is required and inventing one would have been a lie. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "การค้นพบ 1200 ล้านนาตะวันออกสู่ลุ่มน้ำโขง",
-  "alternateName": "Discovery 1200 — Lanna East to the Mekong",
-  "description": "{{t|แรลลี่จักรยานทางไกล 1,200 กิโลเมตร ภายใน 90-100 ชั่วโมง รุ่นปฐมฤกษ์ พฤศจิกายน 2570 เริ่มและจบที่ข่วงเมืองปัว จังหวัดน่าน ค่าสมัคร 95 ยูโร ถึง 31 สิงหาคม 2570 จากนั้น 110 ยูโร|A 1,200km ultra-distance cycling rally in 90-100 hours. Inaugural edition, November 2027, starting and finishing at Khuang Mueang Pua, Nan province. Entry €95 through 31 August 2027, then €110.}}",
+  "@type": "SportsEvent",
+  "name": "LANNA EAST TO MEKONG 1200 — ล้านนาตะวันออกสู่ลุ่มน้ำโขง 1200",
+  "description": "{{t|กิจกรรมจักรยานทางไกล 1,200 กิโลเมตร รุ่น Challenge ภายใน 90 ชั่วโมง และ Touring ภายใน 120 ชั่วโมง เริ่มและจบที่ข่วงเมืองปัว จังหวัดน่าน|A 1,200km long-distance cycling event: Challenge within 90 hours, Touring within 120 hours. Starts and finishes at Khuang Mueang Pua, Nan, Thailand.}}",
+  "sport": "Cycling",
+  "startDate": "2027-11-06",
+  "endDate": "2027-11-10",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
   "url": "{{SITE_URL}}",
-  "email": "info@lannaeast1200.com",
-  "areaServed": "ภาคเหนือ ประเทศไทย"
+  "location": {
+    "@type": "Place",
+    "name": "ข่วงเมืองปัว / Khuang Mueang Pua",
+    "address": { "@type": "PostalAddress", "addressLocality": "Pua", "addressRegion": "Nan", "addressCountry": "TH" }
+  },
+  "organizer": {
+    "@type": "SportsOrganization",
+    "name": "Pua Cycling Club",
+    "email": "kaewpuabike@gmail.com",
+    "telephone": "+66832021036",
+    "address": { "@type": "PostalAddress", "streetAddress": "41 Moo 3", "addressLocality": "Pua", "addressRegion": "Nan", "postalCode": "55120", "addressCountry": "TH" }
+  },
+  "offers": [
+    { "@type": "Offer", "price": "120", "priceCurrency": "EUR", "validThrough": "2027-09-30", "url": "{{SITE_URL}}#signup" },
+    { "@type": "Offer", "price": "150", "priceCurrency": "EUR", "validFrom": "2027-10-01", "url": "{{SITE_URL}}#signup" }
+  ]
 }
 </script>

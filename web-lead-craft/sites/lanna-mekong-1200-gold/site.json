@@ -16,5 +16,5 @@
     "accent": "#C9A227",
     "radius": "4px"
   },
-  "note": "เดโม่แพ็กเกจ Starter 990.- ธีมล้านนา เขียว-ทอง (หน้าเดียว 2 ภาษา) — เปลี่ยน domain เป็นของลูกค้าจริงก่อน build แล้ว sitemap/hreflang/canonical จะถูกสร้างให้อัตโนมัติ"
+  "note": "ใช้งานจริงแล้ว (19 พ.ย. 2569) — ข้อมูลผู้จัด Pua Cycling Club, ใบสมัครเต็มรูปแบบส่งอีเมลพร้อมสลิปผ่าน form-worker (forms.register). ก่อน deploy: ใส่ domain จริงในช่อง domain และเพิ่ม origin นี้ใน SITES ของ Worker — ดู docs/handover-lanna-gold.md"
 }
