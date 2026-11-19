@@ -48,7 +48,7 @@
    "https://<โดเมนจริง>": {
      "name": "Lanna East to Mekong 1200",
      "emailTo": ["kaewpuabike@gmail.com"],
-     "emailFrom": "Lanna 1200 Registration <spm@shopdashth.com>",
+     "emailFrom": "Lanna 1200 Registration <register@shopdashth.com>",
      "forms": { "register": { "label": "ใบสมัคร", "attach": ["image", "pdf"], "entries": true } }
    }
    ```
