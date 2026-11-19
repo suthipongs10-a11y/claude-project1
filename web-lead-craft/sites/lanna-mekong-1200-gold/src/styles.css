@@ -485,6 +485,7 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 .reg-done {
   max-width: 640px; margin-inline: auto; text-align: center; padding: 34px 26px; border-radius: var(--r);
   background: var(--cream); color: var(--body); box-shadow: var(--shadow-m); outline: none;
+  scroll-margin-top: 96px; /* clear the sticky header when the page jumps here */
 }
 .reg-done-tag { margin: 0; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.22em; color: var(--gold-ink); }
 .reg-done h3 { margin: 8px 0 14px; font-family: var(--display); font-size: 1.45rem; color: var(--ink); display: grid; gap: 2px; }

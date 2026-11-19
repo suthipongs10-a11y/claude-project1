@@ -1296,7 +1296,9 @@
         if (res.ok) {
           form.hidden = true;
           done.hidden = false;
-          done.scrollIntoView({ block: 'start', behavior: 'smooth' });
+          // instant: the form just vanished from under the reader, and a smooth
+          // scroll starting from where the page used to end can land on the footer
+          done.scrollIntoView({ block: 'start', behavior: 'instant' });
           done.focus({ preventScroll: true });
           form.reset();
         } else if (res.error === 'file_too_large') { flag(slipInput); say('err', 'big'); }
