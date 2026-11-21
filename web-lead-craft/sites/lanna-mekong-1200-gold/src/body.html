@@ -501,7 +501,7 @@
     <div class="wrap">
       <div class="sec-head rv">
         <h2>{{t|ค่าสมัครรวมอะไรบ้าง|What's included}}</h2>
-        <p>{{t|120 ยูโร เมื่อสมัครภายใน 30 กันยายน 2570 ตั้งแต่ 1 ตุลาคม 150 ยูโร|€120 if you register by 30 September 2027, €150 from 1 October}}</p>
+        <p>{{t|4,500 บาท เมื่อสมัครภายใน 30 กันยายน 2570 ตั้งแต่ 1 ตุลาคม 5,500 บาท|฿4,500 if you register by 30 September 2027, ฿5,500 from 1 October}}</p>
       </div>
       <div class="perks rv">
         <div class="perk"><svg aria-hidden="true"><use href="#i-map"/></svg><h3>GPS Tracker</h3><p>{{t|ติดตามตัวด้วยเครื่องติดตามระดับมืออาชีพตลอดเส้นทาง|Tracked the whole way with a professional-grade GPS tracker}}</p></div>
@@ -523,7 +523,7 @@
       <div class="tbas rv">
         <div class="tba"><svg aria-hidden="true"><use href="#i-calendar"/></svg><b>{{t|วันจัดกิจกรรม|Event dates}}</b><span>{{t|ส. 6 – พ. 10 พ.ย. 2570<br>ปั่นทั้งหมด 5 วัน|Sat 6 – Wed 10 Nov 2027<br>five days in all}}</span></div>
         <div class="tba"><svg aria-hidden="true"><use href="#i-clock"/></svg><b>{{t|กรอบเวลา|Time limit}}</b><span>Challenge 90:00 {{t|ชม.|h}}<br>Touring 120:00 {{t|ชม.|h}}</span></div>
-        <div class="tba"><svg aria-hidden="true"><use href="#i-pencil"/></svg><b>{{t|ค่าสมัคร|Entry fee}}</b><span>{{t|120 ยูโร ถึง 30 ก.ย. 70|€120 through 30 Sep 27}}<br>{{t|ตั้งแต่ 1 ต.ค. 150 ยูโร|€150 from 1 Oct}}</span></div>
+        <div class="tba"><svg aria-hidden="true"><use href="#i-pencil"/></svg><b>{{t|ค่าสมัคร|Entry fee}}</b><span>{{t|4,500 บาท ถึง 30 ก.ย. 70|฿4,500 through 30 Sep 27}}<br>{{t|ตั้งแต่ 1 ต.ค. 5,500 บาท|฿5,500 from 1 Oct}}</span></div>
         <div class="tba"><svg aria-hidden="true"><use href="#i-mountain"/></svg><b>{{t|ไต่ระดับสะสม|Total elevation gain}}</b><span>9,000–10,000 {{t|ม.+|m+}}</span></div>
         <div class="tba"><svg aria-hidden="true"><use href="#i-map"/></svg><b>{{t|รายละเอียดเส้นทาง|Route details}}</b><span>1,200 {{t|กม. · 5 ช่วง · 6 จังหวัด|km · 5 stages · 6 provinces}}</span></div>
         <div class="tba"><svg aria-hidden="true"><use href="#i-pin"/></svg><b>{{t|เริ่มและจบ|Start/finish}}</b><span>{{t|ข่วงเมืองปัว จ.น่าน|Khuang Mueang Pua, Nan}}</span></div>
@@ -538,7 +538,7 @@
         <svg class="env" aria-hidden="true"><use href="#i-env"/></svg>
         <div>
           <b>{{t|เปิดรับสมัครแล้ว รุ่นปฐมฤกษ์|Registration's open — inaugural edition}}</b>
-          <span>{{t|120 ยูโร ถึง 30 กันยายน 2570 — ที่นั่งมีจำนวนจำกัด|€120 through 30 September 2027 — limited places}}</span>
+          <span>{{t|4,500 บาท ถึง 30 กันยายน 2570 — ที่นั่งมีจำนวนจำกัด|฿4,500 through 30 September 2027 — limited places}}</span>
         </div>
         <a class="btn btn-dark" href="#signup">{{t|สมัครเข้าร่วม|Sign up}} <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
@@ -550,10 +550,24 @@
       <img {{img:forest-switchback:100vw}} width="1672" height="941" alt="{{t|ถนนคดเคี้ยวผ่านป่าเขียวชอุ่มบนไหล่เขา|A winding road through lush green forest on a mountainside}}">
     </div>
     <div class="wrap">
-      <div class="sec-head rv" style="text-align:center;margin-inline:auto">
-        <p class="eyebrow">{{t|ใบสมัคร|Registration}}</p>
-        <h2>{{t|สมัครเข้าร่วม LANNA EAST TO MEKONG 1200|Register for LANNA EAST TO MEKONG 1200}}</h2>
-        <p>{{t|ปั่น 5 วัน เสาร์ที่ 6 – พุธที่ 10 พฤศจิกายน 2570 · ค่าสมัคร 120 ยูโร ภายใน 30 ก.ย. 2570 จากนั้น 150 ยูโร|Five days, Saturday 6 to Wednesday 10 November 2027 · €120 if you register by 30 September 2027, then €150}}</p>
+      <!-- The registration card, laid out after the organiser's own poster
+           (PUA BIKE · OFFICIAL EVENT · photo · LANNA EAST TO MEKONG 1200 ·
+           OFFICIAL REGISTRATION), in this site's forest and gold. The poster
+           wording is English in both languages, as theirs is; the dates and
+           fees under it switch with the page. -->
+      <div class="reg-card rv">
+        <div class="reg-card-top">
+          <span class="reg-card-brand">PUA BIKE</span>
+          <span class="reg-card-badge">OFFICIAL EVENT</span>
+        </div>
+        <div class="reg-card-shot">
+          <img {{img:road-ricefields-dawn:(max-width:700px) 92vw, 640px}} width="1672" height="941" loading="lazy" decoding="async" alt="{{t|ถนนตัดผ่านทุ่งนาเขียวยามเช้า มีภูเขาและสายหมอกอยู่ไกลออกไป|A road cutting through green morning rice fields, mountains and mist in the distance}}">
+        </div>
+        <h2 class="reg-card-title">LANNA EAST <span>TO MEKONG 1200</span></h2>
+        <p class="reg-card-sub">1,200 KM INTERNATIONAL<br>CYCLING EVENT</p>
+        <p class="reg-card-loc">PUA, NAN, THAILAND</p>
+        <p class="reg-card-meta">{{t|ปั่น 5 วัน · เสาร์ 6 – พุธ 10 พ.ย. 2570<br>ค่าสมัคร 4,500 บาท ถึง 30 ก.ย. 2570 · ตั้งแต่ 1 ต.ค. 5,500 บาท|Five days · Sat 6 – Wed 10 Nov 2027<br>฿4,500 to 30 Sep 2027 · ฿5,500 from 1 Oct}}</p>
+        <a class="reg-card-cta" href="#regForm">OFFICIAL REGISTRATION</a>
       </div>
 
       <div class="reg-intro rv">
@@ -937,8 +951,8 @@
         <fieldset class="fs" data-h="10. การชำระเงิน / Payment">
           <legend><span class="fs-no">10</span>{{t|การชำระเงิน|Payment}}</legend>
           <div class="fee">
-            <div><b>120 €</b><span>{{t|สมัครภายใน 30 ก.ย. 2570|if you register by 30 Sep 2027}}</span></div>
-            <div><b>150 €</b><span>{{t|สมัครตั้งแต่ 1 ต.ค. 2570|from 1 Oct 2027}}</span></div>
+            <div><b>฿4,500</b><span>{{t|สมัครภายใน 30 ก.ย. 2570|if you register by 30 Sep 2027}}</span></div>
+            <div><b>฿5,500</b><span>{{t|สมัครตั้งแต่ 1 ต.ค. 2570|from 1 Oct 2027}}</span></div>
           </div>
           <div class="field" role="radiogroup" aria-labelledby="r-r-pay-l" data-q="วิธีการชำระเงิน / Payment method">
             <span class="q" id="r-r-pay-l">{{t|วิธีการชำระเงิน|Payment method}} <span class="req">*</span></span>
@@ -965,8 +979,8 @@
           </div>
           <div class="field" data-q="จำนวนเงิน / Amount paid" data-req-when="r_pay=Bank Transfer / โอนเงินผ่านธนาคาร">
             <label class="q" for="r-r-pay-amount">{{t|จำนวนเงิน|Amount paid}} <span class="req">*</span></label>
-            <input id="r-r-pay-amount" name="r_pay_amount" type="text" placeholder="120 EUR">
-            <small class="hint">{{t|ระบุสกุลเงินด้วย|Include the currency}}</small>
+            <input id="r-r-pay-amount" name="r_pay_amount" type="text" placeholder="4,500">
+            <small class="hint">{{t|เป็นเงินบาท|In Thai baht}}</small>
           </div>
           </div>
           <div class="field" data-q="ชื่อผู้โอนเงิน / Name of the account that paid" data-req-when="r_pay=Bank Transfer / โอนเงินผ่านธนาคาร">
@@ -987,8 +1001,8 @@
           </div>
           <div class="field" data-q="จำนวนเงิน / Amount" data-req-when="r_pay=Cash Payment / ชำระเงินสด">
             <label class="q" for="r-r-cash-amount">{{t|จำนวนเงิน|Amount}} <span class="req">*</span></label>
-            <input id="r-r-cash-amount" name="r_cash_amount" type="text" placeholder="120 EUR">
-            <small class="hint">{{t|ระบุสกุลเงินด้วย|Include the currency}}</small>
+            <input id="r-r-cash-amount" name="r_cash_amount" type="text" placeholder="4,500">
+            <small class="hint">{{t|เป็นเงินบาท|In Thai baht}}</small>
           </div>
           </div>
           <div class="field" data-q="สถานที่ชำระเงินสด / Where you paid" data-req-when="r_pay=Cash Payment / ชำระเงินสด">
@@ -1035,7 +1049,7 @@
         <p class="reg-status">Registration Status: <b>PENDING VERIFICATION</b></p>
         <p>{{t|ผู้จัดจะตรวจสอบข้อมูลและการชำระเงินก่อนยืนยันการสมัคร เมื่อได้รับการยืนยันแล้ว ท่านจะได้รับ Registration Number และข้อมูลสำหรับการเข้าร่วมงาน|The organiser will check your details and payment before confirming. Once confirmed you will receive your Registration Number and the information you need to take part.}}</p>
         <p>{{t|กรุณาเก็บหลักฐานการชำระเงิน และตรวจสอบอีเมล / ช่องทางติดต่อที่ท่านแจ้งไว้|Please keep your proof of payment, and keep an eye on the email and contact details you gave us.}}</p>
-        <p class="reg-org">Organizer: Pua Cycling Club · Tel. <a href="tel:0832021036">083-202-1036</a> · <a href="mailto:kaewpuabike@gmail.com">kaewpuabike@gmail.com</a></p>
+        <p class="reg-org">Organizer: Pua Cycling Club · Tel. <a href="tel:0832021036">083-202-1036</a> · <a href="mailto:kaewpuabike@gmail.com">kaewpuabike@gmail.com</a> · LINE <a href="https://line.me/ti/p/~kaew.pus" target="_blank" rel="noopener">kaew.pus</a> · <a href="https://www.facebook.com/Eastern.Lanna.to.the.Mekong" target="_blank" rel="noopener">Facebook</a></p>
       </div>
     </div>
   </section>
@@ -1066,6 +1080,8 @@
         <div class="ftr-links">
           <a href="tel:0832021036"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>083-202-1036</a>
           <a href="mailto:kaewpuabike@gmail.com"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>kaewpuabike@gmail.com</a>
+          <a href="https://line.me/ti/p/~kaew.pus" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-line"/></svg>LINE: kaew.pus</a>
+          <a href="https://www.facebook.com/Eastern.Lanna.to.the.Mekong" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-fb"/></svg>Eastern Lanna to the Mekong</a>
           <a href="privacy.html">{{t|นโยบายความเป็นส่วนตัว|Privacy policy}}</a>
         </div>
       </div>
@@ -1142,7 +1158,7 @@
   var TEL = /^[0-9+\-\s()]{8,}$/;
   var MAIL = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
   var MAX_FILE = 4 * 1024 * 1024;
-  var CONTACT = 'kaewpuabike@gmail.com · 083-202-1036';
+  var CONTACT = 'kaewpuabike@gmail.com · 083-202-1036 · LINE kaew.pus';
   var MSG = {
     th: {
       required: 'ยังกรอกไม่ครบ: ',
