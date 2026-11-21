@@ -841,6 +841,10 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
   background: var(--read-panel);
 }
 .cover-item--hq { background: var(--highlight); border-color: var(--highlight); }
+/* Seven boxes in a three- or two-column grid leaves one alone at the end, so
+   "other areas" takes the whole last row and reads as a footnote to the
+   branches rather than a branch nobody finished laying out. */
+.cover-item--other { grid-column: 1 / -1; }
 .cover-item .ic { width: 1.5em; height: 1.5em; color: var(--highlight); }
 .cover-item b { color: var(--on-panel); font-family: var(--font-display); font-weight: 600; font-size: 1.08rem; line-height: 1.4; }
 .cover-item > span { font-size: 0.84rem; line-height: 1.6; color: var(--on-panel-dim); }
@@ -904,6 +908,20 @@ html[data-lang='en'] [data-t]:not([lang='en']) { display: none; }
 
 .book-form { background: #fff; border-radius: 14px; padding: clamp(26px, 3.2vw, 38px); box-shadow: var(--shadow-lift); }
 .book-form h3 { font-size: 1.3rem; }
+.book-side { display: grid; gap: 14px; min-width: 0; }
+.book-more { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.more-card {
+  display: flex; align-items: center; gap: 12px; padding: 16px 16px; min-height: 64px;
+  background: #fff; border-radius: 12px; box-shadow: var(--shadow-lift); color: var(--ink); text-decoration: none;
+  transition: transform 0.15s ease;
+}
+.more-card:hover { transform: translateY(-2px); }
+.more-card > .ic { width: 1.5em; height: 1.5em; flex: none; color: var(--accent); }
+.more-card > span { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.more-card b { font-family: var(--font-display); font-weight: 600; font-size: 1rem; line-height: 1.35; color: var(--brand); }
+.more-card small { font-size: 0.82rem; line-height: 1.45; color: var(--body); }
+.more-card > .more-go { width: 1.1em; height: 1.1em; color: var(--brand); }
+@media (max-width: 520px) { .book-more { grid-template-columns: minmax(0, 1fr); } }
 .form-sub { font-size: 0.9rem; color: var(--faint); margin-top: 5px; margin-bottom: 22px; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 .field { display: grid; gap: 6px; }

@@ -53,7 +53,7 @@
         </a>
       </div>
     </div>
-    <div class="foot-bottom">{{t|© 2569 บริษัท แซนติฟิค เพสท์ แมเนจเม้นท์ (ประเทศไทย) จำกัด · Scientific Pest Management (Thailand)|© 2026 Scientific Pest Management (Thailand) Co., Ltd.}}</div>
+    <div class="foot-bottom">{{t|© <span data-year-be>2569</span> บริษัท แซนติฟิค เพสท์ แมเนจเม้นท์ (ประเทศไทย) จำกัด · Scientific Pest Management (Thailand)|© <span data-year>2026</span> Scientific Pest Management (Thailand) Co., Ltd.}}</div>
   </div>
 </footer>
 
@@ -133,6 +133,13 @@
   // <details> element has no opinion about: tapping a link inside it (which
   // would otherwise leave the panel covering the section it jumped to),
   // tapping anywhere else, and Escape.
+  // The year in the copyright line keeps itself current — the company asked
+  // whether it would, and a static site has no one to edit it each January.
+  // The printed year stays as the fallback if this never runs.
+  var year = new Date().getFullYear();
+  document.querySelectorAll('[data-year]').forEach(function (e) { e.textContent = year; });
+  document.querySelectorAll('[data-year-be]').forEach(function (e) { e.textContent = year + 543; });
+
   var mnav = document.getElementById('mnav');
   if (mnav) {
     mnav.addEventListener('click', function (ev) {
